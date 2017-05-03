@@ -47,6 +47,7 @@ use onTheFly;
 use scheduler;
 use radseq;
 use versionSofts;
+use checkFormat;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -440,6 +441,8 @@ if ($refFastaFile ne 'None')
 
     #Providing the good reference location
     $refFastaFile = $refDir."/".$goodFileFasta;
+    checkFormat::checkFormatFasta($refFastaFile); # checking format fasta
+    
     ##DEBUG print $refFastaFile,"\n";
     onTheFly::indexCreator($configInfo,$refFastaFile);
 }
