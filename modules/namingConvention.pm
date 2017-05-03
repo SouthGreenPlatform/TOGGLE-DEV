@@ -183,6 +183,8 @@ sub correctName
         #FOR trinity
         case ($name =~ m/^trinity/i){$correctedName="trinity"}  # Correction for Trinity step
 		
+        case ($name =~ m/^bamutils[\s|\.|\-| \/|\\|\|]*/i){$name =~ s/bamutils[\s|\.|\-| \/|\\|\|]*//gi; $correctedName="bamutils".$name;}  # Correction for bamutils from ngsutils tools
+		
 		#FOR checkFormat
 		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="checkFormatFasta"}  # Correction for checkFormatFasta step
 		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fastq/i){$correctedName="checkFormatFastq"}  # Correction for checkFormatFastq step
