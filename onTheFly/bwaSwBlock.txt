@@ -34,7 +34,7 @@ elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn eq "NA") )	# Single Mode
 	$fastqReverseIn=undef;
 	$samFileOut=$newDir."/".$readGroup."BWASW.sam";
 	$softParameters = toolbox::extractHashSoft($optionRef,$stepName);		# recovery of specific parameters of bwa bwaSw
-	bwa::bwaSw($samFileOut,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$readGroup,$softParameters);
+	bwa::bwaSw($samFileOut,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$softParameters);
 }
 elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn ne "NA") )	# Paired Mode
 {
