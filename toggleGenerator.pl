@@ -423,21 +423,24 @@ if ($refFastaFile ne 'None')
     toolbox::makeDir($refDir);
     #Transforming in a list of files
     my @listOfRefFiles = split /\n/, $refLsResults;
-    #Performin a ln command per file
+    
+    my $goodFileFasta = ""; #Providing the good reference location
     while (@listOfRefFiles)
     {
       my $currentRefFile = shift @listOfRefFiles;
       $shortRefFileName = toolbox::extractName($currentRefFile);
-      $shortRefFileName = (split /\./, $shortRefFileName)[0].".fa";			# rename to fa for bowtie bug
+      if ($shortRefFileName =~ m/\.fa$/ or $shortRefFileName =~ m/\.fna$/ or $shortRefFileName =~ m/\.fasta$/) #Providing the good reference location
+      {
+        $goodFileFasta = $shortRefFileName; #Providing the good reference location
+      }
       my $refLsCommand = "cp $currentRefFile $refDir/$shortRefFileName";
       ##DEBUG print $refLsCommand,"\n";
       toolbox::run($refLsCommand,"noprint");
     }
 
     #Providing the good reference location
-    $refFastaFile = $refDir."/".$shortRefFileName;
+    $refFastaFile = $refDir."/".$goodFileFasta;
     ##DEBUG print $refFastaFile,"\n";
-
     onTheFly::indexCreator($configInfo,$refFastaFile);
 }
 #Generate script
