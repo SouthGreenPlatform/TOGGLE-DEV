@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.11.10)  19 APR 2017 13:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.11.10)  3 MAY 2017 09:36
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -501,7 +501,7 @@ Package color Info: Driver file: pdftex.def on input line 137.
 (/usr/local/texlive/2014/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2014/03/04 1.5c listings language file
 )
-No file DevManual4Toggle.aux.
+(./DevManual4Toggle.aux)
 \openout1 = `DevManual4Toggle.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 79.
@@ -519,6 +519,7 @@ LaTeX Font Info:    ... okay on input line 79.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 79.
 LaTeX Font Info:    ... okay on input line 79.
 LaTeX Font Info:    Try loading font information for T1+lmr on input line 79.
+
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
@@ -564,12 +565,14 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 79.
 LaTeX Info: Redefining \pageref on input line 79.
 LaTeX Info: Redefining \nameref on input line 79.
+
+(./DevManual4Toggle.out) (./DevManual4Toggle.out)
 \@outlinefile=\write3
 \openout3 = `DevManual4Toggle.out'.
 
 \c@lstlisting=\count120
 
-<images/toggleLogo.png, id=4, 136.8312pt x 31.21295pt>
+<images/toggleLogo.png, id=128, 136.8312pt x 31.21295pt>
 File: images/toggleLogo.png Graphic file (type png)
 
 <use images/toggleLogo.png>
@@ -578,64 +581,69 @@ Package pdftex.def Info: images/toggleLogo.png used on input line 89.
  [1
 
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./image
-s/toggleLogo.png>]
-
-Package hyperref Warning: old toc file detected, not used; run LaTeX again.
-
-\tf@toc=\write4
-\openout4 = `DevManual4Toggle.toc'.
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
-been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.127 \chapter
-              {Introduction} [1
-
-]
-Chapter 1.
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 133.
-
-(/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 133.
-
+s/toggleLogo.png>] (./DevManual4Toggle.toc
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 3.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 133.
-
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 3.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 133
-.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 3.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 133
-.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 3.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 133.
+(Font)              <10> on input line 3.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 133.
+(Font)              <7> on input line 3.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 133.
+(Font)              <5> on input line 3.
+
+Overfull \hbox (0.24959pt too wide) in paragraph at lines 7--7
+ [][] [][]\T1/lmr/m/n/10 General things about the con-ven-tions and nomen-cla-t
+ures in TOG- 
+ []
+
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 14.
+(/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
+ been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.32 ...r}{\numberline {A}Licence}{25}{appendix.A}
+                                                   [1
+
+])
+\tf@toc=\write4
+\openout4 = `DevManual4Toggle.toc'.
+
+
+<images/toggleLogoSmall.png, id=182, 61.6704pt x 14.16588pt>
+File: images/toggleLogoSmall.png Graphic file (type png)
+
+<use images/toggleLogoSmall.png>
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 127.
+(pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
+ [2 <./images/toggleLogoSmall.png>]
+Chapter 1.
 
 Overfull \hbox (59.24883pt too wide) in paragraph at lines 145--145
 [] \T1/lmtt/m/n/10 git clone https://github.com/SouthGreenPlatform/TOGGLE-DEV /
 path/for/cloning[] 
  []
 
-[2
+[3
 
 ]
 Overfull \hbox (53.99884pt too wide) in paragraph at lines 163--163
@@ -643,13 +651,11 @@ Overfull \hbox (53.99884pt too wide) in paragraph at lines 163--163
 .git branchName[] 
  []
 
-<images/toggleLogoSmall.png, id=33, 61.6704pt x 14.16588pt>
 File: images/toggleLogoSmall.png Graphic file (type png)
-
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 183.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [3 <./images/toggleLogoSmall.png>]
+ [4]
 Chapter 2.
 LaTeX Font Info:    Try loading font information for T1+lmss on input line 194.
 
@@ -664,7 +670,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <9> on input line 199.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 199.
-[4
+[5
 
 ]
 Overfull \hbox (379.84845pt too wide) in paragraph at lines 226--228
@@ -681,9 +687,9 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 245.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [5]
+ [6]
 Chapter 3.
-[6
+[7
 
 ]
 Underfull \hbox (badness 3118) in paragraph at lines 304--305
@@ -699,29 +705,29 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 328.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [7]
+ [8]
 File: images/toggleLogoSmall.png Graphic file (type png)
  <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 390.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [8]
+ [9]
 File: images/toggleLogoSmall.png Graphic file (type png)
 
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 440.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [9]
+ [10]
 File: images/toggleLogoSmall.png Graphic file (type png)
  <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 486.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [10]
+ [11]
 File: images/toggleLogoSmall.png Graphic file (type png)
 
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 492.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [11]
+ [12]
 Chapter 4.
 
 Underfull \hbox (badness 10000) in paragraph at lines 499--500
@@ -733,7 +739,7 @@ Overfull \hbox (379.84845pt too wide) in paragraph at lines 518--519
 [][][][] 
  []
 
-[12
+[13
 
 ]
 Overfull \hbox (379.84845pt too wide) in paragraph at lines 547--549
@@ -744,7 +750,7 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 560.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [13]
+ [14]
 LaTeX Font Info:    Try loading font information for OMS+lmss on input line 592
 .
 LaTeX Font Info:    No file OMSlmss.fd. on input line 592.
@@ -758,7 +764,7 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 600.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [14]
+ [15]
 Overfull \hbox (202.24884pt too wide) in paragraph at lines 602--603
 [][][][] 
  []
@@ -784,7 +790,7 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 641.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [15]
+ [16]
 Underfull \hbox (badness 10000) in paragraph at lines 641--643
 []\T1/lmr/m/n/10 Does the func-tion re-turn the ex-pected re-sult-ing file ?
  []
@@ -803,9 +809,9 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 672.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [16]
+ [17]
 Chapter 5.
-[17
+[18
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 722--723
@@ -821,7 +827,7 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 746.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [18]
+ [19]
 Underfull \hbox (badness 10000) in paragraph at lines 766--767
 
  []
@@ -840,93 +846,87 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 787.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [19]
+ [20]
 File: images/toggleLogoSmall.png Graphic file (type png)
  <use images/toggleLogoSmall.png>
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 832.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [20]
+ [21]
 Underfull \hbox (badness 10000) in paragraph at lines 837--838
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 857--858
+Underfull \hbox (badness 10000) in paragraph at lines 852--853
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 875--876
+Underfull \hbox (badness 10000) in paragraph at lines 870--871
 []\T1/lmr/m/n/10 The trans-for-ma-tion/-cor-rec-tion is en-sured by the
  []
 
 File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 888.
-(pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [21]
-File: images/toggleLogoSmall.png Graphic file (type png)
- <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 937.
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 882.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [22]
-Overfull \hbox (53.99884pt too wide) in paragraph at lines 937--937
+File: images/toggleLogoSmall.png Graphic file (type png)
+ <use images/toggleLogoSmall.png>
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 932.
+(pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
+ [23]
+Overfull \hbox (53.99884pt too wide) in paragraph at lines 932--932
 []    \T1/lmtt/m/n/10 git push https://github.com/SouthGreenPlatform/TOGGLE-DEV
 .git branchName[] 
  []
 
 File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 942.
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 937.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
- [23]
+ [24]
 Appendix A.
-<images/cclarge.png, id=632, 385.44pt x 385.44pt>
+<images/cclarge.png, id=767, 385.44pt x 385.44pt>
 File: images/cclarge.png Graphic file (type png)
  <use images/cclarge.png>
-Package pdftex.def Info: images/cclarge.png used on input line 945.
+Package pdftex.def Info: images/cclarge.png used on input line 940.
 (pdftex.def)             Requested size: 96.35976pt x 96.35976pt.
 
-<images/bylarge.png, id=633, 385.44pt x 385.44pt>
+<images/bylarge.png, id=768, 385.44pt x 385.44pt>
 File: images/bylarge.png Graphic file (type png)
  <use images/bylarge.png>
-Package pdftex.def Info: images/bylarge.png used on input line 946.
+Package pdftex.def Info: images/bylarge.png used on input line 941.
 (pdftex.def)             Requested size: 96.35976pt x 96.35976pt.
 
-<images/salarge.png, id=634, 385.44pt x 385.44pt>
+<images/salarge.png, id=769, 385.44pt x 385.44pt>
 File: images/salarge.png Graphic file (type png)
  <use images/salarge.png>
-Package pdftex.def Info: images/salarge.png used on input line 947.
+Package pdftex.def Info: images/salarge.png used on input line 942.
 (pdftex.def)             Requested size: 96.35976pt x 96.35976pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 961.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 956.
 
-[24
+[25
 
  <./images/cclarge.png> <./images/bylarge.png> <./images/salarge.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 961.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 956.
 
 (./DevManual4Toggle.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 961.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 961.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 956.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 956.
+Package rerunfilecheck Info: File `DevManual4Toggle.out' has not changed.
+(rerunfilecheck)             Checksum: D38AEB8AA55979552FE1CBB92F78E40C;2411.
 
-
-Package rerunfilecheck Warning: File `DevManual4Toggle.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `DevManual4Toggle.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  D38AEB8AA55979552FE1CBB92F78E40C;2411.
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 961.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 956.
  ) 
 Here is how much of TeX's memory you used:
- 8904 strings out of 493117
- 125940 string characters out of 6135432
- 388802 words of memory out of 5000000
- 11717 multiletter control sequences out of 15000+600000
+ 8945 strings out of 493117
+ 126539 string characters out of 6135432
+ 389802 words of memory out of 5000000
+ 11749 multiletter control sequences out of 15000+600000
  66843 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  33i,15n,43p,437b,2060s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -943,10 +943,10 @@ l/texlive/2014/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/
 dist/fonts/type1/public/lm/lmsy9.pfb></usr/local/texlive/2014/texmf-dist/fonts/
 type1/public/lm/lmtk10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/publ
 ic/lm/lmtt10.pfb>
-Output written on DevManual4Toggle.pdf (25 pages, 384385 bytes).
+Output written on DevManual4Toggle.pdf (26 pages, 390225 bytes).
 PDF statistics:
- 798 PDF objects out of 1000 (max. 8388607)
- 741 compressed objects within 8 object streams
- 529 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 932 PDF objects out of 1000 (max. 8388607)
+ 873 compressed objects within 9 object streams
+ 530 named destinations out of 1000 (max. 500000)
+ 274 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -834,20 +834,15 @@ is($observedOutput,"1", 'toggleGenerator - One Bam (no SGE) sorting content ');
 
 \section{Launching the test of block individually and add it to allTestBlock.pl}
 
-You can launch the test of block using the command \texttt{perl  samTools.pl}. It will invoke the \textit{Perl Test} framework and signal you if your test is working or not. \\
+You can launch the test of block using the command \texttt{perl samToolsBlock.pl}. It will invoke the \textit{Perl Test} framework and signal you if your test is working or not. \\
 
-If working, add it for the whole test system in adding the following command at the end of the \textbf{\$toggle/test/test/allTestBlock.pl} file:
+If working, add it for the whole test system in adding the following command at the end of the \textbf{\$toggle/test/allTestBlock.pl} file:
 
 \begin{lstlisting}
 system("perl $toggle/test/blocks/samtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for samtoolsBlock.pl  \n$!\n";
 \end{lstlisting}
 
 Then launch the complete tests using \texttt{perl allTestBlock.pl}.
-
-
-
-
-
 
 
 %%%% SoftwareFormat convention
