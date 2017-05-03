@@ -105,7 +105,10 @@ our %testParams=    (
         checkFormatVcf => [""],
         checkFormatSamOrBam => [""],
         #fastqUtils
-        checkEncodeByASCIIcontrol => [""]
+        checkEncodeByASCIIcontrol => [""],
+		# bamutils
+		bamutilsFilter => ["-gte MAPQ 30"],
+		bamutilsRemoveclipping => [""]
         );
 
 sub softParams
