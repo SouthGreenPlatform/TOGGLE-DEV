@@ -70,6 +70,7 @@ sub checkOrder
     {
 	my $currentSoft=$$hashOrder{$step};
         $currentSoft =~ s/ \d+$//; # Removing number if a software is used more than once with different options
+		$currentSoft =~ s/bamutils.*/bamutilsTool/g; #Rename special for bamutils tools
 	##DEBUG print $previousSoft,"->",$currentSoft,"\n";
         ##DEBUG print "**",$$hashInOut{$currentSoft}{"OUT"},"\n";
 	#if first round
@@ -193,6 +194,9 @@ sub generateScript
         my $currentSoft=$$hashOrder{$step}; #Picking up the step name
         $currentSoft =~ s/ \d+$//; #Removing numbers if a soft is called more than once
         $currentSoft =~ s/ /_/g; #Removing extraspace
+        $currentSoft =~ s/bamutils.*/bamutilsTool/g; #Rename special for bamutils tools
+		
+		
         $catCommand .= " ".$toggle."/onTheFly/previousBlock.txt"; # adding the infos of previous block
         $catCommand .= " ".$toggle."/onTheFly/".$currentSoft."Block.txt"; #Adding the code block for the corresponding step in the cat command, as all txt files with these blocks are name as softBlock.txt
 	if ($$hashSoftware{$currentSoft}{'OUT'} eq "NA")
@@ -408,6 +412,7 @@ sub generateGraphviz
     foreach my $step (sort {$a <=> $b} keys %{$hashOrder})
     {
 	my $soft=$$hashOrder{$step};
+	$soft =~ s/bamutils.*/bamutilsTool/g; #Rename special for bamutils tools
 	##DEBUG print $soft,"-->";
 	##DEBUG toolbox::exportLog("DEBUG : $0 : onTheFly::generateGraphviz, step = $step, soft = $soft.\n",2);
 
