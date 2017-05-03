@@ -62,6 +62,7 @@ use HTSeq;
 use tgicl;
 use trinity;
 use radseq;
+use bamutils;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
