@@ -5,7 +5,7 @@
 #
 ############################
 
-$previousShortName = toolbox::extractPath($previousDir);
+($previousShortName) = toolbox::extractPath($previousDir);
 
 @fileList = toolbox::readDir($previousDir);
 
@@ -18,7 +18,10 @@ if ( !-d "$directory" )
 }
 foreach my $file (@{$fileList})
 {
-    $cmdMerge = "mv $file $directory";
+	next if (not defined $file or $file =~ /^\s*$/);
+	$file =~s/://g;
+	my ($basicName)=toolbox::extractPath($file);
+	my $cpLnCommand="cp -rf $file $directory/$basicName && rm -rf $file && ln -s $directory/$basicName $file";
 
     if (toolbox::run($cmdMerge,"noprint") == 1)
     {
