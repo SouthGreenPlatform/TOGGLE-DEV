@@ -5,13 +5,12 @@
 #
 ############################
 
-my ($previousShortName)=toolbox::extractPath($previousDir);
+$previousShortName = toolbox::extractPath($previousDir);
 
-my (@fileList) = toolbox::readDir($previousDir);
+@fileList = toolbox::readDir($previousDir);
 
-my ($directory) = "$initialDir/../$previousShortName";
+$directory = "$initialDir/../$previousShortName";
 
-toolbox::exportLog("INFOS : Merge Step : name of merge folder $directory\n",1); # for exemple 1_samToolsView
 
 if ( !-d "$directory" )
 {
@@ -19,10 +18,10 @@ if ( !-d "$directory" )
 }
 foreach my $file (@{$fileList})
 {
-    my ($cmd) = "mv $file $directory";
+    $cmdMerge = "mv $file $directory";
 
-    if (toolbox::run($cmd,"noprint") == 1)
+    if (toolbox::run($cmdMerge,"noprint") == 1)
     {
-        toolbox::exportLog("INFOS : Merge Step : Merge into $directory\n",1);
+        toolbox::exportLog("INFOS : Merge Step : name of merge folder $directory\n",1); # for exemple 1_samToolsView
     }
 }

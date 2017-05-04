@@ -252,11 +252,11 @@ my ($mpileupOut);
 
 ##Internal variables
 ###Directory and file variables
-my ($newDir, $fileWithoutExtension, $extension, $shortDirName, @dirList);
+my ($newDir, $fileWithoutExtension, $extension, $shortDirName, @dirList, @fileList, $directory);
 ### Step variables
 my ($stepF1, $stepOrder, $stepName, $softParameters);
 ### Various command variables
-my ($cleanerCommand, $compressorCommand,$replacementCommand);
+my ($cleanerCommand, $compressorCommand,$replacementCommand, $cmdMerge, $previousShortName);
 
 my $fileList=toolbox::readDir($previousDir);
 my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or in group (1)
