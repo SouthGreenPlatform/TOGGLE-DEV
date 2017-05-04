@@ -632,8 +632,8 @@ if ($orderBefore1000)
             foreach my $file (@{$fileList}) #Copying the final data in the final directory
             {
                 next if (not defined $file or $file =~ /^\s*$/);
-		$file =~s/://g;
-		my ($basicName)=toolbox::extractPath($file);
+				$file =~s/://g;
+				my ($basicName)=toolbox::extractPath($file);
                 my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
                 toolbox::run($cpLnCommand,"noprint")
             }
