@@ -21,7 +21,7 @@ foreach my $file (@{$fileList})
 	next if (not defined $file or $file =~ /^\s*$/);
 	$file =~s/://g;
 	my ($basicName)=toolbox::extractPath($file);
-	my $cpLnCommand="cp -rf $file $directory/$basicName && rm -rf $file && ln -s $directory/$basicName $file";
+	my $cmdMerge="cp -rf $file $directory/$basicName && rm -rf $file && ln -s $directory/$basicName $file";
 
     if (toolbox::run($cmdMerge,"noprint") == 1)
     {
