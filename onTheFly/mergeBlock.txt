@@ -1,0 +1,28 @@
+
+############################
+#
+# Block for merge the same step from all analyse
+#
+############################
+
+my ($previousShortName)=toolbox::extractPath($previousDir);
+
+my (@fileList) = toolbox::readDir($previousDir);
+
+my ($directory) = "$initialDir/../$previousShortName";
+
+toolbox::exportLog("INFOS : Merge Step : name of merge folder $directory\n",1); # for exemple 1_samToolsView
+
+if ( !-d "$directory" )
+{
+    toolbox::makeDir($directory);
+}
+foreach my $file (@{$fileList})
+{
+    my ($cmd) = "mv $file $directory";
+
+    if (toolbox::run($cmd,"noprint") == 1)
+    {
+        toolbox::exportLog("INFOS : Merge Step : Merge into $directory\n",1);
+    }
+}
