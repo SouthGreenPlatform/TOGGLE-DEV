@@ -52,7 +52,7 @@ use checkFormat;
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $version = "Release 0.3.3, 5th of April, 2017";
+my $version = "Release 0.3.4, xxth of May, 2017";
 
 my $url = "toggle.southgreen.fr/install/releaseNotes/index.html";
 my $lastRealease = `curl -m 5 --connect-timeout 5 --max-time 5 -s "$url" 2>&1 | grep -m 1 '<li><a href="\#0' | cut -f3 -d'>' | cut -f1 -d'<'`;
@@ -61,10 +61,9 @@ my $newRelease="";
 if ($lastRealease ne $version)
 {
     $newRelease =  "
-** NOTE: Latest version of TOGGLE is $lastRealease.
-The current version is $version and can be obtained at:
+** NOTE: Latest version of TOGGLE is $lastRealease, and can be obtained at:
     http://toggle.southgreen.fr/\n\n"
-    
+
 }
 
 my $cmd_line=$0." @ARGV"; # for printing in log file
@@ -73,7 +72,7 @@ my $parser = Getopt::ArgParse->new_parser(
         prog            => "\n\ntoggleGenerator.pl",
         description     => '',
         epilog          => "
- $newRelease       
+ $newRelease
 ##########################################################################
 # More information:
 #\thttps://github.com/SouthGreenPlatform/TOGGLE/blob/master/README.md
@@ -425,7 +424,7 @@ if ($refFastaFile ne 'None')
     toolbox::makeDir($refDir);
     #Transforming in a list of files
     my @listOfRefFiles = split /\n/, $refLsResults;
-    #Performin a ln command per file
+
     my $goodFileFasta = ""; #Providing the good reference location
     while (@listOfRefFiles)
     {
@@ -442,9 +441,9 @@ if ($refFastaFile ne 'None')
 
     #Providing the good reference location
     $refFastaFile = $refDir."/".$goodFileFasta;
-    checkFormat::checkFormatFasta($refFastaFile)
-    ##DEBUG print $refFastaFile,"\n";
+    checkFormat::checkFormatFasta($refFastaFile); # checking format fasta
 
+    ##DEBUG print $refFastaFile,"\n";
     onTheFly::indexCreator($configInfo,$refFastaFile);
 }
 #Generate script
@@ -454,6 +453,7 @@ my $scriptMultiple = "$outputDir/toggleMultiple.pl";
 
 my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
 my $hashCompressor=toolbox::extractHashSoft($configInfo,"compress"); #Picking up infos for steps to be compress
+my $hashmerge=toolbox::extractHashSoft($configInfo,"merge"); #Picking up infos for steps to be merge
 
 my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 
@@ -489,7 +489,7 @@ if ($orderBefore1000)
     toolbox::exportLog("\n#########################################\nINFOS: Running individual pipeline script \n#########################################\n",1);
 
     #generate toggleBzzzz.pl
-    onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner,$hashCompressor);
+    onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner,$hashCompressor,$hashmerge);
     my $listSamples=toolbox::readDir($workingDir);
 
     #CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
@@ -647,7 +647,7 @@ if ($orderAfter1000)
 
     toolbox::exportLog("\n#########################################\n INFOS: Running multiple pipeline script \n#########################################\n",1);
 
-    onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor);
+    onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge);
 
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 

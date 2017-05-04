@@ -43,8 +43,8 @@ use picardTools;
 use tophat;
 
 ################################################################################################
-# sub checkOrder =>  Will verify the order of the softwares in the pipeline 
-#                                           are Ok (ie outfile 1 in Ok as infile 2) 
+# sub checkOrder =>  Will verify the order of the softwares in the pipeline
+#                                           are Ok (ie outfile 1 in Ok as infile 2)
 ################################################################################################
 # arguments :
 # 	- hash of complete configuration
@@ -54,16 +54,16 @@ sub checkOrder
 	toolbox::exportLog("ERROR: onTheFly::checkOrder : should done at least four arguments\n",0) if (@_ < 4);
     my ($hashConf, $refFastaFile,$gffFile,$keyfile)=@_;
     ##DEBUG print Dumper $hashConf;
-    
+
     my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
-    
+
     #Picking up input output for each software
     my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
-	
-	# checking MANDATORY file for each software ( defined in softwareFormats.txt)  
+
+	# checking MANDATORY file for each software ( defined in softwareFormats.txt)
 	checkMandatory($hashOrder,$hashInOut,$refFastaFile,$gffFile,$keyfile);
     ##DEBUG print Dumper $hashInOut;
-    
+
     #Verifying the coherence of input/output
     my ($previousSoft,$previousFormat,$currentFormat,$initialStep,$lastStep);
     foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
@@ -75,7 +75,7 @@ sub checkOrder
         ##DEBUG print "**",$$hashInOut{$currentSoft}{"OUT"},"\n";
 	#if first round
 	if (!defined $previousFormat && $$hashInOut{$currentSoft}{"OUT"} ne "NA")
-	{ 
+	{
 	    $previousFormat=$$hashInOut{$currentSoft}{"OUT"};
 	    $previousSoft=$currentSoft;
             $initialStep=$step unless $initialStep;
@@ -89,16 +89,16 @@ sub checkOrder
 	    ##DEBUG print "pas prout\n";
 	    next;
 	}
-	
+
 	#For other rounds
 	$currentFormat=$$hashInOut{$currentSoft}{"IN"};
-	
+
 	#Comparison IN/OUT
 	my @listCurrentFormat = split (",", $currentFormat);
 	my @listPreviousFormat = split (",", $previousFormat);
-	
+
 	## DEBUG print "++",@listCurrentFormat,"++",@listPreviousFormat,"\n";
-	
+
 	my $compareList = List::Compare->new(\@listCurrentFormat,\@listPreviousFormat);
 	my @intersection = $compareList->get_intersection;
 	##DEBUG print "**",@intersection,"\n";
@@ -111,7 +111,7 @@ sub checkOrder
 	#Preparing for the next round
 
 	next if ($$hashInOut{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
-	
+
 	$previousSoft=$currentSoft;
 	$previousFormat=$$hashInOut{$currentSoft}{"OUT"};
         $lastStep = $step;
@@ -123,8 +123,8 @@ sub checkOrder
 }
 
 ################################################################################################
-# sub checkMandatory =>  Will verify the argument of the softwares in the pipeline 
-#                                           are Ok (ie processRadtags needs -k argument) 
+# sub checkMandatory =>  Will verify the argument of the softwares in the pipeline
+#                                           are Ok (ie processRadtags needs -k argument)
 ################################################################################################
 # arguments :
 # 	- hash of IN, OUT and MANDATORY
@@ -137,7 +137,7 @@ sub checkMandatory
 {
 	toolbox::exportLog("ERROR: onTheFly::checkMandatory : should done at least five arguments\n",0) if (@_ < 5);
 	my ($hashOrder,$hashInOut,$refFastaFile,$gffFile,$keyfile)=@_;
-	
+
 	foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
 	{
 		my $currentSoft=$$hashOrder{$step};
@@ -145,7 +145,7 @@ sub checkMandatory
 		if (defined($$hashInOut{$currentSoft}{"MANDATORY"}))
 		{
 			my $paramMandatory = $$hashInOut{$currentSoft}{"MANDATORY"};
-			
+
 			if ($paramMandatory =~ m/reference/)
 			{
 				if ($refFastaFile eq 'None')
@@ -172,7 +172,7 @@ sub checkMandatory
 }
 
 ################################################################################################
-# sub generateScript =>  will generate scripts on the fly 
+# sub generateScript =>  will generate scripts on the fly
 ################################################################################################
 # arguments :
 # 	- hash of complete configuration
@@ -180,63 +180,70 @@ sub checkMandatory
 ################################################################################################
 sub generateScript
 {
-    my ($hashOrder,$script,$hashCleaner,$hashCompressor)=@_;
-    
+    my ($hashOrder,$script,$hashCleaner,$hashCompressor,$hashmerge)=@_;
+
     #Picking up input output for each software
     my $hashSoftware=toolbox::readFileConf("$toggle/softwareFormats.txt");
-    
+
     my $catCommand = "cat $toggle/onTheFly/startBlock.txt"; #Will create the preambule for the pipeline code, including paths, use modules, etc...
     my @stepsList = sort{$a <=> $b} keys %{$hashOrder};
     my $cleanerCounter=1; #
     my $compressorCounter=1;#for compressing previous folder
+    my $mergeCounter=1;#for merge all folder
     foreach my $step (@stepsList)
     {
         my $currentSoft=$$hashOrder{$step}; #Picking up the step name
         $currentSoft =~ s/ \d+$//; #Removing numbers if a soft is called more than once
         $currentSoft =~ s/ /_/g; #Removing extraspace
         $currentSoft =~ s/bamutils.*/bamutilsTool/g; #Rename special for bamutils tools
-		
-		
+
+
         $catCommand .= " ".$toggle."/onTheFly/previousBlock.txt"; # adding the infos of previous block
         $catCommand .= " ".$toggle."/onTheFly/".$currentSoft."Block.txt"; #Adding the code block for the corresponding step in the cat command, as all txt files with these blocks are name as softBlock.txt
-	if ($$hashSoftware{$currentSoft}{'OUT'} eq "NA")
-	{# will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
-	    $cleanerCounter++;
-	    $compressorCounter++;
-	    $catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt"; # adding infos for next block
-	    next;
-	}
+		if ($$hashSoftware{$currentSoft}{'OUT'} eq "NA")
+		{# will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
+			$cleanerCounter++;
+			$compressorCounter++;
+			$mergeCounter++;
+			$catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt"; # adding infos for next block
+			next;
+		}
         if (defined $$hashCompressor{$step-$compressorCounter})
-	{# The previous step has to be compressed BUT NOT CLEANED
-	    unless (defined $$hashCleaner{$step-$cleanerCounter})
-	    {
-	    $catCommand .= " ".$toggle."/onTheFly/compressorBlock.txt";
-	    }
-	}
-	
-	if (defined $$hashCleaner{$step-$cleanerCounter})
-	{# The previous step has to be cleaned
-	    $catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt";
-	}
-	#Re-initializing the counters for compressing and cleaning data
-	$compressorCounter=1;
-	$cleanerCounter=1;
+		{# The previous step has to be compressed BUT NOT CLEANED
+			unless (defined $$hashCleaner{$step-$cleanerCounter})
+			{
+			$catCommand .= " ".$toggle."/onTheFly/compressorBlock.txt";
+			}
+		}
+
+		if (defined $$hashCleaner{$step-$cleanerCounter})
+		{# The previous step has to be cleaned
+			$catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt";
+		}
+		if (defined $$hashmerge{$step-$mergeCounter})
+		{# The previous step has to be cleaned
+			$catCommand .= " ".$toggle."/onTheFly/mergeBlock.txt";
+		}
+		#Re-initializing the counters for compressing and cleaning data
+		$compressorCounter=1;
+		$cleanerCounter=1;
+		$mergeCounter=1;
 
 
-	$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
+		$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
     }
-    
+
     $catCommand .= " $toggle/onTheFly/endBlock.txt > $script && chmod 775 $script"; #Adding the end of the script and rending it executable
-    
+
     ##DEBUG print $catCommand,"\n";
-    
+
     if(toolbox::run($catCommand,"noprint")==1)       #Execute command
     {
         toolbox::exportLog("INFOS: onTheFly::generateScript : The script $script has been generated\n",1);
         return 1;
     }
-    
-    else       
+
+    else
     {
         toolbox::exportLog("ERROR: onTheFly::generateScript : The script $script cannot be created using the following command:\n $catCommand\n",0);       # ... and return an error message
         return 0;
@@ -254,13 +261,13 @@ sub indexCreator
 {
     my ($hashConf,$reference)=@_;
     my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
-    
+
     my @listConfig = keys %{$hashConf}; #Picking up all softwares with any option declared
-    
+
     foreach my $step (sort {$a <=> $b}  keys %{$hashOrder})
     {
         my $currentSoft = $$hashOrder{$step};
-        
+
         #INDEXING for BWA
         if ($currentSoft =~ m/bwa/i) #Any step involving BWA
         {
@@ -284,7 +291,7 @@ sub indexCreator
         #INDEXING for PICARDTOOLS
         if ($currentSoft eq "picardToolsCreateSequenceDictionary" or $currentSoft =~ m/gatk/i) #Any step involving GATK
         {
-            my $dictFileOut=$reference;   # name of dictionary file    
+            my $dictFileOut=$reference;   # name of dictionary file
             $dictFileOut =~ s/\.[^\.]*$/.dict/;
             if ($currentSoft eq "picardToolsCreateSequenceDictionary")
             {
@@ -298,7 +305,7 @@ sub indexCreator
                 if (-e $dictFileOut)
                 {# The index is already created
                     toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for picardTools CreateSequenceDictionary already exists, skipped...\n",1);
-            
+
                 }
                 else
                 {
@@ -307,7 +314,7 @@ sub indexCreator
                 }
             }
         }
-        
+
         #INDEXING for SAMTOOLS
         if ($currentSoft eq "samToolsFaidx" or $currentSoft =~ m/gatk/i) #Any step involving GATK
         {
@@ -326,21 +333,21 @@ sub indexCreator
                     ##DEBUG print "skipped faidx\n";
                 }
                 else
-                {                
+                {
                     ##DEBUG print "samtools faidx\n";
 					my $softParameters = toolbox::extractHashSoft($hashConf,"samToolsFaidx");# recovery of specific parameters of samToolsFaidx
                     samTools::samToolsFaidx($reference);
                 }
             }
         }
-	
+
 	#INDEXING for topHat
         if ($currentSoft =~ m/bowtie/i or $currentSoft =~ m/tophat/i) #Any step involving BWA
         {
             if ($currentSoft eq "bowtieBuild") # If the index is expressely asked
             {
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bwa index
-                tophat::bowtieBuild($reference,$softParameters);  
+                tophat::bowtieBuild($reference,$softParameters);
             }
             else #We check if the index is present or not
             {
@@ -351,13 +358,13 @@ sub indexCreator
                     next;
                 }
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bwa index
-                tophat::bowtieBuild($reference,$softParameters);  
+                tophat::bowtieBuild($reference,$softParameters);
             }
-	    
+
 	    if ($currentSoft eq "bowtie2-Build" or $currentSoft =~ m/tophat/i) # If the index is expressely asked
             {
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
-                tophat::bowtie2Build($reference,$softParameters);  
+                tophat::bowtie2Build($reference,$softParameters);
             }
             else #We check if the index is present or not
             {
@@ -368,21 +375,21 @@ sub indexCreator
                     next;
                 }
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
-                tophat::bowtie2Build($reference,$softParameters);  
+                tophat::bowtie2Build($reference,$softParameters);
             }
-	    
-	    
+
+
         }
     }
-    
-    
+
+
     return 1;
 }
 
 
 
 ################################################################################################
-# sub generateGraphviz =>  will generate graphical view of the pipeline on the fly 
+# sub generateGraphviz =>  will generate graphical view of the pipeline on the fly
 ################################################################################################
 # arguments :
 # 	- hash of complete configuration
@@ -391,15 +398,15 @@ sub indexCreator
 sub generateGraphviz
 {
     my ($hashOrder,$outDir)=@_;
-    
+
     my $dotFileOut=$outDir."/togglePipeline.dot"; #Creation of the dot file
     my $graphicFileOut=$outDir."/togglePipeline.png"; #Creation of the figure file in png
-    
+
     my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt"); #We need the format IN/OUT
 
     #Log info
     toolbox::exportLog("INFOS : $0 : onTheFly::generateGraphviz is creating the graphical view of the current pipeline.\n",1);
-    
+
     open(OUT,">", $dotFileOut) or die "Cannot create $dotFileOut: $0\n";
     my $date = `date`;
     chomp $date;
@@ -407,7 +414,7 @@ sub generateGraphviz
     \tgraph [fontsize=18,fontname=\"Arial\"]
     \tlabel=\"TOGGLE pipeline generated on the $date\"
     \tnode [shape=box,style=\"rounded,filled\",color=lightblue,width=3,fontname=\"Arial\",fontsize=12]\n";
-    
+
     my ($previousSoft,$input,$output);
     foreach my $step (sort {$a <=> $b} keys %{$hashOrder})
     {
@@ -418,7 +425,7 @@ sub generateGraphviz
 
 	#Removing anything after a space. E.g a samtoolsview 1 will become samtoolsView
 	$soft =~ s/ .+$//;
-	
+
 	$input=$$hashInOut{$soft}{"IN"};
 	##DEBUG print $input,"\n";
 	$output=$$hashInOut{$soft}{"OUT"};
@@ -442,23 +449,23 @@ sub generateGraphviz
 	    print OUT $outline;
 	    next;
 	}
-	
-	 
+
+
 	my $outline = "\t\"".$previousSoft."\"->\"".$soft."\" [weight=500];\n";
 	print OUT $outline;
 	$previousSoft = $soft;
     }
-	
+
     my $trueName=$previousSoft;
     $trueName =~ s/_\d{1,}$//;
     print OUT "\t\"".$$hashInOut{$trueName}{"OUT"}."\" [shape=record,style=\"rounded\",color=gray,width=2];\n";
     my $lastLine="\t\"".$previousSoft."\"->\"".$$hashInOut{$trueName}{"OUT"}."\"[color=gray];\n\t}\n";
     print OUT $lastLine;
     close OUT;
-    
-    
+
+
     my $dotCom="dot -Tpng -o$graphicFileOut $dotFileOut"; #To generate png file
-    
+
     #Verification if dot can work on this installation
     my $dotHelpCommand = `dot -? 2>/dev/null`;
     if ($dotHelpCommand !~ m/Usage: dot/)
@@ -467,7 +474,7 @@ sub generateGraphviz
 	toolbox::exportLog(">>>>>>>>>>>>>> WARNING : onTheFly::generateGraphviz: Cannot generate graphical view, Graphviz is not installed. Only the dot file has been created. \n The command line to create png file is : $dotCom\n ",1);
 	return 1;
     }
-    
+
     toolbox::run("$dotCom");
 }
 
@@ -475,14 +482,14 @@ sub generateGraphviz
 
 =head1 NAME
 
-package I<onTheFly> 
+package I<onTheFly>
 
 =head1 SYNOPSIS
 
 	use onTheFly;
 
 
-	
+
 =head1 DESCRIPTION
 
 	This package is used mainly by toggleGenerator.pl that will allow to generate scripts based on the user definition.

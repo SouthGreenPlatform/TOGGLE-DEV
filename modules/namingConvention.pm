@@ -94,6 +94,9 @@ sub correctName
 	#FOR compressor
 	case ($name =~ m/^compress/i){$correctedName="compress";} #correction for compressor step
 
+	#FOR merge
+	case ($name =~ m/^merge/i){$correctedName="merge";} #correction for merge step
+
 	#FOR SGE
 	case ($name =~ m/^sge/i){$correctedName="sge";} #Correction for sge configuration
 
@@ -176,15 +179,15 @@ sub correctName
 
         #FOR cutadapt functions
         case ($name =~ m/^cutadapt/i){$correctedName="cutadapt"} # Correction for cutadapt step
-    
+
         #FOR TGICL
         case ($name =~ m/^tgicl/i){$correctedName="tgicl"}
-        
+
         #FOR trinity
         case ($name =~ m/^trinity/i){$correctedName="trinity"}  # Correction for Trinity step
-		
+
         case ($name =~ m/^bamutils[\s|\.|\-| \/|\\|\|]*/i){$name =~ s/bamutils[\s|\.|\-| \/|\\|\|]*//gi; $correctedName="bamutils".$name;}  # Correction for bamutils from ngsutils tools
-		
+
 		#FOR checkFormat
 		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="checkFormatFasta"}  # Correction for checkFormatFasta step
 		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fastq/i){$correctedName="checkFormatFastq"}  # Correction for checkFormatFastq step
@@ -192,7 +195,7 @@ sub correctName
 		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
-		
+
         else {toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
     }
     $correctedName .= " ".$order if ($order);
