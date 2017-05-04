@@ -205,7 +205,12 @@ sub generateScript
 			$cleanerCounter++;
 			$compressorCounter++;
 			$mergeCounter++;
+			if (defined $$hashmerge{$step-$mergeCounter})
+			{# The previous step has to be cleaned
+				$catCommand .= " ".$toggle."/onTheFly/mergeBlock.txt";
+			}
 			$catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt"; # adding infos for next block
+
 			next;
 		}
         if (defined $$hashCompressor{$step-$compressorCounter})
