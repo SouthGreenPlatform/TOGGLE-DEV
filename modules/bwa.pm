@@ -87,17 +87,17 @@ sub bwaAln
 	else
 	{
             toolbox::exportLog("ERROR: bwa::bwaAln : ABORTED\n",0);
-            return 0;     
+            return 0;
         }
     }
     else
     {
         toolbox::exportLog("ERROR: bwa::bwaAln : Problem with the files $refFastaFileIn or/and $FastqFileIn\n",0);
-        return 0;     
+        return 0;
     }
 }
 ##BWA SAMPE
-#Generate alignments in the SAM format given paired-end reads. Repetitive read pairs will be placed randomly. 
+#Generate alignments in the SAM format given paired-end reads. Repetitive read pairs will be placed randomly.
 sub bwaSampe
 {
     my($samFileOut,$refFastaFileIn,$forwardSaiFileIn,$reverseSaiFileIn,$forwardFastqFileIn,$reverseFastqFileIn,$readGroupLine,$optionsHachees)=@_;
@@ -108,12 +108,12 @@ sub bwaSampe
 	{
             $options=toolbox::extractOptions($optionsHachees);		##Get given options
         }
-        
+
         if (ref($readGroupLine)) # Here the RG has been sent as a ref, and will be named as a HASH(0x0000) format type. So we dereference it in a new mode
         {
             $readGroupLine = $$readGroupLine;
         }
-         
+
         my $command=$bwa." sampe ".$options." -f ".$samFileOut."  -r '\@RG\\tID:".$readGroupLine."\\tSM:".$readGroupLine."\\tPL:Illumina' ".$refFastaFileIn." ".$forwardSaiFileIn." ".$reverseSaiFileIn." ".$forwardFastqFileIn." ".$reverseFastqFileIn;		# command line
         #Execute command
         if(toolbox::run($command)==1)		## if the command has been excuted correctly, export the log
@@ -130,7 +130,7 @@ sub bwaSampe
     {
         toolbox::exportLog("ERROR: bwa::bwaSampe : Problem with the files $refFastaFileIn or $forwardSaiFileIn or $forwardFastqFileIn or $reverseSaiFileIn or  $reverseFastqFileIn\n",0);
         return 0;
-        
+
     }
 }
 ##BWA SAMSE
@@ -138,7 +138,7 @@ sub bwaSampe
 sub bwaSamse
 {
     my($samFileOut,$refFastaFileIn,$saiFileIn,$fastqFileIn,$readGroupLine,$optionsHachees)=@_;
-    
+
     if ((toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($saiFileIn)==1) and (toolbox::sizeFile($fastqFileIn)==1))		##Check if entry files exist and are not empty
     {
         my $options="";
@@ -146,12 +146,12 @@ sub bwaSamse
 	{
             my $options=toolbox::extractOptions($optionsHachees);		##Get given options
         }
-        
+
         if (ref($readGroupLine)) # Here the RG has been sent as a ref, and will be named as a HASH(0x0000) format type. So we dereference it in a new mode
         {
             $readGroupLine = $$readGroupLine;
         }
-        
+
         my $command=$bwa." samse ".$options." -f ".$samFileOut." -r '\@RG\\tID:".$readGroupLine."\\tSM:".$readGroupLine."\\tPL:Illumina' ".$refFastaFileIn." ".$saiFileIn." ".$fastqFileIn;		# command line
         #Execute command
         if(toolbox::run($command)==1)		## if the command has been excuted correctly, export the log
@@ -173,7 +173,7 @@ sub bwaSamse
 ##BWA MEM
 #Generate alignments in the SAM format.
 #BWA-MEM, which is the latest, is generally recommended for high-quality queries as it is faster and more accurate. It also has better performance for 70-100bp Illumina reads
-sub bwaMem 
+sub bwaMem
 {
     my($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn, $readGroupLine,$optionsHachees)=@_;
     my $options="";
@@ -181,11 +181,10 @@ sub bwaMem
     {
         $options=toolbox::extractOptions($optionsHachees);		##Get given options
     }
-    
-    if ((toolbox::sizeFile($forwardFastqFileIn)==1) and not (defined $reverseFastqFileIn)) 
+
+    if ((toolbox::sizeFile($forwardFastqFileIn)==1) and not (defined $reverseFastqFileIn))
     {
 	my $command="$bwa mem $options $refFastaFileIn $forwardFastqFileIn   -R '\@RG\\tID:".$readGroupLine."\\tSM:".$readGroupLine."\\tPL:Illumina' > $samFileOut";		# command line
-        toolbox::exportLog("INFOS: bwa::bwaMem : $command\n",1);
 
         if (toolbox::run($command)==1)
         {
@@ -198,9 +197,9 @@ sub bwaMem
     }
     elsif ((toolbox::sizeFile($forwardFastqFileIn)==1) and (toolbox::sizeFile($reverseFastqFileIn)==1))
     {
-        
+
 	my $command="$bwa mem $options $refFastaFileIn $forwardFastqFileIn  $reverseFastqFileIn  -R '\@RG\\tID:".$readGroupLine."\\tSM:".$readGroupLine."\\tPL:Illumina' > $samFileOut";		# command line
-        
+
         if (toolbox::run($command)==1)
         {
             return 1;
@@ -214,14 +213,14 @@ sub bwaMem
     {
        toolbox::exportLog("ERROR: bwa::bwaMem : Problem with the files $refFastaFileIn, $forwardFastqFileIn or/and $reverseFastqFileIn\n",0);
        return 0;
-    }                                                                                                                              
+    }
 }
 1;
 
 ##BWA SW
 #Generate alignments in the SAM format.
-#BWA-SW, 
-sub bwaSw 
+#BWA-SW,
+sub bwaSw
 {
     my($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn,$optionsHachees)=@_;
     my $options="";
@@ -229,11 +228,10 @@ sub bwaSw
     {
         $options=toolbox::extractOptions($optionsHachees);		##Get given options
     }
-    
-    if ((toolbox::sizeFile($forwardFastqFileIn)==1) and not (defined $reverseFastqFileIn)) 
+
+    if ((toolbox::sizeFile($forwardFastqFileIn)==1) and not (defined $reverseFastqFileIn))
     {
 	my $command="$bwa bwasw $options $refFastaFileIn $forwardFastqFileIn   > $samFileOut";		# command line
-        toolbox::exportLog("INFOS: bwa::bwaSw : $command\n",1);
 
         if (toolbox::run($command)==1)
         {
@@ -246,9 +244,9 @@ sub bwaSw
     }
     elsif ((toolbox::sizeFile($forwardFastqFileIn)==1) and (toolbox::sizeFile($reverseFastqFileIn)==1))
     {
-        
+
 	my $command="$bwa bwasw $options $refFastaFileIn $forwardFastqFileIn $reverseFastqFileIn > $samFileOut";		# command line
-        
+
         if (toolbox::run($command)==1)
         {
             return 1;
@@ -262,25 +260,25 @@ sub bwaSw
     {
        toolbox::exportLog("ERROR: bwa::bwaSw : Problem with the files $refFastaFileIn, $forwardFastqFileIn or/and $reverseFastqFileIn\n",0);
        return 0;
-    }                                                                                                                              
+    }
 }
 1;
 =head1 NAME
 
-    Package I<bwa> 
+    Package I<bwa>
 
 =head1 SYNOPSIS
 
 	use bwa;
-    
+
 	bwa::bwaIndex ($refFastaFileIn,$option_prog{'bwa index'});
-    
+
 	bwa::bwaAln ($refFastaFileIn,$FastqFileIn,$saiFileOut,$option_prog{'bwa aln'});
-    
+
 	bwa::bwaSampe ($samFileOut,$refFastaFileIn,$forwardSaiFileIn,$reverseSaiFileIn,$forwardFastqFileIn,$reverseFastqFileIn,$readGroupLine,$option_prog{'bwa sampe'});
-    
+
 	bwa::bwaSamse ($samFileOut,$refFastaFileIn,$saiFileIn,$fastqFileIn,$readGroupLine,$option_prog{'bwa samse'});
-    
+
 	bwa::bwaMem ($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn, $readGroupLine,$option_prog{'bwa mem'});
 
 	bwa::bwaSw ($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn, $option_prog{'bwa sw'});
@@ -344,7 +342,7 @@ Align query sequences with the BWA-SW algorithm?.
 
 =head1 AUTHORS
 
-Intellectual property belongs to IRD, CIRAD and South Green developpement plateform 
+Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
 Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
 
 =head1 SEE ALSO
