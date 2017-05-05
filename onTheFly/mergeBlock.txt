@@ -7,12 +7,7 @@
 
 $fileListMerge = toolbox::readDir($stepDirectory{$stepOrder});
 
-my $dum = Dumper(@$fileListMerge);
-
-toolbox::exportLog(">>>>>>>> DEBUG stepOrder: ".($stepOrder)."
->>>>>>>> DEBUG stepDirectory: ".$stepDirectory{$stepOrder}."
->>>>>>>> DEBUG previousShortName: ".$previousShortName."
->>>>>>>> DEBUG dum: $dum\n",1);
+#toolbox::exportLog(">>>>>>>> DEBUG stepOrder: ".($stepOrder)."\n>>>>>>>> DEBUG stepDirectory: ".$stepDirectory{$stepOrder}."\n>>>>>>>> DEBUG previousShortName: ".$previousShortName,1);
 
 $directory = "$initialDir/../$previousShortName";
 
