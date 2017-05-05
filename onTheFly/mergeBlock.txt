@@ -1,13 +1,18 @@
 
 ############################
-#
 # Block for merge the same step from all analyse
-#
 ############################
 
-($previousShortName) = toolbox::extractPath($previousDir);
+($previousShortName) = toolbox::extractPath($stepDirectory{$stepOrder});
 
-@fileList = toolbox::readDir($previousDir);
+$fileListMerge = toolbox::readDir($stepDirectory{$stepOrder});
+
+my $dum = Dumper(@$fileListMerge);
+
+toolbox::exportLog(">>>>>>>> DEBUG stepOrder: ".($stepOrder)."
+>>>>>>>> DEBUG stepDirectory: ".$stepDirectory{$stepOrder}."
+>>>>>>>> DEBUG previousShortName: ".$previousShortName."
+>>>>>>>> DEBUG dum: $dum\n",1);
 
 $directory = "$initialDir/../$previousShortName";
 
@@ -16,14 +21,14 @@ if ( !-d "$directory" )
 {
     toolbox::makeDir($directory);
 }
-foreach my $file (@{$fileList})
+foreach my $file (@{$fileListMerge})
 {
 	next if (not defined $file or $file =~ /^\s*$/);
 	$file =~s/://g;
 	my ($basicName)=toolbox::extractPath($file);
 	my $cmdMerge="cp -rf $file $directory/$basicName && rm -rf $file && ln -s $directory/$basicName $file";
 
-    if (toolbox::run($cmdMerge,"noprint") == 1)
+    if (toolbox::run($cmdMerge) == 1)
     {
         toolbox::exportLog("INFOS : Merge Step : name of merge folder $directory\n",1); # for exemple 1_samToolsView
     }
