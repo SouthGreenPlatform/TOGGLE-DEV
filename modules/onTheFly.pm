@@ -189,7 +189,6 @@ sub generateScript
     my @stepsList = sort{$a <=> $b} keys %{$hashOrder};
     my $cleanerCounter=1; #
     my $compressorCounter=1;#for compressing previous folder
-    my $mergeCounter=1;#for merge all folder
     foreach my $step (@stepsList)
     {
         my $currentSoft=$$hashOrder{$step}; #Picking up the step name
@@ -204,8 +203,7 @@ sub generateScript
 		{# will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
 			$cleanerCounter++;
 			$compressorCounter++;
-			$mergeCounter++;
-			if (defined $$hashmerge{$step-$mergeCounter})
+			if (defined $$hashmerge{$step})
 			{# The previous step has to be cleaned
 				$catCommand .= " ".$toggle."/onTheFly/mergeBlock.txt";
 			}
@@ -225,15 +223,13 @@ sub generateScript
 		{# The previous step has to be cleaned
 			$catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt";
 		}
-		if (defined $$hashmerge{$step-$mergeCounter})
+		if (defined $$hashmerge{$step})
 		{# The previous step has to be cleaned
 			$catCommand .= " ".$toggle."/onTheFly/mergeBlock.txt";
 		}
 		#Re-initializing the counters for compressing and cleaning data
 		$compressorCounter=1;
 		$cleanerCounter=1;
-		$mergeCounter=1;
-
 
 		$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
     }
