@@ -83,7 +83,7 @@ system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files 
 ################################################################################################
 ##bamutils tool
 ################################################################################################
-# tools for bamutils
+# tools for bamutils bamutilsFilter
 my $toolName = "bamutilsFilter";
 
 # input file
@@ -111,5 +111,36 @@ my $observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bamutils::bamutilsTool - bamutilsFilter - output structure');
+
+
+
+# tools for bamutils bamutilstobed
+ $toolName = "bamutilstobed";
+ 
+# input file
+my $bamFileIn = "$toggle/data/testData/samBam/oneBamUnsorted/unsorted.bam";
+
+#Output file
+$bamFileOut="RC3.$toolName.bed";
+
+%optionsRef = ();
+$optionsHachees = \%optionsRef; 
+
+#execution test
+is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1,'bamutils::bamutilsTool - bamutilstobed');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','individuSoft.txt','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
+
+is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilstobed - output list');
+
+# expected output structure
+$expectedMD5sum = "1cdaccadf9fa80dd8822924685ec1291";
+$observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'bamutils::bamutilsTool - bamutilstobed - output structure');
 
 exit;

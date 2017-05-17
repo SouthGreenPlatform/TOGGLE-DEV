@@ -28,7 +28,12 @@ else
     my $toolname = lc($stepName);
     $toolname =~ s/bamutils//g;
     $toolname =~ s/\d+//g;
-    $bamFileOut = $newDir."/"."$readGroup".".bamutils".$toolname.".bam";                              # name for the output file of bamutils
+    my $extention = "bam";
+    $extention = "bed" if  ($toolname =~ m/bed/i);
+    $extention = "fasta" if  ($toolname =~ m/fasta/i);
+    $extention = "fastq" if  ($toolname =~ m/fastq/i);
+    
+    $bamFileOut = $newDir."/"."$readGroup".".bamutils".$toolname.$extention;                              # name for the output file of bamutils
     $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                           # recovery of specific parameters of bamutils
     bamutils::bamutilsTool($toolname, $samFileIn, $bamFileOut, $softParameters)
 }

@@ -69,8 +69,17 @@ sub bamutilsTool
                $options=toolbox::extractOptions($optionsHachees); ##Get given options
           }
           
-                    
-          my $command=$bamutils." ".$toolname." ".$bamFileIn." ".$bamFileOut." ".$options;
+          #check l'extention
+          my $command;
+          if ( $bamFileOut =~ m/bam$|sam$/)
+          {
+               $command=$bamutils." ".$toolname." ".$bamFileIn." ".$bamFileOut." ".$options;
+          }
+          elsif ( $bamFileOut =~ m/bed$|fastq$|fasta$/)
+          {
+               $command=$bamutils." ".$toolname." ".$bamFileIn." ".$options." > ".$bamFileOut;
+          }
+
           #toolbox::exportLog($command."\n",1);
           #Execute command
           if(toolbox::run($command)==1)

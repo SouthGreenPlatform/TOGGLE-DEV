@@ -217,4 +217,4 @@ OUT=NA
 
 $bamutilsTool
 IN=sam,bam
-OUT=bam
+OUT=bam,fastq,fasta,bed
