@@ -63,7 +63,7 @@ if ($lastRealease ne $version)
     $newRelease =  "
 ** NOTE: Latest version of TOGGLE is $lastRealease, and can be obtained at:
     http://toggle.southgreen.fr/\n\n"
-    
+
 }
 
 my $cmd_line=$0." @ARGV"; # for printing in log file
@@ -72,7 +72,7 @@ my $parser = Getopt::ArgParse->new_parser(
         prog            => "\n\ntoggleGenerator.pl",
         description     => '',
         epilog          => "
- $newRelease       
+ $newRelease
 ##########################################################################
 # More information:
 #\thttps://github.com/SouthGreenPlatform/TOGGLE/blob/master/README.md
@@ -424,7 +424,7 @@ if ($refFastaFile ne 'None')
     toolbox::makeDir($refDir);
     #Transforming in a list of files
     my @listOfRefFiles = split /\n/, $refLsResults;
-    
+
     my $goodFileFasta = ""; #Providing the good reference location
     while (@listOfRefFiles)
     {
@@ -442,7 +442,7 @@ if ($refFastaFile ne 'None')
     #Providing the good reference location
     $refFastaFile = $refDir."/".$goodFileFasta;
     checkFormat::checkFormatFasta($refFastaFile); # checking format fasta
-    
+ 
     ##DEBUG print $refFastaFile,"\n";
     onTheFly::indexCreator($configInfo,$refFastaFile);
 }
@@ -453,6 +453,7 @@ my $scriptMultiple = "$outputDir/toggleMultiple.pl";
 
 my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
 my $hashCompressor=toolbox::extractHashSoft($configInfo,"compress"); #Picking up infos for steps to be compress
+my $hashmerge=toolbox::extractHashSoft($configInfo,"merge"); #Picking up infos for steps to be merge
 
 my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 
@@ -488,7 +489,7 @@ if ($orderBefore1000)
     toolbox::exportLog("\n#########################################\nINFOS: Running individual pipeline script \n#########################################\n",1);
 
     #generate toggleBzzzz.pl
-    onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner,$hashCompressor);
+    onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner,$hashCompressor,$hashmerge);
     my $listSamples=toolbox::readDir($workingDir);
 
     #CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
@@ -631,8 +632,8 @@ if ($orderBefore1000)
             foreach my $file (@{$fileList}) #Copying the final data in the final directory
             {
                 next if (not defined $file or $file =~ /^\s*$/);
-		$file =~s/://g;
-		my ($basicName)=toolbox::extractPath($file);
+				$file =~s/://g;
+				my ($basicName)=toolbox::extractPath($file);
                 my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
                 toolbox::run($cpLnCommand,"noprint")
             }
@@ -646,7 +647,7 @@ if ($orderAfter1000)
 
     toolbox::exportLog("\n#########################################\n INFOS: Running multiple pipeline script \n#########################################\n",1);
 
-    onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor);
+    onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge);
 
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 

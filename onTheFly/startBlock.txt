@@ -62,6 +62,7 @@ use HTSeq;
 use tgicl;
 use trinity;
 use radseq;
+use bamutils;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -251,11 +252,11 @@ my ($mpileupOut);
 
 ##Internal variables
 ###Directory and file variables
-my ($newDir, $fileWithoutExtension, $extension, $shortDirName, @dirList);
+my ($newDir, $fileWithoutExtension, $extension, $shortDirName, @dirList, @fileList, $directory, $fileListMerge);
 ### Step variables
 my ($stepF1, $stepOrder, $stepName, $softParameters);
 ### Various command variables
-my ($cleanerCommand, $compressorCommand,$replacementCommand);
+my ($cleanerCommand, $compressorCommand,$replacementCommand, $cmdMerge, $previousShortName,%stepDirectory);
 
 my $fileList=toolbox::readDir($previousDir);
 my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or in group (1)
@@ -281,6 +282,7 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
     $directory =~ s/ //g; #Removing the spaces
     toolbox::makeDir($directory); # Create the folder associated with each steps
     push (@dirList,$directory); # Adding the newly created folder to the list of folders
+    $stepDirectory{$position} = $directory;
   }
   else
   {
@@ -289,6 +291,7 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
     $directory =~ s/ /_/g; #Removing the spaces
     toolbox::makeDir($directory); # Create the folder associated with each steps
     push (@dirList,$directory); # Adding the newly created folder to the list of folders
+    $stepDirectory{$position} = $directory;
 
   }
 }

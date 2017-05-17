@@ -39,21 +39,21 @@ use Switch;
 
 sub bowtieBuildVersion
 {   #We works with the STDOUT output
-	my $version = `$bowtieBuild --version 2>&1 | grep "bowtie-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtieBuildVersion : Can not grep bowtieBuild version.\nPlease check your bowtie installation.\n", 0); 
+	my $version = `$bowtieBuild --version 2>&1 | grep "bowtie-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtieBuildVersion : Can not grep bowtieBuild version.\nPlease check your bowtie installation.\n", 0);
 	chomp($version);
 	return $version;
 }
 
 sub bowtie2BuildVersion
 {   #We works with the STDOUT output
-	my $version = `$bowtie2Build --version 2>&1 | grep "bowtie2-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtie2BuildVersion : Can not grep bowtie2Build version.\nPlease check your bowtie2 installation.\n", 0); 
+	my $version = `$bowtie2Build --version 2>&1 | grep "bowtie2-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtie2BuildVersion : Can not grep bowtie2Build version.\nPlease check your bowtie2 installation.\n", 0);
 	chomp($version);
 	return $version;
 }
 
 sub bwaVersion
 {    #We works with the STDERR output
-	my $version = `$bwa 2>&1 | grep "Version"` or die toolbox::exportLog("ERROR: versionSoft::bwaVersion : Can not grep bwa version\nPlease check your bwa installation.\n", 0); 
+	my $version = `$bwa 2>&1 | grep "Version"` or die toolbox::exportLog("ERROR: versionSoft::bwaVersion : Can not grep bwa version\nPlease check your bwa installation.\n", 0);
 	chomp($version);
 	return $version;
 }
@@ -81,7 +81,7 @@ sub fastqcVersion
 
 sub fastxToolkitVersion
 {   #We works with the STDOUT output
-	my $version = `$fastxTrimmer -h | grep "FASTX Toolkit"` or die toolbox::exportLog("ERROR: versionSoft::fastqxToolkitVersion : Can not grep fastxToolkit version\nPlease check your fastxToolkit installation.\n", 0); 
+	my $version = `$fastxTrimmer -h | grep "FASTX Toolkit"` or die toolbox::exportLog("ERROR: versionSoft::fastqxToolkitVersion : Can not grep fastxToolkit version\nPlease check your fastxToolkit installation.\n", 0);
 	chomp($version);
 	return $version;
 }
@@ -95,7 +95,7 @@ sub gatkVersion
 
 sub htseqcountVersion
 {    #We works with the STDOUT output
-	my $version = `$htseqcount -h | grep "version" | cut -d"," -f 2,2` or die toolbox::exportLog("ERROR: versionSoft::htseqcountVersion : Can not grep htseqcount version\nPlease check your HTseq-Count installation.\n", 0); 
+	my $version = `$htseqcount -h | grep "version" | cut -d"," -f 2,2` or die toolbox::exportLog("ERROR: versionSoft::htseqcountVersion : Can not grep htseqcount version\nPlease check your HTseq-Count installation.\n", 0);
 	chomp($version);
 	return $version;
 }
@@ -122,8 +122,8 @@ sub stacksVersion
 }
 
 sub samtoolsVersion
-{   #We works with the STDOUT output
-	my $version = `$samtools 2>&1 | grep "Version"` or die toolbox::exportLog("ERROR: versionSoft::samtoolsVersion : Can not grep samtools version\nPlease check your samtools installation.\n", 0); 
+{   #We works with the STDERR output
+	my $version = `$samtools 2>&1 | grep "Version"` or die toolbox::exportLog("ERROR: versionSoft::samtoolsVersion : Can not grep samtools version\nPlease check your samtools installation.\n", 0);
 	chomp($version);
 	return $version;
 }
@@ -150,6 +150,13 @@ sub tophatVersion
 sub trinityVersion
 {   #We works with the STDOUT output
 	my $version = `$trinity --version | grep "Trinity version"` or die toolbox::exportLog("ERROR: versionSoft::trinityVersion : Can not grep trinity version\nPlease check your trinity installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+
+sub bamutilsVersion
+{   #We works with the STDOUT output
+	my $version = `$bamutils | tail -1` or die toolbox::exportLog("ERROR: versionSoft::bamutilsVersion : Can not grep bamutils version\nPlease check your bamutils/ngsutils installation.\n", 0);
 	chomp($version);
 	return $version;
 }
@@ -221,7 +228,7 @@ sub writeLogVersion
 											   }
 
 			#FOR cufflinks.pm
-			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= cufflinksVersion if not defined $softPathVersion{"cufflinks"}; 
+			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= cufflinksVersion if not defined $softPathVersion{"cufflinks"};
 												  $softPath{"cufflinks"}= $cufflinks if not defined $softPath{"cufflinks"};
 												  }
 			case ($softOrder =~ m/^cuffdiff.*/i){$softPathVersion{"cuffdiff"}= cufflinksVersion if not defined $softPathVersion{"cuffdiff"};
@@ -262,7 +269,11 @@ sub writeLogVersion
 			case ($softOrder =~ m/^trinity/i){$softPathVersion{"trinity"}= trinityVersion if not defined $softPathVersion{"trinity"};
 											  $softPath{"trinity"}= $trinity if not defined $softPath{"trinity"};
 											  }
-			
+			#FOR bamutils
+			case ($softOrder =~ m/^bamutils.*/i){$softPathVersion{"bamutils"}= bamutilsVersion if not defined $softPathVersion{"bamutils"};
+											  $softPath{"bamutils"}= $bamutils if not defined $softPath{"bamutils"};
+											  }
+
 			#For format checking
 			case($softOrder =~ m/^check/i){next;}
 
@@ -270,7 +281,7 @@ sub writeLogVersion
 		}
 	}
 	## DEBUG print Dumper(%softPathVersion);
-	
+
 	open (my $fhConfig, "<", "$toggle/modules/localConfig.pm");
 	while (my $line = <$fhConfig>)
 	{
@@ -289,18 +300,18 @@ sub writeLogVersion
 
 =head1 NAME
 
-    Package I<versionSofts> 
+    Package I<versionSofts>
 
 =head1 SYNOPSIS
 
         use versionSofts;
-    
+
         versionSofts::writeLogVersion ();
- 
+
 =head1 DESCRIPTION
 
     Package Version Softs
-	
+
 =head2 FUNCTIONS
 
 =head3 versionSofts::writeLogVersion
@@ -309,7 +320,7 @@ This module return soft version
 
 =head1 AUTHORS
 
-Intellectual property belongs to IRD, CIRAD and South Green developpement plateform 
+Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
 Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
 
 =head1 SEE ALSO

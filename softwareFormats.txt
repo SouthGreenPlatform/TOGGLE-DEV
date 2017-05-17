@@ -214,3 +214,7 @@ OUT=NA
 $checkFormatSamOrBam
 IN=sam,bam
 OUT=NA
+
+$bamutilsTool
+IN=sam,bam
+OUT=bam

@@ -670,7 +670,6 @@ sub run
     }
     else
     {
-		##DEBUG
 		exportLog("ERROR: toolbox::run : ".$command."\n--STDERR: ".$stderr."\n--STDOUT: ".$result."\n",0);
 		return 0;
     }
