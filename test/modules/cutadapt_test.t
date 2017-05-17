@@ -49,7 +49,7 @@ can_ok('cutadapt','execution');
 use localConfig;
 use cutadapt;
 
-my $expectedData="$toggle/data/expectedData/";
+my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
 
 #########################################
 #Remove files and directory created by previous test
@@ -80,10 +80,11 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 ########################################
 
 # input file
-my $fastqFile = $expectedData."RC3_2.fastq";     		# fastq file
+
+my $fastqFile=$fastqData."irigin1_2.fastq";
 
 # output file
-my $fastqFileOut = "RC3_2.CUTADAPT.fastq";                   # Output file without adaptators sequences
+my $fastqFileOut = "irigin1_2.CUTADAPT.fastq";                   # Output file without adaptators sequences
 
 # execution test
 my %optionsHachees = (
@@ -91,20 +92,20 @@ my %optionsHachees = (
 						"-m" => 35,
 						"-q" => "20",
 						"--overlap" => 7,
-						"-b" => "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG -b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG",	
+						"-b" => "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG -b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG",
 					);        # Hash containing informations
-my $optionsHachees = \%optionsHachees;   
+my $optionsHachees = \%optionsHachees;
 is ((cutadapt::execution($fastqFile,$fastqFileOut,undef, undef, $optionsHachees)),1, 'cutadapt::execution Single');    # TEST IF FONCTION WORKS
 
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('cutadapt_TEST_log.e','cutadapt_TEST_log.o','individuSoft.txt','RC3_2.CUTADAPT.fastq');
+my @expectedOutput = ('cutadapt_TEST_log.e','cutadapt_TEST_log.o','individuSoft.txt','irigin1_2.CUTADAPT.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'cutadapt::execution Single - output list');
 
 # expected content test
-my $expectedMD5sum = "5a74f7c91eb01b46c4002a584d48bf6f";                                            # structure of the ref file for checking
+my $expectedMD5sum = "aeb4479faca4ce706f82ef6d752e89d1";                                            # structure of the ref file for checking
 my $observedMD5sum = `md5sum $fastqFileOut`;                                                        # structure of the test file for checking
 my @withoutName = split (" ", $observedMD5sum);                                                     # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];     										                        # just to have the md5sum result
@@ -116,12 +117,12 @@ is($observedMD5sum, $expectedMD5sum, "cutadapt::execution Single - output conten
 ########################################
 
 # input file
-my $fastqFile1 = $expectedData."RC3_1.fastq";     		# fastq file
-my $fastqFile2 = $expectedData."RC3_2.fastq";     		# fastq file
+my $forwardFastq=$fastqData."irigin1_1.fastq";
+my $reverseFastq=$fastqData."irigin1_2.fastq";
 
 # output file
-my $fastqFileOut1 = "RC3_1.CUTADAPT.fastq";                   # Output file without adaptators sequences
-my $fastqFileOut2 = "RC3_2.CUTADAPT.fastq";                   # Output file without adaptators sequences
+my $fastqFileOut1 = "irigin1_1.CUTADAPT.fastq";                   # Output file without adaptators sequences
+my $fastqFileOut2 = "irigin1_2.CUTADAPT.fastq";                   # Output file without adaptators sequences
 
 # execution test
 %optionsHachees = (
@@ -130,31 +131,31 @@ my $fastqFileOut2 = "RC3_2.CUTADAPT.fastq";                   # Output file with
 						"-q" => "20,20",
 						"--overlap" => 7,
 						"-b" => "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG -b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG",
-						"-B" => "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG"	
+						"-B" => "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG"
 					);          # Hash containing informations
-$optionsHachees = \%optionsHachees;   
-is ((cutadapt::execution($fastqFile1,$fastqFileOut1, $fastqFile2, $fastqFileOut2, $optionsHachees)),1, 'cutadapt::execution Paired');    # TEST IF FONCTION WORKS
+$optionsHachees = \%optionsHachees;
+is ((cutadapt::execution($forwardFastq,$fastqFileOut1, $reverseFastq, $fastqFileOut2, $optionsHachees)),1, 'cutadapt::execution Paired');    # TEST IF FONCTION WORKS
 
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('cutadapt_TEST_log.e','cutadapt_TEST_log.o','individuSoft.txt','RC3_1.CUTADAPT.fastq','RC3_2.CUTADAPT.fastq');
+@expectedOutput = ('cutadapt_TEST_log.e','cutadapt_TEST_log.o','individuSoft.txt','irigin1_1.CUTADAPT.fastq','irigin1_2.CUTADAPT.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'cutadapt::execution Paired - output list');
 
 # expected content test
-$expectedMD5sum = "9055c369fed4d016212caca9d750f6b6";                                            # structure of the ref file for checking
+$expectedMD5sum = "0307339b270fe6d67a940938cb4f3990";                                            # structure of the ref file for checking
 $observedMD5sum = `md5sum $fastqFileOut1`;                                                        # structure of the test file for checking
 @withoutName = split (" ", $observedMD5sum);                                                     # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];     										                        # just to have the md5sum result
 is($observedMD5sum, $expectedMD5sum, "cutadapt::execution Paired - output content file 1");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
 
 # expected content test
-$expectedMD5sum = "548103973bb70ca479b08e529d05bdcb";                                            # structure of the ref file for checking
+$expectedMD5sum = "5b1528f6d369af2726326e1eeebf3f3f";                                            # structure of the ref file for checking
 $observedMD5sum = `md5sum $fastqFileOut2`;                                                        # structure of the test file for checking
 @withoutName = split (" ", $observedMD5sum);                                                     # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];     										                        # just to have the md5sum result
-is($observedMD5sum, $expectedMD5sum, "cutadapt::execution Paired - output content file 2");  
+is($observedMD5sum, $expectedMD5sum, "cutadapt::execution Paired - output content file 2");
 ##############################
 
 exit;
