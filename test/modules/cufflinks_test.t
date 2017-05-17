@@ -48,7 +48,7 @@ can_ok( 'cufflinks','cuffdiff');
 use localConfig;
 use cufflinks;
 
-my $expectedData="$toggle/data/expectedData/";
+my $testData="$toggle/data//";
 
 #########################################
 #Remove files and directory created by previous test
