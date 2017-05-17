@@ -54,7 +54,8 @@ can_ok('bwa','bwaSw');
 use localConfig;
 use bwa;
 
-my $expectedData="$toggle/data/expectedData/";
+my $bankData="$toggle/data/Bank/";
+my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
 
 #########################################
 #Remove files and directory created by previous test
@@ -86,30 +87,30 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 # input file
-my $fastaRef="Reference.fasta";
+my $fastaRef="referenceIrigin.fasta";
 
-my $originalFastaRef=$expectedData."/Reference.fasta";
+my $originalFastaRef=$bankData."/referenceIrigin.fasta";
 my $copyCmd= "cp $originalFastaRef $fastaRef";           # command to copy the original fasta file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot link the file $originalFastaRef in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 # output file
-my $fastaRefBWT="Reference.fasta.bwt";
-my $fastaRefPAC="Reference.fasta.pac";
-my $fastaRefANN="Reference.fasta.ann";
-my $fastaRefAMB="Reference.fasta.amb";
-my $fastaRefSA="Reference.fasta.sa";
+my $fastaRefBWT="referenceIrigin.fasta.bwt";
+my $fastaRefPAC="referenceIrigin.fasta.pac";
+my $fastaRefANN="referenceIrigin.fasta.ann";
+my $fastaRefAMB="referenceIrigin.fasta.amb";
+my $fastaRefSA="referenceIrigin.fasta.sa";
 
 # execution test
 my %optionsHachees = (
 			"-a" => "is",
 			);        # Hash containing informations
-my $optionsHachees = \%optionsHachees;  
+my $optionsHachees = \%optionsHachees;
 
 is(bwa::bwaIndex($fastaRef,$optionsHachees),1,'bwa::bwaIndex - running');
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","Reference.fasta","Reference.fasta.amb","Reference.fasta.ann","Reference.fasta.bwt","Reference.fasta.pac","Reference.fasta.sa");
+my @expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::bwaIndex - Filetree created');
@@ -156,12 +157,12 @@ is($observedMD5sum, $expectedMD5sum, "bwa::index - output content file SA");    
 ##########################################
 
 # input file
-my $forwardFastq=$expectedData."RC3_1.REPAIRING.fastq";
-my $reverseFastq=$expectedData."RC3_2.REPAIRING.fastq";
+my $forwardFastq=$fastqData."irigin1_1.fastq";
+my $reverseFastq=$fastqData."irigin1_2.fastq";
 
 # output file
-my $forwardSaiFileIn="RC3_1.BWAALN.sai";
-my $reverseSaiFileIn="RC3_2.BWAALN.sai";
+my $forwardSaiFileIn="irigin1_1.BWAALN.sai";
+my $reverseSaiFileIn="irigin1_2.BWAALN.sai";
 
 # execution test
 %optionsHachees = (
@@ -175,7 +176,7 @@ is (bwa::bwaAln($fastaRef,$reverseFastq,$reverseSaiFileIn,$optionsHachees),'1',"
 
 # expected output test
 #Check if files created
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","RC3_1.BWAALN.sai","RC3_2.BWAALN.sai","Reference.fasta","Reference.fasta.amb","Reference.fasta.ann","Reference.fasta.bwt","Reference.fasta.pac","Reference.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_2.BWAALN.sai","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::aln - Files created');
@@ -195,22 +196,22 @@ ok((-s $reverseSaiFileIn)>0, "bwa::aln - output content file sai forward");     
 ##########################################
 
 # output file
-my $samFileOut="RC3.BWASAMPE.sam";
-my $readGroupLine="RC3";
+my $samFileOut="irigin.BWASAMPE.sam";
+my $readGroupLine="irigin";
 
 # execution test
 is(bwa::bwaSampe($samFileOut,$fastaRef,$forwardSaiFileIn,$reverseSaiFileIn,$forwardFastq,$reverseFastq,$readGroupLine),'1',"bwa::sampe - Test for bwa sampe running");
 
 # expected output test
 #Check if files created
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","RC3_1.BWAALN.sai","RC3_2.BWAALN.sai","RC3.BWASAMPE.sam","Reference.fasta","Reference.fasta.amb","Reference.fasta.ann","Reference.fasta.bwt","Reference.fasta.pac","Reference.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::sampe - Files created');
 
 
 # expected content test $samFileOut
-my $expectedLineNumber = "2947 $samFileOut";                                            # structure of the ref file for checking
+my $expectedLineNumber = "2953 $samFileOut";                                            # structure of the ref file for checking
 my $observedLineNumber = `wc -l $samFileOut`;                                                        # structure of the test file for checking
 chomp $observedLineNumber;                                                     # to separate the structure and the name of file
 is($observedLineNumber, $expectedLineNumber, "bwa::sampe - output content file sam");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
@@ -219,7 +220,7 @@ is($observedLineNumber, $expectedLineNumber, "bwa::sampe - output content file s
 #GREP command result
 my $grepResult=`grep -c "XT:A:U" $samFileOut`;
 chomp $grepResult;
-is($grepResult,1699,'bwa::sampe - output grep in file sam');
+is($grepResult,69,'bwa::sampe - output grep in file sam');
 
 
 ##########################################
@@ -227,18 +228,18 @@ is($grepResult,1699,'bwa::sampe - output grep in file sam');
 ##########################################
 
 # input file
-my $fastqFile=$expectedData."RC3.REPAIRING.fastq";
+my $fastqFile=$fastqData."irigin1_1.fastq";
 
 # output files
-my $singleSaiFileIn="RC3.BWAALN.sai";
-my $samseFileOut="RC3.BWASAMSE.sam";
+my $singleSaiFileIn="irigin1_1.BWAALN.sai";
+my $samseFileOut="irigin1_1.BWASAMSE.sam";
 
 is (bwa::bwaAln($fastaRef,$fastqFile,$singleSaiFileIn,$optionsHachees),'1',"bwa::aln - Test for bwa Aln running for single");
 is (bwa::bwaSamse($samseFileOut,$fastaRef,$singleSaiFileIn,$fastqFile,$readGroupLine),'1',"bwa::samse - Test for bwa samse running");
 
 # expected output test
 #Check if files created
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","RC3_1.BWAALN.sai","RC3_2.BWAALN.sai","RC3.BWAALN.sai","RC3.BWASAMPE.sam","RC3.BWASAMSE.sam","Reference.fasta","Reference.fasta.amb","Reference.fasta.ann","Reference.fasta.bwt","Reference.fasta.pac","Reference.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::samse - Files created');
@@ -248,29 +249,30 @@ is_deeply(\@observedOutput,\@expectedOutput,'bwa::samse - Files created');
 ok((-s $singleSaiFileIn)>0, "bwa::aln - output content file sai forward");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
 
 # expected content test $samseFileOut
-$expectedLineNumber = "954 $samseFileOut";                                            # structure of the ref file for checking
+$expectedLineNumber = "1953 $samseFileOut";                                            # structure of the ref file for checking
 $observedLineNumber = `wc -l $samseFileOut`;                                                        # structure of the test file for checking
 chomp $observedLineNumber;     										                        # just to have the md5sum result
 is($observedLineNumber, $expectedLineNumber, "bwa::samse - output content file sam");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
 
-####Test for correct file value of bwa samse - 
+####Test for correct file value of bwa samse -
 $grepResult= `grep -c "XT:A:U" $samseFileOut`;
 chomp $grepResult;
-is($grepResult,1,'bwa::samse - output grep in file sam');
+is($grepResult,38,'bwa::samse - output grep in file sam');
 
 ##########################################
 ##### bwa::mem single
 ##########################################
 
 #output files
-$samFileOut="RC3.BWAMEM.sam";
+$samFileOut="irigin1_1.BWAMEM.sam";
 
 ##Running test
 is (bwa::bwaMem($samFileOut,$fastaRef,$forwardFastq,undef,$readGroupLine),'1',"bwa::bwaMem - Test for bwa mem running single");
 
 
 ###Verify if output are correct for mem single
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","RC3_1.BWAALN.sai","RC3_2.BWAALN.sai","RC3.BWAALN.sai","RC3.BWAMEM.sam","RC3.BWASAMPE.sam","RC3.BWASAMSE.sam","Reference.fasta","Reference.fasta.amb","Reference.fasta.ann","Reference.fasta.bwt","Reference.fasta.pac","Reference.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::mem Single - Files created');
@@ -285,14 +287,15 @@ is($grepResult,0,'bwa::mem - Test for the result of bwa mem single');
 ##########################################
 
 #output files
-$samFileOut="RC3.BWAMEMPaired.sam";
+$samFileOut="irigin1_1.BWAMEMPaired.sam";
 
 ##Running test
 is (bwa::bwaMem($samFileOut,$fastaRef,$forwardFastq,$reverseFastq,$readGroupLine),'1',"bwa::mem - Test for bwa mem running paired");
 
 
 ###Verify if output are correct for mem single
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","RC3_1.BWAALN.sai","RC3_2.BWAALN.sai","RC3.BWAALN.sai","RC3.BWAMEMPaired.sam","RC3.BWAMEM.sam","RC3.BWASAMPE.sam","RC3.BWASAMSE.sam","Reference.fasta","Reference.fasta.amb","Reference.fasta.ann","Reference.fasta.bwt","Reference.fasta.pac","Reference.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_1.BWAMEMPaired.sam","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::mem Paired - Files created');
@@ -308,14 +311,15 @@ is($grepResult,0,'bwa::mem - Test for the result of bwa mem paired');
 ##########################################
 
 #output files
-$samFileOut="RC3.BWASWPaired.sam";
+$samFileOut="irigin1_1.BWASWPaired.sam";
 
 ##Running test
 is (bwa::bwaSw($samFileOut,$fastaRef,$forwardFastq,$reverseFastq),'1',"bwa::bwaSw - Test for bwa bwaSw running paired");
 
 
 ###Verify if output are correct for mem single
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","RC3_1.BWAALN.sai","RC3_2.BWAALN.sai","RC3.BWAALN.sai","RC3.BWAMEMPaired.sam","RC3.BWAMEM.sam","RC3.BWASAMPE.sam","RC3.BWASAMSE.sam","RC3.BWASWPaired.sam", "Reference.fasta","Reference.fasta.amb","Reference.fasta.ann","Reference.fasta.bwt","Reference.fasta.pac","Reference.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_1.BWAMEMPaired.sam","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_1.BWASWPaired.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::bwaSw Paired - Files created');
@@ -326,5 +330,3 @@ chomp $grepResult;
 is($grepResult,0,'bwa::bwaSw - Test for the result of bwa bwaSw paired');
 
 exit;
-
-
