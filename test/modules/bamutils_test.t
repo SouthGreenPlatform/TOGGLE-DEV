@@ -87,7 +87,7 @@ system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files 
 my $toolName = "bamutilsFilter";
 
 # input file
-my $bamFileIn = "$toggle/data/testData/samBam/oneSam/RC3-SAMTOOLSVIEW.bam";
+my $bamFileIn = "$toggle/data/testData/samBam/oneSam/RC3-SAMTOOLSVIEW.sam";
 
 #Output file
 my $bamFileOut="RC3.$toolName.bam";
@@ -98,18 +98,17 @@ my $optionsHachees = \%optionsRef;
 #execution test
 is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1,'bamutils::bamutilsTool');
 
-__END__
 # expected output test
-$observedOutput = `ls`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+my $observedOutput = `ls`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','individuSoft.txt','RC3.bamutilsFilter.bam');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsView - output list');
 
 # expected output structure
-$expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
-$observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+my $expectedMD5sum = "667002537d89d3a1b79d4628085fdbb6";
+my $observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
+my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'samTools::samToolsView - output structure');
 
