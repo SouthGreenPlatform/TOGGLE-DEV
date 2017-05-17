@@ -203,8 +203,8 @@ sub generateScript
 		{# will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
 			$cleanerCounter++;
 			$compressorCounter++;
-			if (defined $$hashmerge{$step})
-			{# The previous step has to be cleaned
+			if (defined $$hashmerge{$step} and $step != $stepsList[-1])
+			{
 				$catCommand .= " ".$toggle."/onTheFly/mergeBlock.txt";
 			}
 			$catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt"; # adding infos for next block
@@ -223,7 +223,7 @@ sub generateScript
 		{# The previous step has to be cleaned
 			$catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt";
 		}
-		if (defined $$hashmerge{$step})
+		if (defined $$hashmerge{$step} and $step != $stepsList[-1])
 		{# The previous step has to be cleaned
 			$catCommand .= " ".$toggle."/onTheFly/mergeBlock.txt";
 		}
