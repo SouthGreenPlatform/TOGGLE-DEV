@@ -106,7 +106,7 @@ is($cuffdiff,$dictLocation{"\$cuffdiff"},"cuffdiff infos");
 
 is($cuffmerge,$dictLocation{"\$cuffmerge"},"cuffmerge infos");
 
-is($snpEff,'/usr/java/jre1.8.0_111//bin/java -jar -jar /usr/local/snpEff-4.3//snpEff.jar',"snpEff infos");
+is($snpEff,'/usr/java/jre1.8.0_111//bin/java -jar /usr/local/snpEff-4.3//snpEff.jar',"snpEff infos");
 
 
 
