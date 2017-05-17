@@ -52,9 +52,6 @@ can_ok('checkFormat','checkFormatSamOrBam');
 use localConfig;
 use checkFormat;
 
-my $expectedData="$toggle/data/expectedData/";
-my $configFile="$toggle/exampleConfigs/SNPdiscoveryPaired.config.txt";
-
 #########################################
 #Remove files and directory created by previous test
 #########################################
@@ -82,20 +79,20 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 #######################################
 
 #Fastq file
-my $fastqFile=$expectedData."RC3_1.fastq";
+my $fastqFile="$toggle/data/testData/fastq/singleOneIndividuIrigin/irigin2_1.fastq";
 
 #Sam file
-my $samFile=$expectedData."RC3.BWASAMPE.sam";
+my $samFile="$toggle/data/testData/samBam/oneSam/RC3-SAMTOOLSVIEW.sam";
 
 #Bam file
-my $bamFile=$expectedData."RC3.PICARDTOOLSSORT.bam";
+my $bamFile="$toggle/data/testData/samBam/oneBam/RC3-SAMTOOLSVIEW.bam";
 
 #VCF file
-my $vcfFile=$expectedData."GATKHAPLOTYPECALLER.vcf";
+my $vcfFile="$toggle/data/testData/vcf/singleVCF/GATKVARIANTFILTRATION.vcf";
 
 #Fasta files
-my $reference=$expectedData."correctReference.fasta";
-my $wrongFasta=$expectedData."wrongReference.fasta";
+my $reference="$toggle/data/testData/fasta/correctReference.fasta";
+my $wrongFasta="$toggle/data/testData/fasta/wrongReference.fasta";
 
 ########################################
 #File Format test
