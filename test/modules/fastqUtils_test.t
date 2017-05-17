@@ -80,12 +80,10 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 ########################################
 #Input files
 ########################################
-my $expectedData="$toggle/data/expectedData/";
 
 #Correct files for verifying the outputs
-my $CorrectPHRED33file=$expectedData."RC1_1.fastq";
-my $CorrectPHRED64file=$expectedData."RC1_1.ILLUMINA.fastq";
-
+my $CorrectPHRED33file="$toggle/data/testData/fastq/singleIndividualPHRED64/RC1_1.SANGER.fastq";
+my $CorrectPHRED64file="$toggle/data/testData/fastq/singleIndividualPHRED64/RC1_1.ILLUMINA.fastq";
 
 #########################################
 # changeEncode
@@ -157,7 +155,7 @@ is (fastqUtils::convertLinePHRED33ToPHRED64($PHRED33Data),$PHRED64Data,'fastqUti
 #########################################
 
 # Will verify that the file is a correct PHRED33 encoded one
-is (fastqUtils::checkEncodeByASCIIcontrol($fastqFileOut33),'1','fastqUtils::checkEncode - positive test'); 
+is (fastqUtils::checkEncodeByASCIIcontrol($fastqFileOut33),'1','fastqUtils::checkEncode - positive test');
 
 # Will verify that the file is not a correct PHRED33 encoded one
 is (fastqUtils::checkEncodeByASCIIcontrol($fastqFileOut64),'0','fastqUtils::checkEncode - negative test');
