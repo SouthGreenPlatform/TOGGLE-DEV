@@ -123,7 +123,7 @@ sub stacksVersion
 
 sub samtoolsVersion
 {   #We works with the STDOUT output
-	my $version = `$samtools --help | grep "Version"` or die toolbox::exportLog("ERROR: versionSoft::samtoolsVersion : Can not grep samtools version\nPlease check your samtools installation.\n", 0); 
+	my $version = `$samtools 2>&1 | grep "Version"` or die toolbox::exportLog("ERROR: versionSoft::samtoolsVersion : Can not grep samtools version\nPlease check your samtools installation.\n", 0); 
 	chomp($version);
 	return $version;
 }
