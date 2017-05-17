@@ -65,21 +65,22 @@ fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for bamutilsFilter";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for bamutilsFilter and bamutilsRemoveclipping";
 
-__END__
+
 ## check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults/`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSCLEANSAM.sam');
+my @expectedOutput = ('RC3-SAMTOOLSVIEW.bamutilsremoveclipping.bam');
 
 ## expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) cleanSam file list');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) bamutilsFilter and bamutilsRemoveclipping file list');
 
-# expected output content
-$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.PICARDTOOLSCLEANSAM.sam`; # We pick up only the position field
-chomp $observedOutput;
-is($observedOutput,"2952 $testingDir/finalResults/RC3-SAMTOOLSVIEW.PICARDTOOLSCLEANSAM.sam", 'toggleGenerator - One Bam (no SGE) cleanSam content');
-
+# expected output structure
+my $expectedMD5sum = "40d83df65cee1917dfb847c3c4ab0bd3";
+my $observedMD5sum=`md5sum $testingDir/finalResults/RC3-SAMTOOLSVIEW.bamutilsremoveclipping.bam`;;# structure of the test file
+my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'toggleGenerator - One Bam (no SGE) bamutilsFilter and bamutilsRemoveclipping content');
 
