@@ -50,13 +50,13 @@ can_ok('fastqc','execution');
 use fastqc;
 use localConfig;
 
-my $expectedData="$toggle/data/expectedData/";
+my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
 
 #########################################
 #Remove files and directory created by previous test
 #########################################
 my $testingDir="$toggle/dataTest/fastqcTestDir";
-my $cleaningCmd="rm -Rf $testingDir && mkdir $testingDir"; 
+my $cleaningCmd="rm -Rf $testingDir && mkdir $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot clean or create the test directory with the command $cleaningCmd \n$!\n");
 
 chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
@@ -79,23 +79,22 @@ system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files 
 ##########################################
 
 # input file
-my $fastqFile = "RC3_2.fastq";
-my $fastqPath = $expectedData.$fastqFile;      
+my $fastqPath=$fastqData."irigin1_1.fastq";
 my $fastqcDir = "fastqcOut";
 my $makeDirCmd = "mkdir $fastqcDir";
 system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
 
 # execution test
-is(fastqc::execution($fastqPath,$fastqcDir),1,'fastqc::execution');     
+is(fastqc::execution($fastqPath,$fastqcDir),1,'fastqc::execution');
 
 # expected output test
 my $observedOutput = `ls $fastqcDir`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('RC3_2_fastqc.html','RC3_2_fastqc.zip');
+my @expectedOutput = ('irigin1_1_fastqc.html','irigin1_1_fastqc.zip');
 
 is_deeply(\@observedOutput,\@expectedOutput,'fastqc::execution - output list');
 
 # expected content test
-my $observedContent=`unzip -l $fastqcDir/RC3_2_fastqc.zip | tail -n1`;
+my $observedContent=`unzip -l $fastqcDir/irigin1_1_fastqc.zip | tail -n1`;
 my $validContent = ( $observedContent =~ m/20 files/);
 is($validContent,1,'fastqc::execution - output content');
