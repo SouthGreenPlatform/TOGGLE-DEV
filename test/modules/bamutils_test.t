@@ -96,20 +96,20 @@ my %optionsRef = ("-gte" => 'MAPQ 30');
 my $optionsHachees = \%optionsRef; 
 
 #execution test
-is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1,'bamutils::bamutilsTool');
+is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1,'bamutils::bamutilsTool - bamutilsFilter');
 
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 my @expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','individuSoft.txt','RC3.bamutilsFilter.bam');
 
-is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsView - output list');
+is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilsFilter - output list');
 
 # expected output structure
 my $expectedMD5sum = "667002537d89d3a1b79d4628085fdbb6";
 my $observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'samTools::samToolsView - output structure');
+is($observedMD5sum,$expectedMD5sum,'bamutils::bamutilsTool - bamutilsFilter - output structure');
 
 exit;
