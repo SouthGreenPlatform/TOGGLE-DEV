@@ -50,9 +50,6 @@ can_ok( 'HTSeq','htseqCount');
 use localConfig;
 use HTSeq;
 
-my $expectedData="$toggle/data/expectedData/";
-
-
 #########################################
 #Remove files and directory created by previous test
 #########################################
@@ -77,21 +74,22 @@ my $cleaningCommand="rm -rf htseq_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 
-
-
-
+my $bankData="$toggle/data/Bank/";
+my $testData="$toggle/data/testData/";
+my $gffData="$toggle/data/testData/vcf/singleVCF/";
 
 ########################################
 #HTSeq::htseqCount bam file
 ########################################
 
 # input file
-my $bamIni=$expectedData."/accepted_hits.SAMTOOLSSORT.bam";
+#my $bamIni=$expectedData."/accepted_hits.SAMTOOLSSORT.bam";
+my $gffRef="$bankData/referenceRnaseqGFF.gff3";
+my $bamIn="$testData/samBam/oneBam/RC3-SAMTOOLSVIEW.bam";
 my $bam="accepted_hits.SAMTOOLSSORT.bam";
-my $gffRef=$expectedData."referenceRNASeq.gff3";
 
-#copy fasta reference into test directory where the index will be created
-my $copyCommand="cp $bamIni .";
+#copy bam reference into test directory where the index will be created
+my $copyCommand="cp $bamIn ./$bam";
 system ($copyCommand) and die "ERROR: $0: Cannot copy the bam file with the command $copyCommand \n$!\n";
 
 
@@ -118,7 +116,7 @@ my @expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT
 is_deeply(\@observedOutput,\@expectedOutput,'HTSeq::htseqCount - output list');
 
 # expected content test
-my $expectedMD5sum="02dbd2343614fba7a9e7535e92ff0f38";
+my $expectedMD5sum="a97aaf22fa76469ba1ec630429600a5e";
 my $observedMD5sum=`md5sum $htseqcountFile`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -131,7 +129,8 @@ is($observedMD5sum,$expectedMD5sum,'HTSeq::htseqCount - output content');
 ########################################
 
 #input file
-my $samIni=$expectedData."/accepted_hits.SAMTOOLSSORT.sam";
+#my $samIni=$expectedData."/accepted_hits.SAMTOOLSSORT.sam";
+my $samIni="$testData/samBam/oneSam/RC3-SAMTOOLSVIEW.sam";
 my $sam="accepted_hits.SAMTOOLSSORT.sam";
 
 #copy fasta reference into test directory where the index will be created
@@ -139,7 +138,7 @@ my $rmCommand="rm $bam $sam";
 system ($rmCommand) and die "ERROR: $0: Cannot remove bam and sam files generated precedently with the command $rmCommand \n$!\n";
 
 #copy fasta reference into test directory where the index will be created
-$copyCommand="cp $samIni .";
+$copyCommand="cp $samIni ./$sam";
 system ($copyCommand) and die "ERROR: $0: Cannot copy the refence file with the command $copyCommand \n$!\n";
 
 #htseq option
@@ -165,7 +164,7 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'HTSeq::htseqCount - output list');
 
 # expected content test
-$expectedMD5sum="02dbd2343614fba7a9e7535e92ff0f38";
+$expectedMD5sum="a97aaf22fa76469ba1ec630429600a5e";
 $observedMD5sum=`md5sum $htseqcountFile`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
