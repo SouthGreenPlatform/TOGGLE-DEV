@@ -72,7 +72,7 @@ can_ok('toolbox','relativeToAbsolutePath');
 use localConfig;
 use toolbox;
 
-my $expectedData="$toggle/data/expectedData/";
+my $testData="$toggle/data/testData/";
 my $configFile="$toggle/exampleConfigs/SNPdiscoveryPaired.config.txt";
 
 #########################################
@@ -107,28 +107,28 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 #######################################
 
 #Fastq file
-my $fastqFile=$expectedData."RC3_1.fastq";
+my $fastqFile=$testData."/fastq/pairedTwoIndividusIrigin/irigin1_1.fastq";
 
 #Sam file
-my $samFile=$expectedData."RC3.BWASAMPE.sam";
+my $samFile=$testData."/samBam/oneSam/RC3-SAMTOOLSVIEW.sam";
 
 #Bam file
-my $bamFile=$expectedData."RC3.PICARDTOOLSSORT.bam";
+my $bamFile=$testData."/samBam/oneBam/RC3-SAMTOOLSVIEW.bam";
 
 #VCF file
-my $vcfFile=$expectedData."GATKHAPLOTYPECALLER.vcf";
+my $vcfFile=$testData."/vcf/GATKVARIANTFILTRATION.vcf";
 
 #VCF file non readable
-my $chmodVcfFile=$expectedData."test-nonreadrigth.vcf";
+my $chmodVcfFile=$testData."/toolbox/test-nonreadrigth.vcf";
 
 #File empty
-my $emptyFile=$expectedData."empty-file.vcf";
+my $emptyFile=$testData."/toolbox/empty-file.vcf";
 my $createFileCmd="touch $emptyFile";
 system($createFileCmd) and die ("ERROR: $0 : Cannot create the empty file with the command $createFileCmd\n$!\n"); +
 
 #Fasta files
-my $reference=$expectedData."correctReference.fasta";
-my $wrongFasta=$expectedData."wrongReference.fasta";
+my $reference=$testData."correctReference.fasta";
+my $wrongFasta=$testData."wrongReference.fasta";
 
 
 ########################################
@@ -223,19 +223,19 @@ system ("rm -Rf test_dir") and die ("\nCannot remove the test_dir for test:$!\nA
 ########################################
 #toolbox::readDir test with a directory name as argument
 ########################################
-my $listCom = `ls $expectedData/*`;
+my $listCom = `ls $testData/*`;
 chomp $listCom;
 my @listExpected = split /\n/, $listCom;
-my @listObserved = toolbox::readDir($expectedData);
+my @listObserved = toolbox::readDir($testData);
 is_deeply(\@listExpected,@listObserved,'toolbox::readDir - just directory');
 
 ########################################
 #toolbox::readDir test with a directory name and a format as arguments
 ########################################
-$listCom = `ls $expectedData/*fastq`;
+$listCom = `ls $testData/fastq/pairedTwoIndividusIrigin/*fastq`;
 chomp $listCom;
 @listExpected = split /\n/, $listCom;
-@listObserved = toolbox::readDir($expectedData,'fastq');
+@listObserved = toolbox::readDir($testData."/fastq/pairedTwoIndividusIrigin",'fastq');
 is_deeply(\@listExpected,@listObserved,'toolbox::readDir - just fastq files');
 
 ########################################
@@ -270,7 +270,7 @@ is_deeply (\@expectedList,\@testList,'toolbox::extractPath - OK');
 ########################################
 #toolbox::extractName Extract name from path test
 ########################################
-is (toolbox::extractName($samFile),'RC3.BWASAMPE.sam','toolbox::extractName - OK');
+is (toolbox::extractName($samFile),'RC3-SAMTOOLSVIEW.sam','toolbox::extractName - OK');
 
 
 ########################################
