@@ -76,7 +76,6 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 my $bankData="$toggle/data/Bank/";
 my $testData="$toggle/data/testData/";
-my $gffData="$toggle/data/testData/vcf/singleVCF/";
 
 ########################################
 #HTSeq::htseqCount bam file
