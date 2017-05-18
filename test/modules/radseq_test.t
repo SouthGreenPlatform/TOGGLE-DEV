@@ -53,8 +53,6 @@ can_ok('toolbox','rmHashOrder');                                                
 use localConfig;
 use radseq;
 
-my $expectedData="$toggle/data/expectedData/";
-
 #########################################
 #Remove files and directory created by previous test
 #########################################
