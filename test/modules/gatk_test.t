@@ -58,7 +58,10 @@ can_ok('gatk','gatkReadBackedPhasing');
 use localConfig;
 use gatk;
 
-my $expectedData="$toggle/data/expectedData/";
+my $bankData="$toggle/data/Bank/";
+my $bamData="$toggle/data/testData/samBam/";
+my $vcfData="$toggle/data/testData/vcf/singleVCF/";
+
 
 #########################################
 #Remove files and directory created by previous test
@@ -87,10 +90,10 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 ##########################################
 
 # input file
-my $bamIn=$expectedData."/RC3.SAMTOOLSVIEW.bam";
-my $fastaRef=$expectedData."/Reference.fasta";
-my $fastaRefFai=$expectedData."/Reference.fasta.fai";
-my $fastaRefDict=$expectedData."/Reference.dict";
+my $bamIn="$bamData/oneBam/RC3-SAMTOOLSVIEW.bam";
+my $fastaRef="$bankData/referenceIrigin.fasta";
+my $fastaRefFai="$bankData/referenceIrigin.fasta.fai";
+my $fastaRefDict="$bankData/referenceIrigin.dict";
 
 # output file
 my $intervalsFile="RC3.GATKREALIGNERTARGETCREATOR.intervals";
@@ -179,13 +182,13 @@ is($observedOutput,$expectedOutput,'gatk::gatkUnifiedGenotyper - output content'
 
 # execution test
 $bamIn=$bamOut;
-my $controlVCF=$expectedData."/GATKVARIANTFILTRATION.vcf";
+my $controlVCF=$vcfData."/GATKVARIANTFILTRATION.vcf";
 my $tableReport="recal_data.table";
 
 my %optionsHachees = (
 			"-knownSites" => $controlVCF,
 			);        # Hash containing informations
-my $optionsHachees = \%optionsHachees;   
+my $optionsHachees = \%optionsHachees;
 is(gatk::gatkBaseRecalibrator($fastaRef,$bamIn,$tableReport, $optionsHachees),1, 'gatk::gatkBaseRecalibrator');
 
 # expected output test
@@ -240,8 +243,8 @@ is($observedOutput,$expectedOutput, 'gatk::gatkPrintReads - output content 2');
 #################################################################################################
 ######Test for gatk Haplotype caller
 ##########################################
-$bamIn="$toggle/data/expectedData/RC3.PICARDTOOLSMARKDUPLICATES.bam";
-my $bamSingle="$toggle/data/expectedData/RC3Single.PICARDTOOLSMARKDUPLICATES.bam";;
+$bamIn=$bamData."/twoBamsIrigin/irigin1-PICARDTOOLSMARKDUPLICATES.bam";
+my $bamSingle=$bamData."/twoBamsIrigin/irigin3-PICARDTOOLSMARKDUPLICATES.bam";
 
 # execution test
 my @bamsToCall=($bamIn,$bamSingle);
@@ -256,12 +259,12 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkHaplotypeCaller - output list');
 
 # expected output structure test
-my $expectedSNPLines="2224477	996	.	TA	T	32.71	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
-2248321	377	.	C	G	62.74	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2248321	379	.	C	T	62.74	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4213	.	G	A	62.74	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4214	.	A	G	62.74	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2290182	1013	.	A	G	42.74	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";     # structure of the ref file
+my $expectedSNPLines="2224477	996	.	TA	T	34.13	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=17.07;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:69,6,0
+2248321	377	.	C	G	64.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2248321	379	.	C	T	64.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2281178	4213	.	G	A	64.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2281178	4214	.	A	G	64.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2290182	1013	.	A	G	44.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";     # structure of the ref file
 my $observedSNPLines=`grep -v "#" $vcfCalled`;      # structure of the test file
 chomp $observedSNPLines;
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkHaplotypeCaller - structure of file');
@@ -284,12 +287,12 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkVariantFiltration - output list');
 
 # expected output structure test
-$expectedSNPLines="2224477	996	.	TA	T	32.71	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
-2248321	377	.	C	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2248321	379	.	C	T	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4213	.	G	A	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4214	.	A	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0
+$expectedSNPLines="2224477	996	.	TA	T	34.13	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=17.07;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:69,6,0
+2248321	377	.	C	G	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2248321	379	.	C	T	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2281178	4213	.	G	A	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2281178	4214	.	A	G	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2290182	1013	.	A	G	44.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0
 ";     # structure of the ref file
 $observedSNPLines=`grep -v "#" $variantFiltered`;      # structure of the test file
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkVariantFiltration - structure of file');
@@ -312,12 +315,12 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkSelectVariants - output list');
 
 # expected output structure test
-$expectedSNPLines="2224477	996	.	TA	T	32.71	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
-2248321	377	.	C	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2248321	379	.	C	T	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4213	.	G	A	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4214	.	A	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0
+$expectedSNPLines="2224477	996	.	TA	T	34.13	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=17.07;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:69,6,0
+2248321	377	.	C	G	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2248321	379	.	C	T	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2281178	4213	.	G	A	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2281178	4214	.	A	G	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
+2290182	1013	.	A	G	44.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0
 ";     # structure of the ref file
 $observedSNPLines=`grep -v "#" $vcfVariantsSelected`;      # structure of the test file
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkSelectVariants - structure of file');
@@ -340,13 +343,14 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkReadBackedPhasing - output list');
 
 # expected output structure test
-$expectedSNPLines="2224477	996	.	TA	T	32.71	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
-2248321	377	.	C	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2248321	379	.	C	T	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4213	.	G	A	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4214	.	A	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0
-";     # structure of the ref file
+#$expectedSNPLines="2224477	996	.	TA	T	32.71	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
+#2248321	377	.	C	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+#2248321	379	.	C	T	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+#2281178	4213	.	G	A	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+#2281178	4214	.	A	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+#2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0
+#";     # structure of the ref file
+$expectedSNPLines="";
 $observedSNPLines=`grep -v "#" $vcfFileOut`;      # structure of the test file
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkReadBackedPhasing - structure of file');
 
@@ -355,5 +359,3 @@ is($observedSNPLines,$expectedSNPLines,'gatk::gatkReadBackedPhasing - structure 
 
 exit;
 __END__
-
-
