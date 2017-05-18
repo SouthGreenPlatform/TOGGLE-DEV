@@ -40,7 +40,6 @@ use Test::Deep;
 use lib qw(../../modules/);
 
 use localConfig;
-my $configFile='software.config.txt';
 
 use_ok('localConfig') or exit;
 use_ok('onTheFly') or exit;
@@ -77,10 +76,10 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 ########################################
 #Creation of test files
 ########################################
-my $originalFastaRef="$toggle/data/expectedData/Reference.fasta";
-my $fastaRef="Reference.fasta";
+my $originalFastaRef="$toggle/data/Bank/referenceIrigin.fasta";
+my $fastaRef="referenceIrigin.fasta";
 my $refCopyCom="cp $originalFastaRef $fastaRef";
-system($refCopyCom) and die ("ERROR: $0 : Cannot copy the Reference for test with the command $refCopyCom \n$!\n");
+system($refCopyCom) and die ("ERROR: $0 : Cannot copy the referenceIrigin.fasta for test with the command $refCopyCom \n$!\n");
   #Now we have a ref to be tested
 
 ########################################
@@ -187,7 +186,7 @@ is (onTheFly::generateScript($hashConf,$outputScript),'1','onTheFly::generateScr
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','Reference.fasta','toggleBzzz.pl');
+my @expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.fasta','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateScript - output list');
 
@@ -217,7 +216,7 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator - cr
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','Reference.dict','Reference.fasta','Reference.fasta.amb','Reference.fasta.ann','Reference.fasta.bwt','Reference.fasta.fai','Reference.fasta.pac','Reference.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator - output list');
 
@@ -231,7 +230,7 @@ $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 
 #Testing if creating in case of existing refs.
 #Input file
-my $initialModifDate = `stat -c %y Reference.fasta.pac`; #type such as 2016-05-11 15:49:19.696893241 +0200
+my $initialModifDate = `stat -c %y referenceIrigin.fasta.pac`; #type such as 2016-05-11 15:49:19.696893241 +0200
 chomp $initialModifDate;
 
 #execution test
@@ -240,12 +239,12 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator no c
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','Reference.dict','Reference.fasta','Reference.fasta.amb','Reference.fasta.ann','Reference.fasta.bwt','Reference.fasta.fai','Reference.fasta.pac','Reference.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator no creation - output list');
 
 # expected content test
-$observedOutput = `stat -c %y Reference.fasta.pac`;
+$observedOutput = `stat -c %y referenceIrigin.fasta.pac`;
 chomp $observedOutput;
 is($observedOutput,$initialModifDate,'onTheFly::indexCreator no creation - output structure');
 
@@ -264,12 +263,12 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator forc
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','Reference.dict','Reference.fasta','Reference.fasta.amb','Reference.fasta.ann','Reference.fasta.bwt','Reference.fasta.fai','Reference.fasta.pac','Reference.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator forcing creation - output list');
 
 # expected content test
-$observedOutput = `stat -c %y Reference.fasta.pac`;
+$observedOutput = `stat -c %y referenceIrigin.fasta.pac`;
 chomp $observedOutput;
 isnt($observedOutput,$initialModifDate,'onTheFly::indexCreator forcing creation - output structure');
 
@@ -291,7 +290,7 @@ is (onTheFly::generateGraphviz($hashConf,"$toggle/dataTest/onTheFlyTestDir"),'1'
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','Reference.dict','Reference.fasta','Reference.fasta.amb','Reference.fasta.ann','Reference.fasta.bwt','Reference.fasta.fai','Reference.fasta.pac','Reference.fasta.sa','toggleBzzz.pl','togglePipeline.dot','togglePipeline.png');
+@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl','togglePipeline.dot','togglePipeline.png');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateGraphviz - output list');
 
