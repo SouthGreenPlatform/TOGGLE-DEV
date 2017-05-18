@@ -219,10 +219,10 @@ chomp $numberOfLinesObserved;
 is ($numberOfLinesObserved,'8 '.'irigin3_Single/irigin3Single.fastq','pairing::repairing - single file');
 
 #Check if the files created are the same as planned
-my $diffForward=`diff -q irigin3_1.REPAIRING.fastq $toggle/data/expectedData/irigin3_1.REPAIRING.fastq`;
+my $diffForward=`diff -q irigin3_1.REPAIRING.fastq $toggle/data/testData/toolbox/irigin3_1.REPAIRING.fastq`;
 is ($diffForward,'','pairing::repairing - forward file');
 
 #Check if the files created are the same as planned
-my $diffReverse=`diff -q irigin3_2.REPAIRING.fastq $toggle/data/expectedData/irigin3_2.REPAIRING.fastq`;
+my $diffReverse=`diff -q irigin3_2.REPAIRING.fastq $toggle/data/testData/toolbox/irigin3_2.REPAIRING.fastq`;
 is ($diffReverse,'','pairing::repairing - reverse file');
 
