@@ -59,9 +59,6 @@ can_ok( 'samTools','samToolsMpileUp');
 use localConfig;
 use samTools;
 
-
-#my $configInfos = toolbox::readFileConf("software.config.txt");
-
 #########################################
 #Remove files and directory created by previous test
 #########################################
@@ -69,7 +66,7 @@ my $testingDir="$toggle/dataTest/samToolsTestDir";
 my $cleaningCmd="rm -Rf $testingDir"; 
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-my $expectedData="$toggle/data/expectedData/";
+#my $expectedData="$toggle/data/expectedData/";
 
 ########################################
 #Creation of test directory
@@ -94,10 +91,14 @@ system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files 
 #initialisation and setting configs
 ########################################
 
-system ("cp $expectedData/Reference.fasta Reference.fasta") and die ("Cannot copy reference! $!\n"); # need to have the reference in "hard"
-my $fastaRef="Reference.fasta";
+my $bankData="$toggle/data/Bank/";
+my $bamData="$toggle/data/testData/samBam/";
 
-
+# COPY reference file
+my $fastaRef="referenceIrigin.fasta";
+my $originalFastaRef=$bankData."/referenceIrigin.fasta";
+my $copyCmd= "cp $originalFastaRef $fastaRef";           # command to copy the original fasta file into the test directory
+system ($copyCmd) and die ("ERROR: $0 : Cannot link the file $originalFastaRef in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 
 
@@ -111,7 +112,7 @@ is(samTools::samToolsFaidx($fastaRef),1,'samTools::samToolsFaidx');
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+my @expectedOutput = ('individuSoft.txt','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsFaidx - output list');
 
@@ -130,8 +131,10 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsFaidx - output structure')
 ################################################################################################
 
 #Input files
-system ("cp $expectedData/RC3.PICARDTOOLSSORT.bam .") and die ("Cannot copy bam file ! $!\n");
-my $bamFile="RC3.PICARDTOOLSSORT.bam";
+my $originalBam="$bamData/oneBam/RC3-SAMTOOLSVIEW.bam";
+my $bamFile="RC3.bam";
+$copyCmd= "cp $originalBam $bamFile";           # command to copy the original BAM file into the test directory
+system ($copyCmd) and die ("ERROR: $0 : Cannot link the file $originalBam in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 #execution test
 is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex');
@@ -139,12 +142,12 @@ is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIndex - output list');
 
 # expected output structure
-$expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
+$expectedMD5sum = "ab22a5d60dfc20bc5d4e54608e62095c";
 $observedMD5sum=`md5sum $bamFile.bai`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -155,7 +158,7 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsIndex - output structure')
 ################################################################################################
 
 #Output file
-my $bamFileOut="RC3.SAMTOOLSVIEW.bam";
+my $bamFileOut="RC3-SAMTOOLSVIEW.bam";
 my %optionsRef = ("-h" => '', "-b" => '', "-F" => "0*02");
 my $optionsHachees = \%optionsRef; 
 
@@ -165,7 +168,7 @@ is(samTools::samToolsView($bamFile, $bamFileOut, $optionsHachees),1,'samTools::s
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsView - output list');
 
@@ -182,7 +185,7 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsView - output structure');
 ################################################################################################
 
 #Output file
-$bamFileOut = "RC3.SAMTOOOLSSORT.bam";
+$bamFileOut = "RC3-SAMTOOOLSSORT.bam";
 
 #execution test
 is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
@@ -190,13 +193,13 @@ is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsSort - output list');
 
 # expected output structure
 $expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
-$observedMD5sum=`md5sum RC3.SAMTOOOLSSORT.bam`;# structure of the test file
+$observedMD5sum=`md5sum RC3-SAMTOOOLSSORT.bam`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort - output structure');
@@ -207,8 +210,8 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort - output structure');
 ################################################################################################
 
 #Input files
-my @bamFiles=("$toggle/data/expectedData/RC3.SAMTOOLSVIEW.bam","$toggle/data/expectedData/RC3.PICARDTOOLSSORT.bam");
-my $headerExtractCommand="samtools view -H $toggle/data/expectedData/RC3.SAMTOOLSVIEW.bam > headerFile.sam";  #Extracting header for the following test
+my @bamFiles=("$originalBam","$originalBam");
+my $headerExtractCommand="samtools view -H $originalBam > headerFile.sam";  #Extracting header for the following test
 system($headerExtractCommand) and die ("\nCannot launch the header extract command: $!\n Aborting tests\n");
 
 
@@ -221,7 +224,7 @@ is(samTools::samToolsMerge(\@bamFiles,$bamFileOut,'headerFile.sam'),1,'samTools:
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMerge - output list');
 
@@ -247,7 +250,7 @@ is(samTools::mergeHeader(\@bamFiles,$header),1,'samTools::mergeHeader');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::mergeHeader - output list');
 
@@ -272,7 +275,7 @@ is(samTools::samToolsIdxstats($bamFile,$statsFile),1,'samTools::samToolsIdxstats
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -298,7 +301,7 @@ is(samTools::samToolsDepth(\@bamFiles,$depthFile),1,'samTools::samToolsDepth');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -315,7 +318,7 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsDepth - output structure')
 ################################################################################################
 
 #output file
-my $statsBamFile = "RC3.SAMTOOLSFLAGSTAT.txt";
+my $statsBamFile = "RC3-SAMTOOLSFLAGSTAT.txt";
 
 #execution test
 is(samTools::samToolsFlagstat($bamFile,$statsBamFile),1,'samTools::samToolsFlagStat');
@@ -324,7 +327,7 @@ is(samTools::samToolsFlagstat($bamFile,$statsBamFile),1,'samTools::samToolsFlagS
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSFLAGSTAT.txt','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -341,7 +344,7 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsFlagStat - output structur
 ################################################################################################
 
 #output file
-my $mpileupFile = "RC3.SAMTOOLSMPILEUP.mpileup";
+my $mpileupFile = "RC3-SAMTOOLSMPILEUP.mpileup";
 
 #execution test
 is(samTools::samToolsMpileUp(\@bamFiles,$mpileupFile),1,'samTools::samToolsMpileUp');
@@ -350,7 +353,7 @@ is(samTools::samToolsMpileUp(\@bamFiles,$mpileupFile),1,'samTools::samToolsMpile
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSFLAGSTAT.txt','RC3.SAMTOOLSMPILEUP.mpileup','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSMPILEUP.mpileup','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMpileUp - output list');
 
