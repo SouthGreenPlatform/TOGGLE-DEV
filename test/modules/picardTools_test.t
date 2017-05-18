@@ -63,7 +63,6 @@ my $testingDir="$toggle/dataTest/picardtoolsTestDir";
 my $cleaningCmd="rm -Rf $testingDir"; 
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-my $expectedData="$toggle/data/expectedData/";
 my $bankData="$toggle/data/Bank/";
 my $bamData="$toggle/data/testData/samBam/";
 
