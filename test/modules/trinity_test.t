@@ -51,8 +51,6 @@ can_ok('trinity','trinityRun');
 use localConfig;
 use trinity;
 
-my $expectedData="$toggle/data/expectedData/contigTrinity.fasta";
-
 ## rm readcount in initialDir if exist
 if (-e "$toggle/data/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq.readcount")
 { 
