@@ -241,7 +241,7 @@ is_deeply(\@listExpected,@listObserved,'toolbox::readDir - just fastq files');
 ########################################
 #toolbox::readDir2 test with a directory name
 ########################################
-#$listCom = `ls $toggle/data/expectedData/*`;
+#$listCom = `ls $toggle/data/*`;
 #chomp $listCom;
 #@listExpected = split /\n/, $listCom;
 #@listObserved = toolbox::readDir2("$toggle/data/expectedData");
@@ -250,7 +250,7 @@ is_deeply(\@listExpected,@listObserved,'toolbox::readDir - just fastq files');
 ########################################
 #toolbox::readDir2 test with a directory name and a part of filename as arguments
 ########################################
-#$listCom = `ls $toggle/data/expectedData/RC*`;
+#$listCom = `ls $toggle/data/RC*`;
 #chomp $listCom;
 #@listExpected = split /\n/, $listCom;
 #@listObserved = toolbox::readDir2("$toggle/data/expectedData",'RC');
