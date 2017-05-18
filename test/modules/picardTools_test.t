@@ -64,6 +64,8 @@ my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 my $expectedData="$toggle/data/expectedData/";
+my $bankData="$toggle/data/Bank/";
+my $bamData="$toggle/data/testData/samBam/";
 
 ########################################
 #Creation of test directory
@@ -89,39 +91,38 @@ system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files 
 ##########################################
 
 #Input file
-my $refFile = "Reference.fasta";  
-my $originalRefFile = $expectedData."/".$refFile;    
+
+my $originalRefFile="$bankData/referenceIrigin.fasta";
+my $fastaRef = "referenceIrigin.fasta";    
 my $cpCmd = "cp $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
 system ($cpCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $cpCmd\n$!\n"); 
 
 #Output file
-my $refFileDict = "Reference.dict";
+my $fastaRefDict = "referenceIrigin.dict";
 
 #execution test
-is(picardTools::picardToolsCreateSequenceDictionary($refFile,$refFileDict),1,'picardTools::picardToolsCreateSequenceDictionary');
+is(picardTools::picardToolsCreateSequenceDictionary($fastaRef,$fastaRefDict),1,'picardTools::picardToolsCreateSequenceDictionary');
 
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','Reference.dict','Reference.fasta');
+my @expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCreateSequenceDictionary - output list');
 
 # expected content test
 my $expectedLastLine="\@SQ	SN:2299897	";  
-my $observedLastLine=`tail -n 1 $refFileDict`; 
+my $observedLastLine=`tail -n 1 $fastaRefDict`; 
 my @withoutName = split ("LN:", $observedLastLine); 
 $observedLastLine = $withoutName[0];       # just to have the md5sum result
 is($observedLastLine,$expectedLastLine,'picardTools::picardToolsCreateSequenceDictionary - output structure');
-
-
 
 ##########################################
 #picardToolsSortSam test
 ##########################################
 #input data
 ## Input files test for single analysis
-my $samFile = $expectedData."RC3.BWASAMPE.sam";
+my $samFile="$bamData/oneSam/RC3-SAMTOOLSVIEW.sam";
 
 #output data
 my $bamFileOut = "RC3.PICARDTOOLSSORT.bam";
@@ -135,7 +136,7 @@ is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionsHachees),1,'pica
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSSORT.bam','Reference.dict','Reference.fasta');
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSortSam - output list');
 
@@ -157,7 +158,8 @@ is($observedEndLine,$expectedEndLine,'picardTools::picardToolsSortSam - output e
 ##picardToolsMarkDuplicates test
 ###########################################
 #input file
-my $bamFile = $expectedData."RC3.GATKINDELREALIGNER.bam"; 
+#my $bamFile = $expectedData."RC3.GATKINDELREALIGNER.bam"; 
+my $bamFile="$bamData/oneBam/RC3-SAMTOOLSVIEW.bam";
 
 #output files
 $bamFileOut = "RC3.PICARDTOOLSMARKDUPLICATES.bam";
@@ -171,7 +173,7 @@ is(picardTools::picardToolsMarkDuplicates($bamFile, $bamFileOut, $duplicatesFile
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','Reference.dict','Reference.fasta');
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsMarkDuplicates - output list');
 
@@ -198,7 +200,7 @@ is(picardTools::picardToolsCleanSam($bamFile, $bamFileOut,$optionsHachees),1,'pi
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam',,'Reference.dict','Reference.fasta');
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCleanSam - output list');
 
@@ -225,7 +227,7 @@ is(picardTools::picardToolsSamFormatConverter($bamFile, $samFileOut,$optionsHach
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'Reference.dict','Reference.fasta');
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSamFormatConverter - output list');
 
@@ -251,7 +253,7 @@ is(picardTools::picardToolsAddOrReplaceReadGroups($bamFile, $bamFileOut,$options
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'Reference.dict','Reference.fasta');
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsAddOrReplaceReadGroups - output list');
 
@@ -284,7 +286,7 @@ is($observedOutput,$expectedLastLine,'picardTools::picardToolsAddOrReplaceReadGr
 ## expected output test
 #$observedOutput = `ls`;
 #@observedOutput = split /\n/,$observedOutput;
-#@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSVALIDATESAMFILE.infos','Reference.dict','Reference.fasta');
+#@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSVALIDATESAMFILE.infos','referenceIrigin.dict','referenceIrigin.fasta');
 #
 #is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsValidateSamFile - output list');
 #
