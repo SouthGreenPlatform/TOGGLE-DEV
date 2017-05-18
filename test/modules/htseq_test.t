@@ -83,7 +83,6 @@ my $gffData="$toggle/data/testData/vcf/singleVCF/";
 ########################################
 
 # input file
-#my $bamIni=$expectedData."/accepted_hits.SAMTOOLSSORT.bam";
 my $gffRef="$bankData/referenceRnaseqGFF.gff3";
 my $bamIn="$testData/samBam/oneBam/RC3-SAMTOOLSVIEW.bam";
 my $bam="accepted_hits.SAMTOOLSSORT.bam";
@@ -129,7 +128,6 @@ is($observedMD5sum,$expectedMD5sum,'HTSeq::htseqCount - output content');
 ########################################
 
 #input file
-#my $samIni=$expectedData."/accepted_hits.SAMTOOLSSORT.sam";
 my $samIni="$testData/samBam/oneSam/RC3-SAMTOOLSVIEW.sam";
 my $sam="accepted_hits.SAMTOOLSSORT.sam";
 
