@@ -52,8 +52,6 @@ can_ok( 'tophat','tophat2');
 use localConfig;
 use tophat;
 
-my $expectedData="$toggle/data/expectedData/";
-
 #########################################
 #Remove files and directory created by previous test
 #########################################
@@ -77,18 +75,21 @@ system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt
 my $cleaningCommand="rm -rf tophat_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
+my $bankData="$toggle/data/Bank/";
+my $testData="$toggle/data/testData/rnaseq";
 
 ##########################################
 ### Test for tophat::bowtieBuild
 ##########################################
 
 # input file
-my $fastaRefIni=$expectedData."/referenceRNASeq.fa";
+
+my $fastaRefIni=$bankData."/referenceRnaseq.fa";
 my $fastaRef="referenceRNASeq.fa";
 
 #copy fasta reference into test directory where the index will be created
-my $copyCommand="cp $fastaRefIni .";
-system ($copyCommand) and die "ERROR: $0: Cannot copy the refence file with the command $copyCommand \n$!\n";
+my $copyCommand="cp $fastaRefIni ./$fastaRef";
+system ($copyCommand) and die "ERROR: $0: Cannot copy the $fastaRefIni file with the command $copyCommand \n$!\n";
 
 # execution test
 is(tophat::bowtieBuild($fastaRef),$fastaRef,'tophat::bowtieBuild');
@@ -203,8 +204,8 @@ is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content rev.2.
 ####tophat::tophat2
 #################################################################################################
 
-#input file
-my $gffRef=$expectedData."/referenceRNASeq.gff3";
+# input file
+my $gffRef="$bankData/referenceRnaseqGFF.gff3";
 
 my $fastqFile1=$expectedData."/RNASeq_1.fastq";
 my $fastqFile2=$expectedData."/RNASeq_2.fastq";
