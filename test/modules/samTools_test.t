@@ -66,8 +66,6 @@ my $testingDir="$toggle/dataTest/samToolsTestDir";
 my $cleaningCmd="rm -Rf $testingDir"; 
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-#my $expectedData="$toggle/data/expectedData/";
-
 ########################################
 #Creation of test directory
 ########################################
