@@ -173,7 +173,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) 
 # expected output content
 $observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKPRINTREADS.bam`; # We pick up only the position field
 chomp $observedOutput;
-is($observedOutput,"585 $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKPRINTREADS.bam", 'toggleGenerator - One Bam (no SGE) gatkPrindReads content');
+is($observedOutput,"473 $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKPRINTREADS.bam", 'toggleGenerator - One Bam (no SGE) gatkPrindReads content');
 
 
 
