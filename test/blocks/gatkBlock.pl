@@ -222,3 +222,7 @@ $observedOutput=`tail -n 1 $testingDir/finalResults/GATKVARIANTFILTRATION.GATKSE
 chomp $observedOutput;
 my $expectedOutput="2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Vcf (no SGE) content ');
+
+#rm idx file on $dataOneVcf
+$cleaningCmd="rm -f $dataOneVcf/GATKVARIANTFILTRATION.vcf.idx";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove GATKVARIANTFILTRATION.vcf.idx with the command $cleaningCmd \n$!\n");
