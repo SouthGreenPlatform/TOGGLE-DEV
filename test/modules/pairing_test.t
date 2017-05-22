@@ -110,11 +110,11 @@ is_deeply($obsRG2,$expectRG2,'pairing::extractName - RG irigin3');
 my $checkFastq = 1;
 
 # copy paired and single files into pairingDir
-my $fastqFilePaired = $fastqPairedData."irigin*_*.fastq";     # fastq file 
+my $fastqFilePaired = $fastqPairedData."irigin*_*.fastq";     # fastq file
 my $copyCmd= "cp $fastqFilePaired pairingDir";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFilePaired in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
-my $fastqFileSingle = $fastqSingleData."irigin*_*.fastq";     # fastq file 
+my $fastqFileSingle = $fastqSingleData."irigin*_*.fastq";     # fastq file
 $copyCmd= "cp $fastqFileSingle pairingDir";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFileSingle in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
@@ -133,7 +133,7 @@ my $expectedOutput={
           '@H3:C39R6ACXX:3:1101:1192:1848' => {
                                                    'ReadGroup' => 'irigin2',
                                                    'forward' => 'pairingDir/irigin2_1.fastq',
-                                                } 
+                                                }
         };
 
 my $observedOutput=pairing::pairRecognition("pairingDir",$checkFastq);
@@ -179,29 +179,28 @@ is_deeply($observedFileTree,$expectedFileTree,'pairing::pairRecognition - Filetr
 my $rmDirCmd= "rm -r pairingDir";           # command to copy the original fastq file into the test directory
 system ($rmDirCmd) and die ("ERROR: $0 : Cannot removed pairingDir in the test directory with the command $rmDirCmd\n$!\n");    # RUN the rm command
 
+my $fastqPairedData="$toggle/data/testData/fastq/pairingRepairing/";
 # copy paired and single files into pairingDir
-$fastqFilePaired = $fastqPairedData."irigin*_*.fastq";     # fastq file 
+$fastqFilePaired = $fastqPairedData."irigin*_*.fastq";     # fastq file
 $copyCmd= "cp $fastqFilePaired ./";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFilePaired in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
-$fastqFileSingle = $fastqSingleData."irigin*_*.fastq";     # fastq file 
+$fastqFileSingle = $fastqSingleData."irigin*_*.fastq";     # fastq file
 $copyCmd= "cp $fastqFileSingle ./";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFileSingle in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 #Check if running
 
-my $checkValue=pairing::repairing('irigin3_1.fastq','irigin3_2.fastq',".",$checkFastq);
+my $checkValue=pairing::repairing('irigin3_1.CUTADAPT.fastq','irigin3_2.CUTADAPT.fastq',".",$checkFastq);
 is ($checkValue,'1','pairing::repairing - running');
 
 #Check if files created
 $expectedFileTree = ".:
 individuSoft.txt
-irigin1_1.fastq
-irigin1_2.fastq
 irigin2_1.fastq
-irigin3_1.fastq
+irigin3_1.CUTADAPT.fastq
 irigin3_1.REPAIRING.fastq
-irigin3_2.fastq
+irigin3_2.CUTADAPT.fastq
 irigin3_2.REPAIRING.fastq
 irigin3_Single
 pairing_TEST_log.e
@@ -219,7 +218,7 @@ is_deeply($observedFileTree,$expectedFileTree,'pairing::pairRecognition - Filetr
 #Check if working
 my $numberOfLinesObserved=`wc -l irigin3_Single/irigin3Single.fastq`;
 chomp $numberOfLinesObserved;
-is ($numberOfLinesObserved,'0 '.'irigin3_Single/irigin3Single.fastq','pairing::repairing - single file');
+is ($numberOfLinesObserved,'8 '.'irigin3_Single/irigin3Single.fastq','pairing::repairing - single file');
 
 #Check if the files created are the same as planned
 my $diffForward=`diff -q irigin3_1.REPAIRING.fastq $toggle/data/testData/toolbox/irigin3_1.REPAIRING.fastq`;
@@ -228,4 +227,3 @@ is ($diffForward,'','pairing::repairing - forward file');
 #Check if the files created are the same as planned
 my $diffReverse=`diff -q irigin3_2.REPAIRING.fastq $toggle/data/testData/toolbox/irigin3_2.REPAIRING.fastq`;
 is ($diffReverse,'','pairing::repairing - reverse file');
-
