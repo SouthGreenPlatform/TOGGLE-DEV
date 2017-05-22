@@ -82,7 +82,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 ########################################
 
 #Correct files for verifying the outputs
-my $CorrectPHRED33file="$toggle/data/testData/fastq/singleIndividualPHRED64/RC1_1.SANGER.fastq";
+my $CorrectPHRED33file="$toggle/data/testData/fastq/singleIndividualPHRED33/RC1_1.SANGER.fastq";
 my $CorrectPHRED64file="$toggle/data/testData/fastq/singleIndividualPHRED64/RC1_1.ILLUMINA.fastq";
 
 #########################################
