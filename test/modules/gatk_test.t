@@ -91,6 +91,9 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 # input file
 my $bamIn="$bamData/oneBam/RC3-SAMTOOLSVIEW.bam";
+# index BAM
+system ("samtools index $bamIn") and die ("ERROR: $0 : Cannot index file $bamIn\n$!\n");
+
 my $fastaRef="$bankData/referenceIrigin.fasta";
 my $fastaRefFai="$bankData/referenceIrigin.fasta.fai";
 my $fastaRefDict="$bankData/referenceIrigin.dict";
@@ -147,6 +150,8 @@ $expectedOutput = "H2:C381HACXX:5:1101:1433:2214	99	2187676	10	29	101M	=	199	269
 H2:C381HACXX:5:1101:1433:2214	147	2187676	199	29	6S80M15S	=	10	-269	ATCCTAAATTGCTGCAAATACCCTCCGTGAATTATTGAACACTTAAACCTCCTTTGTCGACCGTTGTGCTTCGATGCACGGGCCTTCGGACACGCGCATCA	DCDDDDDDDDDDEDEEDC>2BDDDDDDDEDEDEEEEDDCCCDDDCA<DDBCCDDDDFFHCHIJJJJJIJJJJJJJJIHJJJIJJJJJJHHHHHFFFFFCCC	MC:Z:101M	MD:Z:11T8T0G21C36	RG:Z:RC3	XG:i:0	AM:i:29	NM:i:4	SM:i:29	XM:i:4	XO:i:0	MQ:i:29	XT:A:M";
 is($observedOutput,$expectedOutput, 'gatk::gatkIndelRealigner - output content 2');
 
+# RM index bai
+system ("rm $bamIn.bai") and die ("ERROR: $0 : Cannot remove index file $bamIn.bai\n$!\n");
 
 
 ##########################################
@@ -245,6 +250,11 @@ is($observedOutput,$expectedOutput, 'gatk::gatkPrintReads - output content 2');
 ##########################################
 $bamIn=$bamData."/twoBamsIrigin/irigin1-PICARDTOOLSMARKDUPLICATES.bam";
 my $bamSingle=$bamData."/twoBamsIrigin/irigin3-PICARDTOOLSMARKDUPLICATES.bam";
+
+# index BAM
+system ("samtools index $bamIn") and die ("ERROR: $0 : Cannot index file $bamIn\n$!\n");
+system ("samtools index $bamSingle") and die ("ERROR: $0 : Cannot index file $bamSingle\n$!\n");
+
 
 # execution test
 my @bamsToCall=($bamIn,$bamSingle);
@@ -354,6 +364,9 @@ $expectedSNPLines="";
 $observedSNPLines=`grep -v "#" $vcfFileOut`;      # structure of the test file
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkReadBackedPhasing - structure of file');
 
+# rm index
+system ("rm $bamIn.bai") and die ("ERROR: $0 : Cannot remove index file $bamIn.bai\n$!\n");
+system ("rm $bamSingle.bai") and die ("ERROR: $0 : Cannot remove index file $bamSingle.bai\n$!\n");
 
 
 
