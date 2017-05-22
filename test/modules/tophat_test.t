@@ -237,9 +237,17 @@ is_deeply(\@observedOutput,\@expectedOutput,'tophat::tophat2 - output list');
 
 
 # expected output test
-$expectedMD5sum="2d3a8ce4123320066b059133be256876";
-$observedMD5sum=`md5sum $tmpDir/RNASeq.accepted_hits.bam`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::tophat2- output content bam');
+#$expectedMD5sum="2d3a8ce4123320066b059133be256876";
+#$observedMD5sum=`md5sum $tmpDir/RNASeq.accepted_hits.bam`;# structure of the test file
+#@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+#$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+#is($observedMD5sum,$expectedMD5sum,'tophat::tophat2- output content bam');
+
+
+
+my $expectedEndLine="HWI-D00393:103:C6KCUANXX:1:1101:1904:31492	147	EG5_Chr1	68172906	50	118M	=	68172845	-179	AATGGATCAGGCTATAATAATGGAAGCTTGAGTTATGAAAATGGTGAGAGTAACTTTGGTTTGGGCACCAGCAGTTTTGGAAGAAGTGGTCAAACTGGAGCTGCTAACACTTCTCTTA	FFFFFFFFFFFFFFFFFFFFFFFB/FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF	AS:i:0	XN:i:0	XM:i:0	XO:i:0	XG:i:0	NM:i:0	MD:Z:118	YT:Z:UU	XS:A:+	NH:i:1
+";
+my $observedEndLine=`samtools view $tmpDir/RNASeq.accepted_hits.bam | tail -1`  or die ("ERROR: $0 : Cannot execute: samtools view $tmpDir/RNASeq.accepted_hits.bam | tail -1  \n$!\n");
+is($observedEndLine,$expectedEndLine,'tophat::tophat2- output content bam - output endFile');
+
 
