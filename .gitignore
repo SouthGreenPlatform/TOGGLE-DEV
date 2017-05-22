@@ -16,4 +16,5 @@ test/SNPdiscoveryPairedTest.config.txt
 /data/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount
 /data/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.readcount
 individuSoft.txt
+data/testData/vcf/vcfForRecalibration/control.vcf.idx
 
