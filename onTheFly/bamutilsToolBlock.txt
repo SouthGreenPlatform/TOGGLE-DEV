@@ -33,7 +33,7 @@ else
     $extention = "fasta" if  ($toolname =~ m/fasta/i);
     $extention = "fastq" if  ($toolname =~ m/fastq/i);
     
-    $bamFileOut = $newDir."/"."$readGroup".".bamutils".$toolname.$extention;                              # name for the output file of bamutils
+    $bamFileOut = $newDir."/"."$readGroup".".bamutils".$toolname.".".$extention;                              # name for the output file of bamutils
     $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                           # recovery of specific parameters of bamutils
     bamutils::bamutilsTool($toolname, $samFileIn, $bamFileOut, $softParameters)
 }
