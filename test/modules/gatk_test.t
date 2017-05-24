@@ -369,7 +369,7 @@ system ("rm $bamIn.bai") and die ("ERROR: $0 : Cannot remove index file $bamIn.b
 system ("rm $bamSingle.bai") and die ("ERROR: $0 : Cannot remove index file $bamSingle.bai\n$!\n");
 #rm idx file on 
 my $dataOneVcf = "$toggle/data/testData/vcf/singleVCF";
-$cleaningCmd="rm -f $dataOneVcf/GATKVARIANTFILTRATION.vcf.idx";
+my $cleaningCmd="rm -f $dataOneVcf/GATKVARIANTFILTRATION.vcf.idx";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove GATKVARIANTFILTRATION.vcf.idx with the command $cleaningCmd \n$!\n");
 
 
