@@ -110,47 +110,52 @@ print "#######################################################
 #######################################################";
 
 my $INSTALLPATH;
-print "\nPlease provide the installation path as ABSOLUTE (e.g. /home/myUserName/TOGGLE):\n";
-$INSTALLPATH = <STDIN>;
-chomp $INSTALLPATH;
-
-
-while (1)
-{  
-    if ($INSTALLPATH !~ m/^\//) #Absolute Path ?
-    {
-        print "\nThis path is not an absolute one (not starting from '/').\nPlease provide an absolute Path:\n";
-        $INSTALLPATH = <STDIN>;
-        chomp $INSTALLPATH;
-        next;
-    }
-    
-    #Asking for the path to be Ok
-    print "\nIs the correct Install Path is: $INSTALLPATH ? [Y|N]: \n";
-    my $yn;
-    $yn = <STDIN>;
-    chomp $yn;
-
-    if ($yn =~ m/^Y|^y/)
-    {
-        print"\nTOGGLE will be installed in '$INSTALLPATH'\n ";
-        last;
-    }
-    elsif ($yn =~ m/^N|^n/ )
-    {
-        print "\nPlease, provide the correct installation path:";
-        $INSTALLPATH = <STDIN>;
-        chomp $INSTALLPATH;
-        next;
-    }
-    else
-    {
-        print "\nPlease answer 'Y' or 'N'\n";
-        next;
-    }
+if (defined ARGV[$0]) 
+{
+	$INSTALLPATH=ARGV[$0];
 }
+else
+{
+	print "\nPlease provide the installation path as ABSOLUTE (e.g. /home/myUserName/TOGGLE):\n";
+	$INSTALLPATH = <STDIN>;
+	chomp $INSTALLPATH;
 
+	while (1)
+	{  
+	    if ($INSTALLPATH !~ m/^\//) #Absolute Path ?
+	    {
+		print "\nThis path is not an absolute one (not starting from '/').\nPlease provide an absolute Path:\n";
+		$INSTALLPATH = <STDIN>;
+		chomp $INSTALLPATH;
+		next;
+	    }
 
+	    #Asking for the path to be Ok
+	    print "\nIs the correct Install Path is: $INSTALLPATH ? [Y|N]: \n";
+	    my $yn;
+	    $yn = <STDIN>;
+	    chomp $yn;
+
+	    if ($yn =~ m/^Y|^y/)
+	    {
+		print"\nTOGGLE will be installed in '$INSTALLPATH'\n ";
+		last;
+	    }
+	    elsif ($yn =~ m/^N|^n/ )
+	    {
+		print "\nPlease, provide the correct installation path:";
+		$INSTALLPATH = <STDIN>;
+		chomp $INSTALLPATH;
+		next;
+	    }
+	    else
+	    {
+		print "\nPlease answer 'Y' or 'N'\n";
+		next;
+	    }
+	}
+
+}
 mkdir $INSTALLPATH or die ("\nCannot create installation directory $INSTALLPATH:\n$!\n\nAborting installation...\n");
 
 #Cloning current version of TOGGLE
