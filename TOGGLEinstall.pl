@@ -298,7 +298,7 @@ system ("cd $INSTALLPATH && tar xzf perlModules.tar.gz && rm -Rf perlModules.tar
 #Adding toggle in the user PERL5LIB path
 
 system ("echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - >> ~/.bashrc && echo \"\nPATH=\$PATH:$INSTALLPATH\n\" | cat - >> ~/.bashrc && source ~/.bashrc") and die("\nCannot add paths: $!\n");
-
+print "echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - >> ~/.bashrc && echo \"\nPATH=\$PATH:$INSTALLPATH\n\" | cat - >> ~/.bashrc && source ~/.bashrc";
 print "\n The automatic configuration is finished.\n\nPlease use first the test data as recommended on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n";
 
 exit;
