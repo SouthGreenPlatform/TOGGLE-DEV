@@ -110,9 +110,9 @@ print "#######################################################
 #######################################################";
 
 my $INSTALLPATH;
-if (defined $ARGV[$0]) 
+if (defined $ARGV[0]) 
 {
-	$INSTALLPATH=$ARGV[$0];
+	$INSTALLPATH=$ARGV[0];
 }
 else
 {
