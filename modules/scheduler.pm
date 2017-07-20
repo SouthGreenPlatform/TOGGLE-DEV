@@ -119,10 +119,11 @@ sub launcher {
     
     #Picking up sample name
     
-    $sample=`basename $sample` or die("ERROR : $0 : Cannot pickup the basename for $sample: $!\n");
+    $sample=`basename $sample` or toolbox::exportLog("ERROR : scheduler::launcher : Cannot pickup the basename for $sample: $!\n",0);
     chomp $sample;
     
     my $schedulerType = &checkingCapability;
+	toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
     
     my $runOutput;
        
@@ -271,53 +272,54 @@ Individual\tJobID\tExitStatus
     
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
-      my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
-      my $acctOutput = `$acctCommand`;
-      my $outputLine;
-      
-      chomp $acctOutput;
-      if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
-      {
-        #IF acct cannot be run on the node
-        $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
-        toolbox::exportLog($outputLine,1);
-        next;
-      }
-      
-      my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
-      $outputLine = $individual."\t".$jobHash{$individual}."\t";
-	  my $currentLine ="Error";
-      while (@linesQacct) #Parsing the qacct output
-      {
-        my $line = shift @linesQacct;
-        #Passing the header lines
-		next if $line =~ m/JobID/;
-		next $line =~ m/^$/;
+		my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
+		my $acctOutput = `$acctCommand`;
+		my $outputLine;
 		
-		my $parserText = $parsings{'acctOutText'}{$schedulerType};
-        if ($line =~ m/$parserText/) #Picking up exit status
-        {
-			$currentLine = "Normal";
-			last;
-		}
-		
-		next;
-	  }
-	  if ($currentLine eq "Error")
+		chomp $acctOutput;
+		if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
 		{
-			push @jobsInError, $individual;
-			$currentLine = "Error";
+		  #IF acct cannot be run on the node
+		  $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
+		  toolbox::exportLog($outputLine,1);
+		  next;
 		}
-        $outputLine .= $currentLine;       
-      toolbox::exportLog($outputLine,1);
+		
+		my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
+		$outputLine = $individual."\t".$jobHash{$individual}."\t";
+		my $currentLine ="Error";
+		while (@linesQacct) #Parsing the qacct output
+		{
+		  my $line = shift @linesQacct;
+		  #Passing the header lines
+		  next if $line =~ m/JobID/;
+		  next $line =~ m/^$/;
+		  
+		  my $parserText = $parsings{'acctOutText'}{$schedulerType};
+		  if ($line =~ m/$parserText/) #Picking up exit status
+		  {
+			  $currentLine = "Normal";
+			  last;
+		  }
+		  
+		  next;
+		}
+		
+		#The parsing text has not been found meaning still an error
+		if ($currentLine eq "Error")
+		{
+		  push @jobsInError, $individual;
+		}
+		$outputLine .= $currentLine;       
+		toolbox::exportLog($outputLine,1);
       
     }
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
   
     if (scalar @jobsInError)
     {
-	#at least one job has failed
-	return \@jobsInError;
+		#at least one job has failed
+		return \@jobsInError;
     }
     return 1;
 }
