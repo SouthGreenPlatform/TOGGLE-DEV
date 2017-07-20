@@ -303,7 +303,7 @@ Individual\tJobID\tExitStatus
 		  my $line = shift @linesQacct;
 		  #Passing the header lines
 		  next if $line =~ m/JobID/;
-		  next $line =~ m/^$/;
+		  next if $line =~ m/^$/;
 		  
 		  my $parserText = $parsings{'acctOutText'}{$schedulerType};
 		  
