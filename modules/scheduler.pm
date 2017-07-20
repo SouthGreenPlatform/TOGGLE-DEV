@@ -37,6 +37,8 @@ use localConfig;
 
 use toolbox;
 
+use Data::Dumper;
+
 ##################################
 #
 #LAUNCHING
@@ -59,6 +61,8 @@ my %commands =('run' => ('sge'=>'qsub',
 						  'slurm'=>'squeue',
 						  'mprun'=>'ccc_mstat -u \$USER',
 						  'lsf'=>'bjobs -u \$USER'));
+
+toolbox::exportLog(Dumper(\%commands),0);
 
 #Here are the infos for parsing data in waiting system
 
