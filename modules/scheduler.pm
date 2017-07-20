@@ -223,6 +223,10 @@ sub schedulerRun
     my @infosList=split ($parsings{'JIDsplitter'}{$schedulerType}, $currentJID); 
     $currentJID = $infosList[$parsings{'JIDposition'}{$schedulerType}];
     
+	
+	##DEBUG
+	toolbox::exportLog($currentJID,2);
+	
     return $currentJID;
 }
 
@@ -302,6 +306,10 @@ Individual\tJobID\tExitStatus
 		  next $line =~ m/^$/;
 		  
 		  my $parserText = $parsings{'acctOutText'}{$schedulerType};
+		  
+		  ##DEBUG 
+		  toolbox::exportLog($parserText,0);
+		  
 		  if ($line =~ m/$parserText/) #Picking up exit status
 		  {
 			  $currentLine = "Normal";
