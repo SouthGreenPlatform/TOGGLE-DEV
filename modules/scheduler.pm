@@ -49,39 +49,39 @@ our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash);
 
 #Here is the core commands for any scheduler: run, acct and queue command.
 
-my %commands =('run' => ('sge'=>'qsub',
+my %commands =('run' => {'sge'=>'qsub',
 						 'slurm'=>'sbatch',
 						 'mprun'=>'ccc_msub',
-						 'lsf'=>'bsub'),
-			   'acct' => ('sge'=>'qacct -j',
+						 'lsf'=>'bsub'},
+			   'acct' => {'sge'=>'qacct -j',
 						  'slurm'=>'qacct -j',
 						  'mprun'=>'ccc_macct',
-						  'lsf'=>'bacct'),
-			   'queue' => ('sge'=>'qstat -u \$USER',
+						  'lsf'=>'bacct'},
+			   'queue' => {'sge'=>'qstat -u \$USER',
 						  'slurm'=>'squeue',
 						  'mprun'=>'ccc_mstat -u \$USER',
-						  'lsf'=>'bjobs -u \$USER'));
+						  'lsf'=>'bjobs -u \$USER'});
 
 toolbox::exportLog(Dumper(\%commands),0);
 
 #Here are the infos for parsing data in waiting system
 
-my %parsings = ('JIDposition' => (	'sge'=>2,
+my %parsings = ('JIDposition' => {	'sge'=>2,
 									'slurm'=>3,
 									'mprun'=>3,
-									'lsf'=>1),
-				'JIDsplitter' => ('sge'=>"\\s",
+									'lsf'=>1},
+				'JIDsplitter' => {'sge'=>"\\s",
 								  'slurm'=>"\\s",
 								  'mprun'=>"\\s",
-								  'lsf'=>"<\|>"),
-				'acctOutSplitter' => ('sge'=>"\\n",
+								  'lsf'=>"<\|>"},
+				'acctOutSplitter' => {'sge'=>"\\n",
 									  'slurm'=>"\\n",
 									  'mprun'=>"\\s+",
-									  'lsf'=>"\\s+"),
-				'acctOutText' => ('sge'=>"exit_status  0",
+									  'lsf'=>"\\s+"},
+				'acctOutText' => {'sge'=>"exit_status  0",
 								  'slurm'=>"COMPLETED",
 								  'mprun'=>"COMPLETED",
-								  'lsf'=>"Total number of done jobs:\\s*1\\s*Total number of exited jobs:\\s*0\\s*"));
+								  'lsf'=>"Total number of done jobs:\\s*1\\s*Total number of exited jobs:\\s*0\\s*"});
 
 sub checkingCapability { #Will test the capacity of launching using various schedulers on the current system
     
