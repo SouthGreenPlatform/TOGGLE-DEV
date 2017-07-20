@@ -83,8 +83,7 @@ my %parsings = ('JIDposition' => {	'sge'=>2,
 								  'mprun'=>"COMPLETED",
 								  'lsf'=>"Total number of done jobs:\\s*1\\s*Total number of exited jobs:\\s*0\\s*"});
 
-##DEBUG
-toolbox::exportLog(Dumper(\%parsings),0);
+##DEBUG toolbox::exportLog(Dumper(\%parsings),0);
 
 sub checkingCapability { #Will test the capacity of launching using various schedulers on the current system
     
