@@ -62,7 +62,7 @@ my %commands =('run' => {'sge'=>'qsub',
 						  'mprun'=>'ccc_mstat -u \$USER',
 						  'lsf'=>'bjobs -u \$USER'});
 
-toolbox::exportLog(Dumper(\%commands),0);
+##DEBUG toolbox::exportLog(Dumper(\%commands),0);
 
 #Here are the infos for parsing data in waiting system
 
@@ -82,6 +82,9 @@ my %parsings = ('JIDposition' => {	'sge'=>2,
 								  'slurm'=>"COMPLETED",
 								  'mprun'=>"COMPLETED",
 								  'lsf'=>"Total number of done jobs:\\s*1\\s*Total number of exited jobs:\\s*0\\s*"});
+
+##DEBUG
+toolbox::exportLog(Dumper(\%parsings),0);
 
 sub checkingCapability { #Will test the capacity of launching using various schedulers on the current system
     
