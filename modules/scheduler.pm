@@ -86,23 +86,23 @@ sub checkingCapability { #Will test the capacity of launching using various sche
     #SGE test
     $capabilityValue = `qsub -help 2>/dev/null | grep usage`; #Will provide a not-empty output if SGE is installed
     chomp $capabilityValue;
-	return $capabilityValue if $capabilityValue;
+	return "sge" if $capabilityValue;
     
     #SLURM test
     $capabilityValue=`sbatch -V 2>/dev/null | grep slurm`; #Will provide a not-empty output if SLURM is installed
     chomp $capabilityValue;
-	return $capabilityValue if $capabilityValue;
+	return "slurm" if $capabilityValue;
 
     
     #mprun test
     $capabilityValue=`ccc_mprun -h 2>&1 | grep usage`; #Will provide a not-empty output if mprun is installed
     chomp $capabilityValue;
-    return $capabilityValue if $capabilityValue;
+    return "mprun" if $capabilityValue;
 
     #lsf test
     $capabilityValue=`bsub -h 2>&1 | grep -i Synopsis`; #Will provide a not-empty output if lsf is installed
     chomp $capabilityValue;
-	return $capabilityValue if $capabilityValue;
+	return "lsf" if $capabilityValue;
 
     
 }
