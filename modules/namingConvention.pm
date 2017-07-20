@@ -96,6 +96,9 @@ sub correctName
 
 	#FOR merge
 	case ($name =~ m/^merge/i){$correctedName="merge";} #correction for merge step
+	
+	#FOR env
+	case ($name =~ m/^env/i){$correctedName="env";} #correction for merge step	
 
 	#FOR SGE
 	case ($name =~ m/^sge/i){$correctedName="sge";} #Correction for sge configuration
