@@ -110,6 +110,8 @@ sub checkingCapability { #Will test the capacity of launching using various sche
     chomp $capabilityValue;
 	return "lsf" if $capabilityValue;
 
+	#None
+	return "normaLRun" unless $capabilityValue;
     
 }
 
@@ -186,7 +188,7 @@ sub schedulerRun
     
 	#Picking up ENV variable
     my $envOptionsHash=toolbox::extractHashSoft($configInfo,"env");
-    my $envOptions=toolbox::extractOptions($envOptionsHash," ","\n");
+    my $envOptions=toolbox::extractOptions($envOptionsHash,"","\n");
 	
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$sgeOptions;
@@ -194,8 +196,8 @@ sub schedulerRun
     #Creating the bash script for slurm to launch the command
     my $date =`date +%Y_%m_%d_%H_%M_%S`;
     chomp $date;
-    my $scriptName="schedulerScript_".$date.".sh";
-    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n".$envOptions."\n".$commandLine."\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
+    my $scriptName=$sample."_schedulerScript_".$date.".sh";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand);
     $launcherCommand.=" $scriptName";
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
@@ -246,11 +248,10 @@ sub waiter
         
     my $schedulerType = &checkingCapability;
     my $stopWaiting;
-    my $runOutput;
-       
+          
     if (defined $$configInfo{$schedulerType})
 	{
-		$runOutput = &schedulerWait($schedulerType)
+		$stopWaiting = &schedulerWait($schedulerType)
 	}
 
     return $stopWaiting;
@@ -298,6 +299,11 @@ Individual\tJobID\tExitStatus
 		my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
 		$outputLine = $individual."\t".$jobHash{$individual}."\t";
 		my $currentLine ="Error";
+		my $parserText = $parsings{'acctOutText'}{$schedulerType};
+		  
+		##DEBUG
+		toolbox::exportLog($parserText,2);
+		
 		while (@linesQacct) #Parsing the qacct output
 		{
 		  my $line = shift @linesQacct;
@@ -305,10 +311,7 @@ Individual\tJobID\tExitStatus
 		  next if $line =~ m/JobID/;
 		  next if $line =~ m/^$/;
 		  
-		  my $parserText = $parsings{'acctOutText'}{$schedulerType};
 		  
-		  ##DEBUG
-		  toolbox::exportLog($parserText,2);
 		  
 		  if ($line =~ m/$parserText/) #Picking up exit status
 		  {
