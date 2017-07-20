@@ -311,8 +311,7 @@ Individual\tJobID\tExitStatus
 		my $currentLine ="Error";
 		my $parserText = $parsings{'acctOutText'}{$schedulerType};
 		  
-		##DEBUG
-		toolbox::exportLog($parserText,2);
+		##DEBUG	toolbox::exportLog($parserText,2);
 		
 		while (@linesQacct) #Parsing the qacct output
 		{
