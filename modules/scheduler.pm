@@ -190,16 +190,20 @@ sub schedulerRun
     my $envOptionsHash=toolbox::extractHashSoft($configInfo,"env");
     my $envOptions=toolbox::extractOptions($envOptionsHash,"","\n");
 	
+	#Picking up location
+	my $location = `pwd`;
+	chomp $location;
+	
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$sgeOptions;
 	
     #Creating the bash script for slurm to launch the command
-    my $date =`date +%Y_%m_%d_%H_%M_%S`;
-    chomp $date;
-    my $scriptName=$sample."_schedulerScript_".$date.".sh";
+    #my $date =`date +%Y_%m_%d_%H_%M_%S`;
+    #chomp $date;
+    my $scriptName=$sample."_schedulerScript.sh";
     my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand);
-    $launcherCommand.=" $scriptName";
+    $launcherCommand.=" ".$location."/".$scriptName;
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
 	
 	#launching the job through a bash script
