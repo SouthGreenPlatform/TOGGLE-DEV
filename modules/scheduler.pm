@@ -230,8 +230,7 @@ sub schedulerRun
     $currentJID = $infosList[$parsings{'JIDposition'}{$schedulerType}];
     
 	
-	##DEBUG
-	toolbox::exportLog($currentJID,2);
+	##DEBUG	toolbox::exportLog($currentJID,2);
 	
     return $currentJID;
 }
