@@ -50,18 +50,17 @@ our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash);
 my %commands =('run' => ('sge'=>'qsub',
 						 'slurm'=>'sbatch',
 						 'mprun'=>'ccc_msub',
-						 'lsf'=>'bsub',
-						 'normal'=>''),
+						 'lsf'=>'bsub'),
 			   'acct' => ('sge'=>'qacct -j',
 						  'slurm'=>'qacct -j',
 						  'mprun'=>'ccc_macct',
-						  'lsf'=>'bacct',
-						  'normal'=>''),
+						  'lsf'=>'bacct'),
 			   'queue' => ('sge'=>'qstat -u \$USER',
 						  'slurm'=>'squeue',
 						  'mprun'=>'ccc_mstat -u \$USER',
-						  'lsf'=>'bjobs -u \$USER',
-						  'normal'=>''));
+						  'lsf'=>'bjobs -u \$USER'));
+
+#Here are the infos for parsing data in waiting system
 
 my %parsings = ('JIDposition' => (	'sge'=>2,
 									'slurm'=>3,
@@ -112,7 +111,9 @@ sub checkingCapability { #Will test the capacity of launching using various sche
 # A zero value (0) means mandatory
 # Any non-zero value means not blocking job
 
-sub launcher { #Global function for launching, will recover the command to be launch and will re-dispatch to normal or other scheduler
+sub launcher {
+	
+	#Global function for launching, will recover the command to be launch and will re-dispatch to normal or other scheduler
     
     ($commandLine,$requirement, $sample, $configInfo) = @_;
     
@@ -122,7 +123,6 @@ sub launcher { #Global function for launching, will recover the command to be la
     chomp $sample;
     
     my $schedulerType = &checkingCapability;
-
     
     my $runOutput;
        
@@ -136,14 +136,11 @@ sub launcher { #Global function for launching, will recover the command to be la
 	};
     
     
-    ##DEBUG    toolbox::exportLog("WARNING : scheduler : run output is $runOutput",2);
-    
-    if ($runOutput == 0 && $requirement == 0)
+	if ($runOutput == 0 && $requirement == 0)
     {
 	#The job has to succeed either it will kill all other jobs
         toolbox::exportLog("ERROR: scheduler::launcher on $sample using the scheduler $schedulerType: ".$commandLine."\nThe job cannot be achieved and is mandatory, thus the whole analysis is stop\n",0);
-    
-	return 0;
+    	return 0;
     }
     
     return $runOutput;
@@ -162,14 +159,13 @@ sub normalRun { #For running in normal mode, ie no scheduler
     ##Log export according to the error
     if ($?==0) #Success, no error
     {
-	##DEBUG toolbox::exportLog("INFOS: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\n",1);
-	return 1;
+		return 1;
     }
     else  #Error, the job cannot be achieved for any reason
     {
 	##DEBUG
-	toolbox::exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
-	return 0;
+		toolbox::exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
+		return 0;
     }
     
 }
@@ -187,6 +183,7 @@ sub schedulerRun
 	
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$sgeOptions;
+	
     #Creating the bash script for slurm to launch the command
     my $date =`date +%Y_%m_%d_%H_%M_%S`;
     chomp $date;
@@ -195,7 +192,8 @@ sub schedulerRun
     toolbox::run($bashScriptCreationCommand);
     $launcherCommand.=" $scriptName";
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
-
+	
+	#launching the job through a bash script
     my $currentJID = `$launcherCommand`;
     
     if ($!) #There are errors in the launching...
@@ -214,7 +212,7 @@ sub schedulerRun
     
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in $commands{'run'}{$schedulerType} mode through the command:\n\t$launcherCommand\n",1);
     
-    
+    #Picking job ID
     my @infosList=split ($parsings{'JIDsplitter'}{$schedulerType}, $currentJID); 
     $currentJID = $infosList[$parsings{'JIDposition'}{$schedulerType}];
     
@@ -224,7 +222,7 @@ sub schedulerRun
 
 ##################################
 #
-#WAITING for schedulers ONLY!
+# WAITING for schedulers ONLY!
 #
 ##################################
 
@@ -235,11 +233,8 @@ sub waiter
     
     %jobHash = %{$jobsInfos};
         
-    my $hashCapability = &checkingCapability;
+    my $schedulerType = &checkingCapability;
     my $stopWaiting;
-
-	my ($schedulerType) = keys %{$hashCapability};
-    
     my $runOutput;
        
     if (defined $$configInfo{$schedulerType})
