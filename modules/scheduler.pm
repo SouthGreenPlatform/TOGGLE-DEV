@@ -307,8 +307,8 @@ Individual\tJobID\tExitStatus
 		  
 		  my $parserText = $parsings{'acctOutText'}{$schedulerType};
 		  
-		  ##DEBUG 
-		  toolbox::exportLog($parserText,0);
+		  ##DEBUG
+		  toolbox::exportLog($parserText,2);
 		  
 		  if ($line =~ m/$parserText/) #Picking up exit status
 		  {
