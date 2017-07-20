@@ -186,7 +186,7 @@ sub schedulerRun
     
 	#Picking up ENV variable
     my $envOptionsHash=toolbox::extractHashSoft($configInfo,"env");
-    my $envOptions=toolbox::extractOptions($envOptionsHash,"=","\n");
+    my $envOptions=toolbox::extractOptions($envOptionsHash," ","\n");
 	
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$sgeOptions;
