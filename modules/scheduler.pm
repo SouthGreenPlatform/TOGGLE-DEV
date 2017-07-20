@@ -70,7 +70,7 @@ my %parsings = ('JIDposition' => (	'sge'=>2,
 				'JIDsplitter' => ('sge'=>"\\s",
 								  'slurm'=>"\\s",
 								  'mprun'=>"\\s",
-								  'lsf'=>"<|>"),
+								  'lsf'=>"<\|>"),
 				'acctOutSplitter' => ('sge'=>"\\n",
 									  'slurm'=>"\\n",
 									  'mprun'=>"\\s+",
@@ -82,27 +82,30 @@ my %parsings = ('JIDposition' => (	'sge'=>2,
 
 sub checkingCapability { #Will test the capacity of launching using various schedulers on the current system
     
-    my %capabilityValue;
+    my $capabilityValue;
     
     #SGE test
-    $capabilityValue{"sge"} = `qsub -help 2>/dev/null | grep usage`; #Will provide a not-empty output if SGE is installed
-    chomp $capabilityValue{"sge"};
+    $capabilityValue = `qsub -help 2>/dev/null | grep usage`; #Will provide a not-empty output if SGE is installed
+    chomp $capabilityValue;
+	return $capabilityValue if $capabilityValue;
     
     #SLURM test
-    $capabilityValue{"slurm"}=`sbatch -V 2>/dev/null | grep slurm`; #Will provide a not-empty output if SLURM is installed
-    chomp $capabilityValue{"slurm"};
+    $capabilityValue=`sbatch -V 2>/dev/null | grep slurm`; #Will provide a not-empty output if SLURM is installed
+    chomp $capabilityValue;
+	return $capabilityValue if $capabilityValue;
+
     
     #mprun test
-    $capabilityValue{"mprun"}=`ccc_mprun -h 2>&1 | grep usage`; #Will provide a not-empty output if mprun is installed
-    chomp $capabilityValue{"mprun"};
-    
+    $capabilityValue=`ccc_mprun -h 2>&1 | grep usage`; #Will provide a not-empty output if mprun is installed
+    chomp $capabilityValue;
+    return $capabilityValue if $capabilityValue;
+
     #lsf test
-    $capabilityValue{"lsf"}=`bsub -h 2>&1 | grep -i Synopsis`; #Will provide a not-empty output if lsf is installed
-    chomp $capabilityValue{"lsf"};
+    $capabilityValue=`bsub -h 2>&1 | grep -i Synopsis`; #Will provide a not-empty output if lsf is installed
+    chomp $capabilityValue;
+	return $capabilityValue if $capabilityValue;
+
     
-    
-    #Returning infos as a reference
-    return \%capabilityValue;
 }
 
 #Requirement means the job needs to be achieved for the next steps or it is not a blocking job?
@@ -118,8 +121,8 @@ sub launcher { #Global function for launching, will recover the command to be la
     $sample=`basename $sample` or die("ERROR : $0 : Cannot pickup the basename for $sample: $!\n");
     chomp $sample;
     
-    my $hashCapability = &checkingCapability;
-	my ($schedulerType) = keys %{$hashCapability};
+    my $schedulerType = &checkingCapability;
+
     
     my $runOutput;
        
