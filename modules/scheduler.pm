@@ -123,7 +123,7 @@ sub launcher {
     chomp $sample;
     
     my $schedulerType = &checkingCapability;
-	toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
+	##DEBUG toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
     
     my $runOutput;
        
