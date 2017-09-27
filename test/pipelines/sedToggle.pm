@@ -75,7 +75,7 @@ sub sedFunction
         $sed="sed -i -e 's|#-V|-V|' ". $file;
         ## DEBUG print $sed;
         #system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-        my $echoText = "\$env\nmodule load toggleDev\n";
+        my $echoText = "\$env\nmodule use --append \$HOME/privatemodules\nmodule load toggleDev\n";
         my $echoCom = "echo '$echoText' | cat - >> $file";
         system("$echoCom") and die ("#### ERROR ECHO COMMAND: $echoCom\n");
     }
