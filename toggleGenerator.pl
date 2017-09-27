@@ -52,7 +52,8 @@ use checkFormat;
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $version = "Release 0.3.5, 27th of September, 2017";
+my $version = "Release 0.3.4, 27th of September, 2017";
+my @shortVersion = (3,4);
 
 my $url = "toggle.southgreen.fr/install/releaseNotes/index.html";
 my $lastRealease = `curl -m 5 --connect-timeout 5 --max-time 5 -s "$url" 2>&1 | grep -m 1 '<li><a href="\#0' | cut -f3 -d'>' | cut -f1 -d'<'`;
@@ -60,9 +61,23 @@ chomp($lastRealease);
 my $newRelease="";
 if ($lastRealease ne $version)
 {
-    $newRelease =  "
+    my $shortRelease = $lastRealease;
+    $shortRelease =~ s/Release (\d\.\d.\d), .*/$1/;
+    my ($main,$major,$minor) = split /\./, $shortRelease;
+    if ($major < $shortVersion[0])
+    {
+        $newRelease = "\n** NOTE: This TOGGLE version is higher than the production version, you are using a dev version\n\n";
+    }
+    if ($major == $shortVersion[0] && $minor > $shortVersion[1])
+    {
+        $newRelease = "\n** NOTE: This TOGGLE version is higher than the production version, you are using a dev version\n\n";
+    }
+    else
+    {
+        $newRelease =  "
 ** NOTE: Latest version of TOGGLE is $lastRealease, and can be obtained at:
     http://toggle.southgreen.fr/\n\n"
+    }
 
 }
 
