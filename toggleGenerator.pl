@@ -62,13 +62,13 @@ my $newRelease="";
 if ($lastRealease ne $version)
 {
     my $shortRelease = $lastRealease;
-    $shortRelease =~ s/Release (\d\.\d.\d), .*/$1/;
+    $shortRelease =~ s/Release (\d\.\d\.\d), .*/$1/;
     my ($main,$major,$minor) = split /\./, $shortRelease;
     if ($major < $shortVersion[0])
     {
         $newRelease = "\n** NOTE: This TOGGLE version is higher than the production version, you are using a dev version\n\n";
     }
-    if ($major == $shortVersion[0] && $minor > $shortVersion[1])
+    if ($major == $shortVersion[0] && $minor < $shortVersion[1])
     {
         $newRelease = "\n** NOTE: This TOGGLE version is higher than the production version, you are using a dev version\n\n";
     }
