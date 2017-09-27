@@ -73,3 +73,6 @@ $gatkVariantFiltration
 $gatkSelectVariants
 -T=SelectVariants
 -selectType=SNP
+
+$env
+module load toggleDev

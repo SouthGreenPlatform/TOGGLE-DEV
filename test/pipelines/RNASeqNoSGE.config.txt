@@ -49,3 +49,6 @@ $picardToolsSortSam
 SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
 CREATE_INDEX=TRUE
+
+$env
+module load toggleDev

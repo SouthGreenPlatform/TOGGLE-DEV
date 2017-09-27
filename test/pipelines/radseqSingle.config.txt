@@ -16,3 +16,6 @@ $processRadtags
 -i fastq
 -e 'apeKI'
 --retain_header
+
+$env
+module load toggleDev
