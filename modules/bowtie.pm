@@ -140,7 +140,7 @@ sub bowtie
     {
         
         #Basic command line
-        my $command = $bowtie." --sam-RG".$readGroup." ".$options." ".$refFastaFileIn;
+        my $command = $bowtie." --sam-RG ".$readGroup." ".$options." ".$refFastaFileIn;
         
         if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
@@ -193,7 +193,7 @@ sub bowtie2
     {
         
         #Basic command line
-        my $command = $bowtie." --rg-id".$readGroup." ".$options." -x ".$refFastaFileIn;
+        my $command = $bowtie." --rg-id ".$readGroup." ".$options." -x ".$refFastaFileIn;
         
         if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
