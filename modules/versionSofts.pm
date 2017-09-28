@@ -37,6 +37,18 @@ use toolbox;
 use Data::Dumper;
 use Switch;
 
+sub bowtieVersion
+{   #We works with the STDIN output
+	my $version = `$bowtie --version | grep "bowtie version"` or die toolbox::exportLog("ERROR: versionSoft::bowtieVersion : Can not grep bowtie version.\nPlease check your bowtie installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+sub bowtie2Version
+{   #We works with the STDIN output
+	my $version = `$bowtie2 --version | grep "bowtie2-align-s version"` or die toolbox::exportLog("ERROR: versionSoft::bowtie2Version : Can not grep bowtie2 version.\nPlease check your bowtie installation.\n", 0);
+	chomp($version);
+	return $version;
+}
 sub bowtieBuildVersion
 {   #We works with the STDOUT output
 	my $version = `$bowtieBuild --version 2>&1 | grep "bowtie-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtieBuildVersion : Can not grep bowtieBuild version.\nPlease check your bowtie installation.\n", 0);
