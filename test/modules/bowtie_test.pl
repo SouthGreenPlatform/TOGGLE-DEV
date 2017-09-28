@@ -101,44 +101,41 @@ my @expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt'
 is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtieBuild - output list');
 
 # expected output content
-my $expectedMD5sum="167cd0622bda91392673aaf207255d2b";
+my $expectedMD5sum="de1ef57892bd9f508fb466521bd5a5b6";
 my $observedMD5sum=`md5sum $fastaRef.1.ebwt`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtieBuild - output content 1.ebwt');
 
-$expectedMD5sum="dd30c97b610f5dc53cf6f02123fcf807";
+$expectedMD5sum="5fe542df841de8685b4ee1c694b52f64";
 $observedMD5sum=`md5sum $fastaRef.2.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtieBuild - output content 2.ebwt');
 
-$expectedMD5sum="8aa5c56a0ba0b0ab7e9e7f3fb7ee4a76";
+$expectedMD5sum="dc12cca8433dfb22df23bc78bc6aeef6";
 $observedMD5sum=`md5sum $fastaRef.3.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtieBuild - output content 3.ebwt');
 
-$expectedMD5sum="a4ebbf39ff457e410253b571ee79088d";
+$expectedMD5sum="3d11892beee30c866ee5e2a06bbbc3d8";
 $observedMD5sum=`md5sum $fastaRef.4.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtieBuild - output content 4.ebwt');
 
-$expectedMD5sum="4bd4f23dc8b98a5dc4b56d7f4d89a9b5";
+$expectedMD5sum="cdf0694f4adfc7c5773f59c234081e98";
 $observedMD5sum=`md5sum $fastaRef.rev.1.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtieBuild - output content rev.1.ebwt');
 
-$expectedMD5sum="619322d189d42f4eaede8aaaedf9890e";
+$expectedMD5sum="f55fc9bd3bc5298fb0946289db6cff66";
 $observedMD5sum=`md5sum $fastaRef.rev.2.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtieBuild - output content rev.2.ebwt');
-
-
-
 
 
 ###############################################################################################
@@ -160,37 +157,37 @@ is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtie2Build - output list'
 
 # expected output content
 ###Checking the correct structure for the output file using md5sum
-$expectedMD5sum="4e0329b55cd2a67490ef96b7b2567e5d";
+$expectedMD5sum="b7a6d65d4bcefe2332dcdc8e9c0cb9c1";
 $observedMD5sum=`md5sum $fastaRef.1.bt2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtie2Build - output content 1.bt2');
 
-$expectedMD5sum="4ad45a523ecaef6310bb6f7f608eb311";
+$expectedMD5sum="481b0055258e98825bb4a8c52c3e90c0";
 $observedMD5sum=`md5sum $fastaRef.2.bt2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtie2Build - output content 2.bt2');
 
-$expectedMD5sum="8aa5c56a0ba0b0ab7e9e7f3fb7ee4a76";
+$expectedMD5sum="dc12cca8433dfb22df23bc78bc6aeef6";
 $observedMD5sum=`md5sum $fastaRef.3.bt2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtie2Build - output content 3.bt2');
 
-$expectedMD5sum="a4ebbf39ff457e410253b571ee79088d";
+$expectedMD5sum="3d11892beee30c866ee5e2a06bbbc3d8";
 $observedMD5sum=`md5sum $fastaRef.4.bt2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtie2Build - output content 4.bt2');
 
-$expectedMD5sum="beeb0f44030b631af6f182f4a85f045d";
+$expectedMD5sum="c5c13aab02f5bf0d2701b8de21df32ec";
 $observedMD5sum=`md5sum $fastaRef.rev.1.bt2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtie2Build - output content rev.1.bt2');
 
-$expectedMD5sum="df753d8d0522ee01e2479f99a04525dd";
+$expectedMD5sum="f53340fee1bdbd14d0da74565975c29d";
 $observedMD5sum=`md5sum $fastaRef.rev.2.bt2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
