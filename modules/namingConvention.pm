@@ -165,8 +165,6 @@ sub correctName
         case ($name =~ m/^fastx[\s|\.|\-| \/|\\|\|]*trimmer/i){$correctedName="fastxTrimmer"} # Correction for fastxTrimmer
 
         #FOR tophat.pm
-        case ($name =~ m/^bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bowtiebuild
-        case ($name =~ m/^bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bowtie2build
         case ($name =~ m/^tophat[\s|\.|\-| \/|\\|\|]*2/i){$correctedName="tophat2"; } #Correction for tophat2
 
         #FOR cufflinks.pm
@@ -202,8 +200,13 @@ sub correctName
         #FOR BOWTIE SUITE
         case ($name =~ m/^bowtie$/i){$correctedName="bowtie"}#Correction for bowtie
         case ($name =~ m/^bowtie2$/i){$correctedName="bowtie2"}#Correction for bowtie2
+        case ($name =~ m/^bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bowtiebuild
+        case ($name =~ m/^bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bowtie2build
 
-        else {toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
+        else
+        {
+            toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);
+        }; # Name unknown to TOGGLE, must stop
     }
     $correctedName .= " ".$order if ($order);
     ##DEBUG toolbox::exportLog("$correctedName\n",1);
