@@ -118,10 +118,9 @@ sub bowtie2Build
 
 
 ##Bowtie Mapping
-#Find the SA coordinates of the input reads.
 sub bowtie
 {
-    my($refFastaFileIn,$forwardFastqFile,$reverseFastqFile,$optionsHachees)=@_;
+    my($samFileOut,$readGroup,$refFastaFileIn,$forwardFastqFile,$reverseFastqFile,$optionsHachees)=@_;
     
     if (ref $reverseFastqFile) #No mate file, sequences are single ends
     {
@@ -129,33 +128,100 @@ sub bowtie
         $reverseFastqFile = "NA";
     }
     
+    #Options
     my $options = "";
     if ($optionsHachees)
     {
         $options=toolbox::extractOptions($optionsHachees);		##Get given options
     }
+    
+    #Command
     if ((toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($forwardFastqFile)==1))		##Check if entry files exist and are not empty
     {
         
-        my $command=$bowtie." ".$options." ".$refFastaFileIn;		# basic command line
+        #Basic command line
+        my $command = $bowtie." --sam-RG".$readGroup." ".$options." ".$refFastaFileIn;
+        
+        if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
+        {
+            $command .= "-1 ".$forwardFastqFile." -2 ".$reverseFastqFile;
+        }
+        else
+        {
+            $command .= " ".$forwardFastqFile;
+        }
+        $command .= " ".$samFileOut;
+        
         #Execute command
-        if(toolbox::run($command)==1)		## if the command has been excuted correctly, export the log
-	{
+        if(toolbox::run($command)==1)		## if the command has been executed correctly, export the log
+        {
             return 1;
         }
-	else
-	{
-            toolbox::exportLog("ERROR: bwa::bwaAln : ABORTED\n",0);
+        else
+        {
+            toolbox::exportLog("ERROR: bowtie::bowtie : ABORTED\n",0);
             return 0;
         }
     }
     else
     {
-        toolbox::exportLog("ERROR: bwa::bwaAln : Problem with the files $refFastaFileIn or/and $FastqFileIn\n",0);
+        toolbox::exportLog("ERROR: bowtie::bowtie : Problem with the files $refFastaFileIn or/and $forwardFastqFile\n",0);
         return 0;
     }
 }
 
+##Bowtie2 Mapping
+sub bowtie2
+{
+    my($samFileOut,$readGroup,$refFastaFileIn,$forwardFastqFile,$reverseFastqFile,$optionsHachees)=@_;
+    
+    if (ref $reverseFastqFile) #No mate file, sequences are single ends
+    {
+        $optionsHachees = $reverseFastqFile;
+        $reverseFastqFile = "NA";
+    }
+    
+    #Options
+    my $options = "";
+    if ($optionsHachees)
+    {
+        $options=toolbox::extractOptions($optionsHachees);		##Get given options
+    }
+    
+    #Command
+    if ((toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($forwardFastqFile)==1))		##Check if entry files exist and are not empty
+    {
+        
+        #Basic command line
+        my $command = $bowtie." --rg-id".$readGroup." ".$options." -x ".$refFastaFileIn;
+        
+        if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
+        {
+            $command .= "-1 ".$forwardFastqFile." -2 ".$reverseFastqFile;
+        }
+        else
+        {
+            $command .= " -U ".$forwardFastqFile;
+        }
+        $command .= " -S ".$samFileOut;
+        
+        #Execute command
+        if(toolbox::run($command)==1)		## if the command has been executed correctly, export the log
+        {
+            return 1;
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: bowtie::bowtie2 : ABORTED\n",0);
+            return 0;
+        }
+    }
+    else
+    {
+        toolbox::exportLog("ERROR: bowtie::bowtie2 : Problem with the files $refFastaFileIn or/and $forwardFastqFile\n",0);
+        return 0;
+    }
+}
 
 
 1;
@@ -166,7 +232,14 @@ sub bowtie
 =head1 SYNOPSIS
 
 	use bowtie;
-
+    
+    bowtie::bowtieBuild
+    
+    bowtie::bowtie2Build
+    
+    bowtie::bowtie
+    
+    bowtie::bowtie2
 	
 
 =head1 DESCRIPTION
@@ -175,11 +248,24 @@ sub bowtie
 
 =head2 FUNCTIONS
 
-=head3 bwa::bwaIndex
+=head3 bowtie::bowtieBuild
 
-This module index database sequences in the FASTA format.
+This module indexes database sequences in the FASTA format.
 It takes at least one argument: the name of the database to index
-The second argument is the options of bwa index, for more informations see http://bio-bwa.sourceforge.net/bwa.shtml
+!! NOT WORKING FOR BOWTIE2 !!
+
+=head3 bowtie::bowtie2Build
+
+This module indexes database sequences in the FASTA format.
+It takes at least one argument: the name of the database to index
+
+=head3 bowtie::bowtie
+
+This module will map the FASTQ data (single or paired) on the reference
+
+=head3 bowtie::bowtie2
+
+This module will map the FASTQ data (single or paired) on the reference
 
 =head1 AUTHORS
 

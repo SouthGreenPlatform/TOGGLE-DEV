@@ -218,3 +218,11 @@ OUT=NA
 $bamutilsTool
 IN=sam,bam
 OUT=bam,fastq,fasta,bed
+
+$bowtie
+IN=fastq
+OUT=SAM
+
+$bowtie2
+IN=fastq
+OUT=SAM
