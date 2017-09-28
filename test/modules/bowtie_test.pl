@@ -226,4 +226,35 @@ is($observedLineNumber, $expectedLineNumber, "bowtie::bowtie - output content fi
 #GREP command result
 my $grepResult=`grep -c ">" $samFileOut`;
 chomp $grepResult;
-is($grepResult,69,'bowtie::bowtie - output grep in file sam');
+is($grepResult,4,'bowtie::bowtie - output grep in file sam');
+
+##########################################
+##### bowtie::bowtie2
+##########################################
+
+# output file
+$samFileOut="irigin.BOWTIE2.sam";
+
+
+# execution test
+is(bowtie::bowtie($samFileOut,$readGroupLine,$fastaRef,$forwardFastq,$reverseFastq),'1',"bowtie::bowtie2 - Test for bowtie2 running");
+
+# expected output test
+#Check if files created
+@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt','irigin.BOWTIE.sam','irigin.BOWTIE2.sam','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtie2 - Files created');
+
+
+# expected content test $samFileOut
+$expectedLineNumber = "8 $samFileOut";                        # structure of the ref file for checking
+$observedLineNumber = `wc -l $samFileOut`;                       # structure of the test file for checking
+chomp $observedLineNumber;                                          # to separate the structure and the name of file
+is($observedLineNumber, $expectedLineNumber, "bowtie::bowtie2 - output content file sam");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
+
+###Test for correct file value of bwa sampe
+#GREP command result
+$grepResult=`grep -c ">" $samFileOut`;
+chomp $grepResult;
+is($grepResult,4,'bowtie::bowtie2 - output grep in file sam');
