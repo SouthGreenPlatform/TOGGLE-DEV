@@ -1,5 +1,5 @@
 ##############################################
-# Block for bwa::bwaAln
+# Block for bowtie::bowtie
 ##############################################
 
 #Correct variable populating
@@ -25,44 +25,16 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 	}
 }
 
-if ( ($fastqForwardIn ne "NA") && ($fastqReverseIn eq "NA") )	# Single data
+
+($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);		# extract name of file without the extention
+
+$samFileOut = "$newDir"."/"."$readGroup".".BOWTIE.sam";					# name for the output file of bowtie
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);			# recovery of specific parameters of bowtie
+if ($fastqReverse ne "NA")
 {
-	##########################################
-	# bwa::bwaAln for fastqForwardIn
-	##########################################
-	$softParameters = toolbox::extractHashSoft($optionRef,$stepName);									# recovery of specific parameters of bwa aln
-	($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);						  # extract name of file without the extention
-	$saiForwardOut = "$newDir"."/"."$fileWithoutExtension".".BWAALN.sai";								# name for the output file of bwa aln
-	bwa::bwaAln($refFastaFile,$fastqForwardIn,$saiForwardOut,$softParameters);						   # find the SA coordinates of the current file
-	#########################################
-	# Add a link to fastqFiles, to avoid empty fastq files for bwaSampe and Samse.
-	#########################################
-	my $linkForwardCommand = "ln -s $fastqForwardIn $newDir/";
-	toolbox::run($linkForwardCommand,"noprint");
+	bowtie::bowtie($samFileOut,readGroup,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$softParameters); # generate alignement in SAM format for PE data
 }
-elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn ne "NA") )	# Paired data
+else
 {
-	##########################################
-	# bwa::bwaAln for fastqForwardIn
-	##########################################
-	$softParameters = toolbox::extractHashSoft($optionRef,$stepName);									# recovery of specific parameters of bwa aln
-	($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);						  # extract name of file without the extention
-	$saiForwardOut = "$newDir"."/"."$fileWithoutExtension".".BWAALN.sai";								# name for the output file of bwa aln
-	bwa::bwaAln($refFastaFile,$fastqForwardIn,$saiForwardOut,$softParameters);						   # find the SA coordinates of the current file
-
-	##########################################
-	# bwa::bwaAln for fastqReverseIn
-	##########################################
-	($fileWithoutExtension,$readGroup) = pairing::extractName($fastqReverseIn);						  # extract name of file without the extention
-	$saiReverseOut = "$newDir"."/"."$fileWithoutExtension".".BWAALN.sai";								# name for the output file of bwa aln
-	bwa::bwaAln($refFastaFile,$fastqReverseIn,$saiReverseOut,$softParameters);						   # find the SA coordinates of the current file
-
-	#########################################
-	# Add a link to fastqFiles, to avoid empty fastq files for bwaSampe and Samse.
-	#########################################
-	my $linkForwardCommand = "ln -s $fastqForwardIn $newDir/";
-	toolbox::run($linkForwardCommand,"noprint");
-	my $linkReverseCommand = "ln -s $fastqReverseIn $newDir/";
-	toolbox::run($linkReverseCommand,"noprint");
-
+	bowtie::bowtie($samFileOut,readGroup,$refFastaFile,$fastqForwardIn,$softParameters); # generate alignement in SAM format for SE data
 }
