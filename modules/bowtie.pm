@@ -144,7 +144,7 @@ sub bowtie
         
         if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
-            $command .= "-1 ".$forwardFastqFile." -2 ".$reverseFastqFile;
+            $command .= " -1 ".$forwardFastqFile." -2 ".$reverseFastqFile;
         }
         else
         {
@@ -197,7 +197,7 @@ sub bowtie2
         
         if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
-            $command .= "-1 ".$forwardFastqFile." -2 ".$reverseFastqFile;
+            $command .= " -1 ".$forwardFastqFile." -2 ".$reverseFastqFile;
         }
         else
         {
