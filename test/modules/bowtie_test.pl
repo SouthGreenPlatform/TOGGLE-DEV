@@ -193,4 +193,37 @@ $observedMD5sum=`md5sum $fastaRef.rev.2.bt2`;# structure of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'bowtie::bowtie2Build - output content rev.2.bt2');
 
+##########################################
+##### bowtie::bowtie
+##########################################
 
+# input file
+my $forwardFastq=$fastqData."irigin1_1.fastq";
+my $reverseFastq=$fastqData."irigin1_2.fastq";
+
+# output file
+my $samFileOut="irigin.BOWTIE.sam";
+my $readGroupLine="irigin";
+
+# execution test
+is(bowtie::bowtie($samFileOut,$readGroupLine,$fastaRef,$forwardFastq,$reverseFastq),'1',"bowtie::bwotie - Test for bowtie running");
+
+# expected output test
+#Check if files created
+@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt','irigin.BOWTIE.sam','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtie - Files created');
+
+
+# expected content test $samFileOut
+my $expectedLineNumber = "8 $samFileOut";                        # structure of the ref file for checking
+my $observedLineNumber = `wc -l $samFileOut`;                       # structure of the test file for checking
+chomp $observedLineNumber;                                          # to separate the structure and the name of file
+is($observedLineNumber, $expectedLineNumber, "bowtie::bowtie - output content file sam");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
+
+###Test for correct file value of bwa sampe
+#GREP command result
+my $grepResult=`grep -c ">" $samFileOut`;
+chomp $grepResult;
+is($grepResult,69,'bowtie::bowtie - output grep in file sam');
