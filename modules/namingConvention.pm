@@ -88,29 +88,29 @@ sub correctName
     $order = pop @list if ($list[-1] =~ m/^\d+/); # This is for a repetition of the same step
     switch (1)
     {
-	#FOR cleaner
-	case ($name =~ m/^cleaner/i){$correctedName="cleaner";} #Correction for cleaner step
-
-	#FOR compressor
-	case ($name =~ m/^compress/i){$correctedName="compress";} #correction for compressor step
-
-	#FOR merge
-	case ($name =~ m/^merge/i){$correctedName="merge";} #correction for merge step
-	
-	#FOR env
-	case ($name =~ m/^env/i){$correctedName="env";} #correction for merge step	
-
-	#FOR SGE
-	case ($name =~ m/^sge/i){$correctedName="sge";} #Correction for sge configuration
-
-	#FOR SLURM
-	case ($name =~ m/^slurm/i){$correctedName="slurm";} #Correction for slurm configuration
-
-	#FOR MPRUN
-	case ($name =~ m/^mprun/i){$correctedName="mprun";} #Correction for mprun configuration
-
-	#FOR LSF
-	case ($name =~ m/^lsf/i){$correctedName="lsf";} #Correction for lsf configuration
+        #FOR cleaner
+        case ($name =~ m/^cleaner/i){$correctedName="cleaner";} #Correction for cleaner step
+    
+        #FOR compressor
+        case ($name =~ m/^compress/i){$correctedName="compress";} #correction for compressor step
+    
+        #FOR merge
+        case ($name =~ m/^merge/i){$correctedName="merge";} #correction for merge step
+        
+        #FOR env
+        case ($name =~ m/^env/i){$correctedName="env";} #correction for merge step	
+    
+        #FOR SGE
+        case ($name =~ m/^sge/i){$correctedName="sge";} #Correction for sge configuration
+    
+        #FOR SLURM
+        case ($name =~ m/^slurm/i){$correctedName="slurm";} #Correction for slurm configuration
+    
+        #FOR MPRUN
+        case ($name =~ m/^mprun/i){$correctedName="mprun";} #Correction for mprun configuration
+    
+        #FOR LSF
+        case ($name =~ m/^lsf/i){$correctedName="lsf";} #Correction for lsf configuration
 
         #FOR bwa.pm
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
@@ -166,8 +166,8 @@ sub correctName
 
         #FOR tophat.pm
         case ($name =~ m/^bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bowtiebuild
-	case ($name =~ m/^bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bowtie2build
-	case ($name =~ m/^tophat[\s|\.|\-| \/|\\|\|]*2/i){$correctedName="tophat2"; } #Correction for tophat2
+        case ($name =~ m/^bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bowtie2build
+        case ($name =~ m/^tophat[\s|\.|\-| \/|\\|\|]*2/i){$correctedName="tophat2"; } #Correction for tophat2
 
         #FOR cufflinks.pm
 
@@ -198,6 +198,10 @@ sub correctName
 		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
+        
+        #FOR BOWTIE SUITE
+        case ($name =~ m/^bowtie$/i){$correctedName="bowtie"}#Correction for bowtie
+        case ($name =~ m/^bowtie2$/i){$correctedName="bowtie2"}#Correction for bowtie2
 
         else {toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
     }
