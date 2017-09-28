@@ -58,7 +58,7 @@ my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
 #########################################
 #Remove files and directory created by previous test
 #########################################
-my $testingDir="$toggle/dataTest/bwaTestDir";
+my $testingDir="$toggle/dataTest/bowtieTestDir";
 my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
 system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
 
@@ -68,14 +68,14 @@ chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
-my $creatingCommand="echo \"bwa\nTEST\" > individuSoft.txt";
+my $creatingCommand="echo \"bowtie\nTEST\" > individuSoft.txt";
 system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
 
 
 #######################################
 #Cleaning the logs for the test
 #######################################
-my $cleaningCommand="rm -Rf bwa_TEST_log.*";
+my $cleaningCommand="rm -Rf bowtie_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 ##########################################
@@ -84,8 +84,8 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 # input file
 
-my $fastaRefIni=$bankData."/referenceRnaseq.fa";
-my $fastaRef="referenceRNASeq.fa";
+my $fastaRefIni=$bankData."/referenceIrigin.fasta";
+my $fastaRef="referenceIrigin.fasta";
 
 #copy fasta reference into test directory where the index will be created
 my $copyCommand="cp $fastaRefIni ./$fastaRef";
@@ -97,7 +97,7 @@ is(bowtie::bowtieBuild($fastaRef),$fastaRef,'bowtie::bowtieBuild');
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','referenceRNASeq.fa','referenceRNASeq.fa.1.ebwt','referenceRNASeq.fa.2.ebwt','referenceRNASeq.fa.3.ebwt','referenceRNASeq.fa.4.ebwt','referenceRNASeq.fa.rev.1.ebwt','referenceRNASeq.fa.rev.2.ebwt','tophat_TEST_log.e','tophat_TEST_log.o');
+my @expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt','referenceIrigin.fasta','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.ebwt');
 is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtieBuild - output list');
 
 # expected output content
@@ -154,7 +154,7 @@ is(bowtie::bowtie2Build($fastaRef,$optionHachees),$fastaRef, 'bowtie::bowtie2Bui
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','referenceRNASeq.fa','referenceRNASeq.fa.1.bt2','referenceRNASeq.fa.1.ebwt','referenceRNASeq.fa.2.bt2','referenceRNASeq.fa.2.ebwt','referenceRNASeq.fa.3.bt2','referenceRNASeq.fa.3.ebwt','referenceRNASeq.fa.4.bt2','referenceRNASeq.fa.4.ebwt','referenceRNASeq.fa.rev.1.bt2','referenceRNASeq.fa.rev.1.ebwt','referenceRNASeq.fa.rev.2.bt2','referenceRNASeq.fa.rev.2.ebwt','tophat_TEST_log.e','tophat_TEST_log.o');
+@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
 ##print Dumper(\@observedOutput);
 is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtie2Build - output list');
 
