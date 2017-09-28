@@ -1,5 +1,5 @@
 ##############################################
-# Block for bowtie::bowtie
+# Block for bowtie::bowtie2
 ##############################################
 
 #Correct variable populating
@@ -28,13 +28,13 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 
 ($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);		# extract name of file without the extension
 
-$samFileOut = "$newDir"."/"."$readGroup".".BOWTIE.sam";					# name for the output file of bowtie
-$softParameters = toolbox::extractHashSoft($optionRef,$stepName);			# recovery of specific parameters of bowtie
+$samFileOut = "$newDir"."/"."$readGroup".".BOWTIE2.sam";					# name for the output file of bowtie2
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);			# recovery of specific parameters of bowtie2
 if ($fastqReverse ne "NA")
 {
-	bowtie::bowtie($samFileOut,readGroup,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$softParameters); # generate alignement in SAM format for PE data
+	bowtie::bowtie2($samFileOut,readGroup,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$softParameters); # generate alignement in SAM format for PE data
 }
 else
 {
-	bowtie::bowtie($samFileOut,readGroup,$refFastaFile,$fastqForwardIn,$softParameters); # generate alignement in SAM format for SE data
+	bowtie::bowtie2($samFileOut,readGroup,$refFastaFile,$fastqForwardIn,$softParameters); # generate alignement in SAM format for SE data
 }
