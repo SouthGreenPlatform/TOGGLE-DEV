@@ -226,9 +226,13 @@ sub writeLogVersion
 			#FOR tophat.pm
 			case ($softOrder =~ m/^bowtie2.*/i){$softPathVersion{"bowtie2Build"}= bowtie2BuildVersion if not defined $softPathVersion{"bowtie2Build"};
 												$softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
+												$softPathVersion{"bowtie2"}= bowtie2Version if not defined $softPathVersion{"bowtie2"};
+												$softPath{"bowtie2"}= $bowtie2 if not defined $softPath{"bowtie2"};
 												}
-			case ($softOrder =~ m/^bowtie/i){$softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"};
+			case ($softOrder =~ m/^bowtie$/i){$softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"};
 											 $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
+											 $softPathVersion{"bowtie"}= bowtieVersion if not defined $softPathVersion{"bowtie"};
+											 $softPath{"bowtie"}= $bowtie if not defined $softPath{"bowtie"};
 											 }
 
 			case ($softOrder =~ m/^tophat.*/i){$softPathVersion{"tophat2"}= tophatVersion if not defined $softPathVersion{"tophat2"};
