@@ -30,11 +30,11 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 
 $samFileOut = "$newDir"."/"."$readGroup".".BOWTIE.sam";					# name for the output file of bowtie
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);			# recovery of specific parameters of bowtie
-if ($fastqReverse ne "NA")
+if ($fastqReverseIn ne "NA")
 {
-	bowtie::bowtie($samFileOut,readGroup,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$softParameters); # generate alignement in SAM format for PE data
+	bowtie::bowtie($samFileOut,$readGroup,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$softParameters); # generate alignement in SAM format for PE data
 }
 else
 {
-	bowtie::bowtie($samFileOut,readGroup,$refFastaFile,$fastqForwardIn,$softParameters); # generate alignement in SAM format for SE data
+	bowtie::bowtie($samFileOut,$readGroup,$refFastaFile,$fastqForwardIn,$softParameters); # generate alignement in SAM format for SE data
 }
