@@ -117,19 +117,27 @@ sub bowtie2Build
 
 
 
-##BWA ALN
+##Bowtie Mapping
 #Find the SA coordinates of the input reads.
-sub bwaAln
+sub bowtie
 {
-    my($refFastaFileIn,$FastqFileIn,$saiFileOut,$optionsHachees)=@_;
-    if ((toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($FastqFileIn)==1))		##Check if entry files exist and are not empty
+    my($refFastaFileIn,$forwardFastqFile,$reverseFastqFile,$optionsHachees)=@_;
+    
+    if (ref $reverseFastqFile) #No mate file, sequences are single ends
     {
-        my $options="";
-        if ($optionsHachees)
-	{
-            $options=toolbox::extractOptions($optionsHachees);		##Get given options
-        }
-        my $command=$bwa." aln ".$options." -f ".$saiFileOut." ".$refFastaFileIn." ".$FastqFileIn;		# command line
+        $optionsHachees = $reverseFastqFile;
+        $reverseFastqFile = "NA";
+    }
+    
+    my $options = "";
+    if ($optionsHachees)
+    {
+        $options=toolbox::extractOptions($optionsHachees);		##Get given options
+    }
+    if ((toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($forwardFastqFile)==1))		##Check if entry files exist and are not empty
+    {
+        
+        my $command=$bowtie." ".$options." ".$refFastaFileIn;		# basic command line
         #Execute command
         if(toolbox::run($command)==1)		## if the command has been excuted correctly, export the log
 	{
@@ -159,21 +167,11 @@ sub bwaAln
 
 	use bowtie;
 
-	bwa::bwaIndex ($refFastaFileIn,$option_prog{'bwa index'});
-
-	bwa::bwaAln ($refFastaFileIn,$FastqFileIn,$saiFileOut,$option_prog{'bwa aln'});
-
-	bwa::bwaSampe ($samFileOut,$refFastaFileIn,$forwardSaiFileIn,$reverseSaiFileIn,$forwardFastqFileIn,$reverseFastqFileIn,$readGroupLine,$option_prog{'bwa sampe'});
-
-	bwa::bwaSamse ($samFileOut,$refFastaFileIn,$saiFileIn,$fastqFileIn,$readGroupLine,$option_prog{'bwa samse'});
-
-	bwa::bwaMem ($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn, $readGroupLine,$option_prog{'bwa mem'});
-
-	bwa::bwaSw ($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn, $option_prog{'bwa sw'});
+	
 
 =head1 DESCRIPTION
 
-    Package BOWTIE (Li et al, 2009, http:// ) is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome.
+    Package BOWTIE/BOWTIE2 ( http:// ) is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome.
 
 =head2 FUNCTIONS
 
@@ -183,55 +181,10 @@ This module index database sequences in the FASTA format.
 It takes at least one argument: the name of the database to index
 The second argument is the options of bwa index, for more informations see http://bio-bwa.sourceforge.net/bwa.shtml
 
-
-
-=head3 bwa::bwaAln
-
-This module find the SA coordinates of the input reads. Maximum maxSeedDiff differences are allowed in the first seedLen subsequence and maximum maxDiff differences are allowed in the whole sequence.
-It takes at least three arguments: the name of the database indexed, the name of file where to find SA coordinates, the name of the output file of this module ".sai"
-The fourth argument is the options of bwa aln, for more informations see http://bio-bwa.sourceforge.net/bwa.shtml
-
-
-
-=head3 bwa::bwaSampe
-
-This module generate alignments in the SAM format given paired-end reads. Repetitive read pairs will be placed randomly.
-It takes at least six arguments: the name of the database indexed, the name of the reverse fastq file, the name of the forward fastq file, the name of the reverse sai file, the name of the forward sai file, the name of the output file of this module ".sam"
-The seventh argument is the read group information
-The eighth argument is the bwa sampe options, for more informations see http://bio-bwa.sourceforge.net/bwa.shtml
-
-
-
-=head3 bwa::bwaSamse
-
-This module generate alignments in the SAM format given single-end reads. Repetitive hits will be randomly chosen.
-It takes at least four arguments: the name of the database indexed, the name of the fastq file, the name of the sai file, the name of the output of this module ".sam"
-The fifth argument is the read group information
-The sixth argument is the options of bwa samse, for more informations see http://bio-bwa.sourceforge.net/bwa.shtml
-
-
-
-=head3 bwa::bwaMem
-
-Align 70bp-1Mbp query sequences with the BWA-MEM algorithm. Briefly, the algorithm works by seeding alignments with maximal exact matches (MEMs) and then extending seeds with the affine-gap Smith-Waterman algorithm (SW).
-
-If mates.fq file is absent and option -p is not set, this command regards input reads are single-end. If mates.fq is present, this command assumes the i-th read in reads.fq and the i-th read in mates.fq constitute a read pair. If -p is used, the command assumes the 2i-th and the (2i+1)-th read in reads.fq constitute a read pair (such input file is said to be interleaved). In this case, mates.fq is ignored. In the paired-end mode, the mem command will infer the read orientation and the insert size distribution from a batch of reads.
-
-The BWA-MEM algorithm performs local alignment. It may produce multiple primary alignments for different part of a query sequence. This is a crucial feature for long sequences. However, some tools such as Picard markDuplicates does not work with split alignments. One may consider to use option -M to flag shorter split hits as secondary.
-It takes at least three (for single) or four (for pair) arguments: the name of the database indexed, the name of the fastq file(s), the name of the output file of this module ".sam"
-The penultimate arguement is the read group information
-The last argument is the options of bwa mem, for more informations see http://bio-bwa.sourceforge.net/bwa.shtml
-
-=head3 bwa::bwaSw
-
-Align query sequences with the BWA-SW algorithm?.
-
-
-
 =head1 AUTHORS
 
-Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
+Intellectual property belongs to IRD, CIRAD, ADNid and South Green development platform
+Written by Christine Tranchant, Julie Orjuela, Sebastien Ravel and Francois Sabot
 
 =head1 SEE ALSO
 
