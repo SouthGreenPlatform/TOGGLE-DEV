@@ -222,7 +222,9 @@ OUT=bam,fastq,fasta,bed
 $bowtie
 IN=fastq
 OUT=SAM
+MANDATORY=reference
 
 $bowtie2
 IN=fastq
 OUT=SAM
+MANDATORY=reference
