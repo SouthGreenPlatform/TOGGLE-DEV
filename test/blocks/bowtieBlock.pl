@@ -63,7 +63,7 @@ fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for bwotie";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for bowtie";
 
 # check final results
 
@@ -77,8 +77,44 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two fastq (no SGE
 # expected output value
 my $grepResult= `grep -c 'H3:C39R6ACXX' $testingDir/finalResults/irigin1.BOWTIE.sam`;
 chomp $grepResult;
-is($grepResult,2004,'toggleGenerator - Two fastq (no SGE) BOWTIE result of bowtie irigin1.BOWTIE.sam');
+is($grepResult,8,'toggleGenerator - Two fastq (no SGE) BOWTIE result of bowtie irigin1.BOWTIE.sam');
 # expected output value
 $grepResult= `grep -c 'H2:C381HACXX' $testingDir/finalResults/irigin3.BOWTIE.sam`;
 chomp $grepResult;
-is($grepResult,2003,'toggleGenerator - Two fastq (no SGE) BOWTIE result of bowtie irigin3.BOWTIE.sam');
+is($grepResult,456,'toggleGenerator - Two fastq (no SGE) BOWTIE result of bowtie irigin3.BOWTIE.sam');
+
+
+print "\n\n#################################################\n";
+print "#### TEST BOWTIE2 bowtie2\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="$toggle/dataTest/bowtie2-noSGE-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("bowtie2");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for bowtie2";
+
+# check final results
+
+# expected output content
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('irigin1.BOWTIE2.sam','irigin3.BOWTIE2.sam');
+
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two fastq (no SGE) BOWTIE2 file list ');
+
+# expected output value
+$grepResult= `grep -c 'H3:C39R6ACXX' $testingDir/finalResults/irigin1.BOWTIE2.sam`;
+chomp $grepResult;
+is($grepResult,2000,'toggleGenerator - Two fastq (no SGE) BOWTIE result of bowtie2 irigin1.BOWTIE2.sam');
+# expected output value
+$grepResult= `grep -c 'H2:C381HACXX' $testingDir/finalResults/irigin3.BOWTIE2.sam`;
+chomp $grepResult;
+is($grepResult,2000,'toggleGenerator - Two fastq (no SGE) BOWTIE result of bowtie2 irigin3.BOWTIE2.sam');
