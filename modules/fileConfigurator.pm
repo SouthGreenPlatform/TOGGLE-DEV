@@ -108,7 +108,10 @@ our %testParams=    (
         checkEncodeByASCIIcontrol => [""],
 		# bamutils
 		bamutilsFilter => ["-gte MAPQ 30"],
-		bamutilsRemoveclipping => [""]
+		bamutilsRemoveclipping => [""],
+        #Bowtie softs
+        bowtie=>[""],
+        bowtie2=>[""]
         );
 
 sub softParams
