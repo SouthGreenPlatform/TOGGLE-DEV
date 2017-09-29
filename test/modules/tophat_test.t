@@ -78,6 +78,35 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 my $bankData="$toggle/data/Bank/";
 my $testData="$toggle/data/testData/rnaseq/";
 
+##########################################
+### Test for bowtie::bowtieBuild
+##########################################
+
+# input file
+
+my $fastaRefIni=$bankData."/referenceIrigin.fasta";
+my $fastaRef="referenceIrigin.fasta";
+
+#copy fasta reference into test directory where the index will be created
+my $copyCommand="cp $fastaRefIni ./$fastaRef";
+system ($copyCommand) and die "ERROR: $0: Cannot copy the $fastaRefIni file with the command $copyCommand \n$!\n";
+
+# execution test
+is(bowtie::bowtieBuild($fastaRef),$fastaRef,'bowtie::bowtieBuild');
+
+
+
+###############################################################################################
+##bowtie::bowtie2Build
+###############################################################################################
+
+my %optionsHachees = ();                # Hash containing informations
+my $optionHachees = \%optionsHachees;   # Ref of the hash
+
+# execution test
+is(bowtie::bowtie2Build($fastaRef,$optionHachees),$fastaRef, 'bowtie::bowtie2Build');
+
+
 
 #################################################################################################
 ####tophat::tophat2
@@ -109,9 +138,9 @@ $tmpDir.='/tophatOut';
 is(tophat::tophat2($tmpDir, $fastaRef, $fastqFile1, $fastqFile2, $gffRef, $optionHachees),1,'tophat::tophat2');
 
 # expected output test
-$observedOutput = `ls $tmpDir`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('RNASeq.accepted_hits.bam','RNASeq.align_summary.txt','RNASeq.deletions.bed','RNASeq.insertions.bed','RNASeq.junctions.bed','RNASeq.logs','RNASeq.prep_reads.info','RNASeq.unmapped.bam');
+my $observedOutput = `ls $tmpDir`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('RNASeq.accepted_hits.bam','RNASeq.align_summary.txt','RNASeq.deletions.bed','RNASeq.insertions.bed','RNASeq.junctions.bed','RNASeq.logs','RNASeq.prep_reads.info','RNASeq.unmapped.bam');
 is_deeply(\@observedOutput,\@expectedOutput,'tophat::tophat2 - output list');
 
 
