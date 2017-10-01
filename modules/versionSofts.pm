@@ -173,6 +173,14 @@ sub bamutilsVersion
 	return $version;
 }
 
+sub cracVersion
+{ #We works with the STDIN output
+	my $version = `$carc -version | grep -m 1 "version"` or die toolbox::exportLog("ERROR: versionSoft::cracVersion : Can not grep CRAC version\nPlease check your CRAC installation.\n", 0);
+	chomp($version);
+	return $version;
+	
+}
+
 sub writeLogVersion
 {
 	my ($fileConf, $version) = @_;
@@ -292,6 +300,11 @@ sub writeLogVersion
 
 			#For format checking
 			case($softOrder =~ m/^check/i){next;}
+			
+			#FOR crac.pm
+			case ($softOrder =~ m/^crac.*/i){$softPathVersion{"crac"}= cracVersion if not defined $softPathVersion{"crac"};
+											$softPath{"crac"}= $bwa if not defined $softPath{"crac"};
+											}
 
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}
