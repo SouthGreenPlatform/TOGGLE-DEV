@@ -105,7 +105,7 @@ sub crac
     {
         
         #Basic command line
-        my $command = $crac." ".$options." -i ../../../referenceFiles/CRAC.index -o ".$samFileOut." ";
+        my $command = $crac." ".$options." -im ../../../referenceFiles/CRAC.index -o ".$samFileOut." ";
         
         if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
