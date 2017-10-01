@@ -210,13 +210,17 @@ sub picardToolsSamFormatConverter
 # This module changes the ReadGroup
 sub picardToolsAddOrReplaceReadGroups
 {
-    my($samFileIn,$bamFileOut,$optionsHachees)= @_;       # recovery of informations
+    my($samFileIn,$bamFileOut,$readGroup,$optionsHachees)= @_;       # recovery of informations
     if ((checkFormat::checkFormatSamOrBam($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
     {
         my $options="";
         if ($optionsHachees)
         {
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
+        }
+        unless ($options =~ m/LB=/)
+        {
+            $options .= " LB=$readGroup PU=$readGroup PL=$readGroup SM=$readGroup ";
         }
         my $command="$picard AddOrReplaceReadGroups $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
