@@ -96,7 +96,7 @@ sub crac
     
 	unless  ($options =~ m/-k /)
 	{
-		toolbox::exportLog("WARNING: crac::crac: no kmers length provided, we fix it arbitrary at 22");
+		toolbox::exportLog("WARNING: crac::crac: no kmers length provided, we fix it arbitrary at 22.\n",2);
 		$options .= " -k 22"; 
 	}
 	
@@ -105,7 +105,7 @@ sub crac
     {
         
         #Basic command line
-        my $command = $crac." --sam-RG ".$readGroup." ".$options." ../../../referenceFiles/CRAC.index -o ".$samFileOut." ";
+        my $command = $crac." ".$options." -i ../../../referenceFiles/CRAC.index -o ".$samFileOut." ";
         
         if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
