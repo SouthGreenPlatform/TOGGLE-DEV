@@ -202,6 +202,10 @@ sub correctName
         case ($name =~ m/^bowtie2$/i){$correctedName="bowtie2"}#Correction for bowtie2
         case ($name =~ m/^bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bowtiebuild
         case ($name =~ m/^bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bowtie2build
+        
+        #FOR CRAC SUITE
+        case ($name =~ m/^crac[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="cracIndex"; } #Correction for cracIndex
+        case ($name =~ m/^crac/i){$correctedName="crac"; } #Correction for crac
 
         else
         {
