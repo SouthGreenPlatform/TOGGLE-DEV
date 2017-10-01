@@ -228,3 +228,13 @@ $bowtie2
 IN=fastq
 OUT=SAM
 MANDATORY=reference
+
+$crac
+IN=fastq
+OUT=SAM
+MANDATORY= reference
+
+$cracIndex
+IN=fasta
+OUT=NA
+MANDATORY=reference
