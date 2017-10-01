@@ -218,7 +218,7 @@ sub picardToolsAddOrReplaceReadGroups
         {
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        unless ($options =~ m/LB=/)
+        unless ($options =~ m/SM=/) # will automatically affect a RG to the sam file, as eg for CRAC post-treatment
         {
             $options .= " LB=unknown PU=unknown PL=unknown SM=$readGroup ";
         }
