@@ -237,4 +237,4 @@ MANDATORY= reference
 $cracIndex
 IN=fasta
 OUT=NA
-MANDATORY=reference
+MANDATORY=referenceé

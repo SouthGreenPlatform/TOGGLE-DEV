@@ -382,6 +382,13 @@ sub indexCreator
 
 
         }
+		
+		 #INDEXING for CRAC
+        if ($currentSoft eq "crac" or $currentSoft =~ m/crac/i) #Any step involving GATK
+        {
+			my $softParameters = toolbox::extractHashSoft($hashConf,"cracIndex"); # recovery of specific parameters of samToolsFaidx
+			crac::cracIndex($reference, $softParameters);
+        }
     }
 
 
