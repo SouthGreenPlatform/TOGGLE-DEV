@@ -39,7 +39,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie $bowtie2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity $stacks $snpEff $bamutils);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie $bowtie2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity $stacks $snpEff $bamutils $cracIndex $crac);
 
 
 #toggle path
@@ -99,6 +99,13 @@ our $snpEff = "/path/to/snpEff/snpEff.jar";
 
 #path to bamutils
 our $bamutils = "/path/to/bamutils";
+
+
+#path to cracIndex
+our $cracIndex = "/path/to/cracIndex";
+
+#path to crac
+our $crac = "/path/to/crac"
 
 
 1;
