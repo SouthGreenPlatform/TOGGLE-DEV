@@ -220,7 +220,7 @@ sub picardToolsAddOrReplaceReadGroups
         }
         unless ($options =~ m/LB=/)
         {
-            $options .= " LB=$readGroup PU=$readGroup PL=$readGroup SM=$readGroup ";
+            $options .= " LB=unknown PU=unknown PL=unknown SM=$readGroup ";
         }
         my $command="$picard AddOrReplaceReadGroups $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
