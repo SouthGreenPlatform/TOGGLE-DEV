@@ -44,9 +44,10 @@ use lib qw(../../modules/);
 ########################################
 use_ok('localConfig') or exit;
 use_ok('tophat') or exit;
+use_ok('bowtie') or exit;
 
-can_ok( 'tophat','bowtieBuild');
-can_ok( 'tophat','bowtie2Build');
+can_ok( 'bowtie','bowtieBuild');
+can_ok( 'bowtie','bowtie2Build');
 can_ok( 'tophat','tophat2');
 
 use localConfig;
