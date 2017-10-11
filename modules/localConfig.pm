@@ -39,7 +39,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie $bowtie2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity $stacks $snpEff $bamutils $cracIndex $crac);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex);
 
 
 #toggle path
@@ -64,12 +64,6 @@ our $fastxTrimmer="/path/to/fastx_trimmer";
 
 #Path for tophat2
 our $tophat2="/path/to/tophat2";
-
-#path to bowtie
-our $bowtie="/path/to/bowtie";
-
-#path to bowtie2
-our $bowtie2="/path/to/bowtie2";
 
 #path for bowtie2-build
 our $bowtie2Build="/path/to/bowtie2-build";
@@ -100,12 +94,13 @@ our $snpEff = "/path/to/snpEff/snpEff.jar";
 #path to bamutils
 our $bamutils = "/path/to/bamutils";
 
+#Path to bowtie
+our $bowtie = "/path/to/bowtie";
+our $bowtie2 = "/path/to/bowtie2";
 
-#path to cracIndex
-our $cracIndex = "/path/to/cracIndex";
-
-#path to crac
-our $crac = "/path/to/crac"
+#Path to crac
+our $crac = "/path/to/crac";
+our $cracIndex = "/path/to/crac-index";
 
 
 1;
