@@ -68,7 +68,7 @@ sub cracIndex
 	{
 		toolbox::exportLog("ERROR: crac::cracIndex : Problem with the file $refFastaFileIn\n",0);		# crac-index can not function because of wrong/missing reference file
 	}
-	return $refFastaFileIn;
+	return 1;
 }
 ################################################################################################
 # END sub crac-index
