@@ -101,7 +101,7 @@ sub crac
 	}
 	
     #Command
-    if ((toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($forwardFastqFile)==1))		##Check if entry files exist and are not empty
+    if (toolbox::sizeFile($forwardFastqFile)==1)		##Check if entry files exist and are not empty
     {
         
         #Basic command line
