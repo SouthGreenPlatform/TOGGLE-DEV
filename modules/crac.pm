@@ -79,7 +79,7 @@ sub cracIndex
 ##crac Mapping
 sub crac
 {
-    my($samFileOut,$refIndex,$readGroup,$forwardFastqFile,$reverseFastqFile,$optionsHachees)=@_;
+    my($samFileOut,$refIndex,$forwardFastqFile,$reverseFastqFile,$optionsHachees)=@_;
     
     if (ref $reverseFastqFile) #No mate file, sequences are single ends
     {
