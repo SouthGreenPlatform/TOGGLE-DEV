@@ -175,7 +175,7 @@ sub bamutilsVersion
 
 sub cracVersion
 { #We works with the STDIN output
-	my $version = `$carc -version | grep -m 1 "version"` or die toolbox::exportLog("ERROR: versionSoft::cracVersion : Can not grep CRAC version\nPlease check your CRAC installation.\n", 0);
+	my $version = `$crac -version | grep -m 1 "version"` or die toolbox::exportLog("ERROR: versionSoft::cracVersion : Can not grep CRAC version\nPlease check your CRAC installation.\n", 0);
 	chomp($version);
 	return $version;
 	
