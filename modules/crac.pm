@@ -79,7 +79,7 @@ sub cracIndex
 ##crac Mapping
 sub crac
 {
-    my($samFileOut,$readGroup,$forwardFastqFile,$reverseFastqFile,$optionsHachees)=@_;
+    my($samFileOut,$refIndex,$readGroup,$forwardFastqFile,$reverseFastqFile,$optionsHachees)=@_e
     
     if (ref $reverseFastqFile) #No mate file, sequences are single ends
     {
@@ -105,7 +105,7 @@ sub crac
     {
         
         #Basic command line
-        my $command = $crac." ".$options." -i ../../../referenceFiles/CRAC.index -o ".$samFileOut." ";
+        my $command = $crac." ".$options." -i ".$refIndex." -o ".$samFileOut." ";
         
         if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
@@ -157,7 +157,7 @@ sub crac
 
 =head3 crac::cracIndex
 
-This module indexes database sequences in the FASTA format.
+This indexes database sequences in the FASTA format.
 It takes at least one argument: the name of the database to index
 
 =head3 crac::crac
