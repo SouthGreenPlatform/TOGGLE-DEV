@@ -129,7 +129,7 @@ sub crac
     }
     else
     {
-        toolbox::exportLog("ERROR: crac::crac : Problem with the files $refFastaFileIn or/and $forwardFastqFile\n",0);
+        toolbox::exportLog("ERROR: crac::crac : Problem with the file $forwardFastqFile\n",0);
         return 0;
     }
 }
