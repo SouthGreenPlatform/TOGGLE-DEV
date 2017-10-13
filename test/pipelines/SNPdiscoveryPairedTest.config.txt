@@ -1,6 +1,6 @@
 $order
 1=fastqc
-2=cutadapt
+2=atropos
 3=bwaAln
 4=bwaSampe
 5=picardToolsSortSam
@@ -25,7 +25,7 @@ $cleaner
 #-b Y
 #-V
 
-$cutadapt
+$atropos
 -O=10
 -m=35
 -q=20,20
@@ -73,6 +73,3 @@ $gatkVariantFiltration
 $gatkSelectVariants
 -T=SelectVariants
 -selectType=SNP
-
-$env
-module load toggleDev

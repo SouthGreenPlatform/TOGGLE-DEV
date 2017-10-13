@@ -147,6 +147,10 @@ $cutadapt
 IN=fastq
 OUT=fastq
 
+$atropos
+IN=fastq
+OUT=fastq
+
 $tophat2
 IN=fastq
 OUT=bam

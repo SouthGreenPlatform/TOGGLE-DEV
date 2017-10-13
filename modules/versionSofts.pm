@@ -72,6 +72,13 @@ sub cutadaptVersion
 	return $version;
 }
 
+sub atroposVersion
+{   #We works with the STDERR output
+	my $version = `$atropos 2>&1 | grep "Atropos version"` or die toolbox::exportLog("ERROR: versionSoft::atroposVersion : Can not grep Atropos version\nPlease check your Atropos installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+
 sub fastqcVersion
 {
 	my $version = `$fastqc -v ` or die toolbox::exportLog("ERROR: versionSoft::fastqcVersion : Can not grep fastqc version\nPlease check your fastqc installation.\n", 0);
@@ -258,6 +265,10 @@ sub writeLogVersion
 			#FOR cutadapt functions
 			case ($softOrder =~ m/^cutadapt/i){$softPathVersion{"cutadapt"}= cutadaptVersion if not defined $softPathVersion{"cutadapt"};
 											   $softPath{"cutadapt"}= $cutadapt if not defined $softPath{"cutadapt"};
+											  }
+			#FOR atropos functions
+			case ($softOrder =~ m/^atropos/i){$softPathVersion{"atropos"}= atroposVersion if not defined $softPathVersion{"atropos"};
+											   $softPath{"atropos"}= $atropos if not defined $softPath{"atropos"};
 											  }
 
 			#FOR TGICL

@@ -96,9 +96,9 @@ sub correctName
 
 	#FOR merge
 	case ($name =~ m/^merge/i){$correctedName="merge";} #correction for merge step
-	
+
 	#FOR env
-	case ($name =~ m/^env/i){$correctedName="env";} #correction for merge step	
+	case ($name =~ m/^env/i){$correctedName="env";} #correction for merge step
 
 	#FOR SGE
 	case ($name =~ m/^sge/i){$correctedName="sge";} #Correction for sge configuration
@@ -182,6 +182,9 @@ sub correctName
 
         #FOR cutadapt functions
         case ($name =~ m/^cutadapt/i){$correctedName="cutadapt"} # Correction for cutadapt step
+
+        #FOR atropos functions
+        case ($name =~ m/^atropos/i){$correctedName="atropos"} # Correction for atropos step
 
         #FOR TGICL
         case ($name =~ m/^tgicl/i){$correctedName="tgicl"}
