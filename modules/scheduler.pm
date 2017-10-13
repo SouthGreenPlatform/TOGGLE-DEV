@@ -86,20 +86,20 @@ my %parsings = ('JIDposition' => {	'sge'=>2,
 ##DEBUG toolbox::exportLog(Dumper(\%parsings),0);
 
 sub checkingCapability { #Will test the capacity of launching using various schedulers on the current system
-    
+
     my $capabilityValue;
-    
+
     #SGE test
     $capabilityValue = `qsub -help 2>/dev/null | grep usage`; #Will provide a not-empty output if SGE is installed
     chomp $capabilityValue;
 	return "sge" if $capabilityValue;
-    
+
     #SLURM test
     $capabilityValue=`sbatch -V 2>/dev/null | grep slurm`; #Will provide a not-empty output if SLURM is installed
     chomp $capabilityValue;
 	return "slurm" if $capabilityValue;
 
-    
+
     #mprun test
     $capabilityValue=`ccc_mprun -h 2>&1 | grep usage`; #Will provide a not-empty output if mprun is installed
     chomp $capabilityValue;
@@ -112,7 +112,7 @@ sub checkingCapability { #Will test the capacity of launching using various sche
 
 	#None
 	return "normaLRun" unless $capabilityValue;
-    
+
 }
 
 #Requirement means the job needs to be achieved for the next steps or it is not a blocking job?
@@ -120,21 +120,21 @@ sub checkingCapability { #Will test the capacity of launching using various sche
 # Any non-zero value means not blocking job
 
 sub launcher {
-	
+
 	#Global function for launching, will recover the command to be launch and will re-dispatch to normal or other scheduler
-    
+
     ($commandLine,$requirement, $sample, $configInfo) = @_;
-    
+
     #Picking up sample name
-    
+
     $sample=`basename $sample` or toolbox::exportLog("ERROR : scheduler::launcher : Cannot pickup the basename for $sample: $!\n",0);
     chomp $sample;
-    
+
     my $schedulerType = &checkingCapability;
 	##DEBUG toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
-    
+
     my $runOutput;
-       
+
     if (defined $$configInfo{$schedulerType})
 	{
 		$runOutput = &schedulerRun($schedulerType)
@@ -143,28 +143,28 @@ sub launcher {
 	{
 		$runOutput = &normalRun
 	};
-    
-    
+
+
 	if ($runOutput == 0 && $requirement == 0)
     {
 	#The job has to succeed either it will kill all other jobs
         toolbox::exportLog("ERROR: scheduler::launcher on $sample using the scheduler $schedulerType: ".$commandLine."\nThe job cannot be achieved and is mandatory, thus the whole analysis is stop\n",0);
     	return 0;
     }
-    
+
     return $runOutput;
 }
 
 sub normalRun { #For running in normal mode, ie no scheduler
-    
+
     #BASED ON TOOLBOX::RUN, but will not stop the whole pipeline for an error
     use Capture::Tiny qw(capture);
-        
+
     toolbox::exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
-    
+
     ##Execute the command
     my ($result,$stderr)=capture {` $commandLine `};
-    
+
     ##Log export according to the error
     if ($?==0) #Success, no error
     {
@@ -176,69 +176,69 @@ sub normalRun { #For running in normal mode, ie no scheduler
 		toolbox::exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
 		return 0;
     }
-    
+
 }
 
 sub schedulerRun
 { #For any scheduler,will launch a script encapsulating the command line
-    
+
 	my ($schedulerType) = @_;
     my $schedulerOptionsHash=toolbox::extractHashSoft($configInfo,$schedulerType);
     my $schedulerOptions=toolbox::extractOptions($schedulerOptionsHash);
-    
+
 	#Picking up ENV variable
     my $envOptionsHash=toolbox::extractHashSoft($configInfo,"env");
     my $envOptions=toolbox::extractOptions($envOptionsHash,"","\n");
-	
+
 	#Picking up location
 	my $location = `pwd`;
 	chomp $location;
-	
+
 	#Creating a folder for scripts
 	my $schedulerFolder = $location."/schedulerJobs";
 	unless (-d $schedulerFolder)
 	{
 		toolbox::makeDir($schedulerFolder,0);
 	}
-	
+
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$schedulerOptions;
-	
+
     #Creating the bash script for slurm to launch the command
     #my $date =`date +%Y_%m_%d_%H_%M_%S`;
     #chomp $date;
     my $scriptName=$schedulerFolder."/".$sample."_schedulerScript.sh";
     my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
-    toolbox::run($bashScriptCreationCommand);
+    toolbox::run($bashScriptCreationCommand,"noprint");
     $launcherCommand.=" ".$scriptName;
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
-	
+
 	#launching the job through a bash script
     my $currentJID = `$launcherCommand`;
-    
+
     if ($!) #There are errors in the launching...
     {
         toolbox::exportLog ("WARNING : $0 : Cannot launch the job for $sample: $!\n",2);
         $currentJID = "";
     }
-        
+
     #Parsing infos and informing logs
     chomp $currentJID;
-    
+
     unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
     {
         return 0; #Returning to launcher subprogram the error type
     }
-    
+
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in $commands{'run'}{$schedulerType} mode through the command:\n\t$launcherCommand\n",1);
-    
+
     #Picking job ID
-    my @infosList=split ($parsings{'JIDsplitter'}{$schedulerType}, $currentJID); 
+    my @infosList=split ($parsings{'JIDsplitter'}{$schedulerType}, $currentJID);
     $currentJID = $infosList[$parsings{'JIDposition'}{$schedulerType}];
-    
-	
+
+
 	##DEBUG	toolbox::exportLog($currentJID,2);
-	
+
     return $currentJID;
 }
 
@@ -251,14 +251,14 @@ sub schedulerRun
 
 sub waiter
 { #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
-    
+
     ($jobList,my $jobsInfos) = @_;
-    
+
     %jobHash = %{$jobsInfos};
-        
+
     my $schedulerType = &checkingCapability;
     my $stopWaiting;
-          
+
     if (defined $$configInfo{$schedulerType})
 	{
 		$stopWaiting = &schedulerWait($schedulerType)
@@ -273,30 +273,30 @@ sub schedulerWait
     my ($schedulerType) = @_;
     my $nbRunningJobs = 1;
     my @jobsInError=();
-    
+
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
-    {  
+    {
       #Picking up the number of currently running jobs
       my $statCommand = $commands{'queue'}{$schedulerType}." | egrep -c \"$jobList\"";
       $nbRunningJobs = `$statCommand`;
       chomp $nbRunningJobs;
       sleep 50;
     }
-    
+
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 25;#Needed for acct to register infos...
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
 Individual\tJobID\tExitStatus
 ---------------------------------------------------------",1);
-    
+
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
 		my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
 		my $acctOutput = `$acctCommand`;
 		my $outputLine;
-		
+
 		chomp $acctOutput;
 		if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
 		{
@@ -305,43 +305,43 @@ Individual\tJobID\tExitStatus
 		  toolbox::exportLog($outputLine,1);
 		  next;
 		}
-		
+
 		my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
 		$outputLine = $individual."\t".$jobHash{$individual}."\t";
 		my $currentLine ="Error";
 		my $parserText = $parsings{'acctOutText'}{$schedulerType};
-		  
+
 		##DEBUG	toolbox::exportLog($parserText,2);
-		
+
 		while (@linesQacct) #Parsing the qacct output
 		{
 		  my $line = shift @linesQacct;
 		  #Passing the header lines
 		  next if $line =~ m/JobID/;
 		  next if $line =~ m/^$/;
-		  
-		  
-		  
+
+
+
 		  if ($line =~ m/$parserText/) #Picking up exit status
 		  {
 			  $currentLine = "Normal";
 			  last;
 		  }
-		  
+
 		  next;
 		}
-		
+
 		#The parsing text has not been found meaning still an error
 		if ($currentLine eq "Error")
 		{
 		  push @jobsInError, $individual;
 		}
-		$outputLine .= $currentLine;       
+		$outputLine .= $currentLine;
 		toolbox::exportLog($outputLine,1);
-      
+
     }
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
-  
+
     if (scalar @jobsInError)
     {
 		#at least one job has failed
@@ -355,14 +355,14 @@ Individual\tJobID\tExitStatus
 
 =head1 NAME
 
-    Package I<scheduler> 
+    Package I<scheduler>
 
 =head1 SYNOPSIS
 
 	use scheduler;
-    
+
 	scheduler::launcher($launcherCommand, $requirement, $sample, $configInfo);
-    
+
 	scheduler::waiter($jobList,$jobInfos);
 
 =head1 DESCRIPTION
