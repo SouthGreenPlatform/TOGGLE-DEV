@@ -42,6 +42,7 @@ use samTools;
 use picardTools;
 use tophat;
 use bowtie;
+use crac;
 
 ################################################################################################
 # sub checkOrder =>  Will verify the order of the softwares in the pipeline
@@ -384,9 +385,9 @@ sub indexCreator
         }
 		
 		 #INDEXING for CRAC
-        if ($currentSoft eq "crac" or $currentSoft =~ m/crac/i) #Any step involving GATK
+        if ($currentSoft eq "crac" or $currentSoft =~ m/crac/i)  #Any step involving crac
         {
-			my $softParameters = toolbox::extractHashSoft($hashConf,"cracIndex"); # recovery of specific parameters of samToolsFaidx
+			my $softParameters = toolbox::extractHashSoft($hashConf,"cracIndex"); # recovery of specific parameters of crac
 			crac::cracIndex($reference, $softParameters);
         }
     }
