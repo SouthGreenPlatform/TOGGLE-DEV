@@ -222,3 +222,24 @@ OUT=NA
 $bamutilsTool
 IN=sam,bam
 OUT=bam,fastq,fasta,bed
+
+$bowtie
+IN=fastq
+OUT=SAM
+MANDATORY=reference
+
+$bowtie2
+IN=fastq
+OUT=SAM
+MANDATORY=reference
+
+$crac
+IN=fastq
+OUT=SAM
+MANDATORY= reference
+
+$cracIndex
+IN=fasta
+OUT=NA
+MANDATORY=referenceé
+

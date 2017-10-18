@@ -38,82 +38,82 @@ use toolbox;
 use pairing;
 use Data::Dumper;
 
-################################################################################################
-# sub bowtieBuild : builds a Bowtie index from a set of DNA sequences.
-################################################################################################
-# arguments : fasta file to index and options used for bowtieBuild running
-# Returns prefixname of the database created  (1 if the execution is correctly done else 0)
-################################################################################################
-sub bowtieBuild
-{
-	my ($refFastaFileIn,$optionsHachees)=@_;
-	##DEBUG toolbox::exportLog("DEBUG: tophat::bowtieBuild : $prefixRef\n",1);
-
-	if (toolbox::sizeFile($refFastaFileIn)==1)						# check if the reference file exist and is not empty
-	{
-		my $options=toolbox::extractOptions($optionsHachees, " ");			# Get given options
-		my $command=$bowtieBuild.$options." ".$refFastaFileIn." ".$refFastaFileIn;		# command
-		##DEBUG toolbox::exportLog("DEBUG: tophat::bowtieBuild : $command\n",1);
-		# Execute command
-		if(toolbox::run($command)==1)							# The command should be executed correctly (ie return) before exporting the log
-	{
-			toolbox::exportLog("INFOS: tophat::bowtieBuild : correctly done\n",1);	# bowtiebuild have been correctly done
-		}
-		else
-		{
-			toolbox::exportLog("ERROR: tophat::bowtieBuild : ABORTED\n",0);		# bowtiebuild have not been correctly done
-		}
-	}
-	else
-	{
-		toolbox::exportLog("ERROR: tophat::bowtiebBuild : Problem with the file $refFastaFileIn\n",0);		# bowtiebuild can not function because of wrong/missing reference file
-	}
-	return $refFastaFileIn;
-}
-################################################################################################
-# END sub bowtieBuild
-################################################################################################
-
-
-
-################################################################################################
-# sub bowtie2Build : builds a Bowtie index from a set of DNA sequences.
-################################################################################################
-# arguments : fasta file to index and options used for bowtie2Build running
-# Returns prefixname of the database created  (1 if the execution is correctly done else 0)
-################################################################################################
-sub bowtie2Build
-{
-	my($refFastaFileIn,$optionsHachees)=@_;
-	##DEBUG toolbox::exportLog("DEBUG: tophat::bowtie2Build : $prefixRef\n",1);
-
-	if (toolbox::sizeFile($refFastaFileIn)==1)						# Check if the reference file exist and is not empty
-	{
-		my $options=toolbox::extractOptions($optionsHachees, " ");			# Get given options
-		my $command=$bowtie2Build.$options." ".$refFastaFileIn." ".$refFastaFileIn;		# command
-		##DEBUG
-		toolbox::exportLog("INFOS: tophat::bowtie2Build : $command\n",1);
-		#Execute command
-		if(toolbox::run($command)==1)							# The command should be executed correctly (ie return) before exporting the log
-	{
-			toolbox::exportLog("INFOS: tophat::bowtie2Build : correctly done\n",1);	# bowtie2build have been correctly done
-		}
-		else
-		{
-			toolbox::exportLog("ERROR: tophat::bowtie2Build : ABORTED\n",0);		# bowtie2build have not been correctly done
-			return 0;
-		}
-	}
-	else
-	{
-		toolbox::exportLog("ERROR: tophat::bowtie2bBuild : Problem with the file $refFastaFileIn\n",0);		# bowtie2build can not function because of wrong/missing reference file
-		return 0;
-	}
-	return $refFastaFileIn;
-}
-################################################################################################
-# END sub bowtie2Build
-################################################################################################
+#################################################################################################
+## sub bowtieBuild : builds a Bowtie index from a set of DNA sequences.
+#################################################################################################
+## arguments : fasta file to index and options used for bowtieBuild running
+## Returns prefixname of the database created  (1 if the execution is correctly done else 0)
+#################################################################################################
+#sub bowtieBuild
+#{
+#	my ($refFastaFileIn,$optionsHachees)=@_;
+#	##DEBUG toolbox::exportLog("DEBUG: tophat::bowtieBuild : $prefixRef\n",1);
+#
+#	if (toolbox::sizeFile($refFastaFileIn)==1)						# check if the reference file exist and is not empty
+#	{
+#		my $options=toolbox::extractOptions($optionsHachees, " ");			# Get given options
+#		my $command=$bowtieBuild.$options." ".$refFastaFileIn." ".$refFastaFileIn;		# command
+#		##DEBUG toolbox::exportLog("DEBUG: tophat::bowtieBuild : $command\n",1);
+#		# Execute command
+#		if(toolbox::run($command)==1)							# The command should be executed correctly (ie return) before exporting the log
+#	{
+#			toolbox::exportLog("INFOS: tophat::bowtieBuild : correctly done\n",1);	# bowtiebuild have been correctly done
+#		}
+#		else
+#		{
+#			toolbox::exportLog("ERROR: tophat::bowtieBuild : ABORTED\n",0);		# bowtiebuild have not been correctly done
+#		}
+#	}
+#	else
+#	{
+#		toolbox::exportLog("ERROR: tophat::bowtiebBuild : Problem with the file $refFastaFileIn\n",0);		# bowtiebuild can not function because of wrong/missing reference file
+#	}
+#	return $refFastaFileIn;
+#}
+#################################################################################################
+## END sub bowtieBuild
+#################################################################################################
+#
+#
+#
+#################################################################################################
+## sub bowtie2Build : builds a Bowtie index from a set of DNA sequences.
+#################################################################################################
+## arguments : fasta file to index and options used for bowtie2Build running
+## Returns prefixname of the database created  (1 if the execution is correctly done else 0)
+#################################################################################################
+#sub bowtie2Build
+#{
+#	my($refFastaFileIn,$optionsHachees)=@_;
+#	##DEBUG toolbox::exportLog("DEBUG: tophat::bowtie2Build : $prefixRef\n",1);
+#
+#	if (toolbox::sizeFile($refFastaFileIn)==1)						# Check if the reference file exist and is not empty
+#	{
+#		my $options=toolbox::extractOptions($optionsHachees, " ");			# Get given options
+#		my $command=$bowtie2Build.$options." ".$refFastaFileIn." ".$refFastaFileIn;		# command
+#		##DEBUG
+#		toolbox::exportLog("INFOS: tophat::bowtie2Build : $command\n",1);
+#		#Execute command
+#		if(toolbox::run($command)==1)							# The command should be executed correctly (ie return) before exporting the log
+#	{
+#			toolbox::exportLog("INFOS: tophat::bowtie2Build : correctly done\n",1);	# bowtie2build have been correctly done
+#		}
+#		else
+#		{
+#			toolbox::exportLog("ERROR: tophat::bowtie2Build : ABORTED\n",0);		# bowtie2build have not been correctly done
+#			return 0;
+#		}
+#	}
+#	else
+#	{
+#		toolbox::exportLog("ERROR: tophat::bowtie2bBuild : Problem with the file $refFastaFileIn\n",0);		# bowtie2build can not function because of wrong/missing reference file
+#		return 0;
+#	}
+#	return $refFastaFileIn;
+#}
+#################################################################################################
+## END sub bowtie2Build
+#################################################################################################
 
 
 

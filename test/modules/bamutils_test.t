@@ -118,7 +118,7 @@ is($observedMD5sum,$expectedMD5sum,'bamutils::bamutilsTool - bamutilsFilter - ou
  $toolName = "bamutilstobed";
  
 # input file
-my $bamFileIn = "$toggle/data/testData/samBam/oneBamUnsorted/unsorted.bam";
+$bamFileIn = "$toggle/data/testData/samBam/oneBamUnsorted/unsorted.bam";
 
 #Output file
 $bamFileOut="RC3.$toolName.bed";

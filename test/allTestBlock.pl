@@ -53,4 +53,6 @@ system("perl $toggle/test/blocks/samtoolsBlock.pl") and warn "ERROR: $0: Cannot 
 system("perl $toggle/test/blocks/checkFormatBlock.pl") and warn "ERROR: $0: Cannot run test for checkFormatBlock.pl  \n$!\n";
 system("perl $toggle/test/blocks/fastqUtilsBlock.pl") and warn "ERROR: $0: Cannot run test for fastqUtilsBlock.pl  \n$!\n";
 system("perl $toggle/test/blocks/bwaBlock.pl") and warn "ERROR: $0: Cannot run test for bwaBlock.pl  \n$!\n";
+system("perl $toggle/test/blocks/bowtieBlock.pl") and warn "ERROR: $0: Cannot run test for bowtieBlock.pl  \n$!\n";
+system("perl $toggle/test/blocks/cracBlock.pl") and warn "ERROR: $0: Cannot run test for cracBlock.pl  \n$!\n";
 

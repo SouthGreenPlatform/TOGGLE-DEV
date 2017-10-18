@@ -1,5 +1,4 @@
-package localConfig;
-
+#!/usr/bin/env perl
 
 ###################################################################################################################################
 #
@@ -31,78 +30,56 @@ package localConfig;
 #
 ###################################################################################################################################
 
-
-
 use strict;
 use warnings;
-use Exporter;
-
-our @ISA=qw(Exporter);
-
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex $atropos);
-
-#toggle path
-our $toggle="/path/to/toggleFolder";
-
-#PATH for Mapping on cluster
-our $java = "/path/to/java -Xmx12g -jar";
-
-our $bwa = "/path/to/bwa";
-our $picard = "$java /path/to/picard_tools/picard.jar";
-
-our $samtools = "/path/to/samtools";
-our $GATK = "$java -Xmx12g -jar /path/to/GenomeAnalysisTK.jar";
-our $fastqc = "/path/to/fastqc";
-
-#Path for CutAdapt
-our $cutadapt = "/path/to/cutadapt";
-
-##### FOR RNASEQ analysis
-#Path for fastq_trimmer
-our $fastxTrimmer="/path/to/fastx_trimmer";
-
-#Path for tophat2
-our $tophat2="/path/to/tophat2";
-
-#path for bowtie2-build
-our $bowtie2Build="/path/to/bowtie2-build";
-
-#path for bowtie-build
-our $bowtieBuild="/path/to/bowtie-build";
-
-#path for htseqcount
-our $htseqcount = "/path/to/htseq-count";
-
-#path for Cufflinks
-our $cufflinks = "/path/to/cufflinks";
-our $cuffdiff = "/path/to/cuffdiff";
-our $cuffmerge = "/path/to/cuffmerge";
-
-#path for tgicl
-our $tgicl = "/path/to/tgicl";
-
-#path for trinity
-our $trinity = "/path/to/trinity";
-
-#path for process_radtags
-our $stacks = "/path/to/process_radtags";
-
-#path for snpEff
-our $snpEff = "/path/to/snpEff/snpEff.jar";
-
-#path for bamutils
-our $bamutils = "/path/to/bamutils";
-
-#path for atropos
-our $atropos="/path/to/atropos";
-
-#Path to bowtie
-our $bowtie = "/path/to/bowtie";
-our $bowtie2 = "/path/to/bowtie2";
-
-#Path to crac
-our $crac = "/path/to/crac";
-our $cracIndex = "/path/to/crac-index";
+use Test::More 'no_plan';
+use Test::Deep;
+use fileConfigurator;
+use localConfig;
 
 
-1;
+#####################
+## PATH for datas test
+#####################
+
+# references files
+my $dataRefIrigin = "$toggle/data/Bank/referenceIrigin.fasta";
+# input file
+my $dataFastq="$toggle/data/testData/fastq/pairedTwoIndividusIrigin";
+
+
+print "\n\n#################################################\n";
+print "#### TEST crac \n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+my $testingDir="$toggle/dataTest/crac-noSGE-Blocks";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+my @listSoft = ("crac");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for bwaSw";
+
+
+# check final results
+# expected output content
+my $observedOutput = `ls $testingDir/finalResults`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('irigin1CRAC.sam','irigin3CRAC.sam');
+
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two fastq (no SGE) CRAC file list ');
+
+# expected output value
+my $grepResult= `grep -c 'H3:C39R6ACXX' $testingDir/finalResults/irigin1CRAC.sam`;
+chomp $grepResult;
+is($grepResult,2000,'toggleGenerator - Two fastq (no SGE) result of CRAC irigin1CRAC');
+# expected output value
+$grepResult= `grep -c 'H2:C381HACXX' $testingDir/finalResults/irigin3CRAC.sam`;
+chomp $grepResult;
+is($grepResult,2000,'toggleGenerator - Two fastq (no SGE) result of CRAC irigin3CRAC');
+

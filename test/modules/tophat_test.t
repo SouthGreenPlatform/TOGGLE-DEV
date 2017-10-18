@@ -44,13 +44,13 @@ use lib qw(../../modules/);
 ########################################
 use_ok('localConfig') or exit;
 use_ok('tophat') or exit;
+use_ok('bowtie') or exit;
 
-can_ok( 'tophat','bowtieBuild');
-can_ok( 'tophat','bowtie2Build');
 can_ok( 'tophat','tophat2');
 
 use localConfig;
 use tophat;
+use bowtie; #I know but cannot do something else
 
 #########################################
 #Remove files and directory created by previous test
@@ -79,124 +79,32 @@ my $bankData="$toggle/data/Bank/";
 my $testData="$toggle/data/testData/rnaseq/";
 
 ##########################################
-### Test for tophat::bowtieBuild
+### Test for bowtie::bowtieBuild
 ##########################################
 
 # input file
 
 my $fastaRefIni=$bankData."/referenceRnaseq.fa";
-my $fastaRef="referenceRNASeq.fa";
+my $fastaRef="referenceRnaseq.fa";
 
 #copy fasta reference into test directory where the index will be created
 my $copyCommand="cp $fastaRefIni ./$fastaRef";
 system ($copyCommand) and die "ERROR: $0: Cannot copy the $fastaRefIni file with the command $copyCommand \n$!\n";
 
 # execution test
-is(tophat::bowtieBuild($fastaRef),$fastaRef,'tophat::bowtieBuild');
-
-# expected output test
-my $observedOutput = `ls`;
-my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','referenceRNASeq.fa','referenceRNASeq.fa.1.ebwt','referenceRNASeq.fa.2.ebwt','referenceRNASeq.fa.3.ebwt','referenceRNASeq.fa.4.ebwt','referenceRNASeq.fa.rev.1.ebwt','referenceRNASeq.fa.rev.2.ebwt','tophat_TEST_log.e','tophat_TEST_log.o');
-is_deeply(\@observedOutput,\@expectedOutput,'tophat::bowtieBuild - output list');
-
-# expected output content
-my $expectedMD5sum="167cd0622bda91392673aaf207255d2b";
-my $observedMD5sum=`md5sum $fastaRef.1.ebwt`;# structure of the test file
-my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtieBuild - output content 1.ebwt');
-
-$expectedMD5sum="dd30c97b610f5dc53cf6f02123fcf807";
-$observedMD5sum=`md5sum $fastaRef.2.ebwt`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtieBuild - output content 2.ebwt');
-
-$expectedMD5sum="8aa5c56a0ba0b0ab7e9e7f3fb7ee4a76";
-$observedMD5sum=`md5sum $fastaRef.3.ebwt`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtieBuild - output content 3.ebwt');
-
-$expectedMD5sum="a4ebbf39ff457e410253b571ee79088d";
-$observedMD5sum=`md5sum $fastaRef.4.ebwt`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtieBuild - output content 4.ebwt');
-
-$expectedMD5sum="4bd4f23dc8b98a5dc4b56d7f4d89a9b5";
-$observedMD5sum=`md5sum $fastaRef.rev.1.ebwt`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtieBuild - output content rev.1.ebwt');
-
-$expectedMD5sum="619322d189d42f4eaede8aaaedf9890e";
-$observedMD5sum=`md5sum $fastaRef.rev.2.ebwt`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtieBuild - output content rev.2.ebwt');
-
-
+is(bowtie::bowtieBuild($fastaRef),$fastaRef,'bowtie::bowtieBuild');
 
 
 
 ###############################################################################################
-##tophat::bowtie2Build
+##bowtie::bowtie2Build
 ###############################################################################################
 
 my %optionsHachees = ();                # Hash containing informations
 my $optionHachees = \%optionsHachees;   # Ref of the hash
 
 # execution test
-is(tophat::bowtie2Build($fastaRef,$optionHachees),$fastaRef, 'tophat::bowtie2Build');
-
-# expected output test
-$observedOutput = `ls`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','referenceRNASeq.fa','referenceRNASeq.fa.1.bt2','referenceRNASeq.fa.1.ebwt','referenceRNASeq.fa.2.bt2','referenceRNASeq.fa.2.ebwt','referenceRNASeq.fa.3.bt2','referenceRNASeq.fa.3.ebwt','referenceRNASeq.fa.4.bt2','referenceRNASeq.fa.4.ebwt','referenceRNASeq.fa.rev.1.bt2','referenceRNASeq.fa.rev.1.ebwt','referenceRNASeq.fa.rev.2.bt2','referenceRNASeq.fa.rev.2.ebwt','tophat_TEST_log.e','tophat_TEST_log.o');
-##print Dumper(\@observedOutput);
-is_deeply(\@observedOutput,\@expectedOutput,'tophat::bowtie2Build - output list');
-
-# expected output content
-###Checking the correct structure for the output file using md5sum
-$expectedMD5sum="4e0329b55cd2a67490ef96b7b2567e5d";
-$observedMD5sum=`md5sum $fastaRef.1.bt2`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content 1.bt2');
-
-$expectedMD5sum="4ad45a523ecaef6310bb6f7f608eb311";
-$observedMD5sum=`md5sum $fastaRef.2.bt2`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content 2.bt2');
-
-$expectedMD5sum="8aa5c56a0ba0b0ab7e9e7f3fb7ee4a76";
-$observedMD5sum=`md5sum $fastaRef.3.bt2`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content 3.bt2');
-
-$expectedMD5sum="a4ebbf39ff457e410253b571ee79088d";
-$observedMD5sum=`md5sum $fastaRef.4.bt2`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content 4.bt2');
-
-$expectedMD5sum="beeb0f44030b631af6f182f4a85f045d";
-$observedMD5sum=`md5sum $fastaRef.rev.1.bt2`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content rev.1.bt2');
-
-$expectedMD5sum="df753d8d0522ee01e2479f99a04525dd";
-$observedMD5sum=`md5sum $fastaRef.rev.2.bt2`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content rev.2.bt2');
-
-
+is(bowtie::bowtie2Build($fastaRef,$optionHachees),$fastaRef, 'bowtie::bowtie2Build');
 
 
 
@@ -230,9 +138,9 @@ $tmpDir.='/tophatOut';
 is(tophat::tophat2($tmpDir, $fastaRef, $fastqFile1, $fastqFile2, $gffRef, $optionHachees),1,'tophat::tophat2');
 
 # expected output test
-$observedOutput = `ls $tmpDir`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('RNASeq.accepted_hits.bam','RNASeq.align_summary.txt','RNASeq.deletions.bed','RNASeq.insertions.bed','RNASeq.junctions.bed','RNASeq.logs','RNASeq.prep_reads.info','RNASeq.unmapped.bam');
+my $observedOutput = `ls $tmpDir`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('RNASeq.accepted_hits.bam','RNASeq.align_summary.txt','RNASeq.deletions.bed','RNASeq.insertions.bed','RNASeq.junctions.bed','RNASeq.logs','RNASeq.prep_reads.info','RNASeq.unmapped.bam');
 is_deeply(\@observedOutput,\@expectedOutput,'tophat::tophat2 - output list');
 
 
@@ -249,5 +157,3 @@ my $expectedEndLine="HWI-D00393:103:C6KCUANXX:1:1101:1904:31492	147	EG5_Chr1	681
 ";
 my $observedEndLine=`samtools view $tmpDir/RNASeq.accepted_hits.bam | tail -1`  or die ("ERROR: $0 : Cannot execute: samtools view $tmpDir/RNASeq.accepted_hits.bam | tail -1  \n$!\n");
 is($observedEndLine,$expectedEndLine,'tophat::tophat2- output content bam - output endFile');
-
-

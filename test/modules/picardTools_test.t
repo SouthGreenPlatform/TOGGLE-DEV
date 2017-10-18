@@ -246,8 +246,9 @@ $bamFileOut = "RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam";
 %optionsRef = ("ID" => "Test","LB" => "Irigin","PL" => "Illumina","SM" => "glaberrima","VALIDATION_STRINGENCY" => "SILENT","PU" => "unit1");        # Hash containing informations
 $optionsHachees = \%optionsRef;                           # Ref of the hash
 
+my $readGroup = "toto";
 #execution test
-is(picardTools::picardToolsAddOrReplaceReadGroups($bamFile, $bamFileOut,$optionsHachees),1,'picardTools::picardToolsAddOrReplaceReadGroups');
+is(picardTools::picardToolsAddOrReplaceReadGroups($bamFile, $bamFileOut,$readGroup,$optionsHachees),1,'picardTools::picardToolsAddOrReplaceReadGroups');
 
 # expected output test
 $observedOutput = `ls`;

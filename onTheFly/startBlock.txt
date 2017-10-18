@@ -64,6 +64,8 @@ use trinity;
 use radseq;
 use bamutils;
 use atropos;
+use crac;
+use bowtie;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed

@@ -37,6 +37,18 @@ use toolbox;
 use Data::Dumper;
 use Switch;
 
+sub bowtieVersion
+{   #We works with the STDIN output
+	my $version = `$bowtie --version | grep "bowtie version"` or die toolbox::exportLog("ERROR: versionSoft::bowtieVersion : Can not grep bowtie version.\nPlease check your bowtie installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+sub bowtie2Version
+{   #We works with the STDIN output
+	my $version = `$bowtie2 --version | grep "bowtie2-align-s version"` or die toolbox::exportLog("ERROR: versionSoft::bowtie2Version : Can not grep bowtie2 version.\nPlease check your bowtie installation.\n", 0);
+	chomp($version);
+	return $version;
+}
 sub bowtieBuildVersion
 {   #We works with the STDOUT output
 	my $version = `$bowtieBuild --version 2>&1 | grep "bowtie-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtieBuildVersion : Can not grep bowtieBuild version.\nPlease check your bowtie installation.\n", 0);
@@ -168,6 +180,14 @@ sub bamutilsVersion
 	return $version;
 }
 
+sub cracVersion
+{ #We works with the STDIN output
+	my $version = `$crac -version | grep -m 1 "version"` or die toolbox::exportLog("ERROR: versionSoft::cracVersion : Can not grep CRAC version\nPlease check your CRAC installation.\n", 0);
+	chomp($version);
+	return $version;
+	
+}
+
 sub writeLogVersion
 {
 	my ($fileConf, $version) = @_;
@@ -221,9 +241,13 @@ sub writeLogVersion
 			#FOR tophat.pm
 			case ($softOrder =~ m/^bowtie2.*/i){$softPathVersion{"bowtie2Build"}= bowtie2BuildVersion if not defined $softPathVersion{"bowtie2Build"};
 												$softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
+												$softPathVersion{"bowtie2"}= bowtie2Version if not defined $softPathVersion{"bowtie2"};
+												$softPath{"bowtie2"}= $bowtie2 if not defined $softPath{"bowtie2"};
 												}
-			case ($softOrder =~ m/^bowtie/i){$softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"};
+			case ($softOrder =~ m/^bowtie$/i){$softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"};
 											 $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
+											 $softPathVersion{"bowtie"}= bowtieVersion if not defined $softPathVersion{"bowtie"};
+											 $softPath{"bowtie"}= $bowtie if not defined $softPath{"bowtie"};
 											 }
 
 			case ($softOrder =~ m/^tophat.*/i){$softPathVersion{"tophat2"}= tophatVersion if not defined $softPathVersion{"tophat2"};
@@ -287,6 +311,11 @@ sub writeLogVersion
 
 			#For format checking
 			case($softOrder =~ m/^check/i){next;}
+			
+			#FOR crac.pm
+			case ($softOrder =~ m/^crac.*/i){$softPathVersion{"crac"}= cracVersion if not defined $softPathVersion{"crac"};
+											$softPath{"crac"}= $bwa if not defined $softPath{"crac"};
+											}
 
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}

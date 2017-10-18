@@ -26,4 +26,4 @@ if ($bamFileIn eq "NA") #No BAM file found in the previous folder
 
 $bamFileOut = $newDir."/"."$readGroup".".PICARDTOOLSADDORREPLACEREADGROUPS.bam";                              # name for the output file of picardtools CleanSam
 $softParameters = toolbox::extractHashSoft($optionRef,"picardToolsAddOrReplaceReadGroups");                           # recovery of specific parameters of picard AddOrReplaceReadGroups
-picardTools::picardToolsAddOrReplaceReadGroups($bamFileIn,$bamFileOut,$softParameters); 
+picardTools::picardToolsAddOrReplaceReadGroups($bamFileIn,$bamFileOut,$readGroup,$softParameters); 

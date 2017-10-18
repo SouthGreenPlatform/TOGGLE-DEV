@@ -41,6 +41,8 @@ use bwa;
 use samTools;
 use picardTools;
 use tophat;
+use bowtie;
+use crac;
 
 ################################################################################################
 # sub checkOrder =>  Will verify the order of the softwares in the pipeline
@@ -342,13 +344,13 @@ sub indexCreator
             }
         }
 
-	#INDEXING for topHat
-        if ($currentSoft =~ m/bowtie/i or $currentSoft =~ m/tophat/i) #Any step involving BWA
+		#INDEXING for topHat
+        if ($currentSoft =~ m/bowtie/i or $currentSoft =~ m/tophat/i) #Any step involving bowtie or tophat
         {
             if ($currentSoft eq "bowtieBuild") # If the index is expressely asked
             {
-                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bwa index
-                tophat::bowtieBuild($reference,$softParameters);
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bowtieBuild index
+                bowtie::bowtieBuild($reference,$softParameters);
             }
             else #We check if the index is present or not
             {
@@ -358,14 +360,14 @@ sub indexCreator
                     toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for bowtie-built already exists, skipped...\n",1);
                     next;
                 }
-                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bwa index
-                tophat::bowtieBuild($reference,$softParameters);
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtieBuild");                                  # recovery of specific parameters of bowtieBuild index
+                bowtie::bowtieBuild($reference,$softParameters);
             }
 
-	    if ($currentSoft eq "bowtie2-Build" or $currentSoft =~ m/tophat/i) # If the index is expressely asked
+			if ($currentSoft eq "bowtie2-Build" or $currentSoft =~ m/tophat/i) # If the index is expressely asked
             {
-                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
-                tophat::bowtie2Build($reference,$softParameters);
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bowtie2Build index
+                bowtie::bowtie2Build($reference,$softParameters);
             }
             else #We check if the index is present or not
             {
@@ -375,11 +377,18 @@ sub indexCreator
                     toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for bowtie2-built already exists, skipped...\n",1);
                     next;
                 }
-                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bwa index
-                tophat::bowtie2Build($reference,$softParameters);
+                my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bowtie2Build index
+                bowtie::bowtie2Build($reference,$softParameters);
             }
 
 
+        }
+		
+		 #INDEXING for CRAC
+        if ($currentSoft eq "crac" or $currentSoft =~ m/crac/i)  #Any step involving crac
+        {
+			my $softParameters = toolbox::extractHashSoft($hashConf,"cracIndex"); # recovery of specific parameters of crac
+			crac::cracIndex($reference, $softParameters);
         }
     }
 
