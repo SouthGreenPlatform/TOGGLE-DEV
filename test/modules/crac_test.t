@@ -97,14 +97,14 @@ is(crac::cracIndex($fastaRef,$optionsHachees),1,'crac::cracIndex - running');
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa","individuSoft.txt","referenceIrigin.fasta");
+my @expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::cracIndex - Filetree created');
 
 # expected content test $fastaRefBWT
 my $expectedMD5sum = "2827db89a8f57cc6298c18b6eb6f9ac8";                                            # structure of the ref file for checkin
-my $observedMD5sum = `md5sum CRAC.index.conf`;                                                        # structure of the test file for checking
+my $observedMD5sum = `md5sum referenceIrigin.fasta.CRAC.index.conf`;                                                        # structure of the test file for checking
 my @withoutName = split (" ", $observedMD5sum);                                                     # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];     										                        # just to have the md5sum result
 is($observedMD5sum, $expectedMD5sum, "crac::cracIndex - output content file");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
@@ -117,7 +117,7 @@ is($observedMD5sum, $expectedMD5sum, "crac::cracIndex - output content file");  
 # input file
 my $forwardFastq=$fastqData."irigin1_1.fastq";
 my $reverseFastq=$fastqData."irigin1_2.fastq";
-my $cracIndex="CRAC.index";
+my $cracIndex="referenceIrigin.fasta.CRAC.index";
 # execution test
 %optionsHachees = (
 			"-k" => 22
@@ -132,7 +132,7 @@ is(crac::crac($samFileOut,$cracIndex,$forwardFastq,$reverseFastq,$optionsHachees
 
 # expected output test
 #Check if files created
-@expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa","crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","irigin.CRAC.sam","referenceIrigin.fasta");
+@expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","irigin.CRAC.sam","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa","crac_TEST_log.e","crac_TEST_log.o");
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::crac - Files created');
