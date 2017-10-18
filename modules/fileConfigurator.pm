@@ -46,6 +46,8 @@ our %testParams=    (
         bwaMem => [""],
         bwaSw => [""],
         bwaIndex => [""],
+		# crac
+		crac => [""],
         #TopHat soft
         tophat2 => ["-i=30","-I=20000","-a=8","-m=1","--no-coverage-search","-g=10","--bowtie-n","--library-type=fr-unstranded","--microexon-search"],
         #GATK soft
