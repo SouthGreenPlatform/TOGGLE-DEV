@@ -89,9 +89,6 @@ my $originalFastaRef=$bankData."/referenceIrigin.fasta";
 my $copyCmd= "cp $originalFastaRef $fastaRef";           # command to copy the original fasta file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot link the file $originalFastaRef in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
-# output file
-my $fastaRefBWT="referenceIrigin.fasta.bwt";
-
 # execution test
 my %optionsHachees = ();
 my $optionsHachees = \%optionsHachees;
@@ -100,7 +97,7 @@ is(crac::cracIndex($fastaRef,$optionsHachees),1,'crac::cracIndex - running');
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("CRAC.index.conf","CRAC.index.ssa","crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","referenceIrigin.fasta");
+my @expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa","individuSoft.txt","referenceIrigin.fasta");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::cracIndex - Filetree created');
@@ -135,7 +132,7 @@ is(crac::crac($samFileOut,$cracIndex,$forwardFastq,$reverseFastq,$optionsHachees
 
 # expected output test
 #Check if files created
-@expectedOutput = ("CRAC.index.conf","CRAC.index.ssa","crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","irigin.CRAC.sam","referenceIrigin.fasta");
+@expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa","crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","irigin.CRAC.sam","referenceIrigin.fasta");
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::crac - Files created');
