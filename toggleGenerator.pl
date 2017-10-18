@@ -48,7 +48,6 @@ use scheduler;
 use radseq;
 use versionSofts;
 use checkFormat;
-use crac;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
