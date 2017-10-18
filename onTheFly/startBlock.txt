@@ -63,6 +63,7 @@ use tgicl;
 use trinity;
 use radseq;
 use bamutils;
+use crac;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
