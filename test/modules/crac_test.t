@@ -132,8 +132,8 @@ is(crac::crac($samFileOut,$cracIndex,$forwardFastq,$reverseFastq,$optionsHachees
 
 # expected output test
 #Check if files created
-@expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","irigin.CRAC.sam","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa","crac_TEST_log.e","crac_TEST_log.o");
-$observedOutput = `ls`;
+@expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","irigin.CRAC.sam","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
+$observedOutput = `ls ./`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::crac - Files created');
 
