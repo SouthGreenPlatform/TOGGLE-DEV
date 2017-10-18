@@ -34,5 +34,5 @@ elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn ne "NA") )	# Paired Mode
 
 	$samFileOut=$newDir."/".$readGroup."CRAC.sam";
 	$softParameters = toolbox::extractHashSoft($optionRef,$stepName);		# recovery of specific parameters of bwa mem
-	crac::crac($samFileOut,$readGroup,$fastqForwardIn,$fastqReverseIn,$softParameters);
+	crac::crac($samFileOut,$refFastaFile.".CRAC.index",$fastqForwardIn,$fastqReverseIn,$softParameters);
 }

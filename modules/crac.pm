@@ -52,14 +52,11 @@ sub cracIndex
 	if (toolbox::sizeFile($refFastaFileIn)==1)						# check if the reference file exist and is not empty
 	{
 		my $options=toolbox::extractOptions($optionsHachees, " ");			# Get given options
-		my $command=$cracIndex.$options." index CRAC.index ".$refFastaFileIn;		# command
+
+		my $command=$cracIndex.$options." index ".$refFastaFileIn.".CRAC.index ".$refFastaFileIn;		# command
 		##DEBUG toolbox::exportLog("DEBUG: bowtie::bowtieBuild : $command\n",1);
 		# Execute command
-		if(toolbox::run($command)==1)							# The command should be executed correctly (ie return) before exporting the log
-	{
-			toolbox::exportLog("INFOS: crac::cracIndex : correctly done\n",1);	# crac-index have been correctly done
-		}
-		else
+		if(toolbox::run($command)!=1)							# The command should be executed correctly (ie return) before exporting the log
 		{
 			toolbox::exportLog("ERROR: crac::cracIndex : ABORTED\n",0);		# crac-index have not been correctly done
 		}
