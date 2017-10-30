@@ -51,6 +51,8 @@ sub mountPoint {
 		my $name = pop @fields;
 		$volumes{$name} = $ip;
 	}
+	
+	return %volumes;
 }
 
 
