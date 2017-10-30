@@ -62,6 +62,11 @@ sub transfer { #From a list of folder, will perform a rsync over ssh transfer (n
 	my $mount = &mountPoint;
 	print Dumper ($mount);
 	
+	my $detected = $mount->{$folderIn};
+	
+	print $folderIn,"-->",$detected,"\n";
+	
+	
 }
 
 
