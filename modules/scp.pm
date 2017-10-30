@@ -53,7 +53,7 @@ sub mountPoint {
 		$volumes{$name} = $ip;
 	}
 	
-	return %volumes;
+	return \%volumes;
 }
 
 
