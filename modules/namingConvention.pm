@@ -111,6 +111,9 @@ sub correctName
     
         #FOR LSF
         case ($name =~ m/^lsf/i){$correctedName="lsf";} #Correction for lsf configuration
+        
+        #FOR SCP
+        case ($name =~ m/^scp/i or $name =~ m/^rsync/i or $name =~ m/^transfer/i){$correctedName="scp";} #Correction for scp transfer
 
         #FOR bwa.pm
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln

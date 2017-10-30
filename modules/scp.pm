@@ -59,6 +59,7 @@ sub mountPoint {# Based on the mounted volume, will provide a hash with VolName 
 }
 
 sub transfer2node { #From a list of folder, will perform a rsync over ssh transfer (normally ok in cluster) and provide a list of new name
+	#The $folderIn is the original data folder, the $tmpRoot is the basic folder on the node (eg /scratch, or /tmp)
  	my ($folderIn, $tmpRoot) = @_;
 	
 	my @path = split /\//, $folderIn;
@@ -112,7 +113,9 @@ sub transfer2node { #From a list of folder, will perform a rsync over ssh transf
 	
 }
 
-sub transfer2origin {
+sub transfer2origin {#Will transfer data from a node to the original folder
+	
+	#the $localFolder is the folder on the node, the $folderIn is the original given folder (ie on the network)
 	my ($localFolder,$folderIn) = @_;
 	
 	my @path = split /\//, $folderIn;
@@ -150,22 +153,34 @@ sub transfer2origin {
 =head1 SYNOPSIS
 
         use scp;
-    
+	
+	scp::transfer2node($folderIn,tmpRoot);
+	
+	scp::transfer2origin($localFolder,$folderIn);
     
         
 =head1 DESCRIPTION
 
-    this module allows the SCP transfer on nodes when working in scheduler/NPC mode
+    this module allows the SCP transfer on nodes when working in scheduler/HPC mode, IF the SCP option is provided in the config file.
+    It uses rsync to ensure a better transfer
     
 =head2 FUNCTIONS
 
+=head3 scp::transfer2node($folderIn,tmpRoot)
 
-=head3 
+	From a list of folder, will perform a rsync over ssh transfer (normally ok in cluster) and provide a list of new name
+	The $folderIn is the original data folder, the $tmpRoot is the basic folder on the node (eg /scratch, or /tmp)
+	
+=head3  scp::transfer2origin($localFolder,$folderIn)
+
+	Will transfer data from a node to the original folder
+	the $localFolder is the folder on the node, the $folderIn is the original given folder (ie on the network)
+
 
 =head1 AUTHORS
 
-Intellectual property belongs to IRD, CIRAD and South Green developpement plateform 
-Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
+Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+Written by Christine Tranchant, Cecile Monat, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 
 =head1 SEE ALSO
 
