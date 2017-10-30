@@ -47,7 +47,7 @@ sub mountPoint {
 	while (@listVolumes)
 	{
 		my $currentVolume = shift @listVolumes;
-		my @fields = split /\t/, $currentVolume;
+		my @fields = split /\s+/, $currentVolume;
 		my ($ip)=split /:/, $fields[0];
 		my $name = pop @fields;
 		$volumes{$name} = $ip;
