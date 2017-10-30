@@ -59,9 +59,8 @@ sub mountPoint {# Based on the mounted volume, will provide a hash with VolName 
 
 sub transfer { #From a list of folder, will perform a rsync over ssh transfer (normally ok in cluster) and provide a list of new name
  	my ($folderIn) = @_;
-	
 	my @path = split /\//, $folderIn;
-	
+	shift @path; # the form is "/my/path", thus the [0] position is undef 
 	my $mount = &mountPoint;
 	print Dumper ($mount);
 	
