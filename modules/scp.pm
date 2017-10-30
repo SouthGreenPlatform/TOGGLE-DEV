@@ -38,7 +38,7 @@ use Data::Dumper;
 
 #Picking up the NFS mount
 
-sub mountPoint {
+sub mountPoint {# Based on the mounted volume, will provide a hash with VolName => IP/DNS
 	
 	my $mounted = `df -h | grep ":"`;
 	chomp $mounted;
@@ -56,6 +56,9 @@ sub mountPoint {
 	return \%volumes;
 }
 
+sub transfer { #From a list of folder, will perform a rsync over ssh transfer (normally ok in cluster) and provide a list of new name
+ 	
+}
 
 
 
