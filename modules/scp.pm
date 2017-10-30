@@ -35,6 +35,7 @@ use warnings;
 use localConfig;
 use toolbox;
 use Data::Dumper;
+use scheduler;
 
 #Picking up the NFS mount
 
@@ -57,20 +58,87 @@ sub mountPoint {# Based on the mounted volume, will provide a hash with VolName 
 	return \%volumes;
 }
 
-sub transfer { #From a list of folder, will perform a rsync over ssh transfer (normally ok in cluster) and provide a list of new name
- 	my ($folderIn) = @_;
+sub transfer2node { #From a list of folder, will perform a rsync over ssh transfer (normally ok in cluster) and provide a list of new name
+ 	my ($folderIn, $tmpRoot) = @_;
+	
 	my @path = split /\//, $folderIn;
 	shift @path; # the form is "/my/path", thus the [0] position is undef 
 	my $mount = &mountPoint;
-	print Dumper ($mount);
 	
-	my $detected = $mount->{$path[0]};
+	my $origin = $mount->{$path[0]};
 	
-	print $folderIn," --> ",$detected,"\n";
+	#node name
+	my $node = `echo \$HOSTNAME`;
+	chomp $node;
 	
+	#User name
+	my $user = `echo \$USER`;
+	chomp $user;
+	
+	#Job number acquisition
+	my $jobNb;
+	my $schedulerType = scheduler::checkingCapability;
+	if ($schedulerType eq "sge")
+	{
+		$jobNb = `echo \$JOB_ID`;
+	}
+	elsif ($schedulerType eq "slurm" or $schedulerType eq "mprun")
+	{
+		$jobNb = `echo \$SLURM_JOBID`;
+	}
+	elsif ($schedulerType eq "lsf")
+	{
+		$jobNb = `echo \$LSF_JOBID`;
+	}
+	chomp $jobNb;
+	
+	#Node folder creation
+	my $newFolder = $tmpRoot."/".$user."-".$jobNb;
+	system ("mkdir -p $newFolder") and toolbox::::exportLog("ERROR: scp::transfer2node: cannot create the desitination folder $newFolder:\n\t$!\n",0);
+	
+	#Transfer
+	
+	my $rsyncCom = "rsync -vazur ".$origin.":".$folderIn."/* ".$newFolder."/.";
+	toolbox::run($rsyncCom);
+	if (toolbox::run($rsyncCom)==1)
+        {
+            toolbox::exportLog("INFOS: scp::transfer2node Ok, data transferred from $origin to $node, in folder $newFolder\n",1);
+            return ($origin,$newFolder);
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: scp::transfer2node error, data NOT transferred from $origin to $node\n",0);
+        }
 	
 }
 
+sub transfer2origin {
+	my ($localFolder,$folderIn) = @_;
+	
+	my @path = split /\//, $folderIn;
+	shift @path; # the form is "/my/path", thus the [0] position is undef 
+	my $mount = &mountPoint;
+	
+	my $origin = $mount->{$path[0]};
+	
+	#node name
+	my $node = `echo \$HOSTNAME`;
+	chomp $node;
+	
+	#Transfer
+	my $rsyncCom = "rsync -vazur ".$localFolder."/* ".$origin.":".$folderIn."/. ";
+	toolbox::run($rsyncCom);
+	if (toolbox::run($rsyncCom)==1)
+        {
+            toolbox::exportLog("INFOS: scp::transfer2origin Ok, data transferred from $node to $origin, in folder $folderIn\n",1);
+            return 1;
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: scp::transfer2origin error, data NOT transferred from $node to $origin\n",0);
+        }
+	
+}
 
 
 1;
