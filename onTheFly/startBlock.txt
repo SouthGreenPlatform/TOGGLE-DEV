@@ -283,7 +283,7 @@ if (defined $optionRef->{"scp"})
   #Picking up the "tmpRoot" info, ie the name of the temp dir on the nodes (eg /scratch, /tmp,...)
   my $tmpRoot = toolbox::extractHashSoft($optionRef,"scp");
   #Launching transfer command and changing the $initialDir value
-  $initialDir = $scp::transfer2node($originalDir,$tmpRoot);
+  $initialDir = scp::transfer2node($originalDir,$tmpRoot);
 }
 
 foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
