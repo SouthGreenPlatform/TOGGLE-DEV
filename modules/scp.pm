@@ -50,6 +50,7 @@ sub mountPoint {# Based on the mounted volume, will provide a hash with VolName 
 		my @fields = split /\s+/, $currentVolume;
 		my ($ip)=split /:/, $fields[0];
 		my $name = pop @fields;
+		$name =~ s/\///;
 		$volumes{$name} = $ip;
 	}
 	
@@ -59,12 +60,14 @@ sub mountPoint {# Based on the mounted volume, will provide a hash with VolName 
 sub transfer { #From a list of folder, will perform a rsync over ssh transfer (normally ok in cluster) and provide a list of new name
  	my ($folderIn) = @_;
 	
+	my @path = split /\//, $folderIn;
+	
 	my $mount = &mountPoint;
 	print Dumper ($mount);
 	
-	my $detected = $mount->{$folderIn};
+	my $detected = $mount->{$path[0]};
 	
-	print $folderIn,"-->",$detected,"\n";
+	print $folderIn," --> ",$detected,"\n";
 	
 	
 }
