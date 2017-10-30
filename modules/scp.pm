@@ -95,7 +95,7 @@ sub transfer2node { #From a list of folder, will perform a rsync over ssh transf
 	
 	#Node folder creation
 	my $newFolder = $tmpRoot."/".$user."-".$jobNb;
-	system ("mkdir -p $newFolder") and toolbox::::exportLog("ERROR: scp::transfer2node: cannot create the desitination folder $newFolder:\n\t$!\n",0);
+	system ("mkdir -p $newFolder") and toolbox::exportLog("ERROR: scp::transfer2node: cannot create the desitination folder $newFolder:\n\t$!\n",0);
 	
 	#Transfer
 	

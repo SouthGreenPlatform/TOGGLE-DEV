@@ -280,11 +280,9 @@ if (scalar @$fileList >=2 && $$fileList[0] =~ m/(sam|bam|vcf|bai|vcf\.gz)$/)
 my $originalDir = $initialDir; #Keep in memory the true initial directory
 if (defined $optionRef->{"scp"})
 {
-  print Dumper ($optionRef->{"scp"});
   #Picking up the "tmpRoot" info, ie the name of the temp dir on the nodes (eg /scratch, /tmp,...)
-  my $tmpRoot = toolbox::extractHashSoft($optionRef,"scp");
-  print Dumper($tmpRoot);
-  exit;
+  my $scpOptions = toolbox::extractHashSoft($optionRef,"scp");
+  my $tmpRoot = toolbox::extractOptions($scpOptions);
   #Launching transfer command and changing the $initialDir value
   $initialDir = scp::transfer2node($originalDir,$tmpRoot);
 }
