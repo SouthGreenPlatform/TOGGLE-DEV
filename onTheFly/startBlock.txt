@@ -287,6 +287,8 @@ if (defined $optionRef->{"scp"})
   $initialDir = scp::transfer2node($originalDir,$tmpRoot);
 }
 
+#Launching analysis, creating folder...
+
 foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
 {
   if ($globalAnalysis == 0)
