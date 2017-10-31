@@ -5,6 +5,8 @@
 
 close F1;
 
+toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
+
 #Transfer to a node if the $scp provided in the config file
 if (defined $optionRef->{"scp"})
 {
@@ -12,7 +14,7 @@ if (defined $optionRef->{"scp"})
   scp::transfer2origin($initialDir,$originalDir);
 }
 
-toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
+
 toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################
 #\tCITATION:
