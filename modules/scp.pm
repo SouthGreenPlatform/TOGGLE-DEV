@@ -60,7 +60,7 @@ sub mountPoint {# Based on the mounted volume, will provide a hash with VolName 
 
 sub transfer2node { #From a list of folder, will perform a rsync over ssh transfer (normally ok in cluster) and provide a list of new name
 	#The $folderIn is the original data folder, the $tmpRoot is the basic folder on the node (eg /scratch, or /tmp)
- 	my ($folderIn, $tmpRoot) = @_;
+ 	my ($folderIn, $tmpRoot,$readgroup) = @_;
 	
 	my @path = split /\//, $folderIn;
 	shift @path; # the form is "/my/path", thus the [0] position is undef 
@@ -94,8 +94,10 @@ sub transfer2node { #From a list of folder, will perform a rsync over ssh transf
 	chomp $jobNb;
 	
 	#Node folder creation
-	my $newFolder = $tmpRoot."/".$user."-".$jobNb;
+	my $newFolder = $tmpRoot."/".$user."-".$jobNb."/".$readgroup;
+	my $refFolder = $tmpRoot."/".$user."-".$jobNb."/referenceFiles";
 	$newFolder =~ s/\s//g; #Removin extraspaces that hinder the transfer
+	$refFolder =~ s/\s//g; #Removin extraspaces that hinder the transfer
 	system ("mkdir -p $newFolder") and toolbox::exportLog("ERROR: scp::transfer2node: cannot create the desitination folder $newFolder:\n\t$!\n",0);
 	
 	#Transfer
@@ -104,7 +106,10 @@ sub transfer2node { #From a list of folder, will perform a rsync over ssh transf
 	if (toolbox::run($rsyncCom)==1)
         {
             toolbox::exportLog("INFOS: scp::transfer2node Ok, data transferred from $origin to $node, in folder $newFolder\n",1);
-            return $newFolder;
+	    
+	    my $rsyncRef = "rsync -vazur ".$origin.":".$folderIn."/../referenceFiles/* ".$refFolder."/.";
+	    
+            return ($newFolder,$refFolder);
         }
         else
         {
