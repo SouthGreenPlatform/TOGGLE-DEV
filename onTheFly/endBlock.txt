@@ -19,8 +19,8 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################
 #\tCITATION:
 #\tTOGGLE: Toolbox for generic NGS analyses.
-#\tCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud,
-#\tSouhila Amanzougarene,Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
+#\tCecile Monat, Christine Tranchant-Dubreuil, Ayite Kougbeadjo, Cedric Farcy, Enrique Ortega-Abboud,
+#\tSouhila Amanzougarene,Sebastien Ravel, Mawusse Agbessi, Julie Orjuela-Bouniol, Maryline Summo and Francois Sabot.
 #\tBMC Bioinformatics 2015, 16:374
 ###########################################################################################################################",1);  
 
