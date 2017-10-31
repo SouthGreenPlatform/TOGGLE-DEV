@@ -5,6 +5,13 @@
 
 close F1;
 
+#Transfer to a node if the $scp provided in the config file
+if (defined $optionRef->{"scp"})
+{
+  #Launching transfer command and changing the $initialDir value
+  scp::transfer2origin($initialDir,$originalDir);
+}
+
 toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
 toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################
@@ -15,11 +22,6 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 #\tBMC Bioinformatics 2015, 16:374
 ###########################################################################################################################",1);  
 
-#Transfer to a node if the $scp provided in the config file
-if (defined $optionRef->{"scp"})
-{
-  #Launching transfer command and changing the $initialDir value
-  scp::transfer2origin($initialDir,$originalDir);
-}
+
 
 exit;
