@@ -284,7 +284,7 @@ if (defined $optionRef->{"scp"})
   my $scpOptions = toolbox::extractHashSoft($optionRef,"scp");
   my $tmpRoot = toolbox::extractOptions($scpOptions);
   #Launching transfer command and changing the $initialDir value
-  ($initialDir,$refFastaFile) = scp::transfer2node($originalDir,$tmpRoot,$readgroup);
+  ($initialDir,$refFastaFile) = scp::transfer2node($originalDir,$tmpRoot,$readGroup);
 }
 
 #Launching analysis, creating folder...
