@@ -63,7 +63,7 @@ print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for duplicationDetector";
 
 # check final results
-my $bedFileOut = $testingDir"/output/smallVcf.DUPLICATIONDETECTOR.bed";
+my $bedFileOut = $testingDir."/output/smallVcf.DUPLICATIONDETECTOR.bed";
 
 #Check if files created
 my @expectedOutput = ("smallVcf.DUPLICATIONDETECTOR.bed");
