@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 ###################################################################################################################################
 #
@@ -30,71 +30,44 @@
 #
 ###################################################################################################################################
 
-#Will test if bwa works correctly
 use strict;
 use warnings;
-use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+use Test::More 'no_plan';
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
-
-
-########################################
-#use of duplicationDetector module ok
-########################################
-use_ok('localConfig') or exit;
-use_ok('duplicationDetector') or exit;
-can_ok('duplicationDetector','execution');
-
-
+use fileConfigurator;
 use localConfig;
-use duplicationDetector;
 
+#####################
+## PATH for datas test
+#####################
 my $vcfData="$toggle/data/testData/vcf/duplicVCF/smallDuplic.vcf";
 
 #########################################
 #Remove files and directory created by previous test
 #########################################
-my $testingDir="$toggle/dataTest/duplicationDetectorTestDir";
+my $testingDir="$toggle/dataTest/duplicationDetectorBlocks";
 my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
 system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
 
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
+print "\n\n#################################################\n";
+print "#### TEST DUPLICATIONDETECTOR \n";
+print "#################################################\n";
 
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"duplicationDetector\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
+#Creating config file for this test
+my @listSoft = ("duplicationDetector");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for duplicationDetector";
 
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf duplicationDetector_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
+# check final results
+my $bedFileOut = $testingDir"/output/smallVcf.DUPLICATIONDETECTOR.bed";
 
-
-##########################################
-##### duplicationDetector::execution
-##########################################
-
-
-# execution test
-my %optionsHachees = ("-H" => 1);
-my $optionsHachees = \%optionsHachees;
-
-# output file
-my $bedFileOut=$testingDir."/test.duplicationDetector.bed";
-
-# execution test
-is(duplicationDetector::execution($vcfData,$bedFileOut,$optionsHachees),'1',"duplicationDetector::execute - Test for duplicationDetector running");
-
-# expected output test
 #Check if files created
-my @expectedOutput = ("duplicationDetector_TEST_log.e","duplicationDetector_TEST_log.o","individuSoft.txt","test.duplicationDetector.bed");
-my $observedOutput = `ls ./`;
+my @expectedOutput = ("smallVcf.DUPLICATIONDETECTOR.bed");
+my $observedOutput = `ls $testingDir/output/`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'duplicationDetector::execute - Files created');
 
@@ -109,5 +82,3 @@ is($observedLineNumber, $expectedLineNumber, "duplicationDetector::execute - out
 my $grepResult=`grep "359593" $bedFileOut`;
 chomp $grepResult;
 is($grepResult,"Reference	359593	359695	102	11	1.00",'duplicationDetector::execute - output grep in file Bed');
-
-exit;
