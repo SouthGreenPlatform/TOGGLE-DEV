@@ -89,7 +89,7 @@ my $optionsHachees = \%optionsHachees;
 my $bedFileOut=$testingDir."/test.duplicationDetector.bed";
 
 # execution test
-is(crac::crac($vcfData,$bedFileOut,$optionsHachees),'1',"duplicationDetector::execute - Test for crac running");
+is(duplicationDetector::execute($vcfData,$bedFileOut,$optionsHachees),'1',"duplicationDetector::execute - Test for duplicationDetector running");
 
 # expected output test
 #Check if files created
