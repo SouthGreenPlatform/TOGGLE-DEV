@@ -241,5 +241,9 @@ MANDATORY= reference
 $cracIndex
 IN=fasta
 OUT=NA
-MANDATORY=referenceé
+MANDATORY=reference
+
+$duplicationDetector
+IN=vcf
+OUT=csv,bed
 
