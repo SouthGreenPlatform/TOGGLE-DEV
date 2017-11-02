@@ -44,7 +44,7 @@ use lib qw(../../modules/);
 ########################################
 use_ok('localConfig') or exit;
 use_ok('duplicationDetector') or exit;
-can_ok('duplicationDetector','execute');
+can_ok('duplicationDetector','execution');
 
 
 use localConfig;
@@ -77,7 +77,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 ##########################################
-##### duplicationDetector::execute
+##### duplicationDetector::execution
 ##########################################
 
 
@@ -89,7 +89,7 @@ my $optionsHachees = \%optionsHachees;
 my $bedFileOut=$testingDir."/test.duplicationDetector.bed";
 
 # execution test
-is(duplicationDetector::execute($vcfData,$bedFileOut,$optionsHachees),'1',"duplicationDetector::execute - Test for duplicationDetector running");
+is(duplicationDetector::execution($vcfData,$bedFileOut,$optionsHachees),'1',"duplicationDetector::execute - Test for duplicationDetector running");
 
 # expected output test
 #Check if files created
