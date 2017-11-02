@@ -37,8 +37,6 @@ use toolbox;
 use Data::Dumper;
 use checkFormat;
 
-
-
 ##duplicationDetector running
 sub execution
 {
@@ -46,7 +44,7 @@ sub execution
     
     if (checkFormat::checkFormatVcf($vcfFileIn) != 1) #No mate file, sequences are single ends
     {
-        toolbox::exportLog("ERROR:")
+        toolbox::exportLog("ERROR: duplicationDetector::execution: THE file $vcfFileIn is not a correctly formatted VCF.", 0);
     }
     
     #Options
@@ -55,45 +53,22 @@ sub execution
     {
         $options=toolbox::extractOptions($optionsHachees);		##Get given options
     }
-    
-	unless  ($options =~ m/-k /)
-	{
-		toolbox::exportLog("WARNING: crac::crac: no kmers length provided, we fix it arbitrary at 22.\n",2);
-		$options .= " -k 22"; 
-	}
 	
     #Command
-    if (toolbox::sizeFile($forwardFastqFile)==1)		##Check if entry files exist and are not empty
+    #Basic command line
+    my $command = $duplicationDetector." ".$options." -i ".$vcfFileIn." -o ".$fileOut." ";
+    
+    #Execute command
+    if(toolbox::run($command)==1)		## if the command has been executed correctly, export the log
     {
-        
-        #Basic command line
-        my $command = $crac." ".$options." -i ".$refIndex." -o ".$samFileOut." ";
-        
-        if (toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
-        {
-            $command .= "-r ".$forwardFastqFile." ".$reverseFastqFile;
-        }
-        else
-        {
-            $command .= "-r ".$forwardFastqFile;
-        }
-        
-        #Execute command
-        if(toolbox::run($command)==1)		## if the command has been executed correctly, export the log
-        {
-            return 1;
-        }
-        else
-        {
-            toolbox::exportLog("ERROR: crac::crac : ABORTED\n",0);
-            return 0;
-        }
+        return 1;
     }
     else
     {
-        toolbox::exportLog("ERROR: crac::crac : Problem with the file $forwardFastqFile\n",0);
+        toolbox::exportLog("ERROR: duplicationDetector::execution : ABORTED\n",0);
         return 0;
     }
+
 }
 
 
