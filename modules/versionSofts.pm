@@ -332,9 +332,9 @@ sub writeLogVersion
 			#FOR checkFormatSamOrBam
 			case ($softOrder =~ m/^checkFormatSamOrBam/i){$softPathVersion{"checkFormatSamOrBam"}= "v1.0" if not defined $softPathVersion{"checkFormatSamOrBam"};
 											$softPath{"checkFormatSamOrBam"}= "checkFormatSamOrBam" if not defined $softPath{"checkFormatSamOrBam"};}
-			#FOR checkEncodeByASCIIcontroll
-			case ($softOrder =~ m/^checkEncodeByASCIIcontroll/i){$softPathVersion{"checkEncodeByASCIIcontroll"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontroll"};
-																 $softPath{"checkEncodeByASCIIcontroll"}= "checkEncodeByASCIIcontroll" if not defined $softPath{"checkEncodeByASCIIcontroll"};}
+			#FOR checkEncodeByASCIIcontrol
+			case ($softOrder =~ m/^checkEncodeByASCIIcontrol/i){$softPathVersion{"checkEncodeByASCIIcontrol"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontrol"};
+																 $softPath{"checkEncodeByASCIIcontrol"}= "checkEncodeByASCIIcontrol" if not defined $softPath{"checkEncodeByASCIIcontrol"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}
