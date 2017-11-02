@@ -108,6 +108,6 @@ is($observedLineNumber, $expectedLineNumber, "duplicationDetector::execute - out
 #GREP command result
 my $grepResult=`grep "359593" $bedFileOut`;
 chomp $grepResult;
-is($grepResult,"Reference      359593  359695  102     11      1.00",'duplicationDetector::execute - output grep in file Bed');
+is($grepResult,"Reference	359593	359695	102	11	1.00",'duplicationDetector::execute - output grep in file Bed');
 
 exit;
