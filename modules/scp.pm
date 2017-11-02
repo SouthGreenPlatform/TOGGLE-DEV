@@ -95,12 +95,9 @@ sub transfer2node { #From a list of folder, will perform a rsync over ssh transf
 	
 	#Node folder creation
 	my $newFolder = $tmpRoot."/".$user."-".$jobNb."/".$readgroup;
-	my $refFolder = $tmpRoot."/".$user."-".$jobNb."/referenceFiles";
 	$newFolder =~ s/\s//g; #Removin extraspaces that hinder the transfer
-	$refFolder =~ s/\s//g; #Removin extraspaces that hinder the transfer
 	system ("mkdir -p $newFolder") and toolbox::exportLog("ERROR: scp::transfer2node: cannot create the destination folder for data $newFolder:\n\t$!\n",0);
-	system ("mkdir -p $refFolder") and toolbox::exportLog("ERROR: scp::transfer2node: cannot create the destination folder for reference $refFolder:\n\t$!\n",0);
-	
+
 	#Transfer
 	
 	my $rsyncCom = "rsync -vazur ".$origin.":".$folderIn."/* ".$newFolder."/.";
@@ -108,8 +105,18 @@ sub transfer2node { #From a list of folder, will perform a rsync over ssh transf
         {
             toolbox::exportLog("INFOS: scp::transfer2node Ok, data transferred from $origin to $node, in folder $newFolder\n",1);
 	    
-	    my $rsyncRef = "rsync -vazur ".$origin.":".$folderIn."/../../referenceFiles/* ".$refFolder."/.";
-	    toolbox::run($rsyncRef);
+	    	
+		my $refFolder;
+		if (-d $origin.":".$folderIn."/../../referenceFiles")
+		{
+				$refFolder = $tmpRoot."/".$user."-".$jobNb."/referenceFiles";
+				system ("mkdir -p $refFolder") and toolbox::exportLog("ERROR: scp::transfer2node: cannot create the destination folder for reference $refFolder:\n\t$!\n",0);
+					$refFolder =~ s/\s//g; #Removin extraspaces that hinder the transfer
+	
+	
+			my $rsyncRef = "rsync -vazur ".$origin.":".$folderIn."/../../referenceFiles/* ".$refFolder."/.";
+			toolbox::run($rsyncRef);
+		}
 	    
             return ($newFolder,$refFolder);
         }
