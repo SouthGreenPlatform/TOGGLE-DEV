@@ -40,7 +40,7 @@ use localConfig;
 #####################
 ## PATH for datas test
 #####################
-my $vcfData="$toggle/data/testData/vcf/duplicVCF/smallDuplic.vcf";
+my $vcfData="$toggle/data/testData/vcf/duplicVCF/";
 
 #########################################
 #Remove files and directory created by previous test
@@ -58,7 +58,7 @@ print "#################################################\n";
 my @listSoft = ("duplicationDetector");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$vcfData." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for duplicationDetector";
 
