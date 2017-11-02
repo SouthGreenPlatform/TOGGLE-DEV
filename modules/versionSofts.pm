@@ -321,7 +321,7 @@ sub writeLogVersion
 											$softPath{"duplicationDetector"}= $duplicationDetector if not defined $softPath{"duplicationDetector"};}
 			
 			#FOR checkFormatFasta
-			case ($softOrder =~ m/^checkFormatFasta/i){$softPathVersion{"checkFormatFasta"}= "v1.0" if not defined $softPathVersion{"duplicationDetector"};
+			case ($softOrder =~ m/^checkFormatFasta/i){$softPathVersion{"checkFormatFasta"}= "v1.0" if not defined $softPathVersion{"checkFormatFasta"};
 											$softPath{"checkFormatFasta"}= "checkFormatFasta" if not defined $softPath{"checkFormatFasta"};}
 			#FOR checkFormatFastq
 			case ($softOrder =~ m/^checkFormatFastq/i){$softPathVersion{"checkFormatFastq"}= "v1.0" if not defined $softPathVersion{"checkFormatFasta"};
@@ -332,6 +332,9 @@ sub writeLogVersion
 			#FOR checkFormatSamOrBam
 			case ($softOrder =~ m/^checkFormatSamOrBam/i){$softPathVersion{"checkFormatSamOrBam"}= "v1.0" if not defined $softPathVersion{"checkFormatSamOrBam"};
 											$softPath{"checkFormatSamOrBam"}= "checkFormatSamOrBam" if not defined $softPath{"checkFormatSamOrBam"};}
+			#FOR checkEncodeByASCIIcontroll
+			case ($softOrder =~ m/^checkEncodeByASCIIcontroll/i){$softPathVersion{"checkEncodeByASCIIcontroll"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontroll"};
+																 $softPath{"checkEncodeByASCIIcontroll"}= "checkEncodeByASCIIcontroll" if not defined $softPath{"checkEncodeByASCIIcontroll"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}
