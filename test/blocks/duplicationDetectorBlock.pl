@@ -67,7 +67,7 @@ my $bedFileOut = $testingDir."/finalResults/smallDuplic.DUPLICATIONDETECTOR.bed"
 
 #Check if files created
 my @expectedOutput = ("smallDuplic.DUPLICATIONDETECTOR.bed");
-my $observedOutput = `ls $testingDir/output/`;
+my $observedOutput = `ls $testingDir/finalResults/`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'duplicationDetector::execute - Files created');
 
