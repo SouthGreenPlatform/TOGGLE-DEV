@@ -39,7 +39,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex $atropos);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex $atropos $duplicationDetector);
 
 #toggle path
 our $toggle="/path/to/toggleFolder";
@@ -103,6 +103,9 @@ our $bowtie2 = "/path/to/bowtie2";
 #Path to crac
 our $crac = "/path/to/crac";
 our $cracIndex = "/path/to/crac-index";
+
+#Path to DuplicationDetector
+our $duplicationDetector = "/path/to/duplicationDetector";
 
 
 1;

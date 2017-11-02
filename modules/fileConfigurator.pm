@@ -115,7 +115,9 @@ our %testParams=    (
 		bamutilsRemoveclipping => [""],
         #Bowtie softs
         bowtie=>[""],
-        bowtie2=>[""]
+        bowtie2=>[""],
+        #DuplicationDetector
+        duplicationDetector=>["-H 1"]
         );
 
 sub softParams

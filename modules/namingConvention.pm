@@ -213,6 +213,9 @@ sub correctName
         case ($name =~ m/^crac[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="cracIndex"; } #Correction for cracIndex
         case ($name =~ m/^crac/i){$correctedName="crac"; } #Correction for crac
 
+        #FOR DUPLICATIONDETECTOR
+        case ($name =~ m/^duplication[\s|\.|\-| \/|\\|\|]*detector/i){$correctedName="duplicationDetector";} #Correction for duplicationDetector
+        
         else
         {
             toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);

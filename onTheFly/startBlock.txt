@@ -67,6 +67,7 @@ use atropos;
 use crac;
 use bowtie;
 use scp;
+use duplicationDetector;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -254,6 +255,9 @@ my ($intervalsFile,$tableReport,$vcfSnpKnownFile,$depthFileOut);
 ##MpileUp associated variables
 my ($mpileupOut);
 
+##BED associated variables
+my ($bedFileIn, $bedFileOut)=("NA","NA");
+
 ##Internal variables
 ###Directory and file variables
 my ($newDir, $fileWithoutExtension, $extension, $shortDirName, @dirList, @fileList, $directory, $fileListMerge);
@@ -286,9 +290,12 @@ if (defined $optionRef->{"scp"})
   #Launching transfer command and changing the $initialDir value
   my $refFastaFolder;
   ($initialDir,$refFastaFolder) = scp::transfer2node($originalDir,$tmpRoot,$readGroup);
-  $refFastaFile = `basename $refFastaFile`;
-  chomp $refFastaFile;
-  $refFastaFile = $refFastaFolder."/".$refFastaFile;
+  if (defined $refFastaFolder)
+  {
+    $refFastaFile = `basename $refFastaFile`;
+    chomp $refFastaFile;
+    $refFastaFile = $refFastaFolder."/".$refFastaFile;
+  }
 }
 
 #Launching analysis, creating folder...
