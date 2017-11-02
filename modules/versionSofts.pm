@@ -323,7 +323,16 @@ sub writeLogVersion
 			#FOR checkFormatFasta
 			case ($softOrder =~ m/^checkFormatFasta/i){$softPathVersion{"checkFormatFasta"}= "v1.0" if not defined $softPathVersion{"duplicationDetector"};
 											$softPath{"checkFormatFasta"}= "checkFormatFasta" if not defined $softPath{"checkFormatFasta"};}
-
+			#FOR checkFormatFastq
+			case ($softOrder =~ m/^checkFormatFastq/i){$softPathVersion{"checkFormatFastq"}= "v1.0" if not defined $softPathVersion{"checkFormatFasta"};
+											$softPath{"checkFormatFastq"}= "checkFormatFastq" if not defined $softPath{"checkFormatFastq"};}
+			#FOR checkFormatVcf
+			case ($softOrder =~ m/^checkFormatVcf/i){$softPathVersion{"checkFormatVcf"}= "v1.0" if not defined $softPathVersion{"checkFormatVcf"};
+											$softPath{"checkFormatVcf"}= "checkFormatVcf" if not defined $softPath{"checkFormatVcf"};}
+			#FOR checkFormatSamOrBam
+			case ($softOrder =~ m/^checkFormatSamOrBam/i){$softPathVersion{"checkFormatSamOrBam"}= "v1.0" if not defined $softPathVersion{"checkFormatSamOrBam"};
+											$softPath{"checkFormatSamOrBam"}= "checkFormatSamOrBam" if not defined $softPath{"checkFormatSamOrBam"};}
+											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}
 	}
