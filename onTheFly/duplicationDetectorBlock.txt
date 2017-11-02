@@ -27,6 +27,6 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be VCF
 }
 
 
-$bedFileOut=$newDir."/".$readGroup."DUPLICATIONDETECTOR.bed";
+$bedFileOut=$newDir."/".$readGroup.".DUPLICATIONDETECTOR.bed";
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);		# recovery of specific parameters of duplicationDetector
 duplicationDetector::execution($vcfFileIn,$bedFileOut,$softParameters);

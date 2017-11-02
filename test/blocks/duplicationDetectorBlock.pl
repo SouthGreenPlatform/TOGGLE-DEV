@@ -63,10 +63,10 @@ print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for duplicationDetector";
 
 # check final results
-my $bedFileOut = $testingDir."/output/smallVcf.DUPLICATIONDETECTOR.bed";
+my $bedFileOut = $testingDir."/output/smallDuplic.DUPLICATIONDETECTOR.bed";
 
 #Check if files created
-my @expectedOutput = ("smallVcf.DUPLICATIONDETECTOR.bed");
+my @expectedOutput = ("smallDuplic.DUPLICATIONDETECTOR.bed");
 my $observedOutput = `ls $testingDir/output/`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'duplicationDetector::execute - Files created');
