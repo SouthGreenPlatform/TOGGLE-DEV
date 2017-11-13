@@ -296,6 +296,9 @@ if (defined $optionRef->{"scp"})
     chomp $refFastaFile;
     $refFastaFile = $refFastaFolder."/".$refFastaFile;
   }
+  
+  $previousDir = $initialDir."/0_initialFiles";
+  $fileList=toolbox::readDir($previousDir);
 }
 
 #Launching analysis, creating folder...
