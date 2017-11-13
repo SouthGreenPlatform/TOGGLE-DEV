@@ -100,7 +100,7 @@ sub transfer2node { #From a list of folder, will perform a rsync over ssh transf
 
 	#Transfer
 	
-	my $rsyncCom = "rsync -vzur--copy-link ".$origin.":".$folderIn."/* ".$newFolder."/.";
+	my $rsyncCom = "rsync -vzur --copy-link ".$origin.":".$folderIn."/* ".$newFolder."/.";
 	if (toolbox::run($rsyncCom)==1)
         {
             toolbox::exportLog("INFOS: scp::transfer2node Ok, data transferred from $origin to $node, in folder $newFolder\n",1);
