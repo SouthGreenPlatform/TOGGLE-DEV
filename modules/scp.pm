@@ -114,7 +114,7 @@ sub transfer2node { #From a list of folder, will perform a rsync over ssh transf
 					$refFolder =~ s/\s//g; #Removin extraspaces that hinder the transfer
 	
 	
-			my $rsyncRef = "rsync -vzurKL --copy-unsafe-links ".$origin.":".$folderIn."/../../referenceFiles/* ".$refFolder."/.";
+			my $rsyncRef = "rsync -vzur--copy-unsafe-links ".$origin.":".$folderIn."/../../referenceFiles/* ".$refFolder."/.";
 			toolbox::run($rsyncRef);
 		}
 	    
