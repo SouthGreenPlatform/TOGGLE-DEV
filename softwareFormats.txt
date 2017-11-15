@@ -247,3 +247,15 @@ $duplicationDetector
 IN=vcf
 OUT=csv,bed
 
+$bedToolsIntersect
+IN=bam,bed,vcf,gff
+OUT=bed
+
+$bedToolsWindow
+IN=bam,bed,vcf,gff
+OUT=bed
+
+$bedToolsGeneric
+IN=bam,bed,vcf,gff
+OUT=bed
+
