@@ -216,6 +216,13 @@ sub correctName
         #FOR DUPLICATIONDETECTOR
         case ($name =~ m/^duplication[\s|\.|\-| \/|\\|\|]*detector/i){$correctedName="duplicationDetector";} #Correction for duplicationDetector
         
+        #FOR BEDTOOLS
+        case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*intersect/i){$correctedName="bedToolsIntersectBed";} #Correction for intersectBed version 1
+        case ($name =~ m/^intersect[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="bedToolsIntersectBed";} #Correction for intersectBed version 2
+        case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*window/i){$correctedName="bedToolsWindowBed";} #Correction for windowBed version 1
+        case ($name =~ m/^window[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="bedToolsWindowBed";} #Correction for windowBed version 2
+        case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*generic/i){$correctedName="bedToolsGeneric";} #Correction for bedtools generic
+              
         else
         {
             toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);
