@@ -188,6 +188,14 @@ sub cracVersion
 	
 }
 
+sub bedToolsVersion
+{ #We works with the STDIN output
+	my $version = `$bedtools --version` or die toolbox::exportLog("ERROR: versionSoft::bedToolsVersion : Can not grep BEDtools version\nPlease check your BEDtools installation.\n", 0);
+	chomp($version);
+	return $version;
+	
+}
+
 sub writeLogVersion
 {
 	my ($fileConf, $version) = @_;
@@ -335,6 +343,10 @@ sub writeLogVersion
 			#FOR checkEncodeByASCIIcontrol
 			case ($softOrder =~ m/^checkEncodeByASCIIcontrol/i){$softPathVersion{"checkEncodeByASCIIcontrol"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontrol"};
 																 $softPath{"checkEncodeByASCIIcontrol"}= "checkEncodeByASCIIcontrol" if not defined $softPath{"checkEncodeByASCIIcontrol"};}
+			
+			#FOR BEDtools
+			case ($softOrder =~ m/^bedtools/i){$softPathVersion{"bedtools"}= bedToolsVersion if not defined $softPathVersion{"bedtools"};
+												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}
