@@ -175,7 +175,7 @@ sub generic {
 		#The generic command system will transform the FILEOUT text by the correct FILENAME
 		$options =~ s/FILEOUT/$fileOut/;
 		my $command;
-		if ($options =~ $fileOut)
+		if ($options =~ m/$fileOut/)
 		{
 			$command=$bedtools." ".$options;
 		}
