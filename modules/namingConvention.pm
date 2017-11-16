@@ -202,6 +202,9 @@ sub correctName
 		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
+        case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*gff/i){$correctedName="checkFormatGff"}  # Correction for checkFormatGff step
+		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="checkFormatBed"}  # Correction for checkFormatBed step
+
         
         #FOR BOWTIE SUITE
         case ($name =~ m/^bowtie$/i){$correctedName="bowtie"}#Correction for bowtie

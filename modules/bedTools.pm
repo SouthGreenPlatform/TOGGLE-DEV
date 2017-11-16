@@ -170,10 +170,10 @@ sub generic {
 		}
 		
 		#The generic command system will transform the FILEIN text by the correct FILENAME
-		$options =~ s/FILEIN/$fileIn/;
+		$options =~ s/FILEIN/$fileIn/i;
 		
 		#The generic command system will transform the FILEOUT text by the correct FILENAME
-		$options =~ s/FILEOUT/$fileOut/;
+		$options =~ s/FILEOUT/$fileOut/i;
 		my $command;
 		if ($options =~ m/$fileOut/)
 		{

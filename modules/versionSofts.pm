@@ -344,6 +344,14 @@ sub writeLogVersion
 			case ($softOrder =~ m/^checkEncodeByASCIIcontrol/i){$softPathVersion{"checkEncodeByASCIIcontrol"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontrol"};
 																 $softPath{"checkEncodeByASCIIcontrol"}= "checkEncodeByASCIIcontrol" if not defined $softPath{"checkEncodeByASCIIcontrol"};}
 			
+			#FOR checkFormatGff
+			case ($softOrder =~ m/^checkFormatGff/i){$softPathVersion{"checkFormatGff"}= "v1.0" if not defined $softPathVersion{"checkFormatGff"};
+											$softPath{"checkFormatGff"}= "checkFormatGff" if not defined $softPath{"checkFormatGff"};}
+			
+			#FOR checkFormatBed
+			case ($softOrder =~ m/^checkFormatBed/i){$softPathVersion{"checkFormatBed"}= "v1.0" if not defined $softPathVersion{"checkFormatBed"};
+											$softPath{"checkFormatBed"}= "checkFormatBed" if not defined $softPath{"checkFormatBed"};}
+			
 			#FOR BEDtools
 			case ($softOrder =~ m/^bedtools/i){$softPathVersion{"bedtools"}= bedToolsVersion if not defined $softPathVersion{"bedtools"};
 												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}

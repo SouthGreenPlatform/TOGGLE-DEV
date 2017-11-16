@@ -267,6 +267,7 @@ sub checkFormatVcf
         else
         {
             @listOfFields = split /\t/, $line;
+            last;
         }
     }
 
@@ -399,6 +400,153 @@ sub checkFormatFasta{
 
 ################################################################################################
 # END sub fastaFormatValidator
+################################################################################################
+
+################################################################################################
+# sub checkFormatGff=> checks if the fileformat is GFF
+################################################################################################
+# arguments : file name to analyze
+# Returns 1 if the file format is validated else 0 (error are managed by toolbox::exportLog)
+################################################################################################
+sub checkFormatGff
+{
+    my ($file)=@_;
+
+    #Check if we can read the file
+    my $rightToRead = toolbox::readFile($file);
+    if ($rightToRead == 0)
+    {
+        toolbox::exportLog("ERROR: toolbox::checkFormatGff : The file $file is not readable\n",0);
+        return 0;
+    }
+
+    #Parsing the file
+    my @header;#List to gather the header
+    my @listOfFields;
+    open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: checkFormat::checkFormatGff : Cannot open the file $file\n$!\n",0);
+
+    # if the input file is a gz file
+    if($file =~ m/\.gz$/)
+    {
+        $inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: checkFormat::checkFormatGff : Cannot open the gz file $file: $GunzipError\n",0);
+    }
+    while (my $line=<$inputHandle>)
+    {
+        chomp $line;
+
+        ##DEBUG print $line."\n";
+        if ($line =~ m/^#/)
+        {
+           push (@header, $line);
+        }
+        else
+        {
+            @listOfFields = split /\t/, $line;
+            last;
+        }
+    }
+
+    #Check if the first line of the header is including the version
+    my $versionLine=defined $header[0]? $header[0]:undef;
+    toolbox::exportLog("ERROR: checkFormat::checkFormatGff : There is no header of the file $file\n",0) unless (defined $versionLine); #Thrown an error if the $version cannot be obtained (misformatted line)
+
+    my @version=split /gff-version/,$versionLine;
+    $version[1] =~ s/\s//g; #Removing extraspaces or tabulations for testing the version of the GFF
+    exportLog("ERROR: checkFormat::checkfFormatGff : Cannot evaluate the GFF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
+    ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n";
+    eval ($version[1] == $version[1]) or exportLog("ERROR: checkFormat::checkFormatGff : Cannot obtain the GFF version of $file\n",0); #Verifying if the value obtained is numerical.
+
+    # Check the first line format as recommanded
+    #   ##gff-version 3
+    #   ctg123  .  exon  1300  1500  .  +  .  ID=exon00001
+    #   ctg123  .  exon  1050  1500  .  +  .  ID=exon00002
+    if (scalar @listOfFields < 9) #Less than the 9 minimum fields
+    {
+        toolbox::exportLog("ERROR: checkFormat::checkFormatGff : The GFF file $file is misformatted (less than 10 colums) ".Dumper(\@listOfFields)."\n",0);
+    }
+
+    #Check if the third and fourth field (the position) is numerical
+    eval ($listOfFields[3] == $listOfFields [3]) or toolbox::exportLog("ERROR: checkFormat::checkFormatGff : Cannot confirm that $file is a GFF.\nAborting.\n",0); #Verifying if numerical. Die if not
+    #Check if the third and fourth field (the position) is numerical
+    eval ($listOfFields[4] == $listOfFields [4]) or toolbox::exportLog("ERROR: checkFormat::checkFormatGff : Cannot confirm that $file is a GFF.\nAborting.\n",0); #Verifying if numerical. Die if not
+
+    close $inputHandle;
+
+    return 1; #Return correct if all check are Ok
+}
+################################################################################################
+# END sub checkFormatGff
+################################################################################################
+
+
+################################################################################################
+# sub checkFormatBed=> checks if the fileformat is BED
+################################################################################################
+# arguments : file name to analyze
+# Returns 1 if the file format is validated else 0 (error are managed by toolbox::exportLog)
+################################################################################################
+sub checkFormatBed
+{
+    my ($file)=@_;
+
+    #Check if we can read the file
+    my $rightToRead = toolbox::readFile($file);
+    if ($rightToRead == 0)
+    {
+        toolbox::exportLog("ERROR: toolbox::checkFormatBed : The file $file is not readable\n",0);
+        return 0;
+    }
+
+    #Parsing the file
+    my @header;#List to gather the header
+    my @listOfFields;
+    open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: checkFormat::checkFormatBed : Cannot open the file $file\n$!\n",0);
+
+    # if the input file is a gz file
+    if($file =~ m/\.gz$/)
+    {
+        $inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: checkFormat::checkFormatBed : Cannot open the gz file $file: $GunzipError\n",0);
+    }
+    while (my $line=<$inputHandle>)
+    {
+        chomp $line;
+
+        ##DEBUG print $line."\n";
+        if ($line =~ m/^#/)
+        {
+           push (@header, $line);
+        }
+        else
+        {
+            @listOfFields = split /\t/, $line;
+            last;
+        }
+    }
+
+    #Check if the first line of the header is including the version
+    my $versionLine=scalar @listOfFields;
+
+    exportLog("ERROR: checkFormat::checkfFormatBed : Cannot evaluate the BED version of the file $file file\n",0) if ($versionLine != 3 or $versionLine != 6 or $versionLine != 9); #Thrown an error if the $version cannot be obtained (misformatted line)
+
+    # Check the first line format as recommanded
+    #   chr7    127471196  127472363  Pos1  0  +  127471196  127472363  255,0,0
+    #   chr7    127472363  127473530  Pos2  0  +  127472363  127473530  255,0,0
+    if ($versionLine < 3) #Less than the 9 minimum fields
+    {
+        toolbox::exportLog("ERROR: checkFormat::checkFormatBed : The BED file $file is misformatted (less than 3 mandatory colums) ".Dumper(\@listOfFields)."\n",0);
+    }
+
+    #Check if the third and fourth field (the position) is numerical
+    eval ($listOfFields[1] == $listOfFields [1]) or toolbox::exportLog("ERROR: checkFormat::checkFormatBed : Cannot confirm that $file is a BED.\nAborting.\n",0); #Verifying if numerical. Die if not
+    #Check if the third and fourth field (the position) is numerical
+    eval ($listOfFields[2] == $listOfFields [2]) or toolbox::exportLog("ERROR: checkFormat::checkFormatBed : Cannot confirm that $file is a BED.\nAborting.\n",0); #Verifying if numerical. Die if not
+
+    close $inputHandle;
+
+    return 1; #Return correct if all check are Ok
+}
+################################################################################################
+# END sub checkFormatBed
 ################################################################################################
 
 1;
