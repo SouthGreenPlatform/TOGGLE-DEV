@@ -215,6 +215,14 @@ $checkFormatVcf
 IN=vcf
 OUT=NA
 
+$checkFormatGff
+IN=gff
+OUT=NA
+
+$checkFormatBed
+IN=bed
+OUT=NA
+
 $checkFormatSamOrBam
 IN=sam,bam
 OUT=NA

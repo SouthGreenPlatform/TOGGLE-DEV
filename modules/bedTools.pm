@@ -37,6 +37,19 @@ use toolbox;
 use Data::Dumper;
 use checkFormat;
 
+#This function will validate that the given file is at least in one of the accepted format (vcf/bam/gff/bed)
+sub localFormatCheck{
+	my ($file)=@_;
+	my $validation =0;
+	$validation = 1 if (checkFormat:checkFormatVcf($file) == 1);
+	$validation = 1 if (checkFormat:checkFormatSamOrBam($file) == 2);
+	$validation = 1 if (checkFormat:checkFormatGff($file) == 1);
+	$validation = 1 if (checkFormat:checkFormatBed($file) == 1);
+	
+	return $validation;
+	
+}
+
 #BEDtools intersectBed/intersect
 sub intersectBed {
 	my($fileIn,$fileOut,$optionsHachees)=@_;
@@ -44,11 +57,11 @@ sub intersectBed {
 	{ ##Check if entry file exist and is not empty
 		
 		#Check if the format is correct
-		#if (checkFormat::checkFormatSamOrBam($fileIn)==0)
-		#{#The file is not a BAM/SAM file
-		#	toolbox::exportLog("ERROR: bedtools::intersectBed : The file $fileIn is not a SAM/BAM file\n",0);
-		#	return 0;
-		#}
+		if (&localFormatCheck($fileIn) == 0)
+		{#The file is not a BAM/VCF/GFF/BED file
+			toolbox::exportLog("ERROR: bedtools::intersectBed : The file $fileIn is not a BAM/GFF/VCF/BED file\n",0);
+			return 0;
+		}
 		
 		my $options="";
 		
@@ -61,10 +74,20 @@ sub intersectBed {
 				toolbox::exportLog("ERROR: bedtools::intersectBed : No options provided, we cannot execute any command\n",0);
 				return 0;
 		}
+		
+		#Picking up the second file
+		my $crossFile = $options;
+		$crossFile =~ s/.*-[a|b] ([A-Za-z0-9\/-_\.]+).*/$1/;
+		if (&localFormatCheck($crossFile) == 0)
+		{#The file is not a BAM/VCF/GFF/BED file
+			toolbox::exportLog("ERROR: bedtools::intersectBed : The file $crossFile is not a BAM/GFF/VCF/BED file\n",0);
+			return 0;
+		}
+		
 		#The second file and other options are within the global file options
 		
 		my $variableQualifier = "-a";
-		
+				
 		if ($options =~ m/ -a /) #The user has specified another file as the -a file
 		{
 			$variableQualifier = "-b"
@@ -97,11 +120,11 @@ sub windowBed {
 	{ ##Check if entry file exist and is not empty
 		
 		#Check if the format is correct
-		#if (checkFormat::checkFormatSamOrBam($fileIn)==0)
-		#{#The file is not a BAM/SAM file
-		#	toolbox::exportLog("ERROR: bedtools::windowBed : The file $fileIn is not a SAM/BAM file\n",0);
-		#	return 0;
-		#}
+		if (&localFormatCheck($file) == 0)
+		{#The file is not a BAM/VCF/GFF/BED file
+			toolbox::exportLog("ERROR: bedtools::windowBed : The file $fileIn is not a BAM/GFF/VCF/BED file\n",0);
+			return 0;
+		}
 		
 		my $options="";
 		
@@ -113,6 +136,15 @@ sub windowBed {
 		{
 				toolbox::exportLog("ERROR: bedtools::windowBed : No options provided, we cannot execute any command\n",0);
 				return 0;
+		}
+		
+		#Picking up the second file
+		my $crossFile = $options;
+		$crossFile =~ s/.*-[a|b] ([A-Za-z0-9\/-_\.]+).*/$1/;
+		if (&localFormatCheck($crossFile) == 0)
+		{#The file is not a BAM/VCF/GFF/BED file
+			toolbox::exportLog("ERROR: bedtools::windowBed : The file $crossFile is not a BAM/GFF/VCF/BED file\n",0);
+			return 0;
 		}
 		
 		#The second file and other options are within the global file options
@@ -151,11 +183,11 @@ sub generic {
 	{ ##Check if entry file exist and is not empty
 		
 		#Check if the format is correct
-		#if (checkFormat::checkFormatSamOrBam($fileIn)==0)
-		#{#The file is not a BAM/SAM file
-		#	toolbox::exportLog("ERROR: bedtools::windowBed : The file $fileIn is not a SAM/BAM file\n",0);
-		#	return 0;
-		#}
+		if (&localFormatCheck($file) == 0)
+		{#The file is not a BAM/VCF/GFF/BED file
+			toolbox::exportLog("ERROR: bedtools::generic : The file $fileIn is not a BAM/GFF/VCF/BED file\n",0);
+			return 0;
+		}
 		
 		my $options="";
 		
