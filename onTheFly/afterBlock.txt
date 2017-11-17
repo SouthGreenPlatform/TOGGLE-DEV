@@ -3,6 +3,6 @@
 $previousDir=$newDir;
 
 #Re-initializing all variables to avoid error propagation
-($fastqForwardIn, $fastqReverseIn,$saiForwardOut, $saiReverseOut, $samFileIn, $bamFileIn, $vcfFileIn, $fastaFileIn,$bedFileIn,fileIn)=("NA","NA","NA","NA","NA","NA","NA","NA","NA","NA");
+($fastqForwardIn, $fastqReverseIn,$saiForwardOut, $saiReverseOut, $samFileIn, $bamFileIn, $vcfFileIn, $fastaFileIn,$bedFileIn,$fileIn)=("NA","NA","NA","NA","NA","NA","NA","NA","NA","NA");
 $listOfBam=();
 
