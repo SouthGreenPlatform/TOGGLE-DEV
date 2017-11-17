@@ -82,7 +82,7 @@ sub intersectBed {
 		
 		#Picking up the second file
 		my $crossFile = $options;
-		$crossFile =~ s/.*-[a|b] ([A-Za-z0-9\/-_\.]+).*/$1/;
+		$crossFile =~ s/.*-[a|b] ([A-Za-z0-9\/-_\.~]+).*/$1/;
 		toolbox::exportLog("file crossed: $crossFile",2);
 		if (&localFormatCheck($crossFile) == 0)
 		{#The file is not a BAM/VCF/GFF/BED file
