@@ -68,7 +68,7 @@ use crac;
 use bowtie;
 use scp;
 use duplicationDetector;
-use bedtools;
+use bedTools;
 use generic;
 
 ##########################################
