@@ -41,10 +41,10 @@ use checkFormat;
 sub localFormatCheck{
 	my ($file)=@_;
 	my $validation =0;
-	$validation = 1 if (checkFormat:checkFormatVcf($file) == 1);
-	$validation = 1 if (checkFormat:checkFormatSamOrBam($file) == 2);
-	$validation = 1 if (checkFormat:checkFormatGff($file) == 1);
-	$validation = 1 if (checkFormat:checkFormatBed($file) == 1);
+	$validation = 1 if (checkFormat::checkFormatVcf($file) == 1);
+	$validation = 1 if (checkFormat::checkFormatSamOrBam($file) == 2);
+	$validation = 1 if (checkFormat::checkFormatGff($file) == 1);
+	$validation = 1 if (checkFormat::checkFormatBed($file) == 1);
 	
 	return $validation;
 	
