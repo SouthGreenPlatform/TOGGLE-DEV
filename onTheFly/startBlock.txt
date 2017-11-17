@@ -68,6 +68,8 @@ use crac;
 use bowtie;
 use scp;
 use duplicationDetector;
+use bedtools;
+use generic;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -257,6 +259,9 @@ my ($mpileupOut);
 
 ##BED associated variables
 my ($bedFileIn, $bedFileOut)=("NA","NA");
+
+##GENERIC variable
+my ($fileIn,$fileOut)=("NA","NA");
 
 ##Internal variables
 ###Directory and file variables
