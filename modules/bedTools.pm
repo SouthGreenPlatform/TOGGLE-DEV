@@ -183,7 +183,7 @@ sub generic {
 	{ ##Check if entry file exist and is not empty
 		
 		#Check if the format is correct
-		if (&localFormatCheck($file) == 0)
+		if (&localFormatCheck($fileIn) == 0)
 		{#The file is not a BAM/VCF/GFF/BED file
 			toolbox::exportLog("ERROR: bedtools::generic : The file $fileIn is not a BAM/GFF/VCF/BED file\n",0);
 			return 0;
