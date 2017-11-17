@@ -85,7 +85,7 @@ sub intersectBed {
 		$crossFile =~ s/.*-[a|b] ([A-Za-z0-9\/-_\.~]+).*/$1/;
 		$crossFile = `readlink -f $crossFile`;
 		chomp $crossFile;
-		toolbox::exportLog("file crossed: $crossFile",2);
+		##DEBUG toolbox::exportLog("file crossed: $crossFile",2);
 		if (&localFormatCheck($crossFile) == 0)
 		{#The file is not a BAM/VCF/GFF/BED file
 			toolbox::exportLog("ERROR: bedtools::intersectBed : The file $crossFile is not a BAM/GFF/VCF/BED file\n",0);
