@@ -24,4 +24,4 @@ if ($fileIn eq "NA") #No BAM file found in the previous folder
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName); # recovery of specific parameters
 
 $fileOut = "$newDir"."/"."$readGroup".".GENERIC".$stepOrder.".TXT";
-bedTools::generic($fileIn,$fileOut,$softParameters);   # Sending to generic::generic function
+generic::generic($fileIn,$fileOut,$softParameters);   # Sending to generic::generic function
