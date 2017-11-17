@@ -277,7 +277,7 @@ sub checkFormatVcf
     toolbox::exportLog("ERROR: checkFormat::checkFormatVcf : There is no header of the file $file\n",0) unless (defined $versionLine); #Thrown an error if the $version cannot be obtained (misformatted line)
 
     my @version=split /VCFv/,$versionLine;
-    exportLog("ERROR: checkFormat::checkfFormatVcf : Cannot evaluate the VCF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
+    toolbox::exportLog("ERROR: checkFormat::checkfFormatVcf : Cannot evaluate the VCF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
     ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n";
     eval ($version[1] == $version[1]) or exportLog("ERROR: checkFormat::checkFormatVcf : Cannot obtain the VCF version of $file\n",0); #Verifying if the value obtained is numerical.
 
@@ -453,7 +453,7 @@ sub checkFormatGff
 
     my @version=split /gff-version/,$versionLine;
     $version[1] =~ s/\s//g; #Removing extraspaces or tabulations for testing the version of the GFF
-    exportLog("ERROR: checkFormat::checkfFormatGff : Cannot evaluate the GFF version of the file $file file\n",2) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
+    toolbox::exportLog("ERROR: checkFormat::checkfFormatGff : Cannot evaluate the GFF version of the file $file file\n",2) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
     ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n";
     eval ($version[1] == $version[1]) or exportLog("ERROR: checkFormat::checkFormatGff : Cannot obtain the GFF version of $file\n",2) && return 0; #Verifying if the value obtained is numerical.
 
@@ -528,7 +528,7 @@ sub checkFormatBed
     #Check if the first line of the header is including the version
     my $versionLine=scalar @listOfFields;
 
-    exportLog("ERROR: checkFormat::checkfFormatBed : Cannot evaluate the BED version of the file $file file\n",2) if ($versionLine != 3 or $versionLine != 6 or $versionLine != 9); #Thrown an error if the $version cannot be obtained (misformatted line)
+    toolbox::exportLog("ERROR: checkFormat::checkfFormatBed : Cannot evaluate the BED version of the file $file file\n",2) if ($versionLine != 3 or $versionLine != 6 or $versionLine != 9); #Thrown an error if the $version cannot be obtained (misformatted line)
 
     # Check the first line format as recommanded
     #   chr7    127471196  127472363  Pos1  0  +  127471196  127472363  255,0,0
