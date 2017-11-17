@@ -4,9 +4,13 @@
 
 #Correct variable populating
 
-foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
+foreach my $file (@{$fileList}) #Checking the number of files
 {
-	if ($fileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
+	#Not considering the different index files
+	next if $file =~ m/idx$/;
+	next if $file =~ m/bai$/;
+	
+	if ($fileIn ne "NA") # Already a file recognized, but more than one in the previous folder
 	{
 		toolbox::exportLog("ERROR : $0 : there are more than one single file at $stepName step.\n",0);
     }
@@ -16,7 +20,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
     }
 }
 
-if ($fileIn eq "NA") #No BAM file found in the previous folder
+if ($fileIn eq "NA") #No file found in the previous folder
 {
     toolbox::exportLog("ERROR : $0 : No file found in $previousDir at step $stepName.\n",0);
 }
