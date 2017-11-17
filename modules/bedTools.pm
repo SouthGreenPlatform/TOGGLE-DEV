@@ -42,10 +42,10 @@ use Switch;
 sub localFormatCheck{
 	my ($file)=@_;
 	my $validation =0;
-	case ($file =~ m/vcf$/i){$validation = 1 if (checkFormat::checkFormatVcf($file) == 1)};
-	case ($file =~ m/bam$/i){$validation = 1 if (checkFormat::checkFormatSamOrBam($file) == 2)};
-	case ($file =~ m/gff$/i){$validation = 1 if (checkFormat::checkFormatGff($file) == 1)};
-	case ($file =~ m/bed$/i){$validation = 1 if (checkFormat::checkFormatBed($file) == 1)};
+	case ($file =~ m/vcf$/i){$validation = 1 if (checkFormat::checkFormatVcf($file) == 1)}
+	case ($file =~ m/bam$/i){$validation = 1 if (checkFormat::checkFormatSamOrBam($file) == 2)}
+	case ($file =~ m/gff$/i){$validation = 1 if (checkFormat::checkFormatGff($file) == 1)}
+	case ($file =~ m/bed$/i){$validation = 1 if (checkFormat::checkFormatBed($file) == 1)}
 	else {toolbox::exportLog("ERROR: bedtools : The file $file is not a BAM/GFF/VCF/BED file\n",0);}
 	
 	return $validation;
