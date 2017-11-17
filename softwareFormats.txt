@@ -233,7 +233,7 @@ OUT=bam,fastq,fasta,bed
 
 $bowtie
 IN=fastq
-OUT=SAM
+OUT=sam
 MANDATORY=reference
 
 $bowtie2
@@ -267,3 +267,6 @@ $bedToolsGeneric
 IN=bam,bed,vcf,gff
 OUT=bed
 
+$generic
+IN=fasta,fastq,bam,sam,bed,vcf,gff,sai
+OUT=fasta,fastq,bam,sam,bed,vcf,gff,sai

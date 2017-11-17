@@ -357,6 +357,10 @@ sub writeLogVersion
 												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
 			case ($softOrder =~ m/.*bed$/i){$softPathVersion{"bedtools"}= bedToolsVersion if not defined $softPathVersion{"bedtools"};
 												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
+			
+			#FOR generic command
+			case ($softOrder =~ m/^generic/i){$softPathVersion{"generic"}= "v0.1" if not defined $softPathVersion{"generic"};
+												$softPath{"generic"}= "" if not defined $softPath{"generic"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}

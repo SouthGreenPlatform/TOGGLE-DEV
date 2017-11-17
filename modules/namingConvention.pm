@@ -225,6 +225,9 @@ sub correctName
         case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*window/i){$correctedName="bedToolsWindowBed";} #Correction for windowBed version 1
         case ($name =~ m/^window[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="bedToolsWindowBed";} #Correction for windowBed version 2
         case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*generic/i){$correctedName="bedToolsGeneric";} #Correction for bedtools generic
+        
+        #FOR GENERIC COMMAND SYSTEM
+        case ($name =~ m/^generic/i){$correctedName="generic";} #Correction for generic command
               
         else
         {
