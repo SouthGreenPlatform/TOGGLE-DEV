@@ -148,7 +148,9 @@ sub windowBed {
 		
 		#Picking up the second file
 		my $crossFile = $options;
-		$crossFile =~ s/.*-[a|b] ([A-Za-z0-9\/-_\.]+).*/$1/;
+		$crossFile =~ s/.*-[a|b] ([A-Za-z0-9\/-_\.~]+).*/$1/;
+		$crossFile = `readlink -f $crossFile`;
+		chomp $crossFile;
 		if (&localFormatCheck($crossFile) == 0)
 		{#The file is not a BAM/VCF/GFF/BED file
 			toolbox::exportLog("ERROR: bedtools::windowBed : The file $crossFile is not a BAM/GFF/VCF/BED file\n",0);
