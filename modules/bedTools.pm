@@ -36,7 +36,7 @@ use localConfig;
 use toolbox;
 use Data::Dumper;
 use checkFormat;
-use switch;
+use Switch;
 
 #This function will validate that the given file is at least in one of the accepted format (vcf/bam/gff/bed)
 sub localFormatCheck{
