@@ -169,7 +169,8 @@ sub checkFormatFastq
     }
     else                                						# if one or some error(s) occured on the file, the fastq format is not right.
     {
-        toolbox::exportLog("ERROR: checkFormat::checkFormatFastq : Invalid FASTQ requirements in file $fileToTest.\n",0);
+        toolbox::exportLog("ERROR: checkFormat::checkFormatFastq : Invalid FASTQ requirements in file $fileToTest.\n",2);
+        return 0;
     }
 
     close $inputHandle;
@@ -217,7 +218,7 @@ sub checkFormatSamOrBam
     }
     else                                # if one or some error(s) occured in extracting header, not ok
     {
-        toolbox::exportLog("ERROR: checkFormat::checkFormatSamOrBam : The file $samFile is not a SAM/BAM file\n",0);
+        toolbox::exportLog("ERROR: checkFormat::checkFormatSamOrBam : The file $samFile is not a SAM/BAM file\n",2);
         return 0;
     }
 }
@@ -289,7 +290,7 @@ sub checkFormatVcf
     }
 
     #Check if the second field (the position) is numerical
-    eval ($listOfFields[1] == $listOfFields [1]) or toolbox::exportLog("ERROR: checkFormat::checkFormatVcf : Cannot confirm that $file is a VCF.\nAborting.\n",0); #Verifying if numerical. Die if not
+    eval ($listOfFields[1] == $listOfFields [1]) or toolbox::exportLog("ERROR: checkFormat::checkFormatVcf : Cannot confirm that $file is a VCF.\nAborting.\n",2) && return 0; #Verifying if numerical. Die if not
 
     close $inputHandle;
 
@@ -452,9 +453,9 @@ sub checkFormatGff
 
     my @version=split /gff-version/,$versionLine;
     $version[1] =~ s/\s//g; #Removing extraspaces or tabulations for testing the version of the GFF
-    exportLog("ERROR: checkFormat::checkfFormatGff : Cannot evaluate the GFF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
+    exportLog("ERROR: checkFormat::checkfFormatGff : Cannot evaluate the GFF version of the file $file file\n",2) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
     ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n";
-    eval ($version[1] == $version[1]) or exportLog("ERROR: checkFormat::checkFormatGff : Cannot obtain the GFF version of $file\n",0); #Verifying if the value obtained is numerical.
+    eval ($version[1] == $version[1]) or exportLog("ERROR: checkFormat::checkFormatGff : Cannot obtain the GFF version of $file\n",2) && return 0; #Verifying if the value obtained is numerical.
 
     # Check the first line format as recommanded
     #   ##gff-version 3
@@ -462,13 +463,14 @@ sub checkFormatGff
     #   ctg123  .  exon  1050  1500  .  +  .  ID=exon00002
     if (scalar @listOfFields < 9) #Less than the 9 minimum fields
     {
-        toolbox::exportLog("ERROR: checkFormat::checkFormatGff : The GFF file $file is misformatted (less than 10 colums) ".Dumper(\@listOfFields)."\n",0);
+        toolbox::exportLog("ERROR: checkFormat::checkFormatGff : The GFF file $file is misformatted (less than 10 colums) ".Dumper(\@listOfFields)."\n",2);
+        return 0;
     }
 
     #Check if the third and fourth field (the position) is numerical
-    eval ($listOfFields[3] == $listOfFields [3]) or toolbox::exportLog("ERROR: checkFormat::checkFormatGff : Cannot confirm that $file is a GFF.\nAborting.\n",0); #Verifying if numerical. Die if not
+    eval ($listOfFields[3] == $listOfFields [3]) or toolbox::exportLog("ERROR: checkFormat::checkFormatGff : Cannot confirm that $file is a GFF.\nAborting.\n",2) && return 0; #Verifying if numerical. Die if not
     #Check if the third and fourth field (the position) is numerical
-    eval ($listOfFields[4] == $listOfFields [4]) or toolbox::exportLog("ERROR: checkFormat::checkFormatGff : Cannot confirm that $file is a GFF.\nAborting.\n",0); #Verifying if numerical. Die if not
+    eval ($listOfFields[4] == $listOfFields [4]) or toolbox::exportLog("ERROR: checkFormat::checkFormatGff : Cannot confirm that $file is a GFF.\nAborting.\n",2) && return 0; #Verifying if numerical. Die if not
 
     close $inputHandle;
 
@@ -526,20 +528,21 @@ sub checkFormatBed
     #Check if the first line of the header is including the version
     my $versionLine=scalar @listOfFields;
 
-    exportLog("ERROR: checkFormat::checkfFormatBed : Cannot evaluate the BED version of the file $file file\n",0) if ($versionLine != 3 or $versionLine != 6 or $versionLine != 9); #Thrown an error if the $version cannot be obtained (misformatted line)
+    exportLog("ERROR: checkFormat::checkfFormatBed : Cannot evaluate the BED version of the file $file file\n",2) if ($versionLine != 3 or $versionLine != 6 or $versionLine != 9); #Thrown an error if the $version cannot be obtained (misformatted line)
 
     # Check the first line format as recommanded
     #   chr7    127471196  127472363  Pos1  0  +  127471196  127472363  255,0,0
     #   chr7    127472363  127473530  Pos2  0  +  127472363  127473530  255,0,0
     if ($versionLine < 3) #Less than the 9 minimum fields
     {
-        toolbox::exportLog("ERROR: checkFormat::checkFormatBed : The BED file $file is misformatted (less than 3 mandatory colums) ".Dumper(\@listOfFields)."\n",0);
+        toolbox::exportLog("ERROR: checkFormat::checkFormatBed : The BED file $file is misformatted (less than 3 mandatory colums) ".Dumper(\@listOfFields)."\n",2);
+        return 0;
     }
 
     #Check if the third and fourth field (the position) is numerical
-    eval ($listOfFields[1] == $listOfFields [1]) or toolbox::exportLog("ERROR: checkFormat::checkFormatBed : Cannot confirm that $file is a BED.\nAborting.\n",0); #Verifying if numerical. Die if not
+    eval ($listOfFields[1] == $listOfFields [1]) or toolbox::exportLog("ERROR: checkFormat::checkFormatBed : Cannot confirm that $file is a BED.\nAborting.\n",2) && return 0; #Verifying if numerical. Die if not
     #Check if the third and fourth field (the position) is numerical
-    eval ($listOfFields[2] == $listOfFields [2]) or toolbox::exportLog("ERROR: checkFormat::checkFormatBed : Cannot confirm that $file is a BED.\nAborting.\n",0); #Verifying if numerical. Die if not
+    eval ($listOfFields[2] == $listOfFields [2]) or toolbox::exportLog("ERROR: checkFormat::checkFormatBed : Cannot confirm that $file is a BED.\nAborting.\n",2) && return 0; #Verifying if numerical. Die if not
 
     close $inputHandle;
 
