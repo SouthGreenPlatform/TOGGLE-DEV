@@ -117,7 +117,13 @@ our %testParams=    (
         bowtie=>[""],
         bowtie2=>[""],
         #DuplicationDetector
-        duplicationDetector=>["-H 1"]
+        duplicationDetector=>["-H 1"],
+        #BedTools
+        bedtoolsIntersectBed=>[""],
+        bedtoolsWindowBed=>[""],
+        bedToolsGeneric=>[""],
+        #Generic
+        generic=>[""]
         );
 
 sub softParams

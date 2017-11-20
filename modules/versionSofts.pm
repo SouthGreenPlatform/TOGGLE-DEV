@@ -188,6 +188,14 @@ sub cracVersion
 	
 }
 
+sub bedToolsVersion
+{ #We works with the STDIN output
+	my $version = `$bedtools --version` or die toolbox::exportLog("ERROR: versionSoft::bedToolsVersion : Can not grep BEDtools version\nPlease check your BEDtools installation.\n", 0);
+	chomp($version);
+	return $version;
+	
+}
+
 sub writeLogVersion
 {
 	my ($fileConf, $version) = @_;
@@ -335,6 +343,24 @@ sub writeLogVersion
 			#FOR checkEncodeByASCIIcontrol
 			case ($softOrder =~ m/^checkEncodeByASCIIcontrol/i){$softPathVersion{"checkEncodeByASCIIcontrol"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontrol"};
 																 $softPath{"checkEncodeByASCIIcontrol"}= "checkEncodeByASCIIcontrol" if not defined $softPath{"checkEncodeByASCIIcontrol"};}
+			
+			#FOR checkFormatGff
+			case ($softOrder =~ m/^checkFormatGff/i){$softPathVersion{"checkFormatGff"}= "v1.0" if not defined $softPathVersion{"checkFormatGff"};
+											$softPath{"checkFormatGff"}= "checkFormatGff" if not defined $softPath{"checkFormatGff"};}
+			
+			#FOR checkFormatBed
+			case ($softOrder =~ m/^checkFormatBed/i){$softPathVersion{"checkFormatBed"}= "v1.0" if not defined $softPathVersion{"checkFormatBed"};
+											$softPath{"checkFormatBed"}= "checkFormatBed" if not defined $softPath{"checkFormatBed"};}
+			
+			#FOR BEDtools
+			case ($softOrder =~ m/^bedtools/i){$softPathVersion{"bedtools"}= bedToolsVersion if not defined $softPathVersion{"bedtools"};
+												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
+			case ($softOrder =~ m/.*bed$/i){$softPathVersion{"bedtools"}= bedToolsVersion if not defined $softPathVersion{"bedtools"};
+												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
+			
+			#FOR generic command
+			case ($softOrder =~ m/^generic/i){$softPathVersion{"generic"}= "v0.1" if not defined $softPathVersion{"generic"};
+												$softPath{"generic"}= "" if not defined $softPath{"generic"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}

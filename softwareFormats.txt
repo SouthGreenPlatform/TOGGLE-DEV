@@ -215,6 +215,14 @@ $checkFormatVcf
 IN=vcf
 OUT=NA
 
+$checkFormatGff
+IN=gff
+OUT=NA
+
+$checkFormatBed
+IN=bed
+OUT=NA
+
 $checkFormatSamOrBam
 IN=sam,bam
 OUT=NA
@@ -225,7 +233,7 @@ OUT=bam,fastq,fasta,bed
 
 $bowtie
 IN=fastq
-OUT=SAM
+OUT=sam
 MANDATORY=reference
 
 $bowtie2
@@ -247,3 +255,18 @@ $duplicationDetector
 IN=vcf
 OUT=csv,bed
 
+$bedToolsIntersect
+IN=bam,bed,vcf,gff
+OUT=bed
+
+$bedToolsWindow
+IN=bam,bed,vcf,gff
+OUT=bed
+
+$bedToolsGeneric
+IN=bam,bed,vcf,gff
+OUT=bed
+
+$generic
+IN=fasta,fastq,bam,sam,bed,vcf,gff,sai
+OUT=fasta,fastq,bam,sam,bed,vcf,gff,sai

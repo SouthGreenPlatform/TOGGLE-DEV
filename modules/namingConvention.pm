@@ -202,6 +202,9 @@ sub correctName
 		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
+        case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*gff/i){$correctedName="checkFormatGff"}  # Correction for checkFormatGff step
+		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="checkFormatBed"}  # Correction for checkFormatBed step
+
         
         #FOR BOWTIE SUITE
         case ($name =~ m/^bowtie$/i){$correctedName="bowtie"}#Correction for bowtie
@@ -216,6 +219,16 @@ sub correctName
         #FOR DUPLICATIONDETECTOR
         case ($name =~ m/^duplication[\s|\.|\-| \/|\\|\|]*detector/i){$correctedName="duplicationDetector";} #Correction for duplicationDetector
         
+        #FOR BEDTOOLS
+        case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*intersect/i){$correctedName="bedToolsIntersectBed";} #Correction for intersectBed version 1
+        case ($name =~ m/^intersect[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="bedToolsIntersectBed";} #Correction for intersectBed version 2
+        case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*window/i){$correctedName="bedToolsWindowBed";} #Correction for windowBed version 1
+        case ($name =~ m/^window[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="bedToolsWindowBed";} #Correction for windowBed version 2
+        case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*generic/i){$correctedName="bedToolsGeneric";} #Correction for bedtools generic
+        
+        #FOR GENERIC COMMAND SYSTEM
+        case ($name =~ m/^generic/i){$correctedName="generic";} #Correction for generic command
+              
         else
         {
             toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);
