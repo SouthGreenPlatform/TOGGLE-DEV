@@ -39,7 +39,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex $atropos $duplicationDetector $bedtools);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex $atropos $duplicationDetector $bedtools $abyss $transAbyss);
 
 #toggle path
 our $toggle="/path/to/toggleFolder";
@@ -109,5 +109,9 @@ our $duplicationDetector = "/path/to/duplicationDetector";
 
 #Path to BEDtools
 our $bedtools = "/path/to/bedtools";
+
+#Path to Abyss/TransAbyss
+our $abyss = "/path/to/abyss";
+our $transAbyss = "/path/to/transAbyss";
 
 1;
