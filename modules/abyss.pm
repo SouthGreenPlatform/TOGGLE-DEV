@@ -36,11 +36,28 @@ use localConfig;
 use toolbox;
 use checkFormat;
 use Data::Dumper;
+use Switch;
 
+#This function will validate that the given file is at least in one of the accepted format (fastq/fasta/sam/bam)
+sub localFormatCheck{
+	my ($file)=@_;
+	my $validation =0;
+	switch (1)
+	{
+		case ($file =~ m/fastq$/i){$validation = 1 if (checkFormat::checkFormatFastq($file) == 1)}
+		case ($file =~ m/fasta$/i){$validation = 1 if (checkFormat::checkFormatFasta($file) == 1)}
+		case ($file =~ m/am$/i){$validation = 1 if (checkFormat::checkFormatSamOrBam($file) > 0)}
+		
+		else {toolbox::exportLog("ERROR: abyss : The file $file is not a FASTQ/FASTA/BAM/SAM file\n",0);}
+	}
+	
+	return $validation;
+	
+}
 
-sub transabyss
+sub transAbyss
 {
-    my($outputDir,$readGroup,$firstListOfFastq,$secondListOfFastq,$optionsHachees)=@_;
+    my($outputDir,$readGroup,$firstListOfFile,$secondListOfFile,$optionsHachees)=@_;
     ## if paired reads give $single as --left and $paired as --right; else give only $single
     my $orderedList=""; 
     my $command="";
@@ -57,63 +74,65 @@ sub transabyss
     }
     else
     {
-        toolbox::exportLog("ERROR: abyss::transAbyss : You do not need to specify name or outdir options\n",2);
+        toolbox::exportLog("WARNING: abyss::transAbyss : You do not need to specify name or outdir options\n",2);
     }
     
-    if (scalar (@{$secondListOfFastq}) > 0) # if is not empty,we have paired reads
+    if (scalar (@{$secondListOfFile}) > 0) # if is not empty,we have paired reads
     {
-        if ((scalar (@{$firstListOfFastq}) > 0 ) and (scalar (@{$firstListOfFastq}) == scalar (@{$secondListOfFastq})) )  # if is not empty and same length
+        if ((scalar (@{$firstListOfFile}) > 0 ) and (scalar (@{$firstListOfFile}) == scalar (@{$secondListOfFile})) )  # if is not empty and same length
         {
-            for (my $i=0; $i < scalar(@{$firstListOfFastq}); $i++)       # for each pair of Fastq file(s)
+            my $i = 0;
+            foreach my $localFile (@{$firstListOfFile})       # for each pair of Fastq file(s)
             {
-                if (@{$firstListOfFastq}[$i] ne "NA" and checkFomat::checkFormatFastq(@{$firstListOfFastq}[$i])==1 )
+                if ($localFile ne "NA" and &localFormatCheck($localFile) == 1)
                 { ##Check if entry file exist and is not empty
-                    if (@{$secondListOfFastq}[$i] ne "NA" and checkFomat::checkFormatFastq(@{$secondListOfFastq}[$i])==1 )
+                    if (@{$secondListOfFile}[$i] ne "NA" and &localFormatCheck(@{$secondListOfFile}[$i])==1 )
                     { ##Check if entry file exist and is not empty
-                        $orderedList .= " --pe ".@{$firstListOfFastq}[$i]." ".@{$secondListOfFastq}[$i];    
+                        $orderedList .= " --pe ".$localFile." ".@{$secondListOfFile}[$i];    
                         
                     }
                     else
                     {
-                        toolbox::exportLog("ERROR: abyss::transAbyss : The file ".@{$secondListOfFastq}[$i]." is uncorrect or is not a Fastq\n",0);
+                        toolbox::exportLog("ERROR: abyss::transAbyss : The file ".@{$secondListOfFile}[$i]." is uncorrect or is not a FASTQ/FASTA/SAM/BAM\n",0);
                         return 0;#File not Ok
                     }
                 }
                 else
                 {
-                    toolbox::exportLog("ERROR: abyss::transAbyss : The file ".@{$firstListOfFastq}[$i]." is uncorrect or is not a Fastq\n",0);
+                    toolbox::exportLog("ERROR: abyss::transAbyss : The file ".$localFile." is uncorrect or is not a FASTQ/FASTA/SAM/BAM\n",0);
                     return 0;#File not Ok
                 }
+                $i++;
             }   
             #print @{$firstListOfFastq},"\n";
         }
         else
         {
-            toolbox::exportLog("ERROR: abyss::transAbyss : Incorrect list of fastq files $firstListOfFastq \n",0);
+            toolbox::exportLog("ERROR: abyss::transAbyss : Incorrect list of files ".@{$firstListOfFile}." \n",0);
             return 0;
         }
     }
     else  # Single mode
     {
-        if (scalar (@{$firstListOfFastq}) > 0)  # if is not empty
+        if (scalar (@{$firstListOfFile}) > 0)  # if is not empty
         {
             $orderedList .= "--se ";
-            foreach my $file (@{$firstListOfFastq})       # for each Fastq file(s)
+            foreach my $localFile (@{$firstListOfFile})       # for each Fastq file(s)
             {                 
-                if ($file ne "NA" and toolbox::checkFormatFastq($file)==1 )
+                if ($localFile ne "NA" and &localFormatCheck($localFile) == 1 )
                 { ##Check if entry file exist and is not empty
-                    $orderedList .= $file." ";
+                    $orderedList .= $localFile." ";
                 }
                 else
                 {
-                    toolbox::exportLog("ERROR: transabyss::transabyssRun : The file $file is uncorrect or is not a Fastq\n",0);
+                    toolbox::exportLog("ERROR: abyss::transAbyss : The file $localFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
                     return 0;#File not Ok
                 }
             }
         }
         else
         {
-            toolbox::exportLog("ERROR: transabyss::transabyssRun : Incorrect list of fastq files $firstListOfFastq \n",0);
+            toolbox::exportLog("ERROR: abyss::transAbyss : Incorrect list of files ".@{$firstListOfFile}." \n",0);
             return 0;
         }
     }
@@ -144,7 +163,61 @@ sub transabyss
          return 0;#Command not Ok
     }
 }
-     
+
+sub abyssPE {
+    #Will use FASTQ/FASTA/SAM/BAM data for assembly, pair-end data or single library BAM/SAM
+    my($outputDir,$readGroup,$forwardFile,$reverseFile,$optionsHachees)=@_;
+    ## if paired reads give $single as --left and $paired as --right; else give only $single
+    my $orderedList=""; 
+    my $options="";
+    
+    if (ref $reverseFile or $reverseFile eq "NA")
+    {
+        #No reverse file, probably a BAM/SAM file
+        $optionsHachees = $reverseFile unless $reverseFile eq "NA";
+        $reverseFile = "NA";
+    }
+
+    if ($optionsHachees)
+    {
+         $options=toolbox::extractOptions($optionsHachees); ##Get given options
+    }
+    
+    if (&localFormatCheck($forwardFile) != 1 )
+    { #Not the good format
+        toolbox::exportLog("ERROR: abyss::abyssPE : The file $forwardFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
+        return 0;#File not Ok
+    }
+    if ($reverseFile ne "NA" && &localFormatCheck($forwardFile) != 1 )
+    { #Not the good format
+        toolbox::exportLog("ERROR: abyss::abyssPE : The file $reverseFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
+        return 0;#File not Ok
+    }
+    
+    
+    my $command = "$abyss -C $outputDir k=64 name=".$readGroup.".ABYSS in='".$forwardFile."";
+    
+    if ($reverseFile ne "NA")
+    {
+        $command .=" ".$reverseFile."'";
+    }
+    else
+    {
+        $command .="'";
+    }
+    
+    #Execute command
+    if(toolbox::run($command)==1)
+    {
+        return 1;#Command Ok
+    }
+    else
+    {
+         toolbox::exportLog("ERROR: abyss::abyssPE : Uncorrectly done\n",0);
+         return 0;#Command not Ok
+    }
+}
+
 1;
 
 =head1 NAME
@@ -155,9 +228,11 @@ sub transabyss
 
     use abyss;
 	
-	abyss::transAbyss($folderIn,tmpRoot);
+	abyss::transAbyss($outputDir,$readGroup,$firstListOfFile,$secondListOfFile,$optionsHachees);
 	
-	abyss::abyss($localFolder,$folderIn);
+	abyss::abyssPE ($localFolder,$folderIn);
+    
+    localFormatCheck($file)
     
         
 =head1 DESCRIPTION
@@ -170,11 +245,14 @@ sub transabyss
 
 	Transcriptome assembly
 	
-=head3  abyss::abyss($localFolder,$folderIn)
+=head3  abyss::abyssPE ($localFolder,$folderIn)
 
-	Genome assembly
+	Genome assembly from pair-end data
 
+=head3  localFormatCheck($file)
 
+    Local format check tester
+    
 =head1 AUTHORS
 
 Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3

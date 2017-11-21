@@ -196,6 +196,22 @@ sub bedToolsVersion
 	
 }
 
+sub abyssVersion
+{ #We works with the STDIN output
+	my $version = `$abyss --version | grep 'GNU Make'` or die toolbox::exportLog("ERROR: versionSoft::abyssVersion : Can not grep Abyss version\nPlease check your Abyss installation.\n", 0);
+	chomp($version);
+	return $version;
+	
+}
+
+sub transAbyssVersion
+{ #We works with the STDIN output
+	my $version = `$transAbyss --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::transAbyssVersion : Can not grep transAbyss version\nPlease check your transAbyss installation.\n", 0);
+	chomp($version);
+	return $version;
+	
+}
+
 sub writeLogVersion
 {
 	my ($fileConf, $version) = @_;
@@ -361,6 +377,13 @@ sub writeLogVersion
 			#FOR generic command
 			case ($softOrder =~ m/^generic/i){$softPathVersion{"generic"}= "v0.1" if not defined $softPathVersion{"generic"};
 												$softPath{"generic"}= "" if not defined $softPath{"generic"};}
+			
+			#FOR Abyss
+			case ($softOrder =~ m/^abyss/i){$softPathVersion{"abyss"}= abyssVersion if not defined $softPathVersion{"abyss"};
+												$softPath{"abyss"}= $abyss if not defined $softPath{"abyss"};}
+			#FOR transAbyss
+			case ($softOrder =~ m/^transAbyss/i){$softPathVersion{"transAbyss"}= transAbyssVersion if not defined $softPathVersion{"transAbyss"};
+												$softPath{"transAbyss"}= $abyss if not defined $softPath{"transAbyss"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}

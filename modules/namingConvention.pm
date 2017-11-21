@@ -228,7 +228,11 @@ sub correctName
         
         #FOR GENERIC COMMAND SYSTEM
         case ($name =~ m/^generic/i){$correctedName="generic";} #Correction for generic command
-              
+        
+        #FOR abyss functions
+        case ($name =~ m/^trans[\s|\.|\-| \/|\\|\|]*abyss/i){$correctedName="transAbyss"} # Correction for transAbyss step
+        case ($name =~ m/^abyss/i){$correctedName="abyss"} # Correction for abyss step
+            
         else
         {
             toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);

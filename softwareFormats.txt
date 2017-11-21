@@ -270,3 +270,11 @@ OUT=bed
 $generic
 IN=fasta,fastq,bam,sam,bed,vcf,gff,sai
 OUT=fasta,fastq,bam,sam,bed,vcf,gff,sai
+
+$abyss
+IN=fasta,fastq,sam,bam
+OUT=fasta
+
+$transAbyss
+IN=fasta,fastq,sam,bam
+OUT=fastq
