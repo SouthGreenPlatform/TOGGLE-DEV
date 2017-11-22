@@ -129,7 +129,7 @@ $parser->add_args(
                         '-nocheck','--nocheckFastq',
                         required => 0,
                         type     =>"Bool",
-                        help     => 'Use if you did not check fastq file',
+                        help     => 'Use if you want not to check fastq file',
                         dest     => 'checkFastq'
                     ],
                     [
@@ -165,6 +165,13 @@ $parser->add_args(
                         help     => 'Reference file name',
                         dest     => 'reference',
                         default  => "None"
+                    ],
+                    [
+                        '-report','--report',
+                        required => 0,
+                        type     =>"Bool",
+                        help     => 'Use if you want to generate workflow an analysis reports',
+                        dest     => 'report'
                     ]
 
                 );
@@ -198,6 +205,7 @@ my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);  
 #verify if -nocheckfastq arguments exist in args. The fastq format is verified par default if $checkFastq == 0.
 # WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
 my $checkFastq = $parser->namespace->checkFastq;
+my $report = $parser->namespace->report;
 
 #stock mandatory files to test if they exist
 my @listFilesMandatory=($initialDir, $fileConf);
@@ -726,6 +734,7 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################",1);
 
 
+onTheFly::generateReports($outputDir);
 exit;
 
 =head1 Name
@@ -747,6 +756,7 @@ toggleGenerator.pl -d DIR -c FILE -o DIR [optional : -r FILE -g FILE -k FILE -no
       -g FILE   	The gff file containing reference annotations (For RNAseq analysis per exemple)
       -k FILE		The keyFile used to demultiplexing (For stacks analysis)
       -nocheckfastq 	No check format in every fastq file
+      -report    	Generate workflow and analysis reports
 
 =head1  Authors
 
