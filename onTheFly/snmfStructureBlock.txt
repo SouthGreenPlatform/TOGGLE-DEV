@@ -1,32 +1,31 @@
 
 
 ##########################################
-# sniplay Ped2fasta block
+# snmf structure block
 ##########################################
 
 #Correct variable populating
 
-foreach my $file (@{$fileList}) #Checking the type of files that must be PED
+foreach my $file (@{$fileList}) #Checking the type of files that must be VCF
 {
-    if ($file =~ m/ped$/) # the file type is normally ped
+    if ($file =~ m/vcf$|vcf\.gz$/) # the file type is normally vcf
     {
-        if ($pedFileIn ne "NA") # Already a ped recognized, but more than one in the previous folder
+        if ($vcfFileIn ne "NA") # Already a sam of a bam recognized, but more than one in the previous folder
         {
-            toolbox::exportLog("ERROR : $0 : there are more than one single PED file at $stepName step.\n",0);
+            toolbox::exportLog("ERROR : $0 : there are more than one single VCF file at $stepName step.\n",0);
         }
         else
         {
-            $pedFileIn = $file;
+            $vcfFileIn = $file;
         }
     }
 }
 
-if ($pedFileIn eq "NA") #No PED file found in the previous folder
+if ($vcfFileIn eq "NA") #No SAM/BAM file found in the previous folder
 {
-    toolbox::exportLog("ERROR : $0 : No PED file found in $previousDir at step $stepName.\n",0);
+    toolbox::exportLog("ERROR : $0 : No VCF file found in $previousDir at step $stepName.\n",0);
 }
-
 $fileOut = $newDir."/".$readGroup;                                      # name of the first fasta alignment file
 
-snmf::structure($pedFileIn, $fastaFileOut);
+snmf::structure($vcfFileIn, $fileOut);
 
