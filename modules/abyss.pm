@@ -144,17 +144,7 @@ sub transAbyss
     #Execute command
     if(toolbox::run($command)==1)
     {
-         #my $moveCmd='mv '.$outputDir.'/*Trinity.fasta '.$outputDir.$readGroup; #rename the output file
-         #chdir "$outputDir";
-         ##rename the output files
-         #my $moveCmd="ls | sed -rn \"s/(.*)\$/mv '&' '".$readGroup."_\\1'/ p\" | sh"; 
-         #toolbox::run($moveCmd,"noprint");
-         ##remove the sub-repositories to avoid errors during copy in the finalResults repository.     
-         #my $rmCmd='find . -maxdepth 1 -mindepth 1 -type d -exec rm -r {} \;';
-         #toolbox::run($rmCmd,"noprint");
-         ## come back to the working directory.
-         #chdir "../";
-         
+        
          return 1;#Command Ok
     }
     else
@@ -164,17 +154,16 @@ sub transAbyss
     }
 }
 
-sub abyssPE {
-    #Will use FASTQ/FASTA/SAM/BAM data for assembly, pair-end data or single library BAM/SAM
+sub abyssSimple {
+    #Will use FASTQ/FASTA/SAM/BAM data for assembly, single-end and pair-end FASTQ/FASTA data or single library BAM/SAM
     my($outputDir,$readGroup,$forwardFile,$reverseFile,$optionsHachees)=@_;
-    ## if paired reads give $single as --left and $paired as --right; else give only $single
     my $orderedList=""; 
     my $options="";
     
-    if (ref $reverseFile or $reverseFile eq "NA")
+    if (ref $reverseFile)
     {
         #No reverse file, probably a BAM/SAM file
-        $optionsHachees = $reverseFile unless $reverseFile eq "NA";
+        $optionsHachees = $reverseFile;
         $reverseFile = "NA";
     }
 
@@ -185,17 +174,32 @@ sub abyssPE {
     
     if (&localFormatCheck($forwardFile) != 1 )
     { #Not the good format
-        toolbox::exportLog("ERROR: abyss::abyssPE : The file $forwardFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
+        toolbox::exportLog("ERROR: abyss::abyssSimple : The file $forwardFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
         return 0;#File not Ok
     }
-    if ($reverseFile ne "NA" && &localFormatCheck($forwardFile) != 1 )
+    if ($reverseFile ne "NA" && &localFormatCheck($reverseFile) != 1 )
     { #Not the good format
-        toolbox::exportLog("ERROR: abyss::abyssPE : The file $reverseFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
+        toolbox::exportLog("ERROR: abyss::abyssSimple : The file $reverseFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
         return 0;#File not Ok
     }
     
-    
-    my $command = "$abyss -C $outputDir k=64 name=".$readGroup.".ABYSS in='".$forwardFile."";
+	#Checking Mandatory options
+	
+    if ($options !~ m/ k=\d+/)
+	{
+		#No k-mer value is affected, will fix it at 65
+		toolbox::exportLog("WARNING: abyss::abyssSimple : No k-mer value (k option) provided, thus fixing it at 65\n", 2);
+		$options .= " k=65 ";
+		$options =~ s/\s+/ /g; #Removing extraspaces
+	}
+	if ($options =~ m/name=/)
+	{
+		#The name is fixed by the user, but no need
+		toolbox::exportLog("WARNING: abyss::abyssSimple : The name option (name=) will be fixed by TOGGLe automatically\n", 2);
+		$options =~ s/name=\w+//;
+	}
+	
+    my $command = "$abyss -C $outputDir $options name=".$readGroup.".ABYSS in='".$forwardFile."";
     
     if ($reverseFile ne "NA")
     {
@@ -213,7 +217,7 @@ sub abyssPE {
     }
     else
     {
-         toolbox::exportLog("ERROR: abyss::abyssPE : Uncorrectly done\n",0);
+         toolbox::exportLog("ERROR: abyss::abyssSimple : Uncorrectly done\n",0);
          return 0;#Command not Ok
     }
 }
@@ -230,9 +234,9 @@ sub abyssPE {
 	
 	abyss::transAbyss($outputDir,$readGroup,$firstListOfFile,$secondListOfFile,$optionsHachees);
 	
-	abyss::abyssPE ($localFolder,$folderIn);
+	abyss::abyssSimple ($outputDir,$readGroup,$forwardFile,$reverseFile,$optionsHachees);
     
-    localFormatCheck($file)
+    localFormatCheck($file);
     
         
 =head1 DESCRIPTION
@@ -245,9 +249,9 @@ sub abyssPE {
 
 	Transcriptome assembly
 	
-=head3  abyss::abyssPE ($localFolder,$folderIn)
+=head3  abyss::abyssSimple ($localFolder,$folderIn)
 
-	Genome assembly from pair-end data
+	Genome assembly from single-end and pair-end data, single library
 
 =head3  localFormatCheck($file)
 
