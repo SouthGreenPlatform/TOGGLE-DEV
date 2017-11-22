@@ -1,0 +1,22 @@
+TOGGLE : 
+- /usr/local/TOGGLE-0.3.5 : Release 0.3.4, 27th of September, 2017
+- Latest version of TOGGLE is Release 0.3.5, 8th of November, 2017
+
+JAVA : /usr/bin/java -Xmx12g -jar (openjdk version "1.8.0_65")
+
+fastqc : 
+- /usr/local/FastQC-0.10.1/fastqc 
+- FastQC v0.10.1
+
+cutadapt : /usr/local/cutadapt-1.10/bin/cutadapt (cutadapt version 1.10)
+
+bwa : /usr/local/bwa-0.7.12/bwa (Version: 0.7.12-r1039)
+
+picard : /usr/bin/java -Xmx12g -jar /usr/local/picard-tools-2.5.0/picard.jar (Version: 2.5.0(2c370988aefe41f579920c8a6a678a201c5261c1_1466708365))
+
+samtools : /usr/local/samtools-1.3.1/bin/samtools ( Version: 1.3.1 (using htslib 1.3.1))
+
+GATK : /usr/bin/java -Xmx12g -jar /usr/local/gatk-3.6/GenomeAnalysisTK.jar (Version: 3.6-0-g89b7209)
+
+
+

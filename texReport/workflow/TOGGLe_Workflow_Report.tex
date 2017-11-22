@@ -1,0 +1,98 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}      
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+%\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{color}
+
+\lstset{ % General setup for the package
+ basicstyle=\footnotesize, %basicstyle=\small\ttfamily,
+language=Perl,   
+numbersep=5pt,
+%numbers=left, 
+numberstyle=\tiny\color{gray}, % number style
+breaklines=true,
+ breakatwhitespace=false, 
+frame=single,
+framexleftmargin=2mm, 
+xleftmargin=2mm,
+prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+%backgroundcolor=\color{green!5},
+%frameround=fttt,
+escapeinside=??,
+rulecolor=\color{teal},
+keywords={% Give key words here                                         % keywords
+    maketitle},
+keywordstyle=\color[rgb]{0,0,1},                    % keywords
+        commentstyle=\color[rgb]{0.133,0.545,0.133},    % comments
+        stringstyle=\color[rgb]{0.627,0.126,0.941}  % strings
+%columns=fullflexible   
+}%
+
+%\title{Workflow report}
+%\author{\includegraphics[scale=0.4]{img/fig2.jpg} TOGGLe}
+
+\begin{document}
+
+\input{input/title.tex}
+
+\section{Samples}
+
+\subsection{Parallel execution (step number < 1000)}
+
+\input{input/sample_parallel_table.tex}
+
+\subsection{Global execution (step number >= 1000)}
+\input{input/sample_global_table.tex}
+
+\section{Workflow}
+
+\subsection{Workflow description}
+
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=0.3\textwidth]{img/frog.jpg}
+%\caption{\label{fig:frog}This image was created automatically by TOGGLe.}
+%\end{figure}
+
+\subsection{Software version}
+
+\lstinputlisting[language=Perl]{input/software.txt}
+ 
+%Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example. 
+
+\subsection{Line code}
+
+\lstinputlisting[language=Perl]{input/commandLine.txt}
+
+
+\subsection{Software configuration}
+
+%Comments can also be added to the margins of the compiled PDF using the todo command\todo{Here's a comment in the margin!}, as shown in the example on the right. You can also add inline comments:
+
+%\todo[inline, color=green!40]{This is an inline comment.}
+
+\lstinputlisting[language=Perl]{input/configuration.txt}
+ % \verbatiminput{input/configuration.txt}
+
+\subsection{How to cite TOGGLe?}
+
+\cite{Monat2015}
+
+\bibliographystyle{alpha}
+\bibliography{sample}
+
+\end{document}
