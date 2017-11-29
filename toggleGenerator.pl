@@ -269,7 +269,7 @@ foreach my $file (@listFilesMandatory)
 
 toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
 
-versionSofts::writeLogVersion($fileConf,$version.$newRelease);
+versionSofts::writeLogVersion($fileConf,$version.$newRelease,$report,$outDir);
 
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
@@ -734,7 +734,8 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################",1);
 
 
-onTheFly::generateReports($outputDir);
+onTheFly::generateReports($outputDir) if $report;
+
 exit;
 
 =head1 Name
