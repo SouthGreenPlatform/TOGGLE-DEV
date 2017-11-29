@@ -515,18 +515,14 @@ sub generateReports
 	chdir "$reportDirWF" or toolbox::exportLog("\nERROR: $0 : cannot cd into the output folder $reportDirWF \nExiting...\n",0);
 	
 	#copying differents tex files to input repertory
-	my $mvCmd="mv $outDir/sorfware.txt $reportDirWF/input";
+	my $mvCmd="mv $outDir/software.txt $reportDirWF/input";
 	toolbox::run($mvCmd);
 	
 	#generating pdf report in $texWorkflowFile 	
 	my $texCmd="/usr/local/texlive/2017/bin/x86_64-linux/pdflatex $texWorkflowFile";
     toolbox::run($texCmd);
 	
-	
-	
-	#toolbox::run("sleep 60","noprint");
-	
-	my $lnCmd="ln -s $pdfWorkflowFile $outDir/.";
+	my $lnCmd="ln -s $texWorkflowFile $outDir/.";
 	toolbox::run($lnCmd);
 }
 
