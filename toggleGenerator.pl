@@ -269,7 +269,7 @@ foreach my $file (@listFilesMandatory)
 
 toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
 
-versionSofts::writeLogVersion($fileConf,$version.$newRelease,$report,$outDir);
+versionSofts::writeLogVersion($fileConf,$version.$newRelease,$report,$outputDir);
 
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
