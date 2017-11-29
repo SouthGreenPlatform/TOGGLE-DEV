@@ -198,7 +198,9 @@ sub bedToolsVersion
 
 sub writeLogVersion
 {
-	my ($fileConf, $version) = @_;
+	my ($fileConf, $version, $report, $reportDir) = @_; #recovery $report boolean value: set to 1 if report is requested. $reportDir is the path were software.txt is generated 
+	$report=0 if not defined $report; # by default $report does not generate sofware.txt
+	
 	my %softPathVersion = ("toggle"	=> $version);
 	my %softPath = ("toggle"	=> $toggle);
 
@@ -366,8 +368,10 @@ sub writeLogVersion
 		}
 	}
 	## DEBUG print Dumper(%softPathVersion);
-
+	
 	open (my $fhConfig, "<", "$toggle/modules/localConfig.pm");
+	open (my $fhSoft, "<", "$reportDir/software.txt") if $report;
+
 	while (my $line = <$fhConfig>)
 	{
 		no strict "vars";
@@ -376,8 +380,15 @@ sub writeLogVersion
 		next unless $line =~ m/^our \$/;
 		my ($soft,$value) = split /=/, $line;
 		$soft =~ s/our| |\$//g;
-		toolbox::exportLog("$soft : $softPath{$soft} : $softPathVersion{$soft}",1) if defined $softPathVersion{$soft};
+		if defined $softPathVersion{$soft}
+		{
+			toolbox::exportLog("$soft : $softPath{$soft} : $softPathVersion{$soft}",1); 
+			print $fhSoft "$soft : $softPath{$soft} : $softPathVersion{$soft}" if $report; 
+		}
 	}
+	
+	close $fhConfig;
+	close $fhSoft;
 }
 1;
 
