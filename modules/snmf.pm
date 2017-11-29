@@ -62,7 +62,19 @@ sub vcf2geno
                return 0;
           }
           
-
+	if ($vcfFileIn =~ m/vcf\.gz$/) # the file type is vcf.gz must be unzip
+	{
+		my $plainFile = toolbox::degzip($vcfFileIn);
+		if ($plainFile == 0)
+		{
+			toolbox::exportLog("ERROR: snmf::vcf2geno : Can not decompress the gzip file $vcfFileIn\n",0);
+		}
+		else
+		{
+			$vcfFileIn = $plainFile;
+		}
+		
+	}
           
           my $command=$snmfbin."/vcf2geno $vcfFileIn $genoFileOut";
           
