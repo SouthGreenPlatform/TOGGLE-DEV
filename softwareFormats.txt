@@ -275,6 +275,6 @@ $abyss
 IN=fasta,fastq,sam,bam
 OUT=fasta
 
-$transAbyss
-IN=fasta,fastq,sam,bam
-OUT=fasta
+#$transAbyss
+#IN=fasta,fastq,sam,bam
+#OUT=fasta

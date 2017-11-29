@@ -230,7 +230,7 @@ sub correctName
         case ($name =~ m/^generic/i){$correctedName="generic";} #Correction for generic command
         
         #FOR abyss functions
-        case ($name =~ m/^trans[\s|\.|\-| \/|\\|\|]*abyss/i){$correctedName="transAbyss"} # Correction for transAbyss step
+        #case ($name =~ m/^trans[\s|\.|\-| \/|\\|\|]*abyss/i){$correctedName="transAbyss"} # Correction for transAbyss step
         case ($name =~ m/^abyss/i){$correctedName="abyssSimple"} # Correction for abyss step
             
         else

@@ -204,13 +204,13 @@ sub abyssVersion
 	
 }
 
-sub transAbyssVersion
-{ #We works with the STDIN output
-	my $version = `$transAbyss --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::transAbyssVersion : Can not grep transAbyss version\nPlease check your transAbyss installation.\n", 0);
-	chomp($version);
-	return $version;
-	
-}
+#sub transAbyssVersion
+#{ #We works with the STDIN output
+#	my $version = `$transAbyss --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::transAbyssVersion : Can not grep transAbyss version\nPlease check your transAbyss installation.\n", 0);
+#	chomp($version);
+#	return $version;
+#	
+#}
 
 sub writeLogVersion
 {
@@ -382,8 +382,8 @@ sub writeLogVersion
 			case ($softOrder =~ m/^abyss/i){$softPathVersion{"abyss"}= abyssVersion if not defined $softPathVersion{"abyss"};
 												$softPath{"abyss"}= $abyss if not defined $softPath{"abyss"};}
 			#FOR transAbyss
-			case ($softOrder =~ m/^transAbyss/i){$softPathVersion{"transAbyss"}= transAbyssVersion if not defined $softPathVersion{"transAbyss"};
-												$softPath{"transAbyss"}= $abyss if not defined $softPath{"transAbyss"};}
+			#case ($softOrder =~ m/^transAbyss/i){$softPathVersion{"transAbyss"}= transAbyssVersion if not defined $softPathVersion{"transAbyss"};
+												#$softPath{"transAbyss"}= $abyss if not defined $softPath{"transAbyss"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}

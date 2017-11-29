@@ -55,104 +55,104 @@ sub localFormatCheck{
 	
 }
 
-sub transAbyss
-{
-    my($outputDir,$readGroup,$firstListOfFile,$secondListOfFile,$optionsHachees)=@_;
-    ## if paired reads give $single as --left and $paired as --right; else give only $single
-    my $orderedList=""; 
-    my $command="";
-    my $options="";
-
-    if ($optionsHachees)
-    {
-         $options=toolbox::extractOptions($optionsHachees); ##Get given options
-    }
-
-    if ($options !~ m/--outdir\s\w+|--name\s\w+/) # The type of walker is not informed in the options
-    {
-        $options .= "--outdir ".$outputDir." --name ".$readGroup;
-    }
-    else
-    {
-        toolbox::exportLog("WARNING: abyss::transAbyss : You do not need to specify name or outdir options\n",2);
-    }
-    
-    if (scalar (@{$secondListOfFile}) > 0) # if is not empty,we have paired reads
-    {
-        if ((scalar (@{$firstListOfFile}) > 0 ) and (scalar (@{$firstListOfFile}) == scalar (@{$secondListOfFile})) )  # if is not empty and same length
-        {
-            my $i = 0;
-            foreach my $localFile (@{$firstListOfFile})       # for each pair of Fastq file(s)
-            {
-                if ($localFile ne "NA" and &localFormatCheck($localFile) == 1)
-                { ##Check if entry file exist and is not empty
-                    if (@{$secondListOfFile}[$i] ne "NA" and &localFormatCheck(@{$secondListOfFile}[$i])==1 )
-                    { ##Check if entry file exist and is not empty
-                        $orderedList .= " --pe ".$localFile." ".@{$secondListOfFile}[$i];    
-                        
-                    }
-                    else
-                    {
-                        toolbox::exportLog("ERROR: abyss::transAbyss : The file ".@{$secondListOfFile}[$i]." is uncorrect or is not a FASTQ/FASTA/SAM/BAM\n",0);
-                        return 0;#File not Ok
-                    }
-                }
-                else
-                {
-                    toolbox::exportLog("ERROR: abyss::transAbyss : The file ".$localFile." is uncorrect or is not a FASTQ/FASTA/SAM/BAM\n",0);
-                    return 0;#File not Ok
-                }
-                $i++;
-            }   
-            #print @{$firstListOfFastq},"\n";
-        }
-        else
-        {
-            toolbox::exportLog("ERROR: abyss::transAbyss : Incorrect list of files ".@{$firstListOfFile}." \n",0);
-            return 0;
-        }
-    }
-    else  # Single mode
-    {
-        if (scalar (@{$firstListOfFile}) > 0)  # if is not empty
-        {
-            $orderedList .= "--se ";
-            foreach my $localFile (@{$firstListOfFile})       # for each Fastq file(s)
-            {                 
-                if ($localFile ne "NA" and &localFormatCheck($localFile) == 1 )
-                { ##Check if entry file exist and is not empty
-                    $orderedList .= $localFile." ";
-                }
-                else
-                {
-                    toolbox::exportLog("ERROR: abyss::transAbyss : The file $localFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
-                    return 0;#File not Ok
-                }
-            }
-        }
-        else
-        {
-            toolbox::exportLog("ERROR: abyss::transAbyss : Incorrect list of files ".@{$firstListOfFile}." \n",0);
-            return 0;
-        }
-    }
-           
-    $command=$transAbyss." ".$orderedList." ".$options;
-
-    #DEBUG toolbox::exportLog("RUN: transabyss::transabyssRun : CMD:: $command\n",1);
-    
-    #Execute command
-    if(toolbox::run($command)==1)
-    {
-        
-         return 1;#Command Ok
-    }
-    else
-    {
-         toolbox::exportLog("ERROR: abyss::transAbyss: Uncorrectly done\n",0);
-         return 0;#Command not Ok
-    }
-}
+#sub transAbyss
+#{
+#    my($outputDir,$readGroup,$firstListOfFile,$secondListOfFile,$optionsHachees)=@_;
+#    ## if paired reads give $single as --left and $paired as --right; else give only $single
+#    my $orderedList=""; 
+#    my $command="";
+#    my $options="";
+#
+#    if ($optionsHachees)
+#    {
+#         $options=toolbox::extractOptions($optionsHachees); ##Get given options
+#    }
+#
+#    if ($options !~ m/--outdir\s\w+|--name\s\w+/) # The type of walker is not informed in the options
+#    {
+#        $options .= "--outdir ".$outputDir." --name ".$readGroup;
+#    }
+#    else
+#    {
+#        toolbox::exportLog("WARNING: abyss::transAbyss : You do not need to specify name or outdir options\n",2);
+#    }
+#    
+#    if (scalar (@{$secondListOfFile}) > 0) # if is not empty,we have paired reads
+#    {
+#        if ((scalar (@{$firstListOfFile}) > 0 ) and (scalar (@{$firstListOfFile}) == scalar (@{$secondListOfFile})) )  # if is not empty and same length
+#        {
+#            my $i = 0;
+#            foreach my $localFile (@{$firstListOfFile})       # for each pair of Fastq file(s)
+#            {
+#                if ($localFile ne "NA" and &localFormatCheck($localFile) == 1)
+#                { ##Check if entry file exist and is not empty
+#                    if (@{$secondListOfFile}[$i] ne "NA" and &localFormatCheck(@{$secondListOfFile}[$i])==1 )
+#                    { ##Check if entry file exist and is not empty
+#                        $orderedList .= " --pe ".$localFile." ".@{$secondListOfFile}[$i];    
+#                        
+#                    }
+#                    else
+#                    {
+#                        toolbox::exportLog("ERROR: abyss::transAbyss : The file ".@{$secondListOfFile}[$i]." is uncorrect or is not a FASTQ/FASTA/SAM/BAM\n",0);
+#                        return 0;#File not Ok
+#                    }
+#                }
+#                else
+#                {
+#                    toolbox::exportLog("ERROR: abyss::transAbyss : The file ".$localFile." is uncorrect or is not a FASTQ/FASTA/SAM/BAM\n",0);
+#                    return 0;#File not Ok
+#                }
+#                $i++;
+#            }   
+#            #print @{$firstListOfFastq},"\n";
+#        }
+#        else
+#        {
+#            toolbox::exportLog("ERROR: abyss::transAbyss : Incorrect list of files ".@{$firstListOfFile}." \n",0);
+#            return 0;
+#        }
+#    }
+#    else  # Single mode
+#    {
+#        if (scalar (@{$firstListOfFile}) > 0)  # if is not empty
+#        {
+#            $orderedList .= "--se ";
+#            foreach my $localFile (@{$firstListOfFile})       # for each Fastq file(s)
+#            {                 
+#                if ($localFile ne "NA" and &localFormatCheck($localFile) == 1 )
+#                { ##Check if entry file exist and is not empty
+#                    $orderedList .= $localFile." ";
+#                }
+#                else
+#                {
+#                    toolbox::exportLog("ERROR: abyss::transAbyss : The file $localFile is uncorrect or is not a SAM/BAM/FASTA/FASTQ\n",0);
+#                    return 0;#File not Ok
+#                }
+#            }
+#        }
+#        else
+#        {
+#            toolbox::exportLog("ERROR: abyss::transAbyss : Incorrect list of files ".@{$firstListOfFile}." \n",0);
+#            return 0;
+#        }
+#    }
+#           
+#    $command=$transAbyss." ".$orderedList." ".$options;
+#
+#    #DEBUG toolbox::exportLog("RUN: transabyss::transabyssRun : CMD:: $command\n",1);
+#    
+#    #Execute command
+#    if(toolbox::run($command)==1)
+#    {
+#        
+#         return 1;#Command Ok
+#    }
+#    else
+#    {
+#         toolbox::exportLog("ERROR: abyss::transAbyss: Uncorrectly done\n",0);
+#         return 0;#Command not Ok
+#    }
+#}
 
 sub abyssSimple {
     #Will use FASTQ/FASTA/SAM/BAM data for assembly, single-end and pair-end FASTQ/FASTA data or single library BAM/SAM
@@ -202,7 +202,7 @@ sub abyssSimple {
     if ($options !~ m/ k=\d+/)
 	{
 		#No k-mer value is affected, will fix it at 65
-		toolbox::exportLog("WARNING: abyss::abyssSimple : No k-mer value (k option) provided, thus fixing it at 65\n", 2);
+		toolbox::exportLog("WARNING: abyss::abyssSimple : No k-mer value (k option) provided, fixing it at 65\n", 2);
 		$options .= " k=65 ";
 		$options =~ s/\s+/ /g; #Removing extraspaces
 	}
