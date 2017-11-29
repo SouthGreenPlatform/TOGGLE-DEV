@@ -192,7 +192,7 @@ sub abyssSimple {
 	}
 	if ($reverseFile ne "NA" && $reverseFile =~ m/\.gz$/)
 	{
-		my $plainFile = toolbox::degzip($reversFile);
+		my $plainFile = toolbox::degzip($reverseFile);
 		toolbox::exportLog("ERROR: abyss::abyssSimple: Cannot decompress the gzip file $reverseFile", 0) if $plainFile == 0;
 		$reverseFile = $plainFile;
 	}
@@ -240,7 +240,7 @@ sub abyssSimple {
 
 =head1 NAME
 
-    Package I<abyss> 
+Package I<abyss> 
 
 =head1 SYNOPSIS
 
