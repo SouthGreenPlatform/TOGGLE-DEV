@@ -31,5 +31,5 @@ if ($fastqForwardIn eq "NA")
 }
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);		# recovery of specific parameters of abyss-pe
-abyss:abyssSimple($newDir,$readGroup,$fastqForwardIn,$fastqReverseIn,$softParameters);
+abyss::abyssSimple($newDir,$readGroup,$fastqForwardIn,$fastqReverseIn,$softParameters);
 
