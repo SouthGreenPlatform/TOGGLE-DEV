@@ -183,6 +183,20 @@ sub abyssSimple {
         return 0;#File not Ok
     }
     
+	#De-gzip files
+	if ($forwardFile =~ m/\.gz$/)
+	{
+		my $plainFile = toolbox::degzip($forwardFile);
+		toolbox::exportLog("ERROR: abyss::abyssSimple: Cannot decompress the gzip file $forwardFile", 0) if $plainFile == 0;
+		$forwardFile = $plainFile;
+	}
+	if ($reverseFile ne "NA" && $reverseFile =~ m/\.gz$/)
+	{
+		my $plainFile = toolbox::degzip($reversFile);
+		toolbox::exportLog("ERROR: abyss::abyssSimple: Cannot decompress the gzip file $reverseFile", 0) if $plainFile == 0;
+		$reverseFile = $plainFile;
+	}
+	
 	#Checking Mandatory options
 	
     if ($options !~ m/ k=\d+/)

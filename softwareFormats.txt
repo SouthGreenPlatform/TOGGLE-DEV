@@ -277,4 +277,4 @@ OUT=fasta
 
 $transAbyss
 IN=fasta,fastq,sam,bam
-OUT=fastq
+OUT=fasta

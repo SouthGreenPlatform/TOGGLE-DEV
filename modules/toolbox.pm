@@ -1100,6 +1100,36 @@ sub rmHashOrder
 # END sub rmHashOrder
 ################################################################################################
 
+################################################################################################
+# sub degzip => decompress a gzip file and return the name of the decompressed file
+################################################################################################
+# arguments :
+# 	- $gzFile
+# returns :
+#	- $plainFile
+################################################################################################
+sub degzip
+{
+	toolbox::exportLog("ERROR: toolbox::degzip : should get one argument\n",0) if (@_ < 1);
+	my ($gzFile)=@_;
+    my $plainFile = `basename $gzFile`;
+    chomp $plainFile;
+    $plainFile =~ s/\.gz$//i;
+    
+    my $command = "gzip -d -c `readlink $gzFile` > $plainFile";
+        #Execute command
+    if(&run($command,"noprint") != 1)
+    {
+        return 0;
+    }
+
+	
+	return $plainFile;
+}
+################################################################################################
+# END sub degzip
+################################################################################################
+
 
 
 1;

@@ -231,7 +231,7 @@ sub correctName
         
         #FOR abyss functions
         case ($name =~ m/^trans[\s|\.|\-| \/|\\|\|]*abyss/i){$correctedName="transAbyss"} # Correction for transAbyss step
-        case ($name =~ m/^abyss/i){$correctedName="abyss"} # Correction for abyss step
+        case ($name =~ m/^abyss/i){$correctedName="abyssSimple"} # Correction for abyss step
             
         else
         {
