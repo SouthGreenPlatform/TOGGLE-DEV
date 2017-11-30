@@ -383,7 +383,7 @@ sub writeLogVersion
 		if (defined $softPathVersion{$soft})
 		{
 			toolbox::exportLog("$soft : $softPath{$soft} : $softPathVersion{$soft}",1); 
-			print $fhSoft "$soft : $softPath{$soft} : $softPathVersion{$soft}" if $report; 
+			print $fhSoft "$softPath{$soft} : $softPathVersion{$soft}\n" if $report; 
 		}
 	}
 	
