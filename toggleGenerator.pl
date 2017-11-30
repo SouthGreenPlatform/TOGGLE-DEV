@@ -257,6 +257,12 @@ toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
 toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
 toolbox::exportLog("INFOS: the current version of TOGGLE is $version\n",1);
 
+### Generate tex file
+my $inputFile="commandLine.txt";
+open(my $cmdFh,">", $inputFile) or toolbox::exportLog("$0 : open error of $inputFile .... $!\n",0);
+print $cmdFh $cmd_line."\n";
+close $cmdFh;
+
 # Verify if file arguments exist
 foreach my $file (@listFilesMandatory)
 {
