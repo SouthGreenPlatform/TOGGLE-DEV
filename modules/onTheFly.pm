@@ -519,7 +519,11 @@ sub generateReports
 	#copying differents tex files to input repertory
 	
 	#Pipeline picture
-	my $mvCmd="cp $outDir/togglePipeline.png $reportDirWF/img";
+	my $mvCmd="cp $outDir/togglePipeline.png $reportDirWF/img/";
+	toolbox::run($mvCmd);
+	
+	#Command line
+	$mvCmd="mv $outDir/commandLine.txt $reportDirWF/input";
 	toolbox::run($mvCmd);
 	
 	#Software Version
