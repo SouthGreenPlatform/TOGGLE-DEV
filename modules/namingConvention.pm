@@ -231,8 +231,16 @@ sub correctName
         
         #FOR abyss functions
         #case ($name =~ m/^trans[\s|\.|\-| \/|\\|\|]*abyss/i){$correctedName="transAbyss"} # Correction for transAbyss step
-        case ($name =~ m/^abyss/i){$correctedName="abyssSimple"} # Correction for abyss step
-            
+        case ($name =~ m/^abyss/i){$correctedName="abyssSimple";} # Correction for abyss step
+        
+        #FOR pindel
+        case ($name =~ m/^pindel/i){$correctedName="pindel";}
+        
+        #FOR breakDancer
+        case ($name =~ m/^break[\s|\.|\-| \/|\\|\|]*dancer/i){$correctedName="breakDancer";}
+        case ($name =~ m/^bam[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*cfg/i){$correctedName="bam2cfg";}
+        case ($name =~ m/^bam[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*cfg[\s|\.|\-| \/|\\|\|]*pl/i){$correctedName="bam2cfg";}
+         
         else
         {
             toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);

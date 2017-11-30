@@ -39,7 +39,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex $atropos $duplicationDetector $bedtools $abyss $transAbyss);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex $atropos $duplicationDetector $bedtools $abyss $transAbyss $breakDancer $bam2cfg);
 
 #toggle path
 our $toggle="/path/to/toggleFolder";
@@ -114,4 +114,7 @@ our $bedtools = "/path/to/bedtools";
 our $abyss = "/path/to/abyss";
 our $transAbyss = "/path/to/transAbyss";
 
+#Path to breakDancer
+our $bam2cfg = "/path/to/bam2cfg.pl";
+our $breakDancer = "/path/to/breakDancer";
 1;
