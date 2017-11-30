@@ -84,7 +84,7 @@ sub bam2cfg
 
 sub breakDancer
 {
-    my($breakDancerConfigFile,$optionsHachees)=@_;
+    my($breakDancerConfigFile,$outputFile, $optionsHachees)=@_;
     if (toolbox::sizeFile($breakDancerConfigFile)==1)
     { ##Check if entry file exist and is not empty
         
@@ -93,7 +93,7 @@ sub breakDancer
         {
             $options=toolbox::extractOptions($optionsHachees); ##Get given options
         }
-        my $command=$breakDancer." ".$options." ".$breakDancerConfigFile;
+        my $command=$breakDancer." ".$options." ".$breakDancerConfigFile." > ".$outputFile ;
         #toolbox::exportLog($command."\n",1);
         #Execute command
         if(toolbox::run($command)==1)

@@ -278,3 +278,11 @@ OUT=fasta
 #$transAbyss
 #IN=fasta,fastq,sam,bam
 #OUT=fasta
+
+$bam2cfg
+IN=bam
+OUT=NA
+
+$breakDancer
+IN=bam
+OUT=NA

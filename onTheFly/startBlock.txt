@@ -71,6 +71,7 @@ use duplicationDetector;
 use bedTools;
 use generic;
 use abyss;
+use breakDancer;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -260,6 +261,9 @@ my ($mpileupOut);
 
 ##BED associated variables
 my ($bedFileIn, $bedFileOut)=("NA","NA");
+
+##BreakDancer associated variables
+my ($cfgFile,$breakDancerOut)=("NA","NA");
 
 ##GENERIC variable
 my ($fileIn,$fileOut)=("NA","NA");
