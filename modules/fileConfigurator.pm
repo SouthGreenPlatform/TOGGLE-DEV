@@ -117,7 +117,10 @@ our %testParams=    (
         bowtie=>[""],
         bowtie2=>[""],
         #DuplicationDetector
-        duplicationDetector=>["-H 1"]
+        duplicationDetector=>["-H 1"],
+        #SNIPLAY
+        plinkVcf2Ped => [""],
+        sniplayPed2fasta => [""]
         );
 
 sub softParams
