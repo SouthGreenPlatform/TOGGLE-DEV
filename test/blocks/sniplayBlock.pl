@@ -35,13 +35,14 @@ use warnings;
 use Test::More 'no_plan';
 use Test::Deep;
 use fileConfigurator;
+use localConfig;
 
 #####################
 ## PATH for datas test
 #####################
 
 # input file
-my $dataPed = "../DATA/testData/ped/";
+my $dataPed = "$toggle/data/testData/vcf/vcfForRecalibration/";
 
 
 print "\n\n#################################################\n";
@@ -49,11 +50,11 @@ print "#### TEST SNIPLAY PED2FASTA\n";
 print "#################################################\n";
 
 #Creating config file for this test
-my @listSoft = ("sniplayPed2fasta");
+my @listSoft = ("plinkVcf2Ped","sniplayPed2fasta");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 # Remove files and directory created by previous test
-my $testingDir="../DATA-TEST/sniplayPed2fasta-noSGE-Blocks";
+my $testingDir="$toggle/dataTest/sniplayPed2fasta-noSGE-Blocks";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
@@ -68,8 +69,6 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for Sniplay Ped2fasta";
 my $observedOutput = `ls $testingDir"/finalResults"`;
 my @observedOutput = split /\n/,$observedOutput;
 
-my @expectedOutput = ('test.SNIPLAYPED2FASTA.fa');
+my @expectedOutput = ('control.SNIPLAYPED2FASTA.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'sniplay::ped2fasta - output list - Fasta alignement');
- 
-

@@ -25,8 +25,8 @@ if ($pedFileIn eq "NA") #No PED file found in the previous folder
 {
     toolbox::exportLog("ERROR : $0 : No PED file found in $previousDir at step $stepName.\n",0);
 }
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                       # recovery of specific parameters of GATK PrintReads
 
-$fastaFileOut = $newDir."/".$readGroup.".SNIPLAYPED2FASTA.fa";                                      # name of the first fasta alignment file
+my $fastaFileOut = $newDir."/".$readGroup.".SNIPLAYPED2FASTA.fasta";                                      # name of the first fasta alignment file
 
-sniplay::ped2fasta($pedFileIn, $fastaFileOut);
-
+sniplay::ped2fasta($pedFileIn, $fastaFileOut, $softParameters);

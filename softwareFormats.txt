@@ -247,3 +247,10 @@ $duplicationDetector
 IN=vcf
 OUT=csv,bed
 
+$plinkVcf2Ped
+IN=vcf
+OUT=ped
+
+$sniplayPed2fasta
+IN=ped
+OUT=fasta

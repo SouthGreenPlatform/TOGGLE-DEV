@@ -25,7 +25,8 @@ if ($vcfFileIn eq "NA") #No SAM/BAM file found in the previous folder
 {
     toolbox::exportLog("ERROR : $0 : No VCF file found in $previousDir at step $stepName.\n",0);
 }
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                       # recovery of specific parameters of GATK PrintReads
+
 $fileOut = $newDir."/".$readGroup;                                      # name of the first fasta alignment file
 
-snmf::structure($vcfFileIn, $fileOut);
-
+snmf::structure($vcfFileIn, $fileOut, $softParameters);

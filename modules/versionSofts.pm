@@ -179,6 +179,12 @@ sub bamutilsVersion
 	chomp($version);
 	return $version;
 }
+sub plinkVersion
+{   #We works with the STDOUT output
+	my $version = `$plink -version` or die toolbox::exportLog("ERROR: versionSoft::plinkVersion : Can not grep plink version\nPlease check your plink installation.\n", 0);
+	chomp($version);
+	return $version;
+}
 
 sub cracVersion
 { #We works with the STDIN output
@@ -200,8 +206,7 @@ sub writeLogVersion
 
 	for my $softOrder ( values %{ $hashOrder } )
 	{
-		#DEBUG: print $softOrder."\n";
-
+		#DEBUG: print $softOrder." DANS LA BOUCLE\n";
 		switch (1)
 		{
 			#FOR bwa.pm
@@ -308,6 +313,14 @@ sub writeLogVersion
 			case ($softOrder =~ m/^bamutils.*/i){$softPathVersion{"bamutils"}= bamutilsVersion if not defined $softPathVersion{"bamutils"};
 											  $softPath{"bamutils"}= $bamutils if not defined $softPath{"bamutils"};
 											  }
+			#FOR plink
+			case ($softOrder =~ m/^plink.*/i){$softPathVersion{"plink"}= plinkVersion if not defined $softPathVersion{"plink"};
+											  $softPath{"plink"}= $plink if not defined $softPath{"plink"};
+											  }
+			#FOR SNIPLAY
+			case ($softOrder =~ m/^sniplay.*/i){$softPathVersion{"sniplay"}= "v1.0" if not defined $softPathVersion{"sniplay"};
+												$softPath{"sniplay"}= "sniplay" if not defined $softPath{"sniplay"};
+											   }
 
 			#For format checking
 			case($softOrder =~ m/^check/i){next;}
@@ -336,7 +349,10 @@ sub writeLogVersion
 			case ($softOrder =~ m/^checkEncodeByASCIIcontrol/i){$softPathVersion{"checkEncodeByASCIIcontrol"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontrol"};
 																 $softPath{"checkEncodeByASCIIcontrol"}= "checkEncodeByASCIIcontrol" if not defined $softPath{"checkEncodeByASCIIcontrol"};}
 											
-			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
+			else
+			{
+				toolbox::exportLog("ERROR VERSIONSOFTS: $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);
+			}; # Name unknown to TOGGLE, must stop
 		}
 	}
 	## DEBUG print Dumper(%softPathVersion);

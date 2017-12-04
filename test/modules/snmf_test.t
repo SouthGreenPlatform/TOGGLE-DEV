@@ -48,6 +48,7 @@ use_ok('toolbox') or exit;
 use_ok('snmf') or exit;
 
 can_ok( 'snmf','vcf2geno');
+can_ok( 'snmf','structure');
 
 use snmf;
 
@@ -77,32 +78,28 @@ my $cleaningCommand="rm -Rf snmf_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 
-
-
-
-
 ################################################################################################
 ##snmf
 ################################################################################################
 
 
 my %optionsRef = ();
-my $optionsHachees = \%optionsRef; 
+my $optionsHachees = \%optionsRef;
 
 # input file
 my $vcfFile = "$toggle/data/testData/vcf/testsnmf.vcf";
 my $fileOut = "testsnmf";
 
 #execution test
-#is(snmf::vcf2geno($vcfFile, $fileOut),1,'snmf::vcf2geno');
+is(snmf::vcf2geno($vcfFile, $fileOut),1,'snmf::vcf2geno');
 
 #snmf option
 my %optionsHachees = (
                       "-K" => "5",
 					  "-c" => ""
-                      );       
+                      );
 
-my $optionHachees = \%optionsHachees;    
+my $optionHachees = \%optionsHachees;
 
 #execution test
 is(snmf::structure($vcfFile, $fileOut,$optionHachees),1,'snmf::structure');
@@ -113,13 +110,13 @@ my $observedOutput = `ls $fileOut*.Q`;
 my @observedOutput = split /\n/,$observedOutput;
 my @expectedOutput = ("$fileOut.SNMFSTRUCTURE.2.Q","$fileOut.SNMFSTRUCTURE.3.Q","$fileOut.SNMFSTRUCTURE.4.Q","$fileOut.SNMFSTRUCTURE.5.Q");
 
-is_deeply(\@observedOutput,\@expectedOutput,'snmf::execution Single - output list');
+is_deeply(\@observedOutput,\@expectedOutput,'snmf::structure - output list');
 
 
 # expected content test
 my $observedContent=`wc -l $fileOut.SNMFSTRUCTURE.5.Q`;
 my $validContent = ( $observedContent =~ m/258/);
-is($validContent,1,'snmf::vcf2geno - output content');
+is($validContent,1,'snmf::structure - output content');
 
 
 
