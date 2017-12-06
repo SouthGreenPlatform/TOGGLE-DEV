@@ -109,7 +109,7 @@ sub gatkVersion
 {
 	my $version = `$GATK -version` or die toolbox::exportLog("ERROR: versionSoft::gatkVersion : Can not grep gatk version\nPlease check your GATK installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return "Version: ".$version;
+	return $version;
 }
 
 sub htseqcountVersion
@@ -130,7 +130,7 @@ sub picardToolsVersion
 {
 	my $version = `$picard CheckFingerprint --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::picardToolsVersion : Can not grep picardTools version\nPlease check your picardtools installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return "Version: ".$version;
+	return $version;
 }
 
 sub stacksVersion
@@ -151,7 +151,7 @@ sub snpeffVersion
 {
 	my $version = `$snpEff -version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::snpeffVersion : Can not grep snpeff version\nPlease check your snpeff installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return "Version: ".$version;
+	return $version;
 }
 
 sub tgiclVersion
@@ -370,8 +370,9 @@ sub writeLogVersion
 	## DEBUG print Dumper(%softPathVersion);
 	
 	open (my $fhConfig, "<", "$toggle/modules/localConfig.pm");
-	open (my $fhSoft, ">", "$reportDir/software.txt") if $report;
-
+	open (my $fhSoft, ">", "$reportDir/software.tex") if $report;
+    print $fhSoft "\begin{itemize}\n";
+	
 	while (my $line = <$fhConfig>)
 	{
 		no strict "vars";
@@ -382,11 +383,11 @@ sub writeLogVersion
 		$soft =~ s/our| |\$//g;
 		if (defined $softPathVersion{$soft})
 		{
-			toolbox::exportLog("$soft : $softPath{$soft} : $softPathVersion{$soft}",1); 
-			print $fhSoft "$softPath{$soft} : $softPathVersion{$soft}\n" if $report; 
+			toolbox::exportLog(uc($soft)." : $softPath{$soft} : $softPathVersion{$soft}",1); 
+			print $fhSoft "\\item"  .			uc($soft) ." : \n \begin{verbatim}\n$softPathVersion{$soft} \n \end{verbatim}" if $report; 
 		}
 	}
-	
+	 print $fhSoft "\end{itemize}\n";
 	close $fhConfig;
 	close $fhSoft;
 }
