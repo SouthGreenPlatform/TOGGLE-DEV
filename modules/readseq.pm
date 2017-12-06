@@ -91,7 +91,7 @@ sub readseq
           }
 		  if  ($options !~ m/-f /)
 		  {
-				toolbox::exportLog("ERROR: readseq::readseq: no format number provided.\n",0);
+				toolbox::exportLog("ERROR: readseq::readseq: no format number provided. ***$optionsHachees***\n",0);
 		  }
 		  my $extension;
 		  if ($options =~ m/-f (\d+)/){

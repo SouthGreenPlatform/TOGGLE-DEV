@@ -42,7 +42,7 @@ use localConfig;
 #####################
 
 # input file
-my $dataPed = "$toggle/data/testData/vcf/vcfForRecalibration/";
+my $dataVCF = "$toggle/data/testData/vcf/vcfForSNiPlay/";
 
 
 print "\n\n#################################################\n";
@@ -50,15 +50,15 @@ print "#### TEST SNIPLAY PED2FASTA\n";
 print "#################################################\n";
 
 #Creating config file for this test
-my @listSoft = ("plinkVcf2Ped","sniplayPed2fasta");
+my @listSoft = ("plinkVcf2Ped","sniplayPed2fasta","readseq","fastme");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 # Remove files and directory created by previous test
-my $testingDir="$toggle/dataTest/sniplayPed2fasta-noSGE-Blocks";
+my $testingDir="$toggle/dataTest/sniplay-noSGE-Blocks";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataPed." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataVCF." -o ".$testingDir;
 
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for Sniplay Ped2fasta";

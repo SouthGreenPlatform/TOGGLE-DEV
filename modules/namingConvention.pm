@@ -220,7 +220,8 @@ sub correctName
         case ($name =~ m/^plink[\s|\.|\-| \/|\\|\|]*vcf[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*ped/i){$correctedName="plinkVcf2Ped";}
         case ($name =~ m/^sniplay[\s|\.|\-| \/|\\|\|]*ped[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="sniplayPed2fasta";}
         case ($name =~ m/^fastme/i){$correctedName="fastme";}
-
+		case ($name =~ m/^readseq/i){$correctedName="readseq";}
+		
         else
         {
             toolbox::exportLog("ERROR NAMING CONVENTION : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);

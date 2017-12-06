@@ -255,6 +255,10 @@ $sniplayPed2fasta
 IN=ped
 OUT=fasta
 
+$readseq
+IN=fasta
+OUT=phylip,phy
+
 $fastme
 IN=phy,phylip
 OUT=nwk,newik,nk

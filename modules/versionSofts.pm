@@ -193,6 +193,13 @@ sub fastmeVersion
 	return $version;
 }
 
+sub readseqVersion
+{   #We works with the STDOUT output
+	my $version = `$readseqjar -h | head -1` or die toolbox::exportLog("ERROR: versionSoft::readseqVersion : Can not grep readseq version\nPlease check your fastme installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+
 sub cracVersion
 { #We works with the STDIN output
 	my $version = `$crac -version | grep -m 1 "version"` or die toolbox::exportLog("ERROR: versionSoft::cracVersion : Can not grep CRAC version\nPlease check your CRAC installation.\n", 0);
@@ -323,11 +330,16 @@ sub writeLogVersion
 			case ($softOrder =~ m/^plink.*/i){$softPathVersion{"plink"}= plinkVersion if not defined $softPathVersion{"plink"};
 											  $softPath{"plink"}= $plink if not defined $softPath{"plink"};
 											  }
-			#FOR c
-			case ($softOrder =~ m/^fastme.*/i){$softPathVersion{"fastme"}= plinkVersion if not defined $softPathVersion{"fastme"};
+			#FOR fastme
+			case ($softOrder =~ m/^fastme.*/i){$softPathVersion{"fastme"}= fastmeVersion if not defined $softPathVersion{"fastme"};
 											  $softPath{"fastme"}= $fastme if not defined $softPath{"fastme"};
 											  }
 			
+			#FOR readseq
+			case ($softOrder =~ m/^readseq.*/i){$softPathVersion{"readseq"}= readseqVersion if not defined $softPathVersion{"readseq"};
+											  $softPath{"readseq"}= $readseqjar if not defined $softPath{"readseq"};
+											  }
+											  
 			#FOR SNIPLAY
 			case ($softOrder =~ m/^sniplay.*/i){$softPathVersion{"sniplay"}= "v1.0" if not defined $softPathVersion{"sniplay"};
 												$softPath{"sniplay"}= "sniplay" if not defined $softPath{"sniplay"};

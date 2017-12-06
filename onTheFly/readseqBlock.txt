@@ -15,24 +15,24 @@ foreach my $file (@{$fileList}) #Checking the number of files
 	next if $file =~ m/vcf$/;
 	next if $file =~ m/fastq$/;
 	
-	if ($fileIn ne "NA") # Already a file recognized, but more than one in the previous folder
+	if ($readseqFileIn ne "NA") # Already a file recognized, but more than one in the previous folder
 	{
 		toolbox::exportLog("ERROR : $0 : there are more than one single file at $stepName step.\n",0);
     }
     else
     {
-        $fileIn = $file;
+        $readseqFileIn = $file;
     }
 }
 
-if ($fileIn eq "NA") #No file found in the previous folder
+if ($readseqFileIn eq "NA") #No file found in the previous folder
 {
     toolbox::exportLog("ERROR : $0 : No file found in $previousDir at step $stepName.\n",0);
 }
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName); # recovery of specific parameters
 
-$fileOut = "$newDir"."/"."$readGroup".".READSEQ";
+my $fileOut = "$newDir"."/"."$readGroup".".READSEQ";
 
-readseq::readseq($fileIn, $fileOut);
+readseq::readseq($readseqFileIn, $fileOut,$softParameters);
 

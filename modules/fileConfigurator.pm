@@ -121,7 +121,8 @@ our %testParams=    (
         #SNIPLAY
         plinkVcf2Ped => [""],
         sniplayPed2fasta => [""],
-		fastme => [""]
+		readseq => ["-f 12"],
+		fastme => ["-d"]
         );
 
 sub softParams
