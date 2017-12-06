@@ -120,7 +120,8 @@ our %testParams=    (
         duplicationDetector=>["-H 1"],
         #SNIPLAY
         plinkVcf2Ped => [""],
-        sniplayPed2fasta => [""]
+        sniplayPed2fasta => [""],
+		fastme => [""]
         );
 
 sub softParams

@@ -219,6 +219,7 @@ sub correctName
         # SNIPLAY
         case ($name =~ m/^plink[\s|\.|\-| \/|\\|\|]*vcf[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*ped/i){$correctedName="plinkVcf2Ped";}
         case ($name =~ m/^sniplay[\s|\.|\-| \/|\\|\|]*ped[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="sniplayPed2fasta";}
+        case ($name =~ m/^fastme/i){$correctedName="fastme";}
 
         else
         {

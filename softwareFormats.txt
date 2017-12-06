@@ -254,3 +254,7 @@ OUT=ped
 $sniplayPed2fasta
 IN=ped
 OUT=fasta
+
+$fastme
+IN=phy,phylip
+OUT=nwk,newik,nk
