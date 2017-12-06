@@ -70,6 +70,7 @@ use scp;
 use duplicationDetector;
 use plink;
 use sniplay;
+use fastme;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -262,6 +263,7 @@ my ($bedFileIn, $bedFileOut)=("NA","NA");
 
 ##PED for SNIPLAY
 my $pedFileIn = "NA";
+my $phylipFileIn = "NA";
 
 ##Internal variables
 ###Directory and file variables
