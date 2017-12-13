@@ -219,6 +219,13 @@ sub breakDancerVersion
 	return $version;
 }
 
+sub pindelVersion
+{
+	my $version = `pindel | grep -m 1 version` or die toolbox::exportLog("ERROR: versionSoft::pindelVersion : Can not grep breakDancer version\nPlease check your pindel installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+
 sub writeLogVersion
 {
 	my ($fileConf, $version) = @_;
@@ -398,6 +405,10 @@ sub writeLogVersion
 												$softPath{"bam2cfg"}= $bam2cfg if not defined $softPath{"bam2cfg"};}
 			case ($softOrder =~ m/^breakDancer/i){$softPathVersion{"breakDancer"}= breakDancerVersion if not defined $softPathVersion{"breakDancer"};
 												$softPath{"breakDancer"}= $breakDancer if not defined $softPath{"breakDancer"};}
+			
+			#For Pindel
+			case ($softOrder =~ m/^pindel/i){$softPathVersion{"pindel"}= pindelVersion if not defined $softPathVersion{"pindel"};
+												$softPath{"pindel"}= $pindel if not defined $softPath{"pindel"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}

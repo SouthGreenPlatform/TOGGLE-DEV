@@ -1,5 +1,5 @@
 ##########################################
-# breakDancer::breakDancer block
+# pindel::pindelConfig + pindel::pindelRun block
 ##########################################
 
 #Correct variable populating
@@ -11,11 +11,11 @@ foreach my $file (@{$fileList})
 }
 
 #Configuration
-$cfgFile = $newDir."/".$readGroup.".BREAKDANCER.cfg";
+$cfgFile = $newDir."/".$readGroup.".PINDEL.cfg";
 $softParameters = toolbox::extractHashSoft($optionRef, "bam2cfg");
-breakDancer::bam2cfg($listOfBam, $cfgFile, $softParameters);
+pindel::pindelConfig($listOfBam, $cfgFile);
 
 #run
-$breakDancerOut = $newDir."/".$readGroup.".BREAKDANCER.ctx";
-$softParameters = toolbox::extractHashSoft($optionRef, "breakDancer");
-breakDancer::breakDancer($cfgFile,$breakDancerOut,$softParameters);
+$pindelOut = $newDir."/".$readGroup.".PINDEL";
+$softParameters = toolbox::extractHashSoft($optionRef, "pindel");
+pindel::pindelRun($cfgFile,$pindelOut,$reference,$softParameters);

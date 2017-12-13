@@ -240,6 +240,9 @@ sub correctName
         case ($name =~ m/^break[\s|\.|\-| \/|\\|\|]*dancer/i){$correctedName="breakDancer";}
         case ($name =~ m/^bam[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*cfg/i){$correctedName="bam2cfg";}
         case ($name =~ m/^bam[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*cfg[\s|\.|\-| \/|\\|\|]*pl/i){$correctedName="bam2cfg";}
+        
+        #FOR pindel
+        case ($name =~ m/^pindel/i){$correctedName="pindel";}
          
         else
         {

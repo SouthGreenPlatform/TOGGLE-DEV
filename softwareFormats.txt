@@ -286,3 +286,7 @@ OUT=NA
 $breakDancer
 IN=bam
 OUT=NA
+
+$pindel
+IN=BAM
+OUT=NA
