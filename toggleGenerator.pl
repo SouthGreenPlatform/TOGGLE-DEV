@@ -211,6 +211,9 @@ push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
 push (@listFilesMandatory,$gffFile) if $gffFile !~ m/None$/;
 push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
 
+
+
+
 ##########################################
 # Creation of the output folder
 ##########################################
@@ -219,22 +222,20 @@ if (not -d $outputDir) #if the output folder is not existing yet
 {
     #creating the output folder
     my $createOutputDirCommand = "mkdir -p $outputDir";
-    system ("$createOutputDirCommand") and toolbox::exportLog("\nERROR: $0 : cannot create the output folder $outputDir: $!\nExiting...\n",0);
+    system ("$createOutputDirCommand") and die "\nERROR: $0 : cannot create the output folder $outputDir: $!\nExiting...\n";
 }
 
 chdir $outputDir;
-
+  
 #Checking if $outputDir is empty
-
 my $lsOutputDir = `ls`;
 chomp $lsOutputDir;
 if ($lsOutputDir ne "") # The folder is not empty
 {
-  toolbox::exportLog("\nERROR: $0 : The output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n",0);
+  die "\nERROR: $0 : The output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n";
 }
 
-my $infosFile = "individuSoft.txt";
-
+# Creating log file GLOBAL
 my ($sec, $min, $h, $mois_jour, $mois, $an, $sem_jour, $cal_jour, $heure_ete) = localtime(time);
 $mois+=1;
 $mois = $mois < 10 ? $mois = "0".$mois : $mois;
@@ -244,11 +245,10 @@ $min = $min < 10 ? $min = "0".$min : $min;
 $an+=1900;
 my $date="$mois_jour-$mois-$an-$h"."_"."$min";
 
+my $logFile=$outputDir."/TOGGLE_".$date."_log.o";
+my $errorFile=$outputDir."/TOGGLE_".$date."_log.e";
+system("touch $logFile $errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
 
-#my $infosFile = "$pathIndividu[1]/individuSoft.txt";
-open (F1, ">",$infosFile) or toolbox::exportLog("$0 : open error of $infosFile .... $!\n",0);
-print F1 "GLOBAL\n";
-print F1 "ANALYSIS_$date\n";
 
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis starts \n#########################################\n",1);;
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
@@ -725,7 +725,6 @@ if ($orderAfter1000)
 
 }
 
-close F1;
 
 toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
 toolbox::exportLog("\nThank you for using TOGGLE!

@@ -65,45 +65,37 @@ use checkFormat;
 ################################################################################################
 sub exportLog
 {
-
     my ($logLines,$controlValue)=@_;
-	my $indivName = "TOGGLE";
-	my $currentSoft = "toggleGenerator";
-	# test if directory contain individuSoft.txt
-	if ((-e "individuSoft.txt"))
-	{
-		# Get the name of indivudal analysed when this function is called
-		$indivName = `head -n 1 individuSoft.txt`;
-		chomp $indivName;
+	my $logFile = `ls *.o`;
+    chomp($logFile);
+    $logFile = `readlink -f $logFile`;
+    chomp($logFile);
+    my $errorFile = `ls *.e`;
+    chomp($errorFile);
+    $errorFile = `readlink -f $errorFile`;
+    chomp($errorFile);
 
-		# Get the name of software executed when this function is called
-		$currentSoft = `tail -n 1 individuSoft.txt`;
-		chomp $currentSoft;
-	}
-
-    # Initialization of the log name from the name of the individual and the name of software
-    my $logBasicName=$indivName."_".$currentSoft."_log";
-	$logBasicName = relativeToAbsolutePath($logBasicName,0);
     # Opening of the log file and erro file
-    open (OUT, '>>', $logBasicName.".o") or toolbox::exportLog("Cannot create $logBasicName.o file: $!",0);
-    open (ERR, '>>', $logBasicName.".e") or toolbox::exportLog("Cannot create $logBasicName.e file: $!",0);
+    open (OUT, '>>', $logFile) or die "\nERROR: $0 : cannot create the log files $logFile: $!\nExiting...\n";
+    open (ERR, '>>', $errorFile) or die "\nERROR: $0 : cannot create the log files $errorFile: $!\nExiting...\n";
 
     # According to the value of the $controlValue, the log message is written either in log file or in log file and error file
     if ($controlValue eq "0")		#Something wrong and die
     {
-	print OUT "ERROR: toolbox::exportLog : Look at $logBasicName.e for more infos\n";
+        print OUT "ERROR: toolbox::exportLog : Look at $errorFile for more infos\n";
         print ERR $logLines;
-	print OUT "ANALYSIS ABORTED\n";
-	die("ANALYSIS ABORTED... Look at $logBasicName.e\n");   #toolbox::exportLog("ANALYSIS ABORTED... Look at $logBasicName.e\n",0);
+        print OUT "ANALYSIS ABORTED\n";
+    
+        die("ANALYSIS ABORTED... Look at $errorFile\n");  
     }
     elsif ($controlValue eq "1")	#Everything is Ok
     {
-	print OUT $logLines."\n";
+        print OUT $logLines."\n";
     }
     elsif ($controlValue eq "2")	#Something wrong but continue with warning
     {
-	print OUT "WARNING: toolbox::exportLog : Look at $logBasicName.e for more infos\n";
-	print ERR $logLines."\n";
+        print OUT "WARNING: toolbox::exportLog : Look at $errorFile for more infos\n";
+        print ERR $logLines."\n";
     }
 
     close OUT;

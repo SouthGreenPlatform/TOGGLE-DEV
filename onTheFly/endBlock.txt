@@ -3,8 +3,6 @@
 # Block for ending toggleAnalysis
 ##########################################
 
-close F1;
-
 toolbox::exportLog("#########################################\nINFOS: Analysis correctly done. \n#########################################\n",1);
 
 #Transfer to a node if the $scp provided in the config file
