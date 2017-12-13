@@ -1,8 +1,10 @@
 package pindel;
 
+package namingConvention;
+
 ###################################################################################################################################
 #
-# Copyright 2014-2016 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,10 +28,9 @@ package pindel;
 # Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
 # Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
 # Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
-# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
-
 use strict;
 use warnings;
 use localConfig;
@@ -70,19 +71,27 @@ sub pindelRun
 sub pindelConfig
 {
      my ($configFile,$listOfBam) = @_;
+     open (my $fh, ">", $configFile) or toolbox::exportLog("ERROR: pindel::pindelConfig: Cannot create the configuration file $configFile: \n$!\n",0);
      foreach my $file (@{$listOfBam})       # for each BAM file(s)
      {
-          if (toolbox::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty
+          if (checkFormat::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty
           {
-              $line.=$file."\n";
+              my $insertSizeCom = `samtools view $file| awk '$3=="*" {next}; int(10*rand())>0 {next}; $9<0 {sumA-=$9}; $9>0 {sumA+=$9}; sumB+=(length($11)); END { print (int(sumA/NR)+int(sumB/NR))*10;}' | tail -n 1`; # will recover the mean size of each insert based on the 1 line on 10 in the bam
+              #NOTE tester de prendre random avec la fonction rand de awk
+              chomp $insertSizeCom;
+              my ($readGroup) = split /\./, $file;
+              $readGroup = `basename $readGroup`;
+              chomp $readGroup;
+              my $outLine = $file."\t".$insertSizeCom."\t".$readGroup."\n";# the config file is such as FILENAME     INSERTSIZE   TAG
+              print $fh $outLine;
           }
           else        # if current file is empty
           {
-              toolbox::exportLog("ERROR: pindel::pindelConfig : The file $file is uncorrect\n", 0);      # returns the error message
+              toolbox::exportLog("ERROR: pindel::pindelConfig : The file $file is not a BAM or is incorrect\n", 0);      # returns the error message
               return 0;
           }
      }
-     toolbox:exportLog("$line");       # recovery of informations fo command line used later
+     return 1; 
 }
 
 1;
