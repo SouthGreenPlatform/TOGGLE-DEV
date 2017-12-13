@@ -370,8 +370,9 @@ sub writeLogVersion
 	## DEBUG print Dumper(%softPathVersion);
 	
 	open (my $fhConfig, "<", "$toggle/modules/localConfig.pm");
-	open (my $fhSoft, ">", "$reportDir/software.tex") if $report;
-    print $fhSoft "\begin{itemize}\n";
+	open (my $fhSoft, ">", "$reportDir/software.txt") if $report;
+	#open (my $fhSoft, ">", "$reportDir/software.tex") if $report;
+    #print $fhSoft "\\begin{itemize}\n";
 	
 	while (my $line = <$fhConfig>)
 	{
@@ -384,10 +385,12 @@ sub writeLogVersion
 		if (defined $softPathVersion{$soft})
 		{
 			toolbox::exportLog(uc($soft)." : $softPath{$soft} : $softPathVersion{$soft}",1); 
-			print $fhSoft "\\item"  .			uc($soft) ." : \n \begin{verbatim}\n$softPathVersion{$soft} \n \end{verbatim}" if $report; 
+			#print $fhSoft "\\item"  .			uc($soft) ." : \n \\begin{verbatim}\n$softPathVersion{$soft} \n \\end{verbatim}" if $report;
+			print $fhSoft uc($soft) ." : ".$softPathVersion{$soft}." \n" if $report;
 		}
 	}
-	 print $fhSoft "\end{itemize}\n";
+	
+	#print $fhSoft "\\end{itemize}\n";
 	close $fhConfig;
 	close $fhSoft;
 }

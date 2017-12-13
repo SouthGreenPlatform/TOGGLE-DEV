@@ -74,9 +74,7 @@ if ($lastRealease ne $version)
     }
     else
     {
-        $newRelease =  "
-** NOTE: Latest version of TOGGLE is $lastRealease, and can be obtained at:
-    http://toggle.southgreen.fr/\n\n"
+        $newRelease =  "\nNOTE: The Latest version of TOGGLE ($lastRealease) is available at http://toggle.southgreen.fr/\n\n"
     }
 
 }
@@ -258,9 +256,9 @@ toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
 toolbox::exportLog("INFOS: the current version of TOGGLE is $version\n",1);
 
 ### Generate tex file
-my $inputFile="commandLine.txt";
+my $inputFile="commandLine.tex";
 open(my $cmdFh,">", $inputFile) or toolbox::exportLog("$0 : open error of $inputFile .... $!\n",0);
-print $cmdFh $cmd_line."\n";
+print $cmdFh "\n \\begin{verbatim} \n $cmd_line \n \\end{verbatim} \n";
 close $cmdFh;
 
 # Verify if file arguments exist
