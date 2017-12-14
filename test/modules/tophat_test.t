@@ -62,12 +62,6 @@ system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creati
 chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
 
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"tophat\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
 
 #######################################
 #Cleaning the logs for the test

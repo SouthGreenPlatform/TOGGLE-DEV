@@ -66,12 +66,6 @@ system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with 
 chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
 #######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCmd="echo \"bamutils\nTEST\" > individuSoft.txt";
-system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
-
-#######################################
 #Cleaning the logs for the test
 #######################################
 $cleaningCmd="rm -Rf bamutils_TEST_log.*";
@@ -101,7 +95,7 @@ is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','individuSoft.txt','RC3.bamutilsFilter.bam');
+my @expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','RC3.bamutilsFilter.bam');
 
 is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilsFilter - output list');
 
@@ -132,7 +126,7 @@ is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','individuSoft.txt','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
+@expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
 
 is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilstobed - output list');
 

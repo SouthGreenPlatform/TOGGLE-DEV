@@ -66,12 +66,6 @@ system($creatingSubDirCom) and die ("ERROR: $0 : Cannot execute the command $cre
 chdir $outdir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $outdir\"\n$!\n");
 
 #######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"tgicl\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
-#######################################
 #Cleaning the logs for the test
 #######################################
 my $cleaningCommand="rm -Rf tgicl_TEST_log.*";

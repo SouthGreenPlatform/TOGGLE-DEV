@@ -63,13 +63,6 @@ chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the
 
 
 #######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"duplicationDetector\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
-
-#######################################
 #Cleaning the logs for the test
 #######################################
 my $cleaningCommand="rm -Rf duplicationDetector_TEST_log.*";

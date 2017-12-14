@@ -66,13 +66,6 @@ chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the
 
 
 #######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"bowtie\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
-
-#######################################
 #Cleaning the logs for the test
 #######################################
 my $cleaningCommand="rm -Rf bowtie_TEST_log.*";
@@ -97,7 +90,7 @@ is(bowtie::bowtieBuild($fastaRef),$fastaRef,'bowtie::bowtieBuild');
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt','referenceIrigin.fasta','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.ebwt');
+my @expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','referenceIrigin.fasta','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.ebwt');
 is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtieBuild - output list');
 
 # expected output content
@@ -151,7 +144,7 @@ is(bowtie::bowtie2Build($fastaRef,$optionHachees),$fastaRef, 'bowtie::bowtie2Bui
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
+@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
 ##print Dumper(\@observedOutput);
 is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtie2Build - output list');
 
@@ -210,7 +203,7 @@ is(bowtie::bowtie($samFileOut,$readGroupLine,$fastaRef,$forwardFastq,$reverseFas
 
 # expected output test
 #Check if files created
-@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt','irigin.BOWTIE.sam','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
+@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','irigin.BOWTIE.sam','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtie - Files created');
@@ -241,7 +234,7 @@ is(bowtie::bowtie($samFileOut,$readGroupLine,$fastaRef,$forwardFastq,$reverseFas
 
 # expected output test
 #Check if files created
-@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','individuSoft.txt','irigin.BOWTIE2.sam','irigin.BOWTIE.sam','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
+@expectedOutput = ('bowtie_TEST_log.e','bowtie_TEST_log.o','irigin.BOWTIE2.sam','irigin.BOWTIE.sam','referenceIrigin.fasta','referenceIrigin.fasta.1.bt2','referenceIrigin.fasta.1.ebwt','referenceIrigin.fasta.2.bt2','referenceIrigin.fasta.2.ebwt','referenceIrigin.fasta.3.bt2','referenceIrigin.fasta.3.ebwt','referenceIrigin.fasta.4.bt2','referenceIrigin.fasta.4.ebwt','referenceIrigin.fasta.rev.1.bt2','referenceIrigin.fasta.rev.1.ebwt','referenceIrigin.fasta.rev.2.bt2','referenceIrigin.fasta.rev.2.ebwt');
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bowtie::bowtie2 - Files created');

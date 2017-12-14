@@ -62,13 +62,6 @@ chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the
 
 
 #######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"atropos\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
-
-#######################################
 #Cleaning the logs for the test
 #######################################
 my $cleaningCommand="rm -Rf atropos_TEST_log.*";
@@ -100,7 +93,7 @@ is ((atropos::execution($fastqFile,$fastqFileOut,undef, undef, $optionsHachees))
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('atropos_TEST_log.e','atropos_TEST_log.o','individuSoft.txt','irigin1_2.ATROPOS.fastq');
+my @expectedOutput = ('atropos_TEST_log.e','atropos_TEST_log.o','irigin1_2.ATROPOS.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'atropos::execution Single - output list');
 
@@ -139,7 +132,7 @@ is ((atropos::execution($forwardFastq,$fastqFileOut1, $reverseFastq, $fastqFileO
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('atropos_TEST_log.e','atropos_TEST_log.o','individuSoft.txt','irigin1_1.ATROPOS.fastq','irigin1_2.ATROPOS.fastq');
+@expectedOutput = ('atropos_TEST_log.e','atropos_TEST_log.o','irigin1_1.ATROPOS.fastq','irigin1_2.ATROPOS.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'atropos::execution Paired - output list');
 

@@ -74,12 +74,6 @@ system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with 
 chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
 #######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCmd="echo \"samTools\nTEST\" > individuSoft.txt";
-system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
-
-#######################################
 #Cleaning the logs for the test
 #######################################
 $cleaningCmd="rm -Rf samTools_TEST_log.*";

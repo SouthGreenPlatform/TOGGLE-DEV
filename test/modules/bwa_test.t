@@ -67,12 +67,6 @@ system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creati
 chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
 
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"bwa\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
 
 #######################################
 #Cleaning the logs for the test
@@ -110,7 +104,7 @@ is(bwa::bwaIndex($fastaRef,$optionsHachees),1,'bwa::bwaIndex - running');
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+my @expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::bwaIndex - Filetree created');
@@ -176,7 +170,7 @@ is (bwa::bwaAln($fastaRef,$reverseFastq,$reverseSaiFileIn,$optionsHachees),'1',"
 
 # expected output test
 #Check if files created
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_2.BWAALN.sai","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","irigin1_1.BWAALN.sai","irigin1_2.BWAALN.sai","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::aln - Files created');
@@ -204,7 +198,7 @@ is(bwa::bwaSampe($samFileOut,$fastaRef,$forwardSaiFileIn,$reverseSaiFileIn,$forw
 
 # expected output test
 #Check if files created
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","irigin1_1.BWAALN.sai","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::sampe - Files created');
@@ -239,7 +233,7 @@ is (bwa::bwaSamse($samseFileOut,$fastaRef,$singleSaiFileIn,$fastqFile,$readGroup
 
 # expected output test
 #Check if files created
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","irigin1_1.BWAALN.sai","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'bwa::samse - Files created');
@@ -271,7 +265,7 @@ is (bwa::bwaMem($samFileOut,$fastaRef,$forwardFastq,undef,$readGroupLine),'1',"b
 
 
 ###Verify if output are correct for mem single
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","irigin1_1.BWAALN.sai","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
@@ -294,7 +288,7 @@ is (bwa::bwaMem($samFileOut,$fastaRef,$forwardFastq,$reverseFastq,$readGroupLine
 
 
 ###Verify if output are correct for mem single
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_1.BWAMEMPaired.sam","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","irigin1_1.BWAALN.sai","irigin1_1.BWAMEMPaired.sam","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
@@ -318,7 +312,7 @@ is (bwa::bwaSw($samFileOut,$fastaRef,$forwardFastq,$reverseFastq),'1',"bwa::bwaS
 
 
 ###Verify if output are correct for mem single
-@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","irigin1_1.BWAALN.sai","irigin1_1.BWAMEMPaired.sam","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_1.BWASWPaired.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","irigin1_1.BWAALN.sai","irigin1_1.BWAMEMPaired.sam","irigin1_1.BWAMEM.sam","irigin1_1.BWASAMSE.sam","irigin1_1.BWASWPaired.sam","irigin1_2.BWAALN.sai","irigin.BWASAMPE.sam","referenceIrigin.fasta","referenceIrigin.fasta.amb","referenceIrigin.fasta.ann","referenceIrigin.fasta.bwt","referenceIrigin.fasta.pac","referenceIrigin.fasta.sa");
 
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
