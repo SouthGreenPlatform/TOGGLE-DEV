@@ -66,7 +66,7 @@ use checkFormat;
 sub exportLog
 {
     my ($logLines,$controlValue)=@_;
-	my $logFile = `ls *.o`;
+	my $logFile = `ls *.o` or die "\nERROR: $0 : cannot list the log files .o $!\nExiting...\n".`pwd`;
     chomp($logFile);
     $logFile = `readlink -f $logFile`;
     chomp($logFile);
