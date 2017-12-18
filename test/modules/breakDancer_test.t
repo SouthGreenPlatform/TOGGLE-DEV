@@ -96,14 +96,14 @@ is(breakDancer::bam2cfg(\@listOfBam,$bamCfgFile,$optionsHachees),1,'breakDancer:
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("breakDancer_TEST_log.e","breakDancer_TEST_log.o","breakDancer.cfg");
+my @expectedOutput = ("breakDancer.cfg","breakDancer_TEST_log.e","breakDancer_TEST_log.o");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'breakDancer::bam2cfg - Filetree created');
 
 # expected content test $fastaRefBWT
 my $expectedMD5sum = "36e50717eb9a27f7c6bd3b5626a9a296";                                        # structure of the ref file for checking
-my $observedMD5sum = `md5sum $bam2cfg`;                	                        # structure of the test file for checking
+my $observedMD5sum = `md5sum breakDancer.cfg`;                	                        # structure of the test file for checking
 my @withoutName = split (" ", $observedMD5sum);                                                 # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];  	                        # just to have the md5sum result
 is($observedMD5sum, $expectedMD5sum, "breakDancer::bam2cfg - output content file");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
