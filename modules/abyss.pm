@@ -169,7 +169,7 @@ sub abyssSimple {
 
     if ($optionsHachees)
     {
-         $options=toolbox::extractOptions($optionsHachees); ##Get given options
+         $options=toolbox::extractOptions($optionsHachees,"="); ##Get given options
     }
     
     if (&localFormatCheck($forwardFile) != 1 )
