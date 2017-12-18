@@ -83,7 +83,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 # input file
-my $listOfBam=\($bamData);
+my @listOfBam=($bamData);
 
 #output data
 my $bamCfgFile = $testingDir."/breakDancer.cfg";
@@ -92,7 +92,7 @@ my $bamCfgFile = $testingDir."/breakDancer.cfg";
 my %optionsHachees = ();
 my $optionsHachees = \%optionsHachees;
 
-is(breakDancer::bam2cfg($listOfBam,$bamCfgFile,$optionsHachees),1,'breakDancer::bam2cfg - running');
+is(breakDancer::bam2cfg(@listOfBam,$bamCfgFile,$optionsHachees),1,'breakDancer::bam2cfg - running');
 
 # expected output test
 #Check if files created
