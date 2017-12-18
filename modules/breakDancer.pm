@@ -41,6 +41,9 @@ use Switch;
 sub bam2cfg
 {
     my($listOfBam,$breakDancerConfigFile,$optionsHachees)=@_;
+    
+    ##debug
+    toolbox::exportLog("FILES: ".Dumper($listOfBam), 2);
      if (scalar @{$listOfBam} >1)
      { ##Check if entry file exist and is not empty
 
