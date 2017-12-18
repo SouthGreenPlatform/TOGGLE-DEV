@@ -51,7 +51,7 @@ use localConfig;
 use breakDancer;
 
 my $bankData="$toggle/data/Bank/";
-my $bamData="$toggle/data/testData/samBam/samBamSV/";
+my $bamData="$toggle/data/testData/samBam/samBamSV/pindelBam.bam";
 
 #########################################
 #Remove files and directory created by previous test
@@ -83,7 +83,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 # input file
-my @listOfBam=($bamData."/pindelBam.bam");
+my @listOfBam=($bamData);
 
 #output data
 my $bamCfgFile = "breakDancer.cfg";
