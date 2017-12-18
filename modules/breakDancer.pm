@@ -47,6 +47,8 @@ sub bam2cfg
         my $bamFiles_names="";
         foreach my $file (@{$listOfBam})       # for each BAM file(s)
         {
+            ##DEBUG
+            toolbox::exportLog("FILE: $file", 2);
             if (toolbox::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty
             {
                 $bamFiles_names.=" ".$file." ";       # recovery of informations fo command line used later
