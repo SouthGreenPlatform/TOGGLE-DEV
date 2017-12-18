@@ -128,7 +128,7 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'breakDancer::breakDancer - Filetree created');
 
 # expected content test $fastaRefBWT
-$expectedMD5sum = "5f0f0930ef1df61e663f27a9fa52ba74";                                        # structure of the ref file for checking
+$expectedMD5sum = "16e042776b1c7d7b2302bfc4775669e3";                                        # structure of the ref file for checking
 $observedMD5sum = `md5sum breakDancer.out`;                	                        # structure of the test file for checking
 @withoutName = split (" ", $observedMD5sum);                                                 # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];  	                        # just to have the md5sum result
