@@ -82,8 +82,8 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 # input file
-my $forward = $fastqData."/ebola1.fq";
-my $reverse = $fastqData."/ebola2.fq";
+my $forward = $fastqData."/ebola1.fastq";
+my $reverse = $fastqData."/ebola2.fastq";
 
 #output data
 my $readGroup = "outputTest";
