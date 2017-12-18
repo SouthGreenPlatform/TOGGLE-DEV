@@ -77,7 +77,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 ##########################################
-##### crac::index
+##### abyss::abyssSimple
 ##########################################
 
 
