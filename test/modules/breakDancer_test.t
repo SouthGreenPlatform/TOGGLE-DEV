@@ -78,9 +78,8 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 ##########################################
-##### abyss::abyssSimple
+##### breakDancer::bam2cfg
 ##########################################
-
 
 # input file
 my @listOfBam=($bamData);
@@ -107,4 +106,32 @@ my $observedMD5sum = `md5sum breakDancer.cfg`;                	                 
 my @withoutName = split (" ", $observedMD5sum);                                                 # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];  	                        # just to have the md5sum result
 is($observedMD5sum, $expectedMD5sum, "breakDancer::bam2cfg - output content file");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
+
+##########################################
+##### breakDancer::breakDancer
+##########################################
+
+#output data
+my $output = $testingDir."/breakDancer.out";
+
+# execution test
+%optionsHachees = ();
+$optionsHachees = \%optionsHachees;
+
+is(breakDancer::breakDancer($bamCfgFile,$output,$optionsHachees),1,'breakDancer::breakDancer - running');
+
+# expected output test
+#Check if files created
+@expectedOutput = ("breakDancer.cfg","breakDancer.out","breakDancer_TEST_log.e","breakDancer_TEST_log.o","individuSoft.txt");
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+is_deeply(\@observedOutput,\@expectedOutput,'breakDancer::breakDancer - Filetree created');
+
+# expected content test $fastaRefBWT
+$expectedMD5sum = "5f0f0930ef1df61e663f27a9fa52ba74";                                        # structure of the ref file for checking
+$observedMD5sum = `md5sum breakDancer.out`;                	                        # structure of the test file for checking
+@withoutName = split (" ", $observedMD5sum);                                                 # to separate the structure and the name of file
+$observedMD5sum = $withoutName[0];  	                        # just to have the md5sum result
+is($observedMD5sum, $expectedMD5sum, "breakDancer::breakDancer - output content file");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
+
 exit;
