@@ -89,7 +89,7 @@ my $reverse = $fastqData."/ebola2.fastq";
 my $readGroup = "outputTest";
 
 # execution test
-my %optionsHachees = ("k="=>"18");
+my %optionsHachees = ("k"=>"18");
 my $optionsHachees = \%optionsHachees;
 
 is(abyss::abyssSimple($testingDir,$readGroup,$forward,$reverse,$optionsHachees),1,'abyss::abyssSimple - running');
