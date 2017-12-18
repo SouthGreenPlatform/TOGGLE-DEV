@@ -41,7 +41,7 @@ use Switch;
 sub bam2cfg
 {
     my($listOfBam,$breakDancerConfigFile,$optionsHachees)=@_;
-     if (toolbox::sizeFile($listOfBam)==1)
+     if (scalar @{$listOfBam} >1)
      { ##Check if entry file exist and is not empty
 
         my $bamFiles_names="";
