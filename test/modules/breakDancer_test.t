@@ -96,7 +96,7 @@ is(breakDancer::bam2cfg(\@listOfBam,$bamCfgFile,$optionsHachees),1,'breakDancer:
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("breakDancer.cfg","breakDancer_TEST_log.e","breakDancer_TEST_log.o");
+my @expectedOutput = ("breakDancer.cfg","breakDancer_TEST_log.e","breakDancer_TEST_log.o","individuSoft.txt");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'breakDancer::bam2cfg - Filetree created');
