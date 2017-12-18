@@ -83,7 +83,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 # input file
-my @listOfBam=($bamData);
+my $listOfBam=($bamData);
 
 #output data
 my $bamCfgFile = "breakDancer.cfg";
