@@ -66,7 +66,7 @@ sub bam2cfg
           if ($optionsHachees) {
                $options=toolbox::extractOptions($optionsHachees); ##Get given options
           }
-          my $command=$bam2cfg." ".$options." ".$bamFiles_names." > ".$breakDancerConfigFile;
+          my $command="perl ".$bam2cfg." ".$options." ".$bamFiles_names." > ".$breakDancerConfigFile;
           #toolbox::exportLog($command."\n",1);
           #Execute command
           if(toolbox::run($command)==1)
