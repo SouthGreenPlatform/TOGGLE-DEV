@@ -92,7 +92,7 @@ my $bamCfgFile = "breakDancer.cfg";
 my %optionsHachees = ();
 my $optionsHachees = \%optionsHachees;
 
-is(breakDancer::bam2cfg(\@listOfBam,$bamCfgFile,$optionsHachees),1,'breakDancer::bam2cfg - running');
+is(breakDancer::bam2cfg(@listOfBam,$bamCfgFile,$optionsHachees),1,'breakDancer::bam2cfg - running');
 
 # expected output test
 #Check if files created
