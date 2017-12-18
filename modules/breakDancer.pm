@@ -51,7 +51,7 @@ sub bam2cfg
         {
             ##DEBUG
             toolbox::exportLog("FILE: $file", 2);
-            if (checkFormat::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty
+            if (checkFormat::checkFormatSamOrBam($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty
             {
                 $bamFiles_names.=" ".$file." ";       # recovery of informations fo command line used later
             }
