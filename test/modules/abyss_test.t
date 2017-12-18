@@ -96,7 +96,7 @@ is(abyss::abyssSimple($testingDir,$readGroup,$forward,$reverse,$optionsHachees),
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("abyss_TEST_log.e","abyss_TEST_log.o","individuSoft.txt");
+my @expectedOutput = ("abyss_TEST_log.e","outputTest.ABYSS-2.dot","outputTest.ABYSS-3.fa.fai","outputTest.ABYSS-4.path3","outputTest.ABYSS-6.hist","outputTest.ABYSS-8.fa","outputTest.ABYSS-stats","abyss_TEST_log.o","outputTest.ABYSS-2.dot1","outputTest.ABYSS-3.hist","outputTest.ABYSS-5.dot","outputTest.ABYSS-6.path","outputTest.ABYSS-bubbles.fa","outputTest.ABYSS-stats.csv","coverage.hist","outputTest.ABYSS-2.fa","outputTest.ABYSS-4.dot","outputTest.ABYSS-5.fa","outputTest.ABYSS-6.path.dot","outputTest.ABYSS-contigs.dot","outputTest.ABYSS-stats.md","individuSoft.txt","outputTest.ABYSS-2.path","outputTest.ABYSS-4.fa","outputTest.ABYSS-5.path","outputTest.ABYSS-7.dot","outputTest.ABYSS-contigs.fa","outputTest.ABYSS-stats.tab","outputTest.ABYSS-1.dot","outputTest.ABYSS-3.dist","outputTest.ABYSS-4.fa.fai","outputTest.ABYSS-6.dist.dot","outputTest.ABYSS-7.fa","outputTest.ABYSS-indel.fa","outputTest.ABYSS-unitigs.fa","outputTest.ABYSS-1.fa","outputTest.ABYSS-3.dot","outputTest.ABYSS-4.path1","outputTest.ABYSS-6.dot","outputTest.ABYSS-7.path","outputTest.ABYSS-scaffolds.dot","outputTest.ABYSS-1.path","outputTest.ABYSS-3.fa","outputTest.ABYSS-4.path2","outputTest.ABYSS-6.fa","outputTest.ABYSS-8.dot","outputTest.ABYSS-scaffolds.fa");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'abyss::abyssSimple - Filetree created');
