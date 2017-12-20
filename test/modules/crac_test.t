@@ -90,7 +90,7 @@ is(crac::cracIndex($fastaRef,$optionsHachees),1,'crac::cracIndex - running');
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
+my @expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::cracIndex - Filetree created');
@@ -125,7 +125,7 @@ is(crac::crac($samFileOut,$cracIndex,$forwardFastq,$reverseFastq,$optionsHachees
 
 # expected output test
 #Check if files created
-@expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","irigin.CRAC.sam","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
+@expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","irigin.CRAC.sam","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
 $observedOutput = `ls ./`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::crac - Files created');

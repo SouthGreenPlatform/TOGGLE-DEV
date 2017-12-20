@@ -101,7 +101,7 @@ is(gatk::gatkRealignerTargetCreator($fastaRef, $bamIn, $intervalsFile),1, 'gatk:
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKREALIGNERTARGETCREATOR.intervals');
+my @expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','RC3.GATKREALIGNERTARGETCREATOR.intervals');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkRealignerTargetCreator - output list');
 
@@ -126,7 +126,7 @@ is(gatk::gatkIndelRealigner($fastaRef, $bamIn, $intervalsFile, $bamOut),1, 'gatk
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals');
+@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkIndelRealigner - output list');
 
@@ -163,7 +163,7 @@ is(gatk::gatkUnifiedGenotyper($fastaRef,$bamIn, $vcfOut),1,'gatk::gatkUnifiedGen
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx');
+@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkUnifiedGenotyper - output list');
 
@@ -193,7 +193,7 @@ is(gatk::gatkBaseRecalibrator($fastaRef,$bamIn,$tableReport, $optionsHachees),1,
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkBaseRecalibrator - output list');
 
@@ -219,7 +219,7 @@ is(gatk::gatkPrintReads($fastaRef,$bamIn,$bamOut,$tableReport),1, 'gatk::gatkPri
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkPrintReads - output list');
 
@@ -258,7 +258,7 @@ is(gatk::gatkHaplotypeCaller($fastaRef, $vcfCalled, \@bamsToCall) ,1,"gatk::gatk
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkHaplotypeCaller - output list');
 
@@ -286,7 +286,7 @@ is(gatk::gatkVariantFiltration($fastaRef, $variantFiltered, $vcfCalled), 1 , 'ga
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','GATKVARIANTFILTRATION.vcf','GATKVARIANTFILTRATION.vcf.idx','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','GATKVARIANTFILTRATION.vcf','GATKVARIANTFILTRATION.vcf.idx','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkVariantFiltration - output list');
 
@@ -314,7 +314,7 @@ is(gatk::gatkSelectVariants($fastaRef, $variantFiltered, $vcfVariantsSelected),1
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','GATKSELECTVARIANT.vcf','GATKSELECTVARIANT.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','GATKVARIANTFILTRATION.vcf','GATKVARIANTFILTRATION.vcf.idx','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','GATKSELECTVARIANT.vcf','GATKSELECTVARIANT.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','GATKVARIANTFILTRATION.vcf','GATKVARIANTFILTRATION.vcf.idx','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkSelectVariants - output list');
 
@@ -342,7 +342,7 @@ is(gatk::gatkReadBackedPhasing($fastaRef, $bamIn, $variantFiltered, $vcfFileOut)
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','GATKPHASED.vcf','GATKPHASED.vcf.idx','GATKSELECTVARIANT.vcf','GATKSELECTVARIANT.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','GATKVARIANTFILTRATION.vcf','GATKVARIANTFILTRATION.vcf.idx','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','GATKPHASED.vcf','GATKPHASED.vcf.idx','GATKSELECTVARIANT.vcf','GATKSELECTVARIANT.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','GATKVARIANTFILTRATION.vcf','GATKVARIANTFILTRATION.vcf.idx','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkReadBackedPhasing - output list');
 

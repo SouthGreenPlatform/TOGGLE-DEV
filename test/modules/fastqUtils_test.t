@@ -96,7 +96,7 @@ is (fastqUtils::changeEncode($CorrectPHRED64file,$fastqFileOut33,$formatInit,$fo
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('fastqUtils_TEST_log.e','fastqUtils_TEST_log.o','individuSoft.txt','RC1_1.SANGER.fastq');
+my @expectedOutput = ('fastqUtils_TEST_log.e','fastqUtils_TEST_log.o','RC1_1.SANGER.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'fastqUtils::changeEncode 64 to 33 - output list');
 
@@ -114,7 +114,7 @@ is (fastqUtils::changeEncode($fastqFileOut33,$fastqFileOut64,$formatInit,$format
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('fastqUtils_TEST_log.e','fastqUtils_TEST_log.o','individuSoft.txt','RC1_1.ILLUMINA.fastq','RC1_1.SANGER.fastq');
+@expectedOutput = ('fastqUtils_TEST_log.e','fastqUtils_TEST_log.o','RC1_1.ILLUMINA.fastq','RC1_1.SANGER.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'fastqUtils::changeEncode 33 to 64 - output list');
 

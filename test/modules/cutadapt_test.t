@@ -93,7 +93,7 @@ is ((cutadapt::execution($fastqFile,$fastqFileOut,undef, undef, $optionsHachees)
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('cutadapt_TEST_log.e','cutadapt_TEST_log.o','individuSoft.txt','irigin1_2.CUTADAPT.fastq');
+my @expectedOutput = ('cutadapt_TEST_log.e','cutadapt_TEST_log.o','irigin1_2.CUTADAPT.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'cutadapt::execution Single - output list');
 
@@ -132,7 +132,7 @@ is ((cutadapt::execution($forwardFastq,$fastqFileOut1, $reverseFastq, $fastqFile
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('cutadapt_TEST_log.e','cutadapt_TEST_log.o','individuSoft.txt','irigin1_1.CUTADAPT.fastq','irigin1_2.CUTADAPT.fastq');
+@expectedOutput = ('cutadapt_TEST_log.e','cutadapt_TEST_log.o','irigin1_1.CUTADAPT.fastq','irigin1_2.CUTADAPT.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'cutadapt::execution Paired - output list');
 

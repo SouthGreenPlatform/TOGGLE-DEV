@@ -102,7 +102,7 @@ SKIP:
     my $observedOutput = `ls`;
     my @observedOutput = split /\n/,$observedOutput;
     #
-    my @expectedOutput = ('all_contigs.fasta','contig_tgicl.fasta.cidx','contig_tgicl.fasta_clusters','contig_tgicl.fasta.nhr','contig_tgicl.fasta.nin','contig_tgicl.fasta.nsq','contig_tgicl.fasta.singletons','err_tgicl_contig_tgicl.fasta.log','formatdb.log','hitsort_001.Z','individuSoft.txt','masked.lst','singletons.fasta','tgicl_contig_tgicl.fasta.log','tgicl_TEST_log.e','tgicl_TEST_log.o');
+    my @expectedOutput = ('all_contigs.fasta','contig_tgicl.fasta.cidx','contig_tgicl.fasta_clusters','contig_tgicl.fasta.nhr','contig_tgicl.fasta.nin','contig_tgicl.fasta.nsq','contig_tgicl.fasta.singletons','err_tgicl_contig_tgicl.fasta.log','formatdb.log','hitsort_001.Z','masked.lst','singletons.fasta','tgicl_contig_tgicl.fasta.log','tgicl_TEST_log.e','tgicl_TEST_log.o');
     #
     is_deeply(\@observedOutput,\@expectedOutput,'tgicl::tgiclRun - output list');
     

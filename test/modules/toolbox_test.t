@@ -129,35 +129,33 @@ my $wrongFasta=$testData."wrongReference.fasta";
 ########################################
 # toolbox::exportLog tests
 ########################################
-# Test if individuSoft.txt has been created
-my $file="individuSoft.txt";
-my $got=(-e $file)?1:0;
-my $expectedBool=1;
-is($got,$expectedBool,"toolbox::exportLog - exist $file?");
-
-# Test if the log is written in toolbox_TEST_log.o
-# Test if toolbox_TEST_log.o has been created
-my $expected="INFO:  toolbox_test.t\n";
-toolbox::exportLog($expected,1);
-
-my $file_log="toolbox_TEST_log.o";
-$got=(-e $file_log)?1:0;
-is($got,$expectedBool,"toolbox::exportLog - exist $file_log?");
-
-$got=`head -n1 $file_log`;
-is($got,$expected,"toolbox::exportLog - Log in $file_log");
-
-
-# Test if the log is written in toolbox_TEST_log.e
-# Test if toolbox_TEST_log.e has been created
-$expected="WARNING:  toolbox_test.t\n";
-toolbox::exportLog($expected,2);
-my $file_error="toolbox_TEST_log.e";
-$got=(-e $file_error)?1:0;
-is($got,$expectedBool,"toolbox::exportLog - exist $file_error?");
-
-$got=`head -n1 $file_error`;
-is($got,$expected,"toolbox::exportLog - Log in $file_error");
+#my $got=(-e $file)?1:0;
+#my $expectedBool=1;
+#is($got,$expectedBool,"toolbox::exportLog - exist $file?");
+#
+## Test if the log is written in toolbox_TEST_log.o
+## Test if toolbox_TEST_log.o has been created
+#my $expected="INFO:  toolbox_test.t\n";
+#toolbox::exportLog($expected,1);
+#
+#my $file_log="toolbox_TEST_log.o";
+#$got=(-e $file_log)?1:0;
+#is($got,$expectedBool,"toolbox::exportLog - exist $file_log?");
+#
+#$got=`head -n1 $file_log`;
+#is($got,$expected,"toolbox::exportLog - Log in $file_log");
+#
+#
+## Test if the log is written in toolbox_TEST_log.e
+## Test if toolbox_TEST_log.e has been created
+#$expected="WARNING:  toolbox_test.t\n";
+#toolbox::exportLog($expected,2);
+#my $file_error="toolbox_TEST_log.e";
+#$got=(-e $file_error)?1:0;
+#is($got,$expectedBool,"toolbox::exportLog - exist $file_error?");
+#
+#$got=`head -n1 $file_error`;
+#is($got,$expected,"toolbox::exportLog - Log in $file_error");
 
 
 ########################################

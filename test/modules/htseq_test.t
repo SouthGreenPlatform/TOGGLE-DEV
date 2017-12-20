@@ -102,7 +102,7 @@ is(HTSeq::htseqCount($bam, $htseqcountFile,$gffRef, $optionHachees),1,'HTSeq::ht
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.bam','accepted_hits.SAMTOOLSSORT.sam','htseq_TEST_log.e','htseq_TEST_log.o','individuSoft.txt');
+my @expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.bam','accepted_hits.SAMTOOLSSORT.sam','htseq_TEST_log.e','htseq_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'HTSeq::htseqCount - output list');
 
@@ -149,7 +149,7 @@ is(HTSeq::htseqCount($sam, $htseqcountFile,$gffRef, $optionHachees),1,'HTSeq::ht
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAM-HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.sam','htseq_TEST_log.e','htseq_TEST_log.o','individuSoft.txt');
+@expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAM-HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.sam','htseq_TEST_log.e','htseq_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'HTSeq::htseqCount - output list');
 

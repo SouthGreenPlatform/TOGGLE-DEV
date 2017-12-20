@@ -104,7 +104,7 @@ is(samTools::samToolsFaidx($fastaRef),1,'samTools::samToolsFaidx');
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+my @expectedOutput = ('referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsFaidx - output list');
 
@@ -134,7 +134,7 @@ is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('RC3.bam','RC3.bam.bai','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIndex - output list');
 
@@ -160,7 +160,7 @@ is(samTools::samToolsView($bamFile, $bamFileOut, $optionsHachees),1,'samTools::s
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsView - output list');
 
@@ -185,7 +185,7 @@ is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsSort - output list');
 
@@ -216,7 +216,7 @@ is(samTools::samToolsMerge(\@bamFiles,$bamFileOut,'headerFile.sam'),1,'samTools:
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMerge - output list');
 
@@ -242,7 +242,7 @@ is(samTools::mergeHeader(\@bamFiles,$header),1,'samTools::mergeHeader');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::mergeHeader - output list');
 
@@ -267,7 +267,7 @@ is(samTools::samToolsIdxstats($bamFile,$statsFile),1,'samTools::samToolsIdxstats
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -293,7 +293,7 @@ is(samTools::samToolsDepth(\@bamFiles,$depthFile),1,'samTools::samToolsDepth');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -319,7 +319,7 @@ is(samTools::samToolsFlagstat($bamFile,$statsBamFile),1,'samTools::samToolsFlagS
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -345,7 +345,7 @@ is(samTools::samToolsMpileUp(\@bamFiles,$mpileupFile),1,'samTools::samToolsMpile
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSMPILEUP.mpileup','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSMPILEUP.mpileup','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMpileUp - output list');
 

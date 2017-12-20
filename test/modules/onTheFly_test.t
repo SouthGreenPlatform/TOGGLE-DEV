@@ -179,7 +179,7 @@ is (onTheFly::generateScript($hashConf,$outputScript),'1','onTheFly::generateScr
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.fasta','toggleBzzz.pl');
+my @expectedOutput = ('onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.fasta','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateScript - output list');
 
@@ -209,7 +209,7 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator - cr
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator - output list');
 
@@ -232,7 +232,7 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator no c
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator no creation - output list');
 
@@ -256,7 +256,7 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator forc
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator forcing creation - output list');
 
@@ -283,7 +283,7 @@ is (onTheFly::generateGraphviz($hashConf,"$toggle/dataTest/onTheFlyTestDir"),'1'
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl','togglePipeline.dot','togglePipeline.png');
+@expectedOutput = ('onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl','togglePipeline.dot','togglePipeline.png');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateGraphviz - output list');
 

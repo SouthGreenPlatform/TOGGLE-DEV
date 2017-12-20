@@ -86,7 +86,7 @@ is(duplicationDetector::execution($vcfData,$bedFileOut,$optionsHachees),'1',"dup
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("duplicationDetector_TEST_log.e","duplicationDetector_TEST_log.o","individuSoft.txt","test.duplicationDetector.bed");
+my @expectedOutput = ("duplicationDetector_TEST_log.e","duplicationDetector_TEST_log.o","test.duplicationDetector.bed");
 my $observedOutput = `ls ./`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'duplicationDetector::execute - Files created');

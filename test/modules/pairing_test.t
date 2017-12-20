@@ -190,7 +190,6 @@ is ($checkValue,'1','pairing::repairing - running');
 
 #Check if files created
 $expectedFileTree = ".:
-individuSoft.txt
 irigin2_1.fastq
 irigin3_1.CUTADAPT.fastq
 irigin3_1.REPAIRING.fastq

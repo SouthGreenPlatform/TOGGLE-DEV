@@ -85,7 +85,7 @@ is(fastxToolkit::fastxTrimmer($fastqFile, $fastqFileOut, $optionHachees),1, 'fas
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput=('fastxToolkit_TEST_log.e','fastxToolkit_TEST_log.o','individuSoft.txt','RC3_1.FASTXTRIMMER.fastq');
+my @expectedOutput=('fastxToolkit_TEST_log.e','fastxToolkit_TEST_log.o','RC3_1.FASTXTRIMMER.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'fastxToolkit::fastxTrimmer - output list');
 
@@ -118,7 +118,7 @@ is(fastxToolkit::fastxTrimmer($fastqFile, $fastqFileOut, $optionHachees),1, 'fas
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput=('fastxToolkit_TEST_log.e','fastxToolkit_TEST_log.o','individuSoft.txt','RC3_1.FASTXTRIMMER.fastq','RC3_1.FASTXTRIMMER.fastq.gz');
+@expectedOutput=('fastxToolkit_TEST_log.e','fastxToolkit_TEST_log.o','RC3_1.FASTXTRIMMER.fastq','RC3_1.FASTXTRIMMER.fastq.gz');
 
 is_deeply(\@observedOutput,\@expectedOutput,'fastxToolkit::fastxTrimmer - output list gzip');
 
