@@ -30,56 +30,91 @@
 #
 ###################################################################################################################################
 
-#Will test if Atropos works correctly
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
+
 use strict;
 use warnings;
+use Data::Dumper;
 
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
 
-########################################
-#Test of the use of atropos modules
-########################################
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('atropos') or exit;
-can_ok('atropos','execution');
-
 use localConfig;
-use atropos;
 
+
+########################################
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
+
+
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
+
+#########################################
+#Preparing test directory
+#########################################
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
+
+
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
+
+
+
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+# SPECIFIC PART OF MODULE TEST
+######################################################################################################################################
+######################################################################################################################################
 my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
-
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/atroposTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf atropos_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
+my $fastqFile=$fastqData."irigin1_2.fastq";     # input file
+my $fastqFileOut = "irigin1_2.ATROPOS.fastq";   # output file without adaptators sequences
+#######################
 
 
 ########################################
 ##### atropos::execution Single
 ########################################
-
-# input file
-
-my $fastqFile=$fastqData."irigin1_2.fastq";
-
-# output file
-my $fastqFileOut = "irigin1_2.ATROPOS.fastq";                   # Output file without adaptators sequences
-
-# execution test
 my %optionsHachees = (
 						"-O" => 10,
 						"-m" => 35,
@@ -93,7 +128,7 @@ is ((atropos::execution($fastqFile,$fastqFileOut,undef, undef, $optionsHachees))
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('atropos_TEST_log.e','atropos_TEST_log.o','irigin1_2.ATROPOS.fastq');
+my @expectedOutput = ($errorFile,$logFile,'irigin1_2.ATROPOS.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'atropos::execution Single - output list');
 
@@ -104,6 +139,9 @@ my @withoutName = split (" ", $observedMD5sum);                                 
 $observedMD5sum = $withoutName[0];     										                        # just to have the md5sum result
 is($observedMD5sum, $expectedMD5sum, "atropos::execution Single - output content");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
 ##############################
+
+
+
 
 ########################################
 ##### atropos::execution Paired
@@ -132,7 +170,7 @@ is ((atropos::execution($forwardFastq,$fastqFileOut1, $reverseFastq, $fastqFileO
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('atropos_TEST_log.e','atropos_TEST_log.o','irigin1_1.ATROPOS.fastq','irigin1_2.ATROPOS.fastq');
+@expectedOutput = ($errorFile,$logFile,'irigin1_1.ATROPOS.fastq','irigin1_2.ATROPOS.fastq');
 
 is_deeply(\@observedOutput,\@expectedOutput,'atropos::execution Paired - output list');
 
