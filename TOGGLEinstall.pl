@@ -286,7 +286,7 @@ system($cpCommand) and die ("\nCannot copy correct config file as localConfig.pm
 print "\nDownloading the various Perl modules";
 
 my $wgetCommand = "wget http://bioinfo-web.mpl.ird.fr/toggle/perlModules.tar.gz";
-system("$wgetCommand") and die ("\nCannot download the required Perl libraries: $!\n");
+system("$wgetCommand") and die ("\nCannot download the required Perl libraries: $!\n\nPlease use the CPAN to install them...\n");
 
 # DECLARE VARIABLES WITH PATHS 
 my $MODULES=$INSTALLPATH."/modules";
