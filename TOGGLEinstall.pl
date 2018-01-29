@@ -293,7 +293,7 @@ my $MODULES=$INSTALLPATH."/modules";
 
 print "\tDecompressing Perl Modules\n";
 
-system ("cd $INSTALLPATH && tar xzf perlModules.tar.gz && rm -Rf perlModules.tar.gz && cp -R perlModules/* $MODULES/. && rm -Rf perlModules") and die ("\nCannot decompress the perl Modules:\n$!\n");
+system ("cd $INSTALLPATH && tar xzf perlModules.tar.gz && rm -Rf perlModules.tar.gz && cp -R perlModules/* $MODULES/. && rm -Rf perlModules && cd") and die ("\nCannot decompress the perl Modules:\n$!\n");
 
 #Adding toggle in the user PERL5LIB path
 
