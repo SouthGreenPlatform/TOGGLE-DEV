@@ -52,7 +52,7 @@ use checkFormat;
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $version = "Release 0.3.4, 27th of September, 2017";
+my $version = "Release 0.3.6, 31 of January, 2018";
 my @shortVersion = (3,4);
 
 my $url = "toggle.southgreen.fr/install/releaseNotes/index.html";
