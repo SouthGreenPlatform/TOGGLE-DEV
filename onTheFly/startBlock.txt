@@ -70,6 +70,9 @@ use scp;
 use duplicationDetector;
 use bedTools;
 use generic;
+use abyss;
+use breakDancer;
+use pindel;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -259,6 +262,9 @@ my ($mpileupOut);
 
 ##BED associated variables
 my ($bedFileIn, $bedFileOut)=("NA","NA");
+
+##BreakDancer and pindel associated variables
+my ($cfgFile,$breakDancerOut, $pindelOut)=("NA","NA","NA");
 
 ##GENERIC variable
 my ($fileIn,$fileOut)=("NA","NA");

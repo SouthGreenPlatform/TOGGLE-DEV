@@ -181,7 +181,7 @@ sub bamutilsVersion
 }
 
 sub cracVersion
-{ #We works with the STDIN output
+{ #We works with the STDOUT output
 	my $version = `$crac -version | grep -m 1 "version"` or die toolbox::exportLog("ERROR: versionSoft::cracVersion : Can not grep CRAC version\nPlease check your CRAC installation.\n", 0);
 	chomp($version);
 	return $version;
@@ -189,11 +189,41 @@ sub cracVersion
 }
 
 sub bedToolsVersion
-{ #We works with the STDIN output
+{ #We works with the STDOUT output
 	my $version = `$bedtools --version` or die toolbox::exportLog("ERROR: versionSoft::bedToolsVersion : Can not grep BEDtools version\nPlease check your BEDtools installation.\n", 0);
 	chomp($version);
 	return $version;
 	
+}
+
+sub abyssVersion
+{ #We works with the STDOUT output
+	my $version = `$abyss --version | grep 'GNU Make'` or die toolbox::exportLog("ERROR: versionSoft::abyssVersion : Can not grep Abyss version\nPlease check your Abyss installation.\n", 0);
+	chomp($version);
+	return $version;
+	
+}
+
+#sub transAbyssVersion
+#{ #We works with the STDOUT output
+#	my $version = `$transAbyss --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::transAbyssVersion : Can not grep transAbyss version\nPlease check your transAbyss installation.\n", 0);
+#	chomp($version);
+#	return $version;
+#	
+#}
+
+sub breakDancerVersion
+{   #We works with the STDERR output
+	my $version = `$breakDancer 2>&1 | grep Version` or die toolbox::exportLog("ERROR: versionSoft::breakDancerVersion : Can not grep breakDancer version\nPlease check your breakDancer installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+
+sub pindelVersion
+{
+	my $version = `pindel | grep -m 1 version` or die toolbox::exportLog("ERROR: versionSoft::pindelVersion : Can not grep breakDancer version\nPlease check your pindel installation.\n", 0);
+	chomp($version);
+	return $version;
 }
 
 sub writeLogVersion
@@ -361,6 +391,24 @@ sub writeLogVersion
 			#FOR generic command
 			case ($softOrder =~ m/^generic/i){$softPathVersion{"generic"}= "v0.1" if not defined $softPathVersion{"generic"};
 												$softPath{"generic"}= "" if not defined $softPath{"generic"};}
+			
+			#FOR Abyss
+			case ($softOrder =~ m/^abyss/i){$softPathVersion{"abyss"}= abyssVersion if not defined $softPathVersion{"abyss"};
+												$softPath{"abyss"}= $abyss if not defined $softPath{"abyss"};}
+			
+			#FOR transAbyss
+			#case ($softOrder =~ m/^transAbyss/i){$softPathVersion{"transAbyss"}= transAbyssVersion if not defined $softPathVersion{"transAbyss"};
+												#$softPath{"transAbyss"}= $abyss if not defined $softPath{"transAbyss"};}
+												
+			#For breakDancer
+			case ($softOrder =~ m/^bam2cfg/i){$softPathVersion{"breakDancer"}= breakDancerVersion if not defined $softPathVersion{"breakDancer"};
+												$softPath{"bam2cfg"}= $bam2cfg if not defined $softPath{"bam2cfg"};}
+			case ($softOrder =~ m/^breakDancer/i){$softPathVersion{"breakDancer"}= breakDancerVersion if not defined $softPathVersion{"breakDancer"};
+												$softPath{"breakDancer"}= $breakDancer if not defined $softPath{"breakDancer"};}
+			
+			#For Pindel
+			case ($softOrder =~ m/^pindel/i){$softPathVersion{"pindel"}= pindelVersion if not defined $softPathVersion{"pindel"};
+												$softPath{"pindel"}= $pindel if not defined $softPath{"pindel"};}
 											
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}

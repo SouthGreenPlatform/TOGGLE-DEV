@@ -123,7 +123,13 @@ our %testParams=    (
         bedtoolsWindowBed=>[""],
         bedToolsGeneric=>[""],
         #Generic
-        generic=>[""]
+        generic=>[""],
+        #Abyss
+        abyss=>[""],
+        #Breakdancer
+        breakDancer=>[""],
+        #Pindel
+        pindel=>[""],
         );
 
 sub softParams
