@@ -39,7 +39,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $bowtie $bowtie2 $crac $cracIndex $atropos $duplicationDetector $bedtools $abyss $transAbyss $breakDancer $bam2cfg $pindel);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $crac $cracIndex $bowtie $bowtie2 $atropos $duplicationDetector $plink $bedtools $snmfbin $readseqjar $fastme $abyss $bam2cfg $breakDancer $pindel);
 
 #toggle path
 our $toggle="/path/to/toggleFolder";
@@ -120,4 +120,17 @@ our $breakDancer = "/path/to/breakDancer";
 
 #Path to pindel
 our $pindel = "/path/to/pindel";
+
+
+# path for plink
+our $plink="/path/to/plink";
+
+# path to sNMF
+our $snmfbin = "/path/to/snmf";
+
+# path to readseq
+our $readseqjar = "/path/to//readseq.jar";
+
+#path to FastME
+our $fastme= "/path/to/fastme";
 1;
