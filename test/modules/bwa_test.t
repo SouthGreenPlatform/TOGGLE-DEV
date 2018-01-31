@@ -249,7 +249,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'bwa::samse - Files created');
 ok((-s $singleSaiFileIn)>0, "bwa::aln - output content file sai forward");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
 
 # expected content test $samseFileOut
-$expectedLineNumber = "1953 $samseFileOut";                                            # structure of the ref file for checking
+$expectedLineNumber = "1952 $samseFileOut";                                            # structure of the ref file for checking
 $observedLineNumber = `wc -l $samseFileOut`;                                                        # structure of the test file for checking
 chomp $observedLineNumber;     										                        # just to have the md5sum result
 is($observedLineNumber, $expectedLineNumber, "bwa::samse - output content file sam");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
