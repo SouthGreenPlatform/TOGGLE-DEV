@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 #
 ###################################################################################################################################
 
-#Will test if plink module work correctly works correctly
+#Will test if snmf module work correctly works correctly
 use strict;
 use warnings;
 
@@ -45,18 +45,19 @@ use localConfig;
 #use of samtools modules ok
 ########################################
 use_ok('toolbox') or exit;
-use_ok('plink') or exit;
+use_ok('snmf') or exit;
 
-can_ok( 'plink','vcf2ped');
+can_ok( 'snmf','vcf2geno');
+can_ok( 'snmf','structure');
 
-use plink;
+use snmf;
 
 
 
 #########################################
 #Remove files and directory created by previous test
 #########################################
-my $testingDir="$toggle/dataTest/plinkTestDir";
+my $testingDir="$toggle/dataTest/snmfTestDir";
 my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
 system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
 
@@ -66,23 +67,19 @@ chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
-my $creatingCommand="echo \"plink\nTEST\" > individuSoft.txt";
+my $creatingCommand="echo \"snmf\nTEST\" > individuSoft.txt";
 system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
 
 
 #######################################
 #Cleaning the logs for the test
 #######################################
-my $cleaningCommand="rm -Rf plink_TEST_log.*";
+my $cleaningCommand="rm -Rf snmf_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 
-
-
-
-
 ################################################################################################
-##Samtools view
+##snmf
 ################################################################################################
 
 
@@ -90,24 +87,36 @@ my %optionsRef = ();
 my $optionsHachees = \%optionsRef;
 
 # input file
-my $vcfFile = "$toggle/data/testData/vcf/vcfForRecalibration/control.vcf";
-my $pedFileOut = "control.PLINKVCF2PED";
+my $vcfFile = "$toggle/data/testData/vcf/testsnmf.vcf";
+my $fileOut = "testsnmf";
 
 #execution test
-is(plink::vcf2ped($vcfFile, $pedFileOut, $optionsHachees),1,'plink::vcf2ped');
+is(snmf::vcf2geno($vcfFile, $fileOut),1,'snmf::vcf2geno');
+
+#snmf option
+my %optionsHachees = (
+                      "-K" => "5",
+					  "-c" => ""
+                      );
+
+my $optionHachees = \%optionsHachees;
+
+#execution test
+is(snmf::structure($vcfFile, $fileOut,$optionHachees),1,'snmf::structure');
 
 
 # expected output test
-my $expectedOutput = 'control.PLINKVCF2PED.ped';
-my $observedOutput = `ls control.PLINKVCF2PED.ped`;
-chomp($observedOutput);
-is($observedOutput,$expectedOutput,'plink::vcf2ped - output list');
+my $observedOutput = `ls $fileOut*.Q`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ("$fileOut.SNMFSTRUCTURE.2.Q","$fileOut.SNMFSTRUCTURE.3.Q","$fileOut.SNMFSTRUCTURE.4.Q","$fileOut.SNMFSTRUCTURE.5.Q");
+
+is_deeply(\@observedOutput,\@expectedOutput,'snmf::structure - output list');
 
 
 # expected content test
-my $observedContent=`wc -w $observedOutput`;
-my $validContent = ( $observedContent =~ m/1636/);
-is($validContent,1,'plink::vcf2ped - output content');
+my $observedContent=`wc -l $fileOut.SNMFSTRUCTURE.5.Q`;
+my $validContent = ( $observedContent =~ m/258/);
+is($validContent,1,'snmf::structure - output content');
 
 
 
