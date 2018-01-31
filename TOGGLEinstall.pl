@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -299,6 +299,14 @@ system ("cd $INSTALLPATH && tar xzf perlModules.tar.gz && rm -Rf perlModules.tar
 
 system ("echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - >> ~/.bashrc && echo \"\nPATH=\$PATH:$INSTALLPATH\n\" | cat - >> ~/.bashrc && source ~/.bashrc") and die("\nCannot add paths: $!\n");
 print "echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - >> ~/.bashrc && echo \"\nPATH=\$PATH:$INSTALLPATH\n\" | cat - >> ~/.bashrc && source ~/.bashrc";
-print "\n The automatic configuration is finished.\n\nPlease use first the test data as recommended on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLe\n";
+print "\n The automatic configuration is finished.\n\nPlease use first the test data as recommended on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLe\n\n
+###########################################################################################################################
+#\tCITATION:
+#\tTOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses.
+#\tChristine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+#\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+#\tbioRxiv, doi: https://doi.org/10.1101/245480
+#\thttps://toggle.southgreen.fr/
+###########################################################################################################################"
 
 exit;

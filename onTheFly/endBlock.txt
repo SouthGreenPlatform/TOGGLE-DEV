@@ -18,10 +18,11 @@ if (defined $optionRef->{"scp"})
 toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################
 #\tCITATION:
-#\tTOGGLE: Toolbox for generic NGS analyses.
-#\tCecile Monat, Christine Tranchant-Dubreuil, Ayite Kougbeadjo, Cedric Farcy, Enrique Ortega-Abboud,
-#\tSouhila Amanzougarene,Sebastien Ravel, Mawusse Agbessi, Julie Orjuela-Bouniol, Maryline Summo and Francois Sabot.
-#\tBMC Bioinformatics 2015, 16:374
+#\tTOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses.
+#\tChristine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+#\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+#\tbioRxiv, doi: https://doi.org/10.1101/245480
+#\thttps://toggle.southgreen.fr/
 ###########################################################################################################################",1);  
 
 

@@ -3,7 +3,7 @@ package localConfig;
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

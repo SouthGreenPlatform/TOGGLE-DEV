@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -719,10 +719,11 @@ toolbox::exportLog("#########################################\nINFOS: Analysis c
 toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################
 #\tCITATION:
-#\tTOGGLE: Toolbox for generic NGS analyses.
-#\tCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud,
-#\tSouhila Amanzougarene,Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
-#\tBMC Bioinformatics 2015, 16:374
+#\tTOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses.
+#\tChristine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+#\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+#\tbioRxiv, doi: https://doi.org/10.1101/245480
+#\thttps://toggle.southgreen.fr/
 ###########################################################################################################################",1);
 
 
@@ -750,8 +751,9 @@ toggleGenerator.pl -d DIR -c FILE -o DIR [optional : -r FILE -g FILE -k FILE -no
 
 =head1  Authors
 
-Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+Christine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+Ndomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
 
-Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
+Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 
 =cut
