@@ -307,6 +307,6 @@ print "\n The automatic configuration is finished.\n\nPlease use first the test 
 #\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
 #\tbioRxiv, doi: https://doi.org/10.1101/245480
 #\thttps://toggle.southgreen.fr/
-###########################################################################################################################"
+###########################################################################################################################";
 
 exit;
