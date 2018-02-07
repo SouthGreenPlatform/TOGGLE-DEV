@@ -237,7 +237,7 @@ sub schedulerRun
 
     unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
     {
-        return 0; #Returning to launcher subprogram the error type
+        return -1; #Returning to launcher subprogram the error type
     }
 
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in $commands{'run'}{$schedulerType} mode through the command:\n\t$launcherCommand\n",1);
