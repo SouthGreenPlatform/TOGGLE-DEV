@@ -153,7 +153,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list -
 #
 ## expected content test
 
-my $cmd = 'grep -c "^>" '.$trinityPairedOutDir.$readGroup.'_Trinity.fasta';
+$cmd = 'grep -c "^>" '.$trinityPairedOutDir.$readGroup.'_Trinity.fasta';
 #print $cmd;
 my $expectedAnswer="17";
 my $observedAnswer=`$cmd`;
