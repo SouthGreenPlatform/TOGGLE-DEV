@@ -91,10 +91,12 @@ my $parser = Getopt::ArgParse->new_parser(
 ##########################################################################
 # More information:
 #\thttp://toggle.southgreen.fr/
-#
-# Citation:
-#\tTOGGLE: Toolbox for generic NGS analyses. Cécile Monat & al..
-#\tBMC Bioinformatics 2015, 16:374
+#\tCITATION:
+#\tTOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses.
+#\tChristine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+#\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+#\tbioRxiv, doi: https://doi.org/10.1101/245480
+#\thttps://toggle.southgreen.fr/
 ###########################################################################\n",
         help            => 'a framework to build quickly NGS pipelines'."\n\n".$version,
         error_prefix    => "\n\tERROR MSG: "
