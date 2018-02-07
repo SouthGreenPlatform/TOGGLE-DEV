@@ -210,6 +210,11 @@ sub schedulerRun
     my $errorLog = `basename $folderOut`;
     chomp $errorLog;
     $errorLog=$folderOut."/".$errorLog."_global_log.e";
+    
+    ##DEBUG
+    my $sizeError = `du -b $errorLog | cut -f1`;
+    ##DEBUG
+    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLog, size $sizeError;",1);
 
     #Creating the bash script for slurm to launch the command
     #my $date =`date +%Y_%m_%d_%H_%M_%S`;
