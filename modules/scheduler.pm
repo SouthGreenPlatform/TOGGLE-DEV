@@ -212,15 +212,13 @@ sub schedulerRun
     $errorLog=$folderOut."/".$errorLog."_global_log.e";
     
     ##DEBUG
-    my $sizeError = `stat -c '%s' $errorLog`;
-    ##DEBUG
-    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLog, size $sizeError;",1);
+    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLogS;",1);
 
     #Creating the bash script for slurm to launch the command
     #my $date =`date +%Y_%m_%d_%H_%M_%S`;
     #chomp $date;
     my $scriptName=$schedulerFolder."/".$sample."_schedulerScript.sh";
-    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\nif [ 'du -b $errorLog | cut -f1 '  != 0 ]\n\tthen\n\n\texit 256\nfi\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\nif [ `stat -c '%s' $errorLog`  != 0 ]\n\tthen\n\n\texit 256\nfi\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand,"noprint");
     $launcherCommand.=" ".$scriptName;
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
