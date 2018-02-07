@@ -212,7 +212,7 @@ sub schedulerRun
     $errorLog=$folderOut."/".$errorLog."_global_log.e";
     
     ##DEBUG
-    my $sizeError = `du $errorLog`;
+    my $sizeError = `stat -c '%s' $errorLog`;
     ##DEBUG
     toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLog, size $sizeError;",1);
 
