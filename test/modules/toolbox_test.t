@@ -94,11 +94,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 
 
 
-
-
-
-
-
 ######################################################################################################################################
 ######################################################################################################################################
 # SPECIFIC PART OF MODULE TEST
@@ -107,28 +102,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 
 my $testData="$toggle/data/testData/";
 my $configFile="$toggle/exampleConfigs/SNPdiscoveryPaired.config.txt";
-
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/toolboxTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-my $makeDirCmd = "mkdir pairingDir";
-system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
-
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf toolbox_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
-
-
-
 
 #######################################
 #charge needed test files into variables
@@ -398,7 +371,7 @@ ok($date eq $endOfLog,'toolbox::run - command behaviour');
 ########################################
 #toolbox::checkInitialDirContent test TODO add test negatif
 ########################################
-$makeDirCmd = "mkdir initialDir";
+my $makeDirCmd = "mkdir initialDir";
 system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
 
 my $copyCmd= "cp $fastqFile initialDir/";           # command to copy the original fastq file into the test directory

@@ -94,11 +94,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 
 
 
-
-
-
-
-
 ######################################################################################################################################
 ######################################################################################################################################
 # SPECIFIC PART OF MODULE TEST
@@ -114,22 +109,6 @@ if (-e "$toggle/data/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R
 { 
      `rm $toggle/data/testData/fastq/assembly/pairedOneIndivuPacaya/*.readcount`;
 }
-
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/trinityTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf trinity_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 ##########################################
 #trinityCreateSequenceDictionary test

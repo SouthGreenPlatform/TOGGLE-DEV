@@ -105,26 +105,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ######################################################################################################################################
 ######################################################################################################################################
 
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/samToolsTestDir";
-my $cleaningCmd="rm -Rf $testingDir"; 
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-########################################
-#Creation of test directory
-########################################
-my $makeDirCmd = "mkdir $testingDir";
-system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-$cleaningCmd="rm -Rf samTools_log.*";
-system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
-
 ########################################
 #initialisation and setting configs
 ########################################

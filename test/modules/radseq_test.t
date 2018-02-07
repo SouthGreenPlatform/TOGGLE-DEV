@@ -104,23 +104,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 # SPECIFIC PART OF MODULE TEST
 ######################################################################################################################################
 ######################################################################################################################################
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/radseqTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -f radseq_log.*";
-system($cleaningCommand) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCommand \n$!\n");
-
-
 
 ##########################################
 ##### radseq::rmHashOrder

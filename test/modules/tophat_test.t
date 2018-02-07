@@ -58,7 +58,6 @@ my ($toolName,$tmp) = split /_/ , $0;
 my $subFile=$toggle."/modules/".$toolName.".pm";
 my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
 
-
 ########################################
 #Automatically module test with use_ok and can_ok
 ########################################
@@ -72,6 +71,9 @@ foreach my $subName (@sub)
     $subName =~ s/sub //;
     can_ok($toolName,$subName);
 }
+
+use_ok("bowtie");
+
 
 #########################################
 #Preparing test directory
@@ -104,23 +106,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 # SPECIFIC PART OF MODULE TEST
 ######################################################################################################################################
 ######################################################################################################################################
-
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/tophatTestDir";
-my $creatingDirCom="rm -rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -rf tophat_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 my $bankData="$toggle/data/Bank/";
 my $testData="$toggle/data/testData/rnaseq/";

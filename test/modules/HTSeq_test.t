@@ -89,79 +89,94 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ######################################################################################################################################
 ######################################################################################################################################
 
-
-##########################################
-##### crac::index
-##########################################
+########################################
+#HTSeq::htseqCount bam file
+########################################
 my $bankData="$toggle/data/Bank/";
-my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
-
+my $testData="$toggle/data/testData/";
 
 # input file
-my $fastaRef="referenceIrigin.fasta";
+my $gffRef="$bankData/referenceRnaseqGFF.gff3";
+my $bamIn="$testData/samBam/oneBam/RC3-SAMTOOLSVIEW.bam";
+my $bam="accepted_hits.SAMTOOLSSORT.bam";
 
-my $originalFastaRef=$bankData."/referenceIrigin.fasta";
-my $copyCmd= "cp $originalFastaRef $fastaRef";           # command to copy the original fasta file into the test directory
-system ($copyCmd) and die ("ERROR: $0 : Cannot link the file $originalFastaRef in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
+#copy bam reference into test directory where the index will be created
+my $copyCommand="cp $bamIn ./$bam";
+system ($copyCommand) and die "ERROR: $0: Cannot copy the bam file with the command $copyCommand \n$!\n";
 
-# execution test
-my %optionsHachees = ();
-my $optionsHachees = \%optionsHachees;
 
-is(crac::cracIndex($fastaRef,$optionsHachees),1,'crac::cracIndex - running');
+#htseq option
+my %optionsHachees = (
+                      "-r" => "name",
+                      "-s" => "no",
+                      "-t" => "mRNA",
+                      "-m" => "union",
+                      "-i" => "ID",
+                      );       
+
+my $optionHachees = \%optionsHachees;                           # Ref of the hash
+
+#outputfile
+my $htseqcountFile="accepted_hits.HTSEQCOUNT.txt";
+is(HTSeq::htseqCount($bam, $htseqcountFile,$gffRef, $optionHachees),1,'HTSeq::htseqCount (bam file)');
 
 # expected output test
-#Check if files created
-my @expectedOutput = ("crac_log.e","crac_log.o","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-is_deeply(\@observedOutput,\@expectedOutput,'crac::cracIndex - Filetree created');
+my @expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.bam','accepted_hits.SAMTOOLSSORT.sam','htseq_log.e','htseq_log.o');
 
-# expected content test $fastaRefBWT
-my $expectedMD5sum = "2827db89a8f57cc6298c18b6eb6f9ac8";                                            # structure of the ref file for checkin
-my $observedMD5sum = `md5sum referenceIrigin.fasta.CRAC.index.conf`;                                                        # structure of the test file for checking
-my @withoutName = split (" ", $observedMD5sum);                                                     # to separate the structure and the name of file
-$observedMD5sum = $withoutName[0];     										                        # just to have the md5sum result
-is($observedMD5sum, $expectedMD5sum, "crac::cracIndex - output content file");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
+is_deeply(\@observedOutput,\@expectedOutput,'HTSeq::htseqCount - output list');
+
+# expected content test
+my $expectedMD5sum="a97aaf22fa76469ba1ec630429600a5e";
+my $observedMD5sum=`md5sum $htseqcountFile`;# structure of the test file
+my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'HTSeq::htseqCount - output content');
 
 
-##########################################
-##### crac::crac
-##########################################
 
-# input file
-my $forwardFastq=$fastqData."irigin1_1.fastq";
-my $reverseFastq=$fastqData."irigin1_2.fastq";
-my $cracIndex="referenceIrigin.fasta.CRAC.index";
-# execution test
+########################################
+#HTSeq::htseqCount sam file
+########################################
+
+#input file
+my $samIni="$testData/samBam/oneSam/RC3-SAMTOOLSVIEW.sam";
+my $sam="accepted_hits.SAMTOOLSSORT.sam";
+
+#copy fasta reference into test directory where the index will be created
+my $rmCommand="rm $bam $sam";
+system ($rmCommand) and die "ERROR: $0: Cannot remove bam and sam files generated precedently with the command $rmCommand \n$!\n";
+
+#copy fasta reference into test directory where the index will be created
+$copyCommand="cp $samIni ./$sam";
+system ($copyCommand) and die "ERROR: $0: Cannot copy the refence file with the command $copyCommand \n$!\n";
+
+#htseq option
 %optionsHachees = (
-			"-k" => 22
-			);        # Hash containing informations
-$optionsHachees = \%optionsHachees;
+                      "-r" => "name",
+                      "-s" => "no",
+                      "-t" => "mRNA",
+                      "-m" => "union",
+                      "-i" => "ID",
+                      );       
 
-# output file
-my $samFileOut="irigin.CRAC.sam";
+$optionHachees = \%optionsHachees;                           # Ref of the hash
 
-# execution test
-is(crac::crac($samFileOut,$cracIndex,$forwardFastq,$reverseFastq,$optionsHachees),'1',"crac::crac - Test for crac running");
+#outputfile
+$htseqcountFile="accepted_hits.SAM-HTSEQCOUNT.txt";
+is(HTSeq::htseqCount($sam, $htseqcountFile,$gffRef, $optionHachees),1,'HTSeq::htseqCount (sam file)');
 
 # expected output test
-#Check if files created
-@expectedOutput = ("crac_log.e","crac_log.o","irigin.CRAC.sam","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
-$observedOutput = `ls ./`;
+$observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-is_deeply(\@observedOutput,\@expectedOutput,'crac::crac - Files created');
+@expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAM-HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.sam','htseq_log.e','htseq_log.o');
 
-# expected content test $samFileOut
-my $expectedLineNumber = "2954 $samFileOut";                                            # structure of the ref file for checking
-my $observedLineNumber = `wc -l $samFileOut`;                                                        # structure of the test file for checking
-chomp $observedLineNumber;                                                     # to separate the structure and the name of file
-is($observedLineNumber, $expectedLineNumber, "crac::crac - output content file sam");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
+is_deeply(\@observedOutput,\@expectedOutput,'HTSeq::htseqCount - output list');
 
-###Test for correct file value of crac crac
-#GREP command result
-my $grepResult=`grep -c "MQ:i:254" $samFileOut`;
-chomp $grepResult;
-is($grepResult,341,'crac::crac - output grep in file sam');
-
-exit;
+# expected content test
+$expectedMD5sum="a97aaf22fa76469ba1ec630429600a5e";
+$observedMD5sum=`md5sum $htseqcountFile`;# structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'HTSeq::htseqCount - output content');

@@ -107,6 +107,8 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ##########################################
 #picardToolsCreateSequenceDictionary test
 ##########################################
+my $bankData="$toggle/data/Bank/";
+my $bamData="$toggle/data/testData/samBam/";
 
 #Input file
 
@@ -124,7 +126,7 @@ is(picardTools::picardToolsCreateSequenceDictionary($fastaRef,$fastaRefDict),1,'
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('picardtools_log.e','picardtools_log.o','referenceIrigin.dict','referenceIrigin.fasta');
+my @expectedOutput = ('picardTools_log.e','picardTools_log.o','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCreateSequenceDictionary - output list');
 
@@ -154,7 +156,7 @@ is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionsHachees),1,'pica
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('picardtools_log.e','picardtools_log.o','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSortSam - output list');
 
@@ -191,7 +193,7 @@ is(picardTools::picardToolsMarkDuplicates($bamFile, $bamFileOut, $duplicatesFile
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('picardtools_log.e','picardtools_log.o','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsMarkDuplicates - output list');
 
@@ -218,7 +220,7 @@ is(picardTools::picardToolsCleanSam($bamFile, $bamFileOut,$optionsHachees),1,'pi
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('picardtools_log.e','picardtools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCleanSam - output list');
 
@@ -245,7 +247,7 @@ is(picardTools::picardToolsSamFormatConverter($bamFile, $samFileOut,$optionsHach
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('picardtools_log.e','picardtools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSamFormatConverter - output list');
 
@@ -272,7 +274,7 @@ is(picardTools::picardToolsAddOrReplaceReadGroups($bamFile, $bamFileOut,$readGro
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('picardtools_log.e','picardtools_log.o','RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsAddOrReplaceReadGroups - output list');
 
@@ -305,7 +307,7 @@ is($observedOutput,$expectedLastLine,'picardTools::picardToolsAddOrReplaceReadGr
 ## expected output test
 #$observedOutput = `ls`;
 #@observedOutput = split /\n/,$observedOutput;
-#@expectedOutput = ('picardtools_log.e','picardtools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSVALIDATESAMFILE.infos','referenceIrigin.dict','referenceIrigin.fasta');
+#@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSVALIDATESAMFILE.infos','referenceIrigin.dict','referenceIrigin.fasta');
 #
 #is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsValidateSamFile - output list');
 #

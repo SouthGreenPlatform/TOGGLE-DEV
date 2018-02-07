@@ -223,7 +223,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateScript - output l
 
 # expected content test
 
-my $expectedMD5sum="affcf62d157d99d7792dbe2b85380f01";
+my $expectedMD5sum="b4053fbcde3fe09f9c25593871acaaff";
 my $observedMD5sum=`md5sum $outputScript`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -316,7 +316,7 @@ $hashConf = {
             };
 
 #execution test
-is (onTheFly::generateGraphviz($hashConf,"$toggle/dataTest/onTheFlyTestDir"),'1','onTheFly::generateGraphviz');
+is (onTheFly::generateGraphviz($hashConf,"$testDir"),'1','onTheFly::generateGraphviz');
 
 # expected output test
 $observedOutput = `ls`;

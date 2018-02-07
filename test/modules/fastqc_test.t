@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,47 +30,70 @@
 #
 ###################################################################################################################################
 
-#Will test if the modue fastqc work correctly
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
 
 use strict;
 use warnings;
-
-use Test::More  'no_plan';
-use Test::Deep;
 use Data::Dumper;
-use lib qw(../../modules/);
 
-########################################
-#use of fastqc module ok
-########################################
-use_ok('fastqc');
-use_ok('localConfig');
-can_ok('fastqc','execution');
+use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+use Test::Deep;
 
-use fastqc;
+# Load localConfig if primary test is successful 
+use_ok('localConfig') or exit;
 use localConfig;
 
-my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
+
+########################################
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
+
+
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
 
 #########################################
-#Remove files and directory created by previous test
+#Preparing test directory
 #########################################
-my $testingDir="$toggle/dataTest/fastqcTestDir";
-my $cleaningCmd="rm -Rf $testingDir && mkdir $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot clean or create the test directory with the command $cleaningCmd \n$!\n");
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
 
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
 
-#######################################
-#Cleaning the logs for the test
-#######################################
-$cleaningCmd="rm -Rf fastqc_TEST_log.*";
-system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
+######################################################################################################################################
+######################################################################################################################################
 
 ##########################################
 #Fastqc::execution test
 ##########################################
+
+my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
 
 # input file
 my $fastqPath=$fastqData."irigin1_1.fastq";

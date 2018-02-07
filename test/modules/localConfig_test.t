@@ -56,7 +56,6 @@ use localConfig;
 ########################################
 my ($toolName,$tmp) = split /_/ , $0;
 my $subFile=$toggle."/modules/".$toolName.".pm";
-my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
 
 
 ########################################
@@ -65,13 +64,6 @@ my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automaticall
 
 use_ok($toolName) or exit;
 eval "use $toolName";
-
-foreach my $subName (@sub)
-{
-    chomp ($subName);
-    $subName =~ s/sub //;
-    can_ok($toolName,$subName);
-}
 
 #########################################
 #Preparing test directory

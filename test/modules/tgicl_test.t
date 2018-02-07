@@ -105,27 +105,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ######################################################################################################################################
 ######################################################################################################################################
 
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/tgiclTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-my $outdir="./outputDir";
-my $creatingSubDirCom="mkdir -p $outdir";                                    #Allows to have a working directory for the tests
-system($creatingSubDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingSubDirCom\n$!\n");
-chdir $outdir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $outdir\"\n$!\n");
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf tgicl_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
-
-
 ##########################################
 #tgiclCreateSequenceDictionary test
 ##########################################
@@ -150,7 +129,7 @@ SKIP:
     skip "No tgicl test on node", 3 if ($host !~/^master0.alineos.net$/ );
     
     # running test
-    is(tgicl::tgiclRun($outdir,$reference),1,'tgicl::tgiclRun');
+    is(tgicl::tgiclRun($testDir,$reference),1,'tgicl::tgiclRun');
 
     # expected output test
     my $observedOutput = `ls`;
