@@ -516,22 +516,26 @@ sub generateReports
 	#copying differents tex files to input repertory
 	
 	#Pipeline picture
-	my $mvCmd="cp $outDir/togglePipeline.png $reportDirWF/img/";
-	toolbox::run($mvCmd,0);
+	my $mvCmd="cp $outDir/togglePipeline.png $reportDirWF/";
+	toolbox::run($mvCmd);
 	
 	#Command line
 	$mvCmd="mv $outDir/commandLine.tex $reportDirWF/input";
-	toolbox::run($mvCmd,0);
+	toolbox::run($mvCmd);
 	
 	#Software Version
 	$mvCmd="mv $outDir/software.txt $reportDirWF/input";
-	toolbox::run($mvCmd,0);
-	
-	# Moving into directory with .tex files. Requested for pdf lateX to avoid loop.
-	chdir "$reportDirWF" or die "\nTEX REPORT ERROR: $0 : cannot cd into the output folder $reportDirWF \nExiting...\n";
+	toolbox::run($mvCmd);
 	
 	#generating pdf report in $texWorkflowFile 	
 	my $texCmd="/usr/local/texlive/2017/bin/x86_64-linux/pdflatex $texWorkflowFile";
+	
+	toolbox::exportLog($texCmd,1);
+
+	# Moving into directory with .tex files. Requested for pdf lateX to avoid loop.
+	chdir "$reportDirWF" or die "\nTEX REPORT ERROR: $0 : cannot cd into the output folder $reportDirWF \nExiting...\n";
+	
+	#toolbox::run($texCmd);
     `$texCmd` or die "\nTEX REPORT ERROR: $0 : cannot generate pdf from tex document $! \nExiting...\n"; 
 	
 	my $lnCmd="ln -s $pdfWorkflowFile $outDir/.";
