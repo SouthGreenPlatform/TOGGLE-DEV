@@ -291,11 +291,11 @@ sub schedulerWait
       my $statCommand = $commands{'queue'}{$schedulerType}." | egrep -c \"$jobList\"";
       $nbRunningJobs = `$statCommand`;
       chomp $nbRunningJobs;
-      sleep 50;
+      sleep 5;
     }
 
     #Compiling infos about sge jobs: jobID, node number, exit status
-    sleep 25;#Needed for acct to register infos...
+    sleep 5;#Needed for acct to register infos...
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
 Individual\tJobID\tExitStatus
