@@ -543,7 +543,7 @@ if ($orderBefore1000)
           chomp $individualName;
           $individualName = $currentDir unless ($individualName); # Basename did not succeed...
 
-          $errorList.="\$\|".$individualName;
+          $errorList.="\$|".$individualName;
           ##DEBUG          print "++$errorList++\n";
           #Need to remove the empty name...
           $errorList =~ s/obiWanKenobi\$\|//;
@@ -570,7 +570,7 @@ if ($orderBefore1000)
       if ($waitOutput != 1)
       {
         #Creating a chain with the list of individual with an error in the job...
-        $errorList=join ("\$\|",@{$waitOutput});
+        $errorList=join ("\$|",@{$waitOutput});
       }
 
     }
@@ -678,11 +678,12 @@ if ($orderAfter1000)
     my %jobHash;
 
     #Launching through the scheduler launching system
-    my $jobOutput = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
+    my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
     if ($jobOutput ne 1) #1 means the job is Ok and is running in a normal linear way, ie no scheduling
     {
       $jobList = $jobOutput;
-      $jobHash{"global"}=$jobOutput;
+      $jobHash{"global"}{output}=$jobOutput;
+      $jobHash{"global"}{errorFile}=$errorFile;
 
       #If qsub mode, we have to wait the end of jobs before populating
       chop $jobList if ($jobList =~ m/\|$/);
