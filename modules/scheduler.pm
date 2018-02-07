@@ -212,7 +212,7 @@ sub schedulerRun
     $errorLog=$folderOut."/".$errorLog."_global_log.e";
     
     ##DEBUG
-    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLogS;",1);
+    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLog;",1);
 
     #Creating the bash script for slurm to launch the command
     #my $date =`date +%Y_%m_%d_%H_%M_%S`;
