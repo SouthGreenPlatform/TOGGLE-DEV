@@ -307,7 +307,7 @@ Individual\tJobID\tExitStatus
 		#my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
         
         my ($currentLine, $outputLine);
-        $outputLine = "$individual\t$jobHash{$individual}\t";
+        $outputLine = "$individual\t$jobHash{$individual}{output}\t";
         
         my $grepError = `grep "ERROR" $jobHash{$individual}{errorFile}`;
         chomp $grepError;
