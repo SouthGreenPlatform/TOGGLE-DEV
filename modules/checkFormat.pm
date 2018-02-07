@@ -310,7 +310,8 @@ sub checkFormatVcf
 #	- send a warning to the log if not a fasta file
 ################################################################################################
 
-sub checkFormatFasta{
+sub checkFormatFasta
+{
     my ($file)=@_;
 
     #Check if we can read the file
