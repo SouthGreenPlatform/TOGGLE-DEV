@@ -45,7 +45,7 @@ use Data::Dumper;
 #
 ##################################
 
-our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash);
+our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash, @errorFileList);
 
 #Here is the core commands for any scheduler: run, acct and queue command.
 
@@ -152,7 +152,14 @@ sub launcher {
     	return 0;
     }
 
-    return $runOutput;
+        #Picking up the output error file
+    my @listOne = split /-d\s+/, $commandLine;
+    my ($folderOut) = split /\s+/, $listOne[1];
+    my $errorLog = `basename $folderOut`;
+    chomp $errorLog;
+    $errorLog=$folderOut."/".$errorLog."_global_log.e";
+    
+    return ($runOutput, $errorLog);
 }
 
 sub normalRun { #For running in normal mode, ie no scheduler
@@ -204,21 +211,14 @@ sub schedulerRun
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$schedulerOptions;
     
-    #Picking up the output error file
-    my @listOne = split /-d\s+/, $commandLine;
-    my ($folderOut) = split /\s+/, $listOne[1];
-    my $errorLog = `basename $folderOut`;
-    chomp $errorLog;
-    $errorLog=$folderOut."/".$errorLog."_global_log.e";
-    
-    ##DEBUG
-    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLog;",1);
+   
+    ##DEBUG    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLog;",1);
 
     #Creating the bash script for slurm to launch the command
     #my $date =`date +%Y_%m_%d_%H_%M_%S`;
     #chomp $date;
     my $scriptName=$schedulerFolder."/".$sample."_schedulerScript.sh";
-    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\nif [ `stat -c '%s' $errorLog`  != 0 ]\n\tthen\n\n\texit 256\nfi\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\n\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand,"noprint");
     $launcherCommand.=" ".$scriptName;
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
@@ -303,49 +303,66 @@ Individual\tJobID\tExitStatus
 
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
-		my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
-		my $acctOutput = `$acctCommand`;
-		my $outputLine;
-
-		chomp $acctOutput;
-		if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
-		{
-		  #IF acct cannot be run on the node
-		  $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
-		  toolbox::exportLog($outputLine,1);
-		  next;
+        #First action testing the error log size...
+		#my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
+        
+        my ($currentLine, $outputLine);
+        $outputLine = "$individual\t$jobHash{$individual}\t";
+        
+        my $grepError = `grep "ERROR" $jobHash{$individual}{errorFile}`;
+        chomp $grepError;
+        
+        if ($greError)
+        {
+            $currentLine = "Normal";
 		}
-
-		my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
-		$outputLine = $individual."\t".$jobHash{$individual}."\t";
-		my $currentLine ="Error";
-		my $parserText = $parsings{'acctOutText'}{$schedulerType};
+        else
+        {
+            $currentLine = "Error";
+        }
+        
+		#my $acctOutput = `$acctCommand`;
+		#my $outputLine;
+		#
+		#chomp $acctOutput;
+		#if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
+		#{
+		#  #IF acct cannot be run on the node
+		#  $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
+		#  toolbox::exportLog($outputLine,1);
+		#  next;
+		#}
+		#
+		#my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
+		#$outputLine = $individual."\t".$jobHash{$individual}."\t";
+		#my $currentLine ="Error";
+		#my $parserText = $parsings{'acctOutText'}{$schedulerType};
 
 		##DEBUG	toolbox::exportLog($parserText,2);
 
-		while (@linesQacct) #Parsing the qacct output
-		{
-		  my $line = shift @linesQacct;
-		  #Passing the header lines
-		  next if $line =~ m/JobID/;
-		  next if $line =~ m/^$/;
+		#while (@linesQacct) #Parsing the qacct output
+		#{
+		#  my $line = shift @linesQacct;
+		#  #Passing the header lines
+		#  next if $line =~ m/JobID/;
+		#  next if $line =~ m/^$/;
 
 
-
-		  if ($line =~ m/$parserText/) #Picking up exit status
-		  {
-			  $currentLine = "Normal";
-			  last;
-		  }
-
-		  next;
-		}
-
-		#The parsing text has not been found meaning still an error
-		if ($currentLine eq "Error")
-		{
-		  push @jobsInError, $individual;
-		}
+		#
+		#  if ($line =~ m/$parserText/) #Picking up exit status
+		#  {
+		#	  $currentLine = "Normal";
+		#	  last;
+		#  }
+		#
+		#  next;
+		#}
+		#
+		##The parsing text has not been found meaning still an error
+		#if ($currentLine eq "Error")
+		#{
+		#  push @jobsInError, $individual;
+		#}
 		$outputLine .= $currentLine;
 		toolbox::exportLog($outputLine,1);
 
