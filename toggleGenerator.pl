@@ -683,6 +683,7 @@ if ($orderAfter1000)
     {
       $jobList = $jobOutput;
       $jobHash{"global"}{output}=$jobOutput;
+      $errorFile =~ s/intermediateResults_global/multipleAnalysis_global/;
       $jobHash{"global"}{errorFile}=$errorFile;
 
       #If qsub mode, we have to wait the end of jobs before populating
