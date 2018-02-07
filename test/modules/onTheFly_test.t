@@ -222,7 +222,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator - output lis
 
 # expected content test
 
-$expectedMD5sum="9163553ed490839492d136c3499911a7";
+$expectedMD5sum="1f0b656dc329906e10727818d5d9416f";
 $observedMD5sum=`md5sum $fastaRef.fai`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
