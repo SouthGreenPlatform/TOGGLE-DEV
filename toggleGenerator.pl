@@ -524,7 +524,6 @@ if ($orderBefore1000)
     #we need those variable for Scheduler launching
     my $jobList="";
     my %jobHash;
-
     foreach my $currentDir(@{$listSamples})
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
@@ -535,8 +534,9 @@ if ($orderBefore1000)
         $launcherCommand.=" -nocheck" if ($checkFastq == 1);
 
         #Launching through the scheduler launching system
-        my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
-        ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- ",2);
+        my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
+        ##DEBUG
+        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- \nerrorFile = $errorFile",2);
         if ($jobOutput == 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
@@ -557,7 +557,8 @@ if ($orderBefore1000)
         $jobList = $jobList.$jobOutput."|";
         my $baseNameDir=`basename $currentDir` or toolbox::exportLog("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n",0);
         chomp $baseNameDir;
-        $jobHash{$baseNameDir}=$jobOutput;
+        $jobHash{$baseNameDir}{output}=$jobOutput;
+        $jobHash{$baseNameDir}{errorFile}=$errorFile;
     }
 
 
