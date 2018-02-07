@@ -273,7 +273,7 @@ foreach my $file (@listFilesMandatory)
 
 toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
 
-versionSofts::writeLogVersion($fileConf,$version.$newRelease,$report,$outputDir);
+versionSofts::writeLogVersion($fileConf,$version.$newRelease,$outputDir,$report);
 
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
@@ -735,7 +735,6 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 #\tSouhila Amanzougarene,Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
 #\tBMC Bioinformatics 2015, 16:374
 ###########################################################################################################################",1);
-
 
 onTheFly::generateReports($outputDir) if $report;
 
