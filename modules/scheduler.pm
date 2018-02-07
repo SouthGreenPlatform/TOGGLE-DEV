@@ -312,13 +312,13 @@ Individual\tJobID\tExitStatus
         my $grepError = `grep "ERROR" $jobHash{$individual}{errorFile}`;
         chomp $grepError;
         
-        if ($greError)
+        if ($grepError)
         {
-            $currentLine = "Normal";
+            $currentLine = "Error";
 		}
         else
         {
-            $currentLine = "Error";
+            $currentLine = "Normal";
         }
         
 		#my $acctOutput = `$acctCommand`;
