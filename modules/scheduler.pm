@@ -203,12 +203,19 @@ sub schedulerRun
 
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$schedulerOptions;
+    
+    #Picking up the output error file
+    my @listOne = split /-d\s+/, $commandLine;
+    my ($folderOut) = split /\s+/, $listOne[1];
+    my $errorLog = `basename $folderOut`;
+    chomp $errorLog;
+    $errorLog=$folderOut."/".$errorLog."_global_log.e";
 
     #Creating the bash script for slurm to launch the command
     #my $date =`date +%Y_%m_%d_%H_%M_%S`;
     #chomp $date;
     my $scriptName=$schedulerFolder."/".$sample."_schedulerScript.sh";
-    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\nif [ \$? != 0 ]\n\tthen\n\n\texit 1\nfi\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\nif [ 'du -b $errorLog | cut -f1 '  != 0 ]\n\tthen\n\n\texit 256\nfi\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand,"noprint");
     $launcherCommand.=" ".$scriptName;
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
