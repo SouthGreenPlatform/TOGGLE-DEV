@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ use checkFormat;
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $version = "Release 0.3.4, 27th of September, 2017";
+my $version = "Release 0.3.6, 31 of January, 2018";
 my @shortVersion = (3,4);
 
 my $url = "toggle.southgreen.fr/install/releaseNotes/index.html";
@@ -89,10 +89,12 @@ my $parser = Getopt::ArgParse->new_parser(
 ##########################################################################
 # More information:
 #\thttp://toggle.southgreen.fr/
-#
-# Citation:
-#\tTOGGLE: Toolbox for generic NGS analyses. Cécile Monat & al..
-#\tBMC Bioinformatics 2015, 16:374
+#\tCITATION:
+#\tTOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses.
+#\tChristine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+#\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+#\tbioRxiv, doi: https://doi.org/10.1101/245480
+#\thttps://toggle.southgreen.fr/
 ###########################################################################\n",
         help            => 'a framework to build quickly NGS pipelines'."\n\n".$version,
         error_prefix    => "\n\tERROR MSG: "
@@ -355,7 +357,7 @@ foreach my $file (@{$initialDirContent})
 
 #Checking if the files are taken in charge by TOGGLE
 
-if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam/)  # j'ai rajouté fasta pour les besoins de TGICL
+if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam|ped/)  # j'ai rajouté fasta pour les besoins de TGICL et moi ped pour SNIPLAY
 {
     toolbox::exportLog("ERROR : $0 : The filetype $previousExtension is not taken in charge by TOGGLE\n",0);
 }
@@ -534,7 +536,6 @@ if ($orderBefore1000)
     #we need those variable for Scheduler launching
     my $jobList="";
     my %jobHash;
-
     foreach my $currentDir(@{$listSamples})
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
@@ -545,8 +546,8 @@ if ($orderBefore1000)
         $launcherCommand.=" -nocheck" if ($checkFastq == 1);
 
         #Launching through the scheduler launching system
-        my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
-        ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- ",2);
+        my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
+        ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- \nerrorFile = $errorFile",2);
         if ($jobOutput == 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
@@ -554,7 +555,7 @@ if ($orderBefore1000)
           chomp $individualName;
           $individualName = $currentDir unless ($individualName); # Basename did not succeed...
 
-          $errorList.="\$\|".$individualName;
+          $errorList.="\$|".$individualName;
           ##DEBUG          print "++$errorList++\n";
           #Need to remove the empty name...
           $errorList =~ s/obiWanKenobi\$\|//;
@@ -567,7 +568,8 @@ if ($orderBefore1000)
         $jobList = $jobList.$jobOutput."|";
         my $baseNameDir=`basename $currentDir` or toolbox::exportLog("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n",0);
         chomp $baseNameDir;
-        $jobHash{$baseNameDir}=$jobOutput;
+        $jobHash{$baseNameDir}{output}=$jobOutput;
+        $jobHash{$baseNameDir}{errorFile}=$errorFile;
     }
 
 
@@ -580,7 +582,7 @@ if ($orderBefore1000)
       if ($waitOutput != 1)
       {
         #Creating a chain with the list of individual with an error in the job...
-        $errorList=join ("\$\|",@{$waitOutput});
+        $errorList=join ("\$|",@{$waitOutput});
       }
 
     }
@@ -688,11 +690,13 @@ if ($orderAfter1000)
     my %jobHash;
 
     #Launching through the scheduler launching system
-    my $jobOutput = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
+    my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", "Global analysis", $configInfo); #not blocking job, explaining the '1'
     if ($jobOutput ne 1) #1 means the job is Ok and is running in a normal linear way, ie no scheduling
     {
       $jobList = $jobOutput;
-      $jobHash{"global"}=$jobOutput;
+      $jobHash{"global"}{output}=$jobOutput;
+      $errorFile =~ s/intermediateResults_global/multipleAnalysis_global/;
+      $jobHash{"global"}{errorFile}=$errorFile;
 
       #If qsub mode, we have to wait the end of jobs before populating
       chop $jobList if ($jobList =~ m/\|$/);
@@ -730,10 +734,11 @@ toolbox::exportLog("#########################################\nINFOS: Analysis c
 toolbox::exportLog("\nThank you for using TOGGLE!
 ###########################################################################################################################
 #\tCITATION:
-#\tTOGGLE: Toolbox for generic NGS analyses.
-#\tCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud,
-#\tSouhila Amanzougarene,Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
-#\tBMC Bioinformatics 2015, 16:374
+#\tTOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses.
+#\tChristine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+#\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+#\tbioRxiv, doi: https://doi.org/10.1101/245480
+#\thttps://toggle.southgreen.fr/
 ###########################################################################################################################",1);
 
 onTheFly::generateReports($outputDir) if $report;
@@ -763,8 +768,9 @@ toggleGenerator.pl -d DIR -c FILE -o DIR [optional : -r FILE -g FILE -k FILE -no
 
 =head1  Authors
 
-Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+Christine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+Ndomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
 
-Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
+Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 
 =cut

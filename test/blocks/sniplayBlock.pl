@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,13 +35,14 @@ use warnings;
 use Test::More 'no_plan';
 use Test::Deep;
 use fileConfigurator;
+use localConfig;
 
 #####################
 ## PATH for datas test
 #####################
 
 # input file
-my $dataPed = "../DATA/testData/ped/";
+my $dataVCF = "$toggle/data/testData/vcf/vcfForSNiPlay/";
 
 
 print "\n\n#################################################\n";
@@ -49,15 +50,15 @@ print "#### TEST SNIPLAY PED2FASTA\n";
 print "#################################################\n";
 
 #Creating config file for this test
-my @listSoft = ("sniplayPed2fasta");
+my @listSoft = ("plinkVcf2Ped","sniplayPed2fasta","readseq","fastme");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 # Remove files and directory created by previous test
-my $testingDir="../DATA-TEST/sniplayPed2fasta-noSGE-Blocks";
+my $testingDir="$toggle/dataTest/sniplay-noSGE-Blocks";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataPed." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataVCF." -o ".$testingDir;
 
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for Sniplay Ped2fasta";
@@ -68,8 +69,6 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for Sniplay Ped2fasta";
 my $observedOutput = `ls $testingDir"/finalResults"`;
 my @observedOutput = split /\n/,$observedOutput;
 
-my @expectedOutput = ('test.SNIPLAYPED2FASTA.fa');
+my @expectedOutput = ('control.SNIPLAYPED2FASTA.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'sniplay::ped2fasta - output list - Fasta alignement');
- 
-

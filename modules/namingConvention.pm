@@ -2,7 +2,7 @@ package namingConvention;
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -90,28 +90,28 @@ sub correctName
     {
         #FOR cleaner
         case ($name =~ m/^cleaner/i){$correctedName="cleaner";} #Correction for cleaner step
-    
+
         #FOR compressor
         case ($name =~ m/^compress/i){$correctedName="compress";} #correction for compressor step
-    
+
         #FOR merge
         case ($name =~ m/^merge/i){$correctedName="merge";} #correction for merge step
-        
+
         #FOR env
-        case ($name =~ m/^env/i){$correctedName="env";} #correction for merge step	
-    
+        case ($name =~ m/^env/i){$correctedName="env";} #correction for merge step
+
         #FOR SGE
         case ($name =~ m/^sge/i){$correctedName="sge";} #Correction for sge configuration
-    
+
         #FOR SLURM
         case ($name =~ m/^slurm/i){$correctedName="slurm";} #Correction for slurm configuration
-    
+
         #FOR MPRUN
         case ($name =~ m/^mprun/i){$correctedName="mprun";} #Correction for mprun configuration
-    
+
         #FOR LSF
         case ($name =~ m/^lsf/i){$correctedName="lsf";} #Correction for lsf configuration
-        
+
         #FOR SCP
         case ($name =~ m/^scp/i or $name =~ m/^rsync/i or $name =~ m/^transfer/i){$correctedName="scp";} #Correction for scp transfer
 
@@ -140,11 +140,11 @@ sub correctName
         case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*mark[\s|\.|\-| \/|\\|\|]*duplicates/i){$correctedName="picardToolsMarkDuplicates"} # Correction for picardToolsMarkDuplicates
         case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*create[\s|\.|\-| \/|\\|\|]*sequence[\s|\.|\-| \/|\\|\|]*dictionary/i){$correctedName="picardToolsCreateSequenceDictionary"} # Correction for picardToolsCreateSequenceDictionary
         case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*sort[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="picardToolsSortSam"} # Correction for picardToolsSortSam
-	case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*validate[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*file/i){$correctedName="picardToolsValidateSamFile"} # Correction for picardToolsValidateSamFile
-	case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*clean[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="picardToolsCleanSam"} # Correction for picardToolsCleanSam
-	case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*converter/i){$correctedName="picardToolsSamFormatConverter"} # Correction for picardToolsSamFormatConverter
-	case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*add[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*replace[\s|\.|\-| \/|\\|\|]*read[\s|\.|\-| \/|\\|\|]*groups/i){$correctedName="picardToolsAddOrReplaceReadGroups"} # Correction for picardToolsAddOrReplaceReadGroups
-
+        case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*validate[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*file/i){$correctedName="picardToolsValidateSamFile"} # Correction for picardToolsValidateSamFile
+        case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*clean[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="picardToolsCleanSam"} # Correction for picardToolsCleanSam
+        case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*converter/i){$correctedName="picardToolsSamFormatConverter"} # Correction for picardToolsSamFormatConverter
+        case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*add[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*replace[\s|\.|\-| \/|\\|\|]*read[\s|\.|\-| \/|\\|\|]*groups/i){$correctedName="picardToolsAddOrReplaceReadGroups"} # Correction for picardToolsAddOrReplaceReadGroups
+    
 
         #FOR gatk.pm
         case ($name =~ m/^gatk[\s|\.|\-| \/|\\|\|]*base[\s|\.|\-| \/|\\|\|]*recalibrator/i){$correctedName="gatkBaseRecalibrator"} # Correction for gatkBaseRecalibrator
@@ -195,29 +195,29 @@ sub correctName
 
         case ($name =~ m/^bamutils[\s|\.|\-| \/|\\|\|]*/i){$name =~ s/bamutils[\s|\.|\-| \/|\\|\|]*//gi; $correctedName="bamutils".$name;}  # Correction for bamutils from ngsutils tools
 
-		#FOR checkFormat
-		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="checkFormatFasta"}  # Correction for checkFormatFasta step
-		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fastq/i){$correctedName="checkFormatFastq"}  # Correction for checkFormatFastq step
-		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*vcf/i){$correctedName="checkFormatVcf"}  # Correction for checkFormatVcf step
-		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
+	#FOR checkFormat
+	case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="checkFormatFasta"}  # Correction for checkFormatFasta step
+	case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fastq/i){$correctedName="checkFormatFastq"}  # Correction for checkFormatFastq step
+	case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*vcf/i){$correctedName="checkFormatVcf"}  # Correction for checkFormatVcf step
+	case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bam/i){$correctedName="checkFormatSamOrBam"}  # Correction for checkSamOrBam step
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*gff/i){$correctedName="checkFormatGff"}  # Correction for checkFormatGff step
-		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="checkFormatBed"}  # Correction for checkFormatBed step
+	case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="checkFormatBed"}  # Correction for checkFormatBed step
 
-        
         #FOR BOWTIE SUITE
         case ($name =~ m/^bowtie$/i){$correctedName="bowtie"}#Correction for bowtie
         case ($name =~ m/^bowtie2$/i){$correctedName="bowtie2"}#Correction for bowtie2
         case ($name =~ m/^bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bowtiebuild
         case ($name =~ m/^bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bowtie2build
-        
+
         #FOR CRAC SUITE
         case ($name =~ m/^crac[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="cracIndex"; } #Correction for cracIndex
         case ($name =~ m/^crac/i){$correctedName="crac"; } #Correction for crac
 
         #FOR DUPLICATIONDETECTOR
         case ($name =~ m/^duplication[\s|\.|\-| \/|\\|\|]*detector/i){$correctedName="duplicationDetector";} #Correction for duplicationDetector
+
         
         #FOR BEDTOOLS
         case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*intersect/i){$correctedName="bedToolsIntersectBed";} #Correction for intersectBed version 1
@@ -228,10 +228,31 @@ sub correctName
         
         #FOR GENERIC COMMAND SYSTEM
         case ($name =~ m/^generic/i){$correctedName="generic";} #Correction for generic command
-              
+        
+        #FOR abyss functions
+        #case ($name =~ m/^trans[\s|\.|\-| \/|\\|\|]*abyss/i){$correctedName="transAbyss"} # Correction for transAbyss step
+        case ($name =~ m/^abyss/i){$correctedName="abyssSimple";} # Correction for abyss step
+        
+        #FOR pindel
+        case ($name =~ m/^pindel/i){$correctedName="pindel";}
+        
+        #FOR breakDancer
+        case ($name =~ m/^break[\s|\.|\-| \/|\\|\|]*dancer/i){$correctedName="breakDancer";}
+        case ($name =~ m/^bam[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*cfg/i){$correctedName="bam2cfg";}
+        case ($name =~ m/^bam[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*cfg[\s|\.|\-| \/|\\|\|]*pl/i){$correctedName="bam2cfg";}
+        
+        #FOR pindel
+        case ($name =~ m/^pindel/i){$correctedName="pindel";}
+         
+        # SNIPLAY
+        case ($name =~ m/^plink[\s|\.|\-| \/|\\|\|]*vcf[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*ped/i){$correctedName="plinkVcf2Ped";}
+        case ($name =~ m/^sniplay[\s|\.|\-| \/|\\|\|]*ped[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="sniplayPed2fasta";}
+        case ($name =~ m/^fastme/i){$correctedName="fastme";}
+		case ($name =~ m/^readseq/i){$correctedName="readseq";}
+		
         else
         {
-            toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);
+            toolbox::exportLog("ERROR NAMING CONVENTION : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);
         }; # Name unknown to TOGGLE, must stop
     }
     $correctedName .= " ".$order if ($order);

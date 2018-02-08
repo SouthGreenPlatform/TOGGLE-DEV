@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ system("clear");
 
 print"###################################################################################################################################
 #
-# This script will allow a user-space automatic installation of TOGGLE from the current Master version https://github.com/SouthGreenPlatform/TOGGLE
+# This script will allow a user-space automatic installation of TOGGLe from the current MASTER version https://github.com/SouthGreenPlatform/TOGGLE
 #
 ###################################################################################################################################\n";
 
@@ -80,7 +80,7 @@ foreach my $softs (keys %{$requirements->{"mandatory"}})
     my $controlRes = `$controlCommand`;
     chomp $controlRes;
     #print "\n$softs --> $controlRes\n";
-    die ("The $softs software is not installed and is mandatory for continuing the installation of TOGGLE.\n\n Please contact your administrator for installing it.\n") unless $controlRes;
+    die ("The $softs software is not installed and is mandatory for continuing the installation of TOGGLe.\n\n Please contact your administrator for installing it.\n") unless $controlRes;
     $requirements->{"software"}->{$softs} = $controlRes;
 }
 
@@ -89,24 +89,24 @@ my $perlVersionCom=`perl -v| grep version`;
 chomp $perlVersionCom;
 
 #Die if not a perl5
-die ("\nPerl 5 is required for TOGGLE to work (5.16 minimum, 5.22 recommended), we cannot continue the installation.\nABORTING...\n") unless $perlVersionCom =~ m/This is perl 5/;
+die ("\nPerl 5 is required for TOGGLe to work (5.16 minimum, 5.22 recommended), we cannot continue the installation.\nABORTING...\n") unless $perlVersionCom =~ m/This is perl 5/;
 
 #The output is normally as such:  This is perl 5, version 22, subversion 1 (v5.22.1) built for x86_64-linux-gnu-thread-multi
 my @fields = split /version /,$perlVersionCom;
 my ($perlVersion) = split /,/, $fields[1];
 if ($perlVersion < 16)
 {
-    die ("Your standard Perl5 version is too old (version $perlVersion) and will block TOGGLE execution. Please contact your administrator to have access to a newer Perl5 version (5.16 minimum, 5.22 recommended)\n");
+    die ("Your standard Perl5 version is too old (version 5.$perlVersion) and will block TOGGLe execution. Please contact your administrator to have access to a newer Perl5 version (5.16 minimum, 5.22 recommended)\n");
 }
 if ($perlVersion < 22)
 {
-    warn ("Your standard Perl5 version is old (version $perlVersion) and may provoke warnings. You can contact your administrator to have access to a newer Perl5 version (5.22 recommended)\n")
+    warn ("Your standard Perl5 version is old (version 5.$perlVersion) and may provoke warnings. You can contact your administrator to have access to a newer Perl5 version (5.22 recommended)\n")
 }
     
 print "\nAll required softwares (perl, git, wget and tar) are installed.\n";
 
 print "#######################################################
-## \tTOGGLE installation
+## \tTOGGLe installation
 #######################################################";
 
 my $INSTALLPATH;
@@ -158,15 +158,15 @@ else
 }
 mkdir $INSTALLPATH or die ("\nCannot create installation directory $INSTALLPATH:\n$!\n\nAborting installation...\n");
 
-#Cloning current version of TOGGLE
+#Cloning current version of TOGGLe
 
-print "\nCloning the current Git Master Version";
+print "\nCloning the current Git MASTER Version";
 
 my $gitCommand = "git clone https://github.com/SouthGreenPlatform/TOGGLE.git $INSTALLPATH";
-system("$gitCommand") and die ("\nCannot clone the current version of TOGGLE: $!\n");
+system("$gitCommand") and die ("\nCannot clone the current version of TOGGLe: $!\n");
 
 
-chdir $INSTALLPATH or die ("\nCannot go to $INSTALLPATH : $!\nTOGGLE is cloned but not configured\n");
+chdir $INSTALLPATH or die ("\nCannot go to $INSTALLPATH : $!\nTOGGLe is cloned but not configured\n");
 
 #Parsing automatically the localConfig.pm file for softwares
 
@@ -206,7 +206,7 @@ foreach my $soft (keys %{$requirements->{"software"}})
         if ($controlCommand)
         {
             my $javaTypeCom = "$controlJava -version";
-            warn("\nYour current standard JAVA is openJDK. Unfortunately, picard-tools require the Oracle JAVA to run, thus you cannot use those tools in TOGGLE in the current configuration.\n") if $javaTypeCom =~ m/openjdk/;
+            warn("\nYour current standard JAVA is openJDK. Unfortunately, picard-tools require the Oracle JAVA to run, thus you will not be able to use those tools in TOGGLe in the current configuration.\n") if $javaTypeCom =~ m/openjdk/;
         }
     }
     else
@@ -226,7 +226,7 @@ foreach my $soft (keys %{$requirements->{"software"}})
     else
     {
         #The lib is absent
-        warn("\nThe $soft software is absent or not in the current PATH. TOGGLE cannot run pipeline using this tool in your current configuration.\n") unless $soft =~ m/toggle/i;
+        warn("\nThe $soft software is absent or not in the current PATH. TOGGLe cannot run pipeline using this tool in your current configuration. Other tools will function anyway\n") unless $soft =~ m/toggle/i;
     }
 }
 
@@ -236,8 +236,8 @@ print ("\nCONFIGURING YOUR PERSONAL localConfig.pm");
 
 my $configOk = "modules/localConfigTEMP.pm";
 
-open (my $fhConfig2, "<", $localConfigFile) or die ("\nCannot read the original localConfig.pm file:\n$!\nTOGGLE is cloned but not configured\n");
-open (my $fhOut, ">", $configOk) or die ("\nCannot create the local configuration file:\n$!\nTOGGLE is cloned but not configured\n");
+open (my $fhConfig2, "<", $localConfigFile) or die ("\nCannot read the original localConfig.pm file:\n$!\nTOGGLe is cloned but not configured\n");
+open (my $fhOut, ">", $configOk) or die ("\nCannot create the local configuration file:\n$!\nTOGGLe is cloned but not configured\n");
 
 while (my $line = <$fhConfig2>)
 {
@@ -281,24 +281,32 @@ close $fhConfig2;
 close $fhOut;
 
 my $cpCommand ="mv $configOk $localConfigFile";
-system($cpCommand) and die ("\nCannot copy correct config file as localConfig.pm:\n$!\nTOGGLE is cloned but not configured\n");
+system($cpCommand) and die ("\nCannot copy correct config file as localConfig.pm:\n$!\nTOGGLe is cloned but not configured\n");
 
 print "\nDownloading the various Perl modules";
 
 my $wgetCommand = "wget http://bioinfo-web.mpl.ird.fr/toggle/perlModules.tar.gz";
-system("$wgetCommand") and die ("\nCannot download the perl libraries: $!\n");
+system("$wgetCommand") and die ("\nCannot download the required Perl libraries: $!\n\nPlease use the CPAN to install them...\n");
 
 # DECLARE VARIABLES WITH PATHS 
 my $MODULES=$INSTALLPATH."/modules";
 
 print "\tDecompressing Perl Modules\n";
 
-system ("cd $INSTALLPATH && tar xzf perlModules.tar.gz && rm -Rf perlModules.tar.gz && cp -R perlModules/* $MODULES/. && rm -Rf perlModules") and die ("\nCannot decompress the perl Modules:\n$!\n");
+system ("cd $INSTALLPATH && tar xzf perlModules.tar.gz && rm -Rf perlModules.tar.gz && cp -R perlModules/* $MODULES/. && rm -Rf perlModules && cd") and die ("\nCannot decompress the perl Modules:\n$!\n");
 
 #Adding toggle in the user PERL5LIB path
 
 system ("echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - >> ~/.bashrc && echo \"\nPATH=\$PATH:$INSTALLPATH\n\" | cat - >> ~/.bashrc && source ~/.bashrc") and die("\nCannot add paths: $!\n");
 print "echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - >> ~/.bashrc && echo \"\nPATH=\$PATH:$INSTALLPATH\n\" | cat - >> ~/.bashrc && source ~/.bashrc";
-print "\n The automatic configuration is finished.\n\nPlease use first the test data as recommended on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n";
+print "\n The automatic configuration is finished.\n\nPlease use first the test data as recommended on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLe\n\n
+###########################################################################################################################
+#\tCITATION:
+#\tTOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses.
+#\tChristine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+#\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+#\tbioRxiv, doi: https://doi.org/10.1101/245480
+#\thttps://toggle.southgreen.fr/
+###########################################################################################################################";
 
 exit;

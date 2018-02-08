@@ -8,7 +8,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -70,6 +70,14 @@ use scp;
 use duplicationDetector;
 use bedTools;
 use generic;
+use abyss;
+use breakDancer;
+use pindel;
+use plink;
+use sniplay;
+use fastme;
+use readseq;
+
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -84,9 +92,12 @@ my $parser = Getopt::ArgParse->new_parser(
 # More information:
 #\thttps://github.com/SouthGreenPlatform/TOGGLE/blob/master/docs/README.md
 #
-# Citation:
-#\tTOGGLE: Toolbox for generic NGS analyses. Cécile Monat & al..
-#\tBMC Bioinformatics 2015, 16:374
+#\tCITATION:
+#\tTOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses.
+#\tChristine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper,
+#\tNdomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+#\tbioRxiv, doi: https://doi.org/10.1101/245480
+#\thttps://toggle.southgreen.fr/
 ###########################################################################\n",
         help            => 'a framework to build quickly NGS pipelines',
         error_prefix    => "\n\tERROR MSG: "
@@ -260,8 +271,17 @@ my ($mpileupOut);
 ##BED associated variables
 my ($bedFileIn, $bedFileOut)=("NA","NA");
 
+##BreakDancer and pindel associated variables
+my ($cfgFile,$breakDancerOut, $pindelOut)=("NA","NA","NA");
+
 ##GENERIC variable
 my ($fileIn,$fileOut)=("NA","NA");
+
+##PED for SNIPLAY
+my $pedFileIn = "NA";
+my $phylipFileIn = "NA";
+my $readseqFileIn = "NA";
+
 
 ##Internal variables
 ###Directory and file variables

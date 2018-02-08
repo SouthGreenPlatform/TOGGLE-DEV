@@ -2,7 +2,7 @@ package scheduler;
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ use Data::Dumper;
 #
 ##################################
 
-our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash);
+our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash, @errorFileList);
 
 #Here is the core commands for any scheduler: run, acct and queue command.
 
@@ -152,7 +152,14 @@ sub launcher {
     	return 0;
     }
 
-    return $runOutput;
+        #Picking up the output error file
+    my @listOne = split /-d\s+/, $commandLine;
+    my ($folderOut) = split /\s+/, $listOne[1];
+    my $errorLog = `basename $folderOut`;
+    chomp $errorLog;
+    $errorLog=$folderOut."/".$errorLog."_global_log.e";
+    
+    return ($runOutput, $errorLog);
 }
 
 sub normalRun { #For running in normal mode, ie no scheduler
@@ -203,12 +210,15 @@ sub schedulerRun
 
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$schedulerOptions;
+    
+   
+    ##DEBUG    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLog;",1);
 
     #Creating the bash script for slurm to launch the command
     #my $date =`date +%Y_%m_%d_%H_%M_%S`;
     #chomp $date;
     my $scriptName=$schedulerFolder."/".$sample."_schedulerScript.sh";
-    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\n\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand,"noprint");
     $launcherCommand.=" ".$scriptName;
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
@@ -227,7 +237,7 @@ sub schedulerRun
 
     unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
     {
-        return 0; #Returning to launcher subprogram the error type
+        return -1; #Returning to launcher subprogram the error type
     }
 
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in $commands{'run'}{$schedulerType} mode through the command:\n\t$launcherCommand\n",1);
@@ -281,11 +291,11 @@ sub schedulerWait
       my $statCommand = $commands{'queue'}{$schedulerType}." | egrep -c \"$jobList\"";
       $nbRunningJobs = `$statCommand`;
       chomp $nbRunningJobs;
-      sleep 50;
+      sleep 5;
     }
 
     #Compiling infos about sge jobs: jobID, node number, exit status
-    sleep 25;#Needed for acct to register infos...
+    sleep 5;#Needed for acct to register infos...
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
 Individual\tJobID\tExitStatus
@@ -293,49 +303,66 @@ Individual\tJobID\tExitStatus
 
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
-		my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
-		my $acctOutput = `$acctCommand`;
-		my $outputLine;
-
-		chomp $acctOutput;
-		if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
-		{
-		  #IF acct cannot be run on the node
-		  $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
-		  toolbox::exportLog($outputLine,1);
-		  next;
+        #First action testing the error log size...
+		#my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
+        
+        my ($currentLine, $outputLine);
+        $outputLine = "$individual\t$jobHash{$individual}{output}\t";
+        
+        my $grepError = `grep "ERROR" $jobHash{$individual}{errorFile}`;
+        chomp $grepError;
+        
+        if ($grepError)
+        {
+            $currentLine = "Error";
 		}
-
-		my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
-		$outputLine = $individual."\t".$jobHash{$individual}."\t";
-		my $currentLine ="Error";
-		my $parserText = $parsings{'acctOutText'}{$schedulerType};
+        else
+        {
+            $currentLine = "Normal";
+        }
+        
+		#my $acctOutput = `$acctCommand`;
+		#my $outputLine;
+		#
+		#chomp $acctOutput;
+		#if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
+		#{
+		#  #IF acct cannot be run on the node
+		#  $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
+		#  toolbox::exportLog($outputLine,1);
+		#  next;
+		#}
+		#
+		#my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
+		#$outputLine = $individual."\t".$jobHash{$individual}."\t";
+		#my $currentLine ="Error";
+		#my $parserText = $parsings{'acctOutText'}{$schedulerType};
 
 		##DEBUG	toolbox::exportLog($parserText,2);
 
-		while (@linesQacct) #Parsing the qacct output
-		{
-		  my $line = shift @linesQacct;
-		  #Passing the header lines
-		  next if $line =~ m/JobID/;
-		  next if $line =~ m/^$/;
+		#while (@linesQacct) #Parsing the qacct output
+		#{
+		#  my $line = shift @linesQacct;
+		#  #Passing the header lines
+		#  next if $line =~ m/JobID/;
+		#  next if $line =~ m/^$/;
 
 
-
-		  if ($line =~ m/$parserText/) #Picking up exit status
-		  {
-			  $currentLine = "Normal";
-			  last;
-		  }
-
-		  next;
-		}
-
-		#The parsing text has not been found meaning still an error
-		if ($currentLine eq "Error")
-		{
-		  push @jobsInError, $individual;
-		}
+		#
+		#  if ($line =~ m/$parserText/) #Picking up exit status
+		#  {
+		#	  $currentLine = "Normal";
+		#	  last;
+		#  }
+		#
+		#  next;
+		#}
+		#
+		##The parsing text has not been found meaning still an error
+		#if ($currentLine eq "Error")
+		#{
+		#  push @jobsInError, $individual;
+		#}
 		$outputLine .= $currentLine;
 		toolbox::exportLog($outputLine,1);
 

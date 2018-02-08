@@ -2,7 +2,7 @@ package toolbox;
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1090,6 +1090,36 @@ sub rmHashOrder
 }
 ################################################################################################
 # END sub rmHashOrder
+################################################################################################
+
+################################################################################################
+# sub degzip => decompress a gzip file and return the name of the decompressed file
+################################################################################################
+# arguments :
+# 	- $gzFile
+# returns :
+#	- $plainFile
+################################################################################################
+sub degzip
+{
+	toolbox::exportLog("ERROR: toolbox::degzip : should get one argument\n",0) if (@_ < 1);
+	my ($gzFile)=@_;
+    my $plainFile = `basename $gzFile`;
+    chomp $plainFile;
+    $plainFile =~ s/\.gz$//i;
+    
+    my $command = "gzip -d -c `readlink $gzFile` > $plainFile";
+        #Execute command
+    if(&run($command,"noprint") != 1)
+    {
+        return 0;
+    }
+
+	
+	return $plainFile;
+}
+################################################################################################
+# END sub degzip
 ################################################################################################
 
 

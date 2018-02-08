@@ -111,21 +111,21 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 
 
 my %optionsRef = ();
-my $optionsHachees = \%optionsRef; 
+my $optionsHachees = \%optionsRef;
 
 # input file
 my $vcfFile = "$toggle/data/testData/vcf/vcfForRecalibration/control.vcf";
-my $pedFileOut = "out";
+my $pedFileOut = "control.PLINKVCF2PED";
 
 #execution test
 is(plink::vcf2ped($vcfFile, $pedFileOut, $optionsHachees),1,'plink::vcf2ped');
 
 
 # expected output test
-my $expectedOutput = 'out.ped';
-my $observedOutput = `ls out.ped`;
+my $expectedOutput = 'control.PLINKVCF2PED.ped';
+my $observedOutput = `ls control.PLINKVCF2PED.ped`;
 chomp($observedOutput);
-is($observedOutput,$expectedOutput,'plink::vcf2ped - output list'); 
+is($observedOutput,$expectedOutput,'plink::vcf2ped - output list');
 
 
 # expected content test

@@ -28,8 +28,8 @@ You are currently on the production version, *i.e.* the last stable one. A more 
 
 * Licencied under CeCill-C (http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html) and GPLv3
 * Intellectual property belongs to IRD, CIRAD, ADNid and SouthGreen development platform
-* Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Enrique Ortega-Abboud, Sébastien Ravel, Julie Orjuela-Bouniol, Souhila Amanzougarene, Gauthier Sarah, Marilyne Summo, and Francois Sabot
-* Copyright 2014-2017
+* Written by Christine Tranchant-Dubreuil, Sebastien Ravel, Maryline Summo, Cédric Farcy, Enrique Ortega-Abboud, Mawussé Agbessi, Cecile Monat, Ayité Kougbeadjo, Souhila Amanzougarene, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper, Ndomassi Tando, Julie Orjuela-Bouniol, and Francois Sabot
+* Copyright 2014-2018
 
 ## Contact
 
@@ -38,7 +38,7 @@ For bug tracking purpose you can use the GitHub or questions about TOGGLE, you c
 
 
 ##  Citation
-**TOGGLE: Toolbox for generic NGS analyses**. Cécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique
-Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
-
-[*BMC Bioinformatics* 2015, 16:374  doi:10.1186/s12859-015-0795-6](http://www.biomedcentral.com/1471-2105/16/374)
+**TOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses**
+Christine Tranchant-Dubreuil, Sebastien Ravel, Cecile Monat, Gautier Sarah, Abdoulaye Diallo, Laura Helou, Alexis Dereeper, Ndomassi Tando, Julie Orjuela-Bouniol, Francois Sabot.
+*bioRxiv*, doi: https://doi.org/10.1101/245480
+https://toggle.southgreen.fr/

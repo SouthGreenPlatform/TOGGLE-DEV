@@ -2,7 +2,7 @@ package fileConfigurator;
 
 ###################################################################################################################################
 #
-# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,8 +46,8 @@ our %testParams=    (
         bwaMem => [""],
         bwaSw => [""],
         bwaIndex => [""],
-		# crac
-		crac => [""],
+	# crac
+	crac => [""],
         #TopHat soft
         tophat2 => ["-i=30","-I=20000","-a=8","-m=1","--no-coverage-search","-g=10","--bowtie-n","--library-type=fr-unstranded","--microexon-search"],
         #GATK soft
@@ -110,9 +110,9 @@ our %testParams=    (
         checkFormatSamOrBam => [""],
         #fastqUtils
         checkEncodeByASCIIcontrol => [""],
-		# bamutils
-		bamutilsFilter => ["-gte MAPQ 30"],
-		bamutilsRemoveclipping => [""],
+	# bamutils
+	bamutilsFilter => ["-gte MAPQ 30"],
+	bamutilsRemoveclipping => [""],
         #Bowtie softs
         bowtie=>[""],
         bowtie2=>[""],
@@ -123,7 +123,18 @@ our %testParams=    (
         bedtoolsWindowBed=>[""],
         bedToolsGeneric=>[""],
         #Generic
-        generic=>[""]
+        generic=>[""],
+        #Abyss
+        abyss=>[""],
+        #Breakdancer
+        breakDancer=>[""],
+        #Pindel
+        pindel=>[""],
+        #SNIPLAY
+        plinkVcf2Ped => [""],
+        sniplayPed2fasta => [""],
+	readseq => ["-f 12"],
+	fastme => ["-d"]
         );
 
 sub softParams
