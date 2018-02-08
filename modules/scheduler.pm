@@ -339,6 +339,7 @@ Individual\tJobID\tExitStatus
 		#at least one job has failed
 		return \@jobsInError;
     }
+    close $fh;
     return 1;
 }
 
