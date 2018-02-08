@@ -256,7 +256,7 @@ sub waiter
 
     my $schedulerType = &checkingCapability;
     
-    my $stopWaiting = &schedulerWait($schedulerType, $outputDir)
+    my $stopWaiting = &schedulerWait($schedulerType, $outputDir);
 
     return $stopWaiting;
 }
