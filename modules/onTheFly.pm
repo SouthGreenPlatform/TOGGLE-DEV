@@ -498,7 +498,7 @@ sub generateGraphviz
 ################################################################################################
 sub generateReports
 {
-    my ($outDir)=@_;
+    my ($outDir, $jobHash)=@_;
 	my $reportDirWF="$outDir/texReport/workflow/";
 	my $reportDirAn="$outDir/texReport/analysis/";
 	
@@ -518,6 +518,22 @@ sub generateReports
 	#Pipeline picture
 	my $mvCmd="cp $outDir/togglePipeline.png $reportDirWF/";
 	toolbox::run($mvCmd);
+	
+	#parallel sample
+	if ( -e $outDir."/sample_parallel_table.tex")
+	{
+	$mvCmd="mv $outDir/sample_parallel_table.tex $reportDirWF/input";
+	toolbox::run($mvCmd);
+	}
+
+	#parallel sample
+	if ( -e  $outDir."/sample_global_table.tex")
+	{
+		$mvCmd="mv $outDir/sample_global_table.tex $reportDirWF/input";
+		toolbox::run($mvCmd);
+	}
+
+	
 	
 	#Command line
 	$mvCmd="mv $outDir/commandLine.tex $reportDirWF/input";

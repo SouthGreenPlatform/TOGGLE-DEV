@@ -45,7 +45,7 @@ use Data::Dumper;
 #
 ##################################
 
-our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash, @errorFileList);
+our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash, @errorFileList, $outputDir);
 
 #Here is the core commands for any scheduler: run, acct and queue command.
 
@@ -53,10 +53,6 @@ my %commands =('run' => {'sge'=>'qsub',
 						 'slurm'=>'sbatch',
 						 'mprun'=>'ccc_msub',
 						 'lsf'=>'bsub'},
-			   'acct' => {'sge'=>'qacct -j',
-						  'slurm'=>'qacct -j',
-						  'mprun'=>'ccc_macct',
-						  'lsf'=>'bacct'},
 			   'queue' => {'sge'=>'qstat -u \$USER',
 						  'slurm'=>'squeue',
 						  'mprun'=>'ccc_mstat -u \$USER',
@@ -73,15 +69,7 @@ my %parsings = ('JIDposition' => {	'sge'=>2,
 				'JIDsplitter' => {'sge'=>"\\s",
 								  'slurm'=>"\\s",
 								  'mprun'=>"\\s",
-								  'lsf'=>"<\|>"},
-				'acctOutSplitter' => {'sge'=>"\\n",
-									  'slurm'=>"\\n",
-									  'mprun'=>"\\s+",
-									  'lsf'=>"\\s+"},
-				'acctOutText' => {'sge'=>"exit_status  0",
-								  'slurm'=>"COMPLETED",
-								  'mprun'=>"COMPLETED",
-								  'lsf'=>"Total number of done jobs:\\s*1\\s*Total number of exited jobs:\\s*0\\s*"});
+								  'lsf'=>"<\|>"});
 
 ##DEBUG toolbox::exportLog(Dumper(\%parsings),0);
 
@@ -262,7 +250,7 @@ sub schedulerRun
 sub waiter
 { #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
 
-    ($jobList,my $jobsInfos) = @_;
+    ($jobList,my $jobsInfos, $outputDir) = @_;
 
     %jobHash = %{$jobsInfos};
 
@@ -271,7 +259,7 @@ sub waiter
 
     if (defined $$configInfo{$schedulerType})
 	{
-		$stopWaiting = &schedulerWait($schedulerType)
+		$stopWaiting = &schedulerWait($schedulerType, $outputDir)
 	}
 
     return $stopWaiting;
@@ -280,7 +268,7 @@ sub waiter
 
 sub schedulerWait
 {
-    my ($schedulerType) = @_;
+    my ($schedulerType, $ouputDir) = @_;
     my $nbRunningJobs = 1;
     my @jobsInError=();
 
@@ -291,11 +279,28 @@ sub schedulerWait
       my $statCommand = $commands{'queue'}{$schedulerType}." | egrep -c \"$jobList\"";
       $nbRunningJobs = `$statCommand`;
       chomp $nbRunningJobs;
-      sleep 5;
+      sleep 15;
     }
 
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 5;#Needed for acct to register infos...
+	
+	#open file for report job info
+	my $openNameFile = $outputDir."/sample_parallel_table.tex";
+	
+	if (scalar(keys%jobHash) == 1 && defined($jobHash{"global"}))
+	{
+		 $openNameFile = $outputDir."/sample_global_table.txt";
+	}
+	
+	open(my $fh, ">", $openNameFile) and die "\nERROR: $0 : cannot open file $openNameFile. $!\nExiting...\n";
+	
+	my $outputLineTex = "\\begin{table}[ht]
+	\\centering
+	\\begin{tabular}{l||r||r}
+	Samples & Job ID & Status \\\\\\hline
+	";
+	
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
 Individual\tJobID\tExitStatus
@@ -308,6 +313,7 @@ Individual\tJobID\tExitStatus
         
         my ($currentLine, $outputLine);
         $outputLine = "$individual\t$jobHash{$individual}{output}\t";
+		$outputLineTex .= "$individual & $jobHash{$individual}{output} & ";
         
         my $grepError = `grep "ERROR" $jobHash{$individual}{errorFile}`;
         chomp $grepError;
@@ -320,54 +326,17 @@ Individual\tJobID\tExitStatus
         {
             $currentLine = "Normal";
         }
-        
-		#my $acctOutput = `$acctCommand`;
-		#my $outputLine;
-		#
-		#chomp $acctOutput;
-		#if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
-		#{
-		#  #IF acct cannot be run on the node
-		#  $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
-		#  toolbox::exportLog($outputLine,1);
-		#  next;
-		#}
-		#
-		#my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
-		#$outputLine = $individual."\t".$jobHash{$individual}."\t";
-		#my $currentLine ="Error";
-		#my $parserText = $parsings{'acctOutText'}{$schedulerType};
-
-		##DEBUG	toolbox::exportLog($parserText,2);
-
-		#while (@linesQacct) #Parsing the qacct output
-		#{
-		#  my $line = shift @linesQacct;
-		#  #Passing the header lines
-		#  next if $line =~ m/JobID/;
-		#  next if $line =~ m/^$/;
-
-
-		#
-		#  if ($line =~ m/$parserText/) #Picking up exit status
-		#  {
-		#	  $currentLine = "Normal";
-		#	  last;
-		#  }
-		#
-		#  next;
-		#}
-		#
-		##The parsing text has not been found meaning still an error
-		#if ($currentLine eq "Error")
-		#{
-		#  push @jobsInError, $individual;
-		#}
-		$outputLine .= $currentLine;
+       
+    	$outputLine .= $currentLine;
+		$outputLineTex .= $currentLine."\\\\";
 		toolbox::exportLog($outputLine,1);
+		
+		print $fh $outputLineTex;
 
     }
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
+	print $fh "\\end{tabular}
+	\\end{table}";
 
     if (scalar @jobsInError)
     {
