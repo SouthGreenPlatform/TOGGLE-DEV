@@ -260,7 +260,7 @@ toolbox::exportLog("INFOS: the current version of TOGGLE is $version\n",1);
 ### Generate tex file
 my $inputFile="commandLine.tex";
 open(my $cmdFh,">", $inputFile) or toolbox::exportLog("$0 : open error of $inputFile .... $!\n",0);
-print $cmdFh "\n \\begin{verbatim} \n $cmd_line \n \\end{verbatim} \n";
+print $cmdFh "\n $cmd_line \n";
 close $cmdFh;
 
 # Verify if file arguments exist
@@ -741,7 +741,7 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 #\thttps://toggle.southgreen.fr/
 ###########################################################################################################################",1);
 
-onTheFly::generateReports($outputDir) if $report;
+onTheFly::generateReports($outputDir, $configInfo) if $report;
 
 exit;
 

@@ -498,7 +498,7 @@ sub generateGraphviz
 ################################################################################################
 sub generateReports
 {
-    my ($outDir, $jobHash)=@_;
+    my ($outDir, $configInfo)=@_;
 	my $reportDirWF="$outDir/texReport/workflow/";
 	my $reportDirAn="$outDir/texReport/analysis/";
 	
@@ -541,6 +541,10 @@ sub generateReports
 	
 	#Software Version
 	$mvCmd="mv $outDir/software.txt $reportDirWF/input";
+	toolbox::run($mvCmd);
+	
+	#config file
+	$mvCmd="mv $configInfo $reportDirWF/input/configuration.txt";
 	toolbox::run($mvCmd);
 	
 	#generating pdf report in $texWorkflowFile 	

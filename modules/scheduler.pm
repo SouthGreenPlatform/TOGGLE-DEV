@@ -287,10 +287,10 @@ sub schedulerWait
 	
 	if (scalar(keys%jobHash) == 1 && defined($jobHash{"global"}))
 	{
-		 $openNameFile = $outputDir."/sample_global_table.txt";
+		 $openNameFile = $outputDir."/sample_global_table.tex";
 	}
 	
-	open(my $fh, ">", $openNameFile) and die "\nERROR: $0 : cannot open file $openNameFile. $!\nExiting...\n";
+	open (FH, '>', $openNameFile) or die "\nERROR: $0 : cannot open file $openNameFile. $!\nExiting...\n";
 	
 	my $outputLineTex = "\\begin{table}[ht]
 	\\centering
@@ -327,11 +327,11 @@ Individual\tJobID\tExitStatus
 		$outputLineTex .= $currentLine."\\\\";
 		toolbox::exportLog($outputLine,1);
 		
-		print $fh $outputLineTex;
+		print FH $outputLineTex;
 
     }
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
-	print $fh "\\end{tabular}
+	print FH "\\end{tabular}
 	\\end{table}";
 
     if (scalar @jobsInError)
@@ -339,7 +339,7 @@ Individual\tJobID\tExitStatus
 		#at least one job has failed
 		return \@jobsInError;
     }
-    close $fh;
+    close FH;
     return 1;
 }
 
