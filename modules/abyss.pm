@@ -39,7 +39,8 @@ use Data::Dumper;
 use Switch;
 
 #This function will validate that the given file is at least in one of the accepted format (fastq/fasta/sam/bam)
-sub localFormatCheck{
+sub localFormatCheck
+{
 	my ($file)=@_;
 	my $validation =0;
 	switch (1)
@@ -154,7 +155,8 @@ sub localFormatCheck{
 #    }
 #}
 
-sub abyssSimple {
+sub abyssSimple
+{
     #Will use FASTQ/FASTA/SAM/BAM data for assembly, single-end and pair-end FASTQ/FASTA data or single library BAM/SAM
     my($outputDir,$readGroup,$forwardFile,$reverseFile,$optionsHachees)=@_;
     my $orderedList=""; 
