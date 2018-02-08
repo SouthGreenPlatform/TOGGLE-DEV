@@ -145,7 +145,7 @@ sub launcher {
     my ($folderOut) = split /\s+/, $listOne[1];
     my $errorLog = `basename $folderOut`;
     chomp $errorLog;
-    $errorLog=$folderOut."/".$errorLog."_global_log.e";
+    $errorLog=$folderOut."/".$errorLog."_log.e";
     
     return ($runOutput, $errorLog);
 }
@@ -327,11 +327,12 @@ Individual\tJobID\tExitStatus
 		$outputLineTex .= $currentLine."\\\\";
 		toolbox::exportLog($outputLine,1);
 		
-		print FH $outputLineTex;
+		
 
     }
+	print FH $outputLineTex;
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
-	print FH "\\end{tabular}
+	print FH "\n\\end{tabular}
 	\\end{table}";
 
     if (scalar @jobsInError)

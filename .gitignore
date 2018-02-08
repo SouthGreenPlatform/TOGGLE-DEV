@@ -1,3 +1,5 @@
 ./modules/localConfig\.pm
 ./dataTest/*
-
+./dataTest
+./data/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq.readcount
+./data/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.fq.readcount

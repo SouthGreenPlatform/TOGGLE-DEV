@@ -695,7 +695,7 @@ if ($orderAfter1000)
     {
       $jobList = $jobOutput;
       $jobHash{"global"}{output}=$jobOutput;
-      $errorFile =~ s/intermediateResults_global/multipleAnalysis_global/;
+      $errorFile =~ s/intermediateResults_/globalAnalysis_/;
       $jobHash{"global"}{errorFile}=$errorFile;
 
       #If qsub mode, we have to wait the end of jobs before populating
@@ -741,7 +741,7 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 #\thttps://toggle.southgreen.fr/
 ###########################################################################################################################",1);
 
-onTheFly::generateReports($outputDir, $configInfo) if $report;
+onTheFly::generateReports($outputDir, $fileConf) if $report;
 
 exit;
 
