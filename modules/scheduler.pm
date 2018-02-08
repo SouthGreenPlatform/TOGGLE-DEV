@@ -255,12 +255,8 @@ sub waiter
     %jobHash = %{$jobsInfos};
 
     my $schedulerType = &checkingCapability;
-    my $stopWaiting;
-
-    if (defined $$configInfo{$schedulerType})
-	{
-		$stopWaiting = &schedulerWait($schedulerType, $outputDir)
-	}
+    
+    my $stopWaiting = &schedulerWait($schedulerType, $outputDir)
 
     return $stopWaiting;
 }
@@ -275,6 +271,7 @@ sub schedulerWait
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
     {
+      last if $schedulerType eq "normalRun";
       #Picking up the number of currently running jobs
       my $statCommand = $commands{'queue'}{$schedulerType}." | egrep -c \"$jobList\"";
       $nbRunningJobs = `$statCommand`;
@@ -308,8 +305,6 @@ Individual\tJobID\tExitStatus
 
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
-        #First action testing the error log size...
-		#my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
         
         my ($currentLine, $outputLine);
         $outputLine = "$individual\t$jobHash{$individual}{output}\t";
@@ -321,6 +316,7 @@ Individual\tJobID\tExitStatus
         if ($grepError)
         {
             $currentLine = "Error";
+            push @jobsInError, $individual;
 		}
         else
         {
