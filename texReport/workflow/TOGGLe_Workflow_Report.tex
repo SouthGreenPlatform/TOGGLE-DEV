@@ -53,7 +53,7 @@ keywordstyle=\color[rgb]{0,0,1},                    % keywords
 \lhead{\includegraphics[width=0.12\textwidth]{../img/toggleLogo2.png}}
 %\chead{Analysis report}
 \rfoot{Page \thepage}
-\rfoot{\includegraphics[width=0.13\textwidth]{../img/SGLogo.png}}
+\lfoot{\includegraphics[width=0.13\textwidth]{../img/SGLogo.png}}
 
 \begin{document}
 
@@ -102,7 +102,7 @@ keywordstyle=\color[rgb]{0,0,1},                    % keywords
 
 %%%%%%%   SUBSECTION : link to software config (appendix)
 \subsection{Software configuration}
-See the software configuration used by TOGGLe (\ref{appendix:config})  in Appendix.
+See the software configuration used by TOGGLe (\ref{configFile})  in Appendix.
 
 
 
@@ -115,11 +115,12 @@ See the software configuration used by TOGGLe (\ref{appendix:config})  in Append
 \newpage
 \section{Jobs execution}
 
-\subsection{Parallel execution (step number < 1000)}
-
+\subsection{Parallel runs  (by sample)}
+Step number < 1000
 \input{input/sample_parallel_table.tex}
 
-\subsection{Global execution (step number >= 1000)}
+\subsection{Global runs}
+Step number > 1000
 \input{input/sample_global_table.tex}
 
 
@@ -130,17 +131,16 @@ See the software configuration used by TOGGLe (\ref{appendix:config})  in Append
 
 \clearpage
 
-%\bibliographystyle{nar}
+\bibliographystyle{plain}
 \bibliography{TOGGLe_Workflow_Report}
 
+\
 \clearpage
 \section{Appendix}\appendix
 
 %\appendix
 \section{ Software configuration file used}
-\label{appendix:config}
+\label{configFile}
 \lstinputlisting[language=Perl]{input/configuration.txt}
 
 \end{document}
-
-
