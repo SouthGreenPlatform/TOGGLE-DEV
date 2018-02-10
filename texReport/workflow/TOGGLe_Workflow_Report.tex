@@ -10,11 +10,7 @@
 
 % header & footer
 \usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-\rhead{\LaTeX}
-\lhead{TOGGLe workflow report}
-\rfoot{Page \thepage}
+
 
 %% Useful packages
 \usepackage{amsmath}
@@ -25,6 +21,7 @@
 %\usepackage{verbatim}
 \usepackage{listings}
 \usepackage{color}
+\usepackage[export]{adjustbox} %figure position include graphics
 
 \lstset{ % General setup for the package
  basicstyle=\footnotesize, %basicstyle=\small\ttfamily,
@@ -50,7 +47,13 @@ keywordstyle=\color[rgb]{0,0,1},                    % keywords
 %columns=fullflexible
 }%
 
-
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Analysis report - \LaTeX}
+\lhead{\includegraphics[width=0.12\textwidth]{../img/toggleLogo2.png}}
+%\chead{Analysis report}
+\rfoot{Page \thepage}
+\rfoot{\includegraphics[width=0.13\textwidth]{../img/SGLogo.png}}
 
 \begin{document}
 
@@ -66,7 +69,6 @@ keywordstyle=\color[rgb]{0,0,1},                    % keywords
 %           LOAD TABLE OF CONTENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tableofcontents
-
 \newpage
 
 
@@ -140,4 +142,5 @@ See the software configuration used by TOGGLe (\ref{appendix:config})  in Append
 \lstinputlisting[language=Perl]{input/configuration.txt}
 
 \end{document}
+
 
