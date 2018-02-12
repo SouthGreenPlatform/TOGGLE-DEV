@@ -742,9 +742,19 @@ if ($orderAfter1000)
     foreach my $file (@{$fileList}) #Copying the final data in the final directory
     {
         my ($basicName)=toolbox::extractPath($file);
-        my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
-        ##DEBUG toolbox::exportLog($cpLnCommand,1);
-        toolbox::run($cpLnCommand,"noprint")
+        
+                        # Moving stat file into stat directory instead of finalDir        
+        if ($basicName =~ /\.stat$/)
+        {
+            my $mvCommand="mv $file $statDir/$basicName && rm -f $file";
+            toolbox::run($mvCommand,"noprint");    
+        }
+        else
+        {
+            my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
+            ##DEBUG toolbox::exportLog($cpLnCommand,1);
+            toolbox::run($cpLnCommand,"noprint")
+        }
     }
 
 }
