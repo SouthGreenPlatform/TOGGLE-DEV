@@ -236,6 +236,20 @@ sub generateScript
 		$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
     }
 
+	
+	
+	
+	###########################################
+	###########################################
+	############# EN TEST REPORT STAT MAPPING
+	$catCommand .= " ".$toggle."/onTheFly/statsMappingBlock.txt";
+	###########################################
+	###########################################
+	
+	
+	
+	
+	
     $catCommand .= " $toggle/onTheFly/endBlock.txt > $script && chmod 775 $script"; #Adding the end of the script and rending it executable
 
     ##DEBUG print $catCommand,"\n";
