@@ -77,7 +77,7 @@ use plink;
 use sniplay;
 use fastme;
 use readseq;
-
+use stats;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
