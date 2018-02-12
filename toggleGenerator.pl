@@ -274,7 +274,6 @@ foreach my $file (@listFilesMandatory)
 ########################################
 
 toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
-
 versionSofts::writeLogVersion($fileConf,$version.$newRelease,$outputDir,$report);
 
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
@@ -316,7 +315,6 @@ if ($initialDirFolder != 0)#The initial dir contains subdirectories, so dying
 }
 
 #Checking input data homogeneity
-
 my $previousExtension=0;
 foreach my $file (@{$initialDirContent})
 {
@@ -356,7 +354,6 @@ foreach my $file (@{$initialDirContent})
 }
 
 #Checking if the files are taken in charge by TOGGLE
-
 if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam|ped/)  # j'ai rajouté fasta pour les besoins de TGICL et moi ped pour SNIPLAY
 {
     toolbox::exportLog("ERROR : $0 : The filetype $previousExtension is not taken in charge by TOGGLE\n",0);
@@ -364,9 +361,7 @@ if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam|ped/)  # j'ai rajouté fasta
 
 
 #Linking the original data to the output dir
-
 #Creating a specific name for the working directory depending on the type of analysis
-
 my $resultsDir = "output";
 
 my $workingDir = $outputDir."/$resultsDir";
@@ -508,6 +503,10 @@ foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash 
 my $finalDir = $outputDir."/finalResults";
 my $intermediateDir = $workingDir."/intermediateResults";
 
+#Creating  directory
+my $statDir = $outputDir."/statsReport";        
+toolbox::makeDir($statDir);
+
 #Graphviz Graphic generator
 toolbox::exportLog("#########################################\nINFOS: Generating graphical view of the current pipeline \n#########################################\n",1);
 onTheFly::generateGraphviz($hashOrder,$outputDir);
@@ -635,8 +634,19 @@ if ($orderBefore1000)
             foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
             {
                 my ($basicName)=toolbox::extractPath($file);
-                my $lnCommand="ln -s $file $intermediateDir/$basicName";
-                toolbox::run($lnCommand,"noprint")
+                toolbox::exportLog("------>".$basicName."\n");
+                
+                # Moving stat file into stat directory instead of intermediateDir        
+                if ($basicName =~ /\.stat$/)
+                {
+                    my $mvCommand="mv $file $statDir/$basicName && rm -f $file";
+                    toolbox::run($mvCommand,"noprint");    
+                }
+                else
+                {
+                    my $lnCommand="ln -s $file $intermediateDir/$basicName";
+                    toolbox::run($lnCommand,"noprint");
+                }
             }
         }
     }
@@ -663,8 +673,18 @@ if ($orderBefore1000)
                 next if (not defined $file or $file =~ /^\s*$/);
 				$file =~s/://g;
 				my ($basicName)=toolbox::extractPath($file);
-                my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
-                toolbox::run($cpLnCommand,"noprint")
+
+                # Moving stat file into stat directory instead of finalDir        
+                if ($basicName =~ /\.stat$/)
+                {
+                    my $mvCommand="mv $file $statDir/$basicName && rm -f $file";
+                    toolbox::run($mvCommand,"noprint");    
+                }
+                else
+                {
+                    my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
+                    toolbox::run($cpLnCommand,"noprint");
+                }
             }
         }
     }
