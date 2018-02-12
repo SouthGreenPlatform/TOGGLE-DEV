@@ -85,7 +85,11 @@ sub mapping
 
           # Delete bam generated
           my $rmCommand = "rm $bamFileOut*";
-      
+          toolbox::run($rmCommand,"noprint");
+          
+          # Delete bai generated
+          $bamFileOut =~ s/\.bam$/\.bai/;
+          $rmCommand = "rm $bamFileOut*";
           toolbox::run($rmCommand,"noprint");
      }
      else
