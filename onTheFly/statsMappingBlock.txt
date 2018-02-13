@@ -35,6 +35,13 @@ foreach my $file (@{$fileList})
     }
 }
 
+# if bam / sam
+# creatingMappingStatFileRaw
+# else vcf
+# creatingCallingStatFileRaw
+# else fasta
+# else fastq
+
 if ($samFileIn eq "NA" )    # No sam or bam found
 {
     toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0) ;
