@@ -1,7 +1,6 @@
 $abyss
 IN=fasta,fastq,sam,bam
 OUT=fasta
-STAT=fasta
 
 $atropos
 IN=fastq
@@ -41,13 +40,11 @@ $bowtie
 IN=fastq
 OUT=sam
 MANDATORY=reference
-STAT=mapping
 
 $bowtie2
 IN=fastq
 OUT=SAM
 MANDATORY=reference
-STAT=mapping
 
 $breakDancer
 IN=bam
@@ -65,25 +62,22 @@ MANDATORY=reference
 
 $bwaMem
 IN=fastq,fasta
-STAT=mapping
 
 $bwaSampe
 IN=fastq,sai
 OUT=sam
 MANDATORY=reference
-STAT=mapping
+
 
 $bwaSamse
 IN=fastq,sai
 OUT=sam
 MANDATORY=reference
-STAT=mapping
 
 $bwaSw
 IN=fastq,fasta
 OUT=sam
 MANDATORY=reference
-STAT=mapping
 
 #$changeEncode
 #IN=fastq
@@ -121,7 +115,6 @@ $crac
 IN=fastq
 OUT=SAM
 MANDATORY= reference
-STAT=mapping
 
 $cracIndex
 IN=fasta
@@ -131,7 +124,6 @@ MANDATORY=reference
 $cutadapt
 IN=fastq
 OUT=fastq
-STAT=fastq
 
 $duplicationDetector
 IN=vcf
@@ -158,7 +150,6 @@ $gatkHaplotypeCaller
 IN=bam,vcf
 OUT=vcf
 MANDATORY=reference
-STAT=calling
 
 $gatkIndelRealigner
 IN=intervals,bam,fasta
@@ -184,7 +175,6 @@ $gatkUnifiedGenotyper
 IN=bam,vcf
 OUT=vcf
 MANDATORY=reference
-STAT=calling
 
 $gatkVariantFiltration
 IN=vcf
@@ -279,7 +269,6 @@ OUT=bam
 $samToolsMpileUp
 IN=bam
 OUT=mpileup
-STAT=calling
 
 $samToolsSort
 IN=bam
@@ -305,13 +294,11 @@ MANDATORY=vcf
 $tgicl
 IN=fasta
 OUT=fasta
-STAT=fasta
 
 $tophat2
 IN=fastq
 OUT=bam
 MANDATORY=reference
-STAT=mapping
 
 #$transAbyss
 #IN=fasta,fastq,sam,bam
@@ -320,4 +307,3 @@ STAT=mapping
 $trinity
 IN=fastq
 OUT=fasta
-STAT=fasta
