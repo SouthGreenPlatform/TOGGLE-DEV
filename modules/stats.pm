@@ -106,17 +106,7 @@ sub generateStats
 	my $fileList = toolbox::readDir($statDir);		# get stat files list
 	
 	my ($texRaw, $texAssembly, $texMapping, $bool);	# different sections of tex stat file
-	$bool=0;
 	
-	#$texMapping = "\\subsection{Mapping}
-	#\\begin{table}[ht]
-	#	\\centering
-#		\\begin{tabular}{l|r|r|r}
-#			Samples & Raw sequences & Mapped sequences & Properly mapped  \\\\\\hline
-#			toto---tata & 001 & Normal \\\\
-#		\\end{tabular}
-#\\end{table}" ;
-
 	my $statTexFile = "stats.tex";
 	open(my $texFh, ">", $statTexFile) or toolbox::exportLog("$0 : open error of $statTexFile .... $!\n",0);
 	## DEBUG toolbox::exportLog("J ouvre $statTexFile ", 1);
@@ -128,28 +118,43 @@ sub generateStats
 		#my ($basicName)=toolbox::extractPath($file);
 		if ($file =~ /\.flagstat.mapping.stat$/)
 		{
-			$bool=1;
+               if  (not defined $texMapping)
+               {
+                         $texMapping = "\\subsection{Mapping}
+	\\begin{table}[ht]
+		\\centering
+		\\begin{tabular}{l|r|r|r}
+			Samples & Raw sequences & Mapped sequences & Properly mapped  \\\\\\hline" ;
+               }
+               
+               #
 			open (my $fh, "<", $file) or toolbox::exportLog("$0 : open error of $file .... $!\n",0);
-			my ($raw, $mapped, $properly);
-			$raw = $mapped = $properly = 0;
+			#my ($raw, $mapped, $properly);
+			my $raw = 0;
+               my $mapped = 0;
+               my $properly = 0;
                
                ##DEBUG q toolbox::exportLog("Je lis $file", 1);
 			while (my $line = <$fh>)
-			{
-				if ($line =~ /^(\d+)\s+.+in\stotal/) { $raw = $1; 	toolbox::exportLog("Je lis $line - $1 -", 1);}
-				elsif ($line =~ /^(\d+)\s+.+in\sproperly\spaired/) { $properly = $1; }
-				elsif ($line =~ /^(\d+)\s+.+in\smapped\s\(/) { $mapped = $1; }
+			{    
+                    # Extract #mapped / properly / raw read number from flasgtat file 
+                    my (@split) = split /\s\+/ , $line;
+                    my $val=$split[0];
+                    
+				if ($line =~ /in\stotal/) { $raw = $val; }
+				elsif ($line =~ /\sproperly\spaired/) { $properly = $val;  }
+				elsif ($line =~ /\smapped\s\(/) { $mapped = $val; }
 			}
 
-			$texMapping .= " & $raw & $mapped $ $properly ";
+			$texMapping .= " & $raw & $mapped & $properly ";
 			
 			close $fh;
 			
 		}
 	}
 	
-#	$texMapping .= "\\end{tabular}
-#\\end{table}";
+	$texMapping .= "\\end{tabular}
+\\end{table}";
 	
 	print $texFh $texMapping;
 	close $texFh;
