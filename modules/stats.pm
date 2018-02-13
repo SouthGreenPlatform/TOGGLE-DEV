@@ -39,6 +39,7 @@ use checkFormat;
 
 use picardTools;
 use samTools;
+use pairing;
 
 ##############################################
 ##stats
@@ -48,9 +49,10 @@ use samTools;
 ##
 ##
 ## mappingStat
-# blablablabla
-sub mapping
+# Execute samtools flagstat / idxstats to generate raw files stat related to sam/bam files
+sub creatingMappingStatFileRaw
 {
+     
      # Getting arguments
      my($bamFileIn,$bamFileOut)=@_;
      
@@ -97,23 +99,26 @@ sub mapping
         toolbox::exportLog("ERROR: stats::mappingStat : The file $bamFileIn is uncorrect\n",0);
         return 0;#File not Ok
      }
+     
+     # creatingMappingStatFileTex
 }
 
-sub generateStats
+sub creatingMappingStatFileTex
 {
 
-    my ($statDir)=@_;		# get parameters
+     my ($statDir)=@_;		# get parameters
 	my $fileList = toolbox::readDir($statDir);		# get stat files list
 	
 	my ($texRaw, $texAssembly, $texMapping, $bool);	# different sections of tex stat file
 	
 	my $statTexFile = "stats.tex";
-	open(my $texFh, ">", $statTexFile) or toolbox::exportLog("$0 : open error of $statTexFile .... $!\n",0);
+	open(my $texFh, ">>", $statTexFile) or toolbox::exportLog("$0 : open error of $statTexFile .... $!\n",0);
 	## DEBUG toolbox::exportLog("J ouvre $statTexFile ", 1);
 	# Parsing stat files
      
     foreach my $file (@{$fileList}) #Copying the final data in the final directory
 	{
+          my $sample = pairing::extractName($file);
 		toolbox::exportLog("Je lis 1 $file", 1);
 		#my ($basicName)=toolbox::extractPath($file);
 		if ($file =~ /\.flagstat.mapping.stat$/)
@@ -124,7 +129,7 @@ sub generateStats
 	\\begin{table}[ht]
 		\\centering
 		\\begin{tabular}{l|r|r|r}
-			Samples & Raw sequences & Mapped sequences & Properly mapped  \\\\\\hline" ;
+			Samples & Raw sequences & Mapped sequences & Properly mapped  \\\\\\hline \n" ;
                }
                
                #
@@ -146,7 +151,7 @@ sub generateStats
 				elsif ($line =~ /\smapped\s\(/) { $mapped = $val; }
 			}
 
-			$texMapping .= " & $raw & $mapped & $properly ";
+			$texMapping .= " $sample & $raw & $mapped (" . $mapped/$raw*100 . " \\%) & $properly (". $properly/$raw*100 . " \\%) \\\\ \n";
 			
 			close $fh;
 			
