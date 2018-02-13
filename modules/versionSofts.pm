@@ -473,13 +473,13 @@ sub writeLogVersion
 		{
 			toolbox::exportLog(uc($soft)." : $softPath{$soft} : $softPathVersion{$soft}",1); 
 			#print $fhSoft "\\item"  .			uc($soft) ." : \n \\begin{verbatim}\n$softPathVersion{$soft} \n \\end{verbatim}" if $report;
-			print $fhSoft uc($soft) ." : ".$softPathVersion{$soft}." \n" if $report;
+			print $fhSoft uc($soft) ." : ".$softPathVersion{$soft}."  \\cite{$soft}\n" if $report;
 		}
 	}
 	
 	#print $fhSoft "\\end{itemize}\n";
 	close $fhConfig;
-	close $fhSoft;
+	close $fhSoft if $report;
 }
 1;
 
