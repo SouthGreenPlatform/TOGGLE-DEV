@@ -574,7 +574,7 @@ sub generateReports
 	
 	#config file
 	$cpCmd="cp $configInfo $reportDirWF/input/configuration.txt";
-	## DEBUG toolbox::run($cpCmd);
+	toolbox::run($cpCmd);
 	
 	#generating pdf report in $texWorkflowFile 	
 	my $texCmd="pdflatex $texWorkflowFile";
