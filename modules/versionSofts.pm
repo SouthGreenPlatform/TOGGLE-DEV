@@ -240,8 +240,15 @@ sub breakDancerVersion
 
 sub pindelVersion
 {
-	my $version = `pindel | grep -m 1 version` or die toolbox::exportLog("ERROR: versionSoft::pindelVersion : Can not grep breakDancer version\nPlease check your pindel installation.\n", 0);
+	my $version = `$pindel | grep -m 1 version` or die toolbox::exportLog("ERROR: versionSoft::pindelVersion : Can not grep breakDancer version\nPlease check your pindel installation.\n", 0);
 	chomp($version);
+	return $version;
+}
+
+sub fastqStatsVersion
+{
+	my $version =`$fastqStats -h | grep Version` or die toolboox::exportLog("ERROR: versionSoft::fastqStatsVersion: Cannot grep fastq-stats version\nPlease check your fastq-stats/ea-utils installation.\n",0);
+	chomp $version;
 	return $version;
 }
 
@@ -447,6 +454,10 @@ sub writeLogVersion
 			#For Pindel
 			case ($softOrder =~ m/^pindel/i){$softPathVersion{"pindel"}= pindelVersion if not defined $softPathVersion{"pindel"};
 												$softPath{"pindel"}= $pindel if not defined $softPath{"pindel"};}
+			
+			#For ea-Utils
+			case ($softOrder =~ m/^fastqStats/i{$softPathVersion{"fastqStats"}=fastqStatsVersion if not defined $softPathVersion{"fastqStats"};
+												$softPath{"fastqStats"}=$fastqStats if not defined $softPath{"fastqStats"};)
 											
 			else
 			{

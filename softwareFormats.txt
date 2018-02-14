@@ -307,3 +307,8 @@ MANDATORY=reference
 $trinity
 IN=fastq
 OUT=fasta
+
+#eaUtils
+$fastqStats
+IN=fastq
+OUT=NA
