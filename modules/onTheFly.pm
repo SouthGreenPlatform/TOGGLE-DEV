@@ -243,6 +243,7 @@ sub generateScript
 	###########################################
 	###########################################
 	############# EN TEST REPORT STAT MAPPING
+	$catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt";
 	$catCommand .= " ".$toggle."/onTheFly/statsMappingBlock.txt";
 	###########################################
 	###########################################
