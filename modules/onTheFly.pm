@@ -559,8 +559,7 @@ sub generateReports
 	
 	# stats
 	my $statDir = $outDir."/statsReport";
-	
-	stats::generateStats($statDir);
+	stats::creatingMappingStatFileTex($statDir);
 	$mvCmd="mv $outDir/stats.tex $reportDirWF/input";
 	toolbox::run($mvCmd);
 	
