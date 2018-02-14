@@ -172,9 +172,16 @@ sub schedulerRun
 { #For any scheduler,will launch a script encapsulating the command line
 
 	my ($schedulerType) = @_;
+    #Returning to normal run if no scheduler config provided even if scheduler exists
+    $schedulerType = "normalRun" unless toolbox::extractHashSoft($configInfo,$schedulerType);
+    
     my $schedulerOptionsHash=toolbox::extractHashSoft($configInfo,$schedulerType);
+    
+    
+    
     my $schedulerOptions=toolbox::extractOptions($schedulerOptionsHash);
 
+    
 	#Picking up ENV variable
     my $envOptionsHash=toolbox::extractHashSoft($configInfo,"env");
     my $envOptions=toolbox::extractOptions($envOptionsHash,"","\n");
