@@ -560,7 +560,7 @@ sub generateReports
 	
 	# stats
 	my $statDir = $outDir."/statsReport";
-	stats::creatingMappingStatFileTex($statDir);
+	stats::creatingStatFileTex($statDir);
 	$mvCmd="mv $outDir/stats.tex $reportDirWF/input";
 	toolbox::run($mvCmd);
 	
