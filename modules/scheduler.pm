@@ -49,11 +49,13 @@ our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash, @erro
 
 #Here is the core commands for any scheduler: run, acct and queue command.
 
-my %commands =('run' => {'sge'=>'qsub',
+my %commands =('run' => {'normalRun'=>'sh',
+                         'sge'=>'qsub',
 						 'slurm'=>'sbatch',
 						 'mprun'=>'ccc_msub',
 						 'lsf'=>'bsub'},
-			   'queue' => {'sge'=>'qstat -u \$USER',
+			   'queue' => {'normalRun'=>'',
+                          'sge'=>'qstat -u \$USER',
 						  'slurm'=>'squeue',
 						  'mprun'=>'ccc_mstat -u \$USER',
 						  'lsf'=>'bjobs -u \$USER'});
@@ -62,11 +64,13 @@ my %commands =('run' => {'sge'=>'qsub',
 
 #Here are the infos for parsing data in waiting system
 
-my %parsings = ('JIDposition' => {	'sge'=>2,
+my %parsings = ('JIDposition' => {	'normalRun'=>'',
+                                    'sge'=>2,
 									'slurm'=>3,
 									'mprun'=>3,
 									'lsf'=>1},
-				'JIDsplitter' => {'sge'=>"\\s",
+				'JIDsplitter' => {'normalRun'=>'',
+                                  'sge'=>"\\s",
 								  'slurm'=>"\\s",
 								  'mprun'=>"\\s",
 								  'lsf'=>"<\|>"});
@@ -121,16 +125,7 @@ sub launcher {
     my $schedulerType = &checkingCapability;
 	##DEBUG toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
 
-    my $runOutput;
-
-    if (defined $$configInfo{$schedulerType})
-	{
-		$runOutput = &schedulerRun($schedulerType)
-	}
-	else
-	{
-		$runOutput = &normalRun
-	};
+    my $runOutput = &schedulerRun($schedulerType);
 
 
 	if ($runOutput == 0 && $requirement == 0)
@@ -150,29 +145,28 @@ sub launcher {
     return ($runOutput, $errorLog);
 }
 
-sub normalRun { #For running in normal mode, ie no scheduler
-
-    #BASED ON TOOLBOX::RUN, but will not stop the whole pipeline for an error
-    use Capture::Tiny qw(capture);
-
-    toolbox::exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
-
-    ##Execute the command
-    my ($result,$stderr)=capture {` $commandLine `};
-
-    ##Log export according to the error
-    if ($?==0) #Success, no error
-    {
-		return 1;
-    }
-    else  #Error, the job cannot be achieved for any reason
-    {
-	##DEBUG
-		toolbox::exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
-		return 0;
-    }
-
-}
+#sub normalRun
+#{ #For running in normal mode, ie no scheduler
+#
+#    #BASED ON TOOLBOX::RUN, but will not stop the whole pipeline for an error
+#    use Capture::Tiny qw(capture);
+#
+#    toolbox::exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
+#
+#    ##Execute the command
+#    my ($result,$stderr)=capture {` $commandLine `};
+#
+#    ##Log export according to the error
+#    if ($?==0) #Success, no error
+#    {
+#		return 1;
+#    }
+#    else  #Error, the job cannot be achieved for any reason
+#    {
+#	##DEBUG
+#		toolbox::exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
+#		return 0;
+#}
 
 sub schedulerRun
 { #For any scheduler,will launch a script encapsulating the command line
@@ -219,21 +213,25 @@ sub schedulerRun
         toolbox::exportLog ("WARNING : $0 : Cannot launch the job for $sample: $!\n",2);
         $currentJID = "";
     }
-
+    
     #Parsing infos and informing logs
     chomp $currentJID;
-
+    
     unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
     {
         return -1; #Returning to launcher subprogram the error type
     }
 
+    $currentJID = "SerialJob" if $schedulerType eq "normalRun"; 
+
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in $commands{'run'}{$schedulerType} mode through the command:\n\t$launcherCommand\n",1);
 
     #Picking job ID
-    my @infosList=split ($parsings{'JIDsplitter'}{$schedulerType}, $currentJID);
-    $currentJID = $infosList[$parsings{'JIDposition'}{$schedulerType}];
-
+    if ($schedulerType ne "normalRun")
+    {
+        my @infosList=split ($parsings{'JIDsplitter'}{$schedulerType}, $currentJID);
+        $currentJID = $infosList[$parsings{'JIDposition'}{$schedulerType}];
+    }
 
 	##DEBUG	toolbox::exportLog($currentJID,2);
 
