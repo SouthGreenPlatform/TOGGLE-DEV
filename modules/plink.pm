@@ -95,8 +95,64 @@ sub vcf2ped
 ################################################################################################
 
 
+################################################################################################
+## sub plink::runPcaIbs => to run PCA plot and IBS analysis
+#################################################################################################
+## arguments :
+##       - VCFIn : the VCF file to analyze
+##       - out : the tabular output file (mandatory)
+#################################################################################################
+## return boolean :
+##       - 1 if runPcaIbs has runned correctly
+##       - else 0
+#################################################################################################
+sub runPcaIbs
+{
+        my($vcfFileIn,$fileOut,$optionsHachees)=@_;
+        if (toolbox::sizeFile($vcfFileIn)==1)
+        { ##Check if entry file exist and is not empty
+
+	#Check if the format is correct
+	if (checkFormat::checkFormatVcf($vcfFileIn)==0)
+	{#The file is not a VCF file
+		toolbox::exportLog("ERROR: plink::runPcaIbs : The file $vcfFileIn is not a VCF file\n",0);
+		return 0;
+	}
 
 
+	my $options="";
+
+	if ($optionsHachees)
+	{
+		$options=toolbox::extractOptions($optionsHachees);
+	}
+
+
+	my $command=$plink." --allow-extra-chr --noweb --cluster --matrix --pca 3 ".$options." --out ".$fileOut." --vcf ".$vcfFileIn;
+	
+	#Execute command
+	if(toolbox::run($command)==1)
+	{
+		rename("$fileOut.eigenvec","$fileOut.pca_plot.txt");
+		rename("$fileOut.mibs","$fileOut.ibs_matrix.txt");
+		return 1;#Command Ok
+	}
+	else
+	{
+		toolbox::exportLog("ERROR: plink::runPcaIbs : Uncorrectly done\n",0);
+		return 0;#Command not Ok
+	}
+	}
+	else
+	{
+		toolbox::exportLog("ERROR: plink::runPcaIbs : The file $vcfFileIn is uncorrect\n",0);
+		return 0;#File not Ok
+	}
+
+}
+################################################################################################
+## END sub plink::runPcaIbs
+#################################################################################################
 
 
 1;
