@@ -456,8 +456,8 @@ sub writeLogVersion
 												$softPath{"pindel"}= $pindel if not defined $softPath{"pindel"};}
 			
 			#For ea-Utils
-			case ($softOrder =~ m/^fastqStats/i{$softPathVersion{"fastqStats"}=fastqStatsVersion if not defined $softPathVersion{"fastqStats"};
-												$softPath{"fastqStats"}=$fastqStats if not defined $softPath{"fastqStats"};)
+			case ($softOrder =~ m/^fastqStats/i){$softPathVersion{"fastqStats"}=fastqStatsVersion if not defined $softPathVersion{"fastqStats"};
+												$softPath{"fastqStats"}=$fastqStats if not defined $softPath{"fastqStats"};}
 											
 			else
 			{
