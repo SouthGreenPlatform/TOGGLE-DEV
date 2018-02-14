@@ -78,6 +78,7 @@ use sniplay;
 use fastme;
 use readseq;
 use stats;
+use eaUtils;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed

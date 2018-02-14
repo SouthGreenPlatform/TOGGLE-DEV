@@ -1,5 +1,5 @@
 ############################
-# Block for FASTXTRIMMER
+# Block for fastq-stats
 ############################
 
 #Correct variable populating
@@ -27,7 +27,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 
 
 ##########################################
-# fastxTrimmer::execution
+# eaUtils::fastqStats
 ##########################################
 
 $softParameters = toolbox::extractHashSoft($optionRef, $stepName);                         # recovery of specific parameters
@@ -36,12 +36,9 @@ $softParameters = toolbox::extractHashSoft($optionRef, $stepName);              
 foreach my $file (@{$fileList})
 {
     ($fileWithoutExtension) = pairing::extractName($file);                           # extract name of file without the extension
-    my $fastqFileOut = "$newDir"."/"."$fileWithoutExtension".".FASTXTRIMMER.fastq";
+    my $fastqFileOut = "$newDir"."/"."$fileWithoutExtension".".FASTQSTATS.txt";
     
-    if ($file=~m/.gz$/)                                          
-    {
-        $fastqFileOut.=".gz";
-    }
-    fastxToolkit::fastxTrimmer($file,$fastqFileOut,$softParameters);
+
+    eaUtils::fastqStats($file,$fastqFileOut,$softParameters);
 }
 
