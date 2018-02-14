@@ -48,7 +48,23 @@ use pairing;
 ##############################################
 ##
 ##
-## mappingStat
+
+sub creatingStatFileTex
+{
+     my ($statDir)=@_;		# get parameters
+	my $fileList = toolbox::readDir($statDir);		# get stat files list
+     
+     if (scalar @{$fileList} >0)
+     {
+          my $file = shift @{$fileList}; #Error to manage
+          creatingMappingStatFileTex($statDir) if ($file =~ /\.mapping.stat$/);
+          creatingCallingStatFileRaw($statDir) if ($file =~ /\.calling.stat$/);
+     }
+     else { toolbox::exportLog("ERROR : $0 : there are no stat report at stats::creatingStatFileTex step.\n",0); }
+    
+}
+
+## creatingMappingStatFileRaw
 # Execute samtools flagstat / idxstats to generate raw files stat related to sam/bam files
 sub creatingMappingStatFileRaw
 {
@@ -68,7 +84,7 @@ sub creatingMappingStatFileRaw
           if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)
           {
                #The file is not a BAM/SAM file
-               toolbox::exportLog("ERROR: stats::mappingStat : The file $bamFileIn is not a SAM/BAM file\n",0);
+               toolbox::exportLog("ERROR: stats::creatingMappingStatFileRaw : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
           }
 
@@ -102,8 +118,6 @@ sub creatingMappingStatFileRaw
      
     # creatingMappingStatFileTex
 }
-
-
 
 sub creatingMappingStatFileTex
 {
@@ -163,6 +177,72 @@ sub creatingMappingStatFileTex
 	close $texFh;
 }
 
+# Execute grep to count polymorphism on a vcf
+sub creatingCallingStatFileRaw
+{  
+     # Getting arguments
+     my ($vcfFileIn)=@_;
+             
+     # Check if the vcf file exists and is not empty
+     if (toolbox::sizeFile($vcfFileIn)==1)
+     {      
+          my $vcfOutputFile=$vcfFileIn;
+          $vcfOutputFile =~ s/\.vcf$/\.calling\.stat/;
+         
+          my $grepcmd='grep "#" '.$vcfFileIn ." -v -c > $vcfOutputFile " ;
+          toolbox::run($grepcmd); #,"noprint");        
+     }
+     else
+     {
+        toolbox::exportLog("ERROR: stats::creatingCallingStatFileRaw : The file $vcfFileIn is uncorrect\n",0);
+        return 0;#File not Ok
+     }
+     
+}
+
+sub creatingCallingStatFileTex
+{
+
+     my ($statDir)=@_;		# get parameters
+     my $fileList = toolbox::readDir($statDir);		# get stat files list
+	
+	my $bool=1;
+	my $statTexFile = "stats.tex";
+	open(my $texFh, ">>", $statTexFile) or toolbox::exportLog("$0 : open error of $statTexFile .... $!\n",0);
+
+     # Parsing stat files     
+    foreach my $file (@{$fileList}) #Copying the final data in the final directory
+	{
+          my $sample = pairing::extractName($file);
+		toolbox::exportLog("Je lis 1 $file", 1);
+		#my ($basicName)=toolbox::extractPath($file);
+		if ($file =~ /\.flagstat.mapping.stat$/)
+		{
+               print $texFh "\\subsection{Calling}
+	\\begin{table}[ht]
+		\\centering
+		\\begin{tabular}{l|r|}
+			Samples & #Polymorphisms detected   \\\\\\hline \n" if  ($bool);
+               
+			open (my $fh, "<", $file) or toolbox::exportLog("$0 : open error of $file .... $!\n",0);
+
+			my $polymorphism = 0;
+
+			while (my $line = <$fh>)
+			{    
+                    chomp $line;
+                    print $texFh " $sample & $line  \\\\ \n";
+			}
+			close $fh;
+			
+		}
+	}
+	
+	print $texFh  "\\end{tabular}
+\\end{table}";
+	
+	close $texFh;
+}
 
 
 1;
