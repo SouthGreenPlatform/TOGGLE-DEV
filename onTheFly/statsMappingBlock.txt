@@ -59,7 +59,7 @@ foreach my $file (@{$fileList})
 
     else
     {
-        next if ($file =~ m/.bai$/);
+        next if ($file =~ m/.bai$|.idx/);
         toolbox::exportLog("ERROR : $0 : there are more than two input files (sam/bam, vcf) at $stepName step.\n",0);
     }
     
@@ -68,7 +68,7 @@ foreach my $file (@{$fileList})
 # if bam / sam
 if ($samFileIn ne "NA")                                                                       
 {
-    $samFileOut = $newDir."/"."$readGroup".".PICARDTOOLSSORT.bam";                        
+    $samFileOut = $newDir."/"."$readGroup".".PICARDTOOLSSORT.mapping.bam";                        
     stats::creatingMappingStatFileRaw($samFileIn,$samFileOut);
 }
 elsif ($vcfFileIn ne "NA")                                                                       
