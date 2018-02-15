@@ -136,7 +136,7 @@ sub creatingMappingStatFileTex
           my $sample = pairing::extractName($file);
 		toolbox::exportLog("Je lis 1 $file", 1);
 		#my ($basicName)=toolbox::extractPath($file);
-		if ($file =~ /\.flagstat.mapping.stat$/)
+		if ($file =~ /\.flagstat.calling.stat$/)
 		{
                print $texFh "\\subsection{Mapping}
 	\\begin{table}[ht]
