@@ -27,7 +27,7 @@ foreach my $file (@{$fileList})
     }
     
     # the file type is normally vcf
-    elsif ($file =~ m/vcf$|vcf\.gz$/ & $vcfFileIn ne "NA")
+    elsif ($file =~ m/vcf$|vcf\.gz$/ & $vcfFileIn eq "NA")
     { 
         $vcfFileIn  = $file  ; 
     }
@@ -60,8 +60,8 @@ foreach my $file (@{$fileList})
 
     else
     {
-        next if ($file =~ m/bai$|idx$|intervals$/);
-        toolbox::exportLog("ERROR : $0 : there are more than two input files (sam/bam, vcf) $file at $stepName step.\n",0);
+        next; # if ($file =~ m/bai$|idx$|intervals$/);
+        #toolbox::exportLog("ERROR : $0 : there are more than two input files (sam/bam, vcf) $file at $stepName step.\n",0);
     }
     
 }
