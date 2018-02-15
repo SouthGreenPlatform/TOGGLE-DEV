@@ -182,7 +182,7 @@ sub creatingCallingStatFileRaw
 {  
      # Getting arguments
      my ($vcfFileIn)=@_;
-             
+         		toolbox::exportLog("----- creatingCallingStatFileRaw : Je lis 1 $vcfFileIn", 1);    
      # Check if the vcf file exists and is not empty
      if (toolbox::sizeFile($vcfFileIn)==1)
      {      
@@ -211,7 +211,7 @@ sub creatingCallingStatFileTex
 	open(my $texFh, ">>", $statTexFile) or toolbox::exportLog("$0 : open error of $statTexFile .... $!\n",0);
 
      # Parsing stat files     
-    foreach my $file (@{$fileList}) #Copying the final data in the final directory
+     foreach my $file (@{$fileList}) #Copying the final data in the final directory
 	{
           my $sample = pairing::extractName($file);
 		toolbox::exportLog("Je lis 1 $file", 1);
