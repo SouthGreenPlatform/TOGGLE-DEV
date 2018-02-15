@@ -19,6 +19,7 @@ toolbox::exportLog("#########################################\nINFOS: Stat analy
 #Correct variable populating
 foreach my $file (@{$fileList})
 {
+    toolbox::exportLog("DEBUG : $0 : $file .\n",1);
     # the file type is normally bam or sam
     if ($file =~ m/bam$|sam$/ and $samFileIn eq "NA")
     {
@@ -59,7 +60,7 @@ foreach my $file (@{$fileList})
 
     else
     {
-        next if ($file =~ m/bai$|idx$/);
+        next if ($file =~ m/bai$|idx$|intervals$/);
         toolbox::exportLog("ERROR : $0 : there are more than two input files (sam/bam, vcf) $file at $stepName step.\n",0);
     }
     
