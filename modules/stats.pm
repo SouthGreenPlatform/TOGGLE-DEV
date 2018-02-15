@@ -58,7 +58,7 @@ sub creatingStatFileTex
      {
           my $file = shift @{$fileList}; #Error to manage
           creatingMappingStatFileTex($statDir) if ($file =~ /\.mapping.stat$/);
-          creatingCallingStatFileRaw($statDir) if ($file =~ /\.calling.stat$/);
+          creatingCallingStatFileTex($statDir) if ($file =~ /\.calling.stat$/);
      }
      else { toolbox::exportLog("ERROR : $0 : there are no stat report at stats::creatingStatFileTex step.\n",0); }
     
