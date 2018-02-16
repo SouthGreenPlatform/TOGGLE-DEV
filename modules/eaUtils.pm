@@ -46,12 +46,12 @@ use Switch;
 ################################################################################################
 sub fastqStats
 {
-    my($fastqFileIn,$fastqFileOut,$optionsHachees)=@_;
+    my($fastqFileIn,$fileOut,$optionsHachees)=@_;
     if (toolbox::sizeFile($fastqFileIn)==1 and checkFormat::checkFormatFastq($fastqFileIn)==1)             ##Check if the fastqfile exist and is not empty
     {
         my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.config
 
-        my $command=$fastqStats." ".$options." ".$fastqFileIn." > ".$fastqFileOut; ## Command initialization
+        my $command=$fastqStats." ".$options." ".$fastqFileIn." > ".$fileOut; ## Command initialization
         
         # Command is executed with the run function (package toolbox)
         if (toolbox::run($command)==1)
@@ -61,7 +61,7 @@ sub fastqStats
         }
         else
         {
-            toolbox::exportLog("ERROR: eaUtils:fastqStats : ABBORTED\n",0);
+            toolbox::exportLog("ERROR: eaUtils:fastqStats : ABORTED\n",0);
         }
         
     }
