@@ -81,4 +81,8 @@ elsif ($vcfFileIn ne "NA")
 # else vcf
 # else fasta
 # else fastq
-
+elsif ($fastqReverseIn ne "NA" or $fastqForwardIn ne "NA")                                                                       
+{
+    toolbox::exportLog("-----  stats block : creatingFastqStatFileRaw : Je lis repertoire $newDir", 1);    
+    stats::creatingFastqStatFileRaw($newDir);
+}

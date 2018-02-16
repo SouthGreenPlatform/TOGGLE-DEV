@@ -634,7 +634,7 @@ if ($orderBefore1000)
             foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
             {
                 my ($basicName)=toolbox::extractPath($file);
-                toolbox::exportLog("------>".$basicName."\n");
+                toolbox::exportLog("------>".$basicName."\n",1);
                 
                 # Moving stat file into stat directory instead of intermediateDir        
                 if ($basicName =~ /\.stat$/)

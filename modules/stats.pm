@@ -40,6 +40,7 @@ use checkFormat;
 use picardTools;
 use samTools;
 use pairing;
+use eaUtils;
 
 ##############################################
 ##stats
@@ -129,12 +130,19 @@ sub creatingCallingStatFileRaw
      
 }
 
-# Execute grep to count polymorphism on a vcf
+# Execute eaUtils::fastqStats on fastq files into directory
 sub creatingFastqStatFileRaw
 {  
      # Getting arguments
-     my ($fastqRev, $fastqF )=@_;
-         		
+     my ($fastqDir )=@_;
+    
+     my @fastqFiles=toolbox::readDir($fastqDir);
+     foreach my $fastqFile (@{$fastqFiles})
+     {
+          my $statOutputFile = $fastqFile;
+          $statOutputFile =~ s/\.fastq$|\.fastq.gz$/\.fastq\.stat/;
+         eaUtils::fastqStats($fastqFile, $statOutputFile); 
+     }
 
 }
 
