@@ -1,88 +1,91 @@
-##### PREVIOUS BLOCK
-
-# Mandatory beginning
-$fileList = toolbox::readDir($previousDir);
-$newDir = $previousDir;                                                                  
-($shortDirName)=toolbox::extractPath($newDir);
-
-
-toolbox::exportLog("#########################################\nINFOS: Stat analysis start $previousDir $newDir \n#########################################\n",1);
-
-##### END PREVIOUS BLOCK
-
-
-
-##########################################
-# Statsmapping block
-##########################################
-
-#Correct variable populating
-foreach my $file (@{$fileList})
+if ($report)
 {
-    toolbox::exportLog("DEBUG : $0 : $file .\n",1);
-    # the file type is normally bam or sam
-    if ($file =~ m/bam$|sam$/ and $samFileIn eq "NA")
-    {
-        $samFileIn = $file ; 
-    }
+    ##### PREVIOUS BLOCK
+
+    # Mandatory beginning
+    $fileList = toolbox::readDir($previousDir);
+    $newDir = $previousDir;                                                                  
+    ($shortDirName)=toolbox::extractPath($newDir);
+
+
+    toolbox::exportLog("#########################################\nINFOS: Stat analysis start $previousDir $newDir \n#########################################\n",1);
+
+    ##### END PREVIOUS BLOCK
+
+
+
+    ##########################################
+    # Statsmapping block
+    ##########################################
     
-    # the file type is normally vcf
-    elsif ($file =~ m/vcf$|vcf\.gz$/ & $vcfFileIn eq "NA")
-    { 
-        $vcfFileIn  = $file  ; 
-    }
-    
-    # the file type is normally fastq
-    elsif ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/) 
+    #Correct variable populating
+    foreach my $file (@{$fileList})
     {
-        if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
+        toolbox::exportLog("DEBUG : $0 : $file .\n",1);
+        # the file type is normally bam or sam
+        if ($file =~ m/bam$|sam$/ and $samFileIn eq "NA")
         {
-            if ($fastqReverseIn ne "NA")
+            $samFileIn = $file ; 
+        }
+        
+        # the file type is normally vcf
+        elsif ($file =~ m/vcf$|vcf\.gz$/ & $vcfFileIn eq "NA")
+        { 
+            $vcfFileIn  = $file  ; 
+        }
+        
+        # the file type is normally fastq
+        elsif ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/) 
+        {
+            if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
             {
-                toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
+                if ($fastqReverseIn ne "NA")
+                {
+                    toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
+                }
+                else
+                {
+                    $fastqReverseIn = $file;
+                }
             }
             else
             {
-                $fastqReverseIn = $file;
+                $fastqForwardIn = $file;
             }
         }
+        
+        # the file type is normally fasta
+        elsif ($file =~ m/fasta$|fasta.gz$|fa$|fa.gz$/ & $fastaFileIn ne "NA") 
+        {
+                $fastaFileIn = $file;
+        }
+    
         else
         {
-            $fastqForwardIn = $file;
+            next; # if ($file =~ m/bai$|idx$|intervals$/);
+            #toolbox::exportLog("ERROR : $0 : there are more than two input files (sam/bam, vcf) $file at $stepName step.\n",0);
         }
+        
     }
-    
-    # the file type is normally fasta
-    elsif ($file =~ m/fasta$|fasta.gz$|fa$|fa.gz$/ & $fastaFileIn ne "NA") 
+
+    # if bam / sam
+    if ($samFileIn ne "NA")                                                                       
     {
-            $fastaFileIn = $file;
+        $samFileOut = $newDir."/"."$readGroup".".PICARDTOOLSSORT.mapping.bam";                        
+        stats::creatingMappingStatFileRaw($samFileIn,$samFileOut);
     }
-
-    else
+    elsif ($vcfFileIn ne "NA")                                                                       
     {
-        next; # if ($file =~ m/bai$|idx$|intervals$/);
-        #toolbox::exportLog("ERROR : $0 : there are more than two input files (sam/bam, vcf) $file at $stepName step.\n",0);
+        toolbox::exportLog("-----  stats block : creatingCallingStatFileRaw : Je lis 1 $vcfFileIn", 1);    
+        stats::creatingCallingStatFileRaw($vcfFileIn);
     }
-    
-}
 
-# if bam / sam
-if ($samFileIn ne "NA")                                                                       
-{
-    $samFileOut = $newDir."/"."$readGroup".".PICARDTOOLSSORT.mapping.bam";                        
-    stats::creatingMappingStatFileRaw($samFileIn,$samFileOut);
-}
-elsif ($vcfFileIn ne "NA")                                                                       
-{
-    toolbox::exportLog("-----  stats block : creatingCallingStatFileRaw : Je lis 1 $vcfFileIn", 1);    
-    stats::creatingCallingStatFileRaw($vcfFileIn);
-}
-
-# else vcf
-# else fasta
-# else fastq
-elsif ($fastqReverseIn ne "NA" or $fastqForwardIn ne "NA")                                                                       
-{
-    toolbox::exportLog("-----  stats block : creatingFastqStatFileRaw : Je lis repertoire $newDir", 1);    
-    stats::creatingFastqStatFileRaw($newDir);
+    # else vcf
+    # else fasta
+    # else fastq
+    elsif ($fastqReverseIn ne "NA" or $fastqForwardIn ne "NA")                                                                       
+    {
+        toolbox::exportLog("-----  stats block : creatingFastqStatFileRaw : Je lis repertoire $newDir", 1);    
+        stats::creatingFastqStatFileRaw($newDir);
+    }
 }
