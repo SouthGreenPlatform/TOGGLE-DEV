@@ -184,7 +184,7 @@ sub creatingStatFileTex
                # tex header (table header)
                $texMapping = "\\subsection{Mapping}
 	\\begin{table}[ht]
-         \\resizebox{\textwidth}{!}{%
+         \\resizebox{\\textwidth}{!}{%
 		\\centering
 		\\begin{tabularx}{l|r|r|r}
 			Samples & Raw sequences & Mapped sequences & Properly mapped  \\\\\\hline  \n" if  ($texMapping eq 'NA');
@@ -216,7 +216,7 @@ sub creatingStatFileTex
                # tex header (table header)
                $texCalling = "\\subsection{Calling}
 	\\begin{table}[ht]
-         \\resizebox{\textwidth}{!}{%
+         \\resizebox{\\textwidth}{!}{%
 		\\centering
 		\\begin{tabularx}{l|r}
 			Samples & Polymorphisms detected   \\\\\\hline \n  " if  ($texCalling eq 'NA');
