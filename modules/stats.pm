@@ -136,7 +136,7 @@ sub creatingFastqStatFileRaw
      # Getting arguments
      my ($fastqDir )=@_;
     
-     my @fastqFiles=toolbox::readDir($fastqDir);
+     my $fastqFiles=toolbox::readDir($fastqDir);
      foreach my $fastqFile (@{$fastqFiles})
      {
           my $statOutputFile = $fastqFile;
@@ -202,7 +202,7 @@ sub creatingStatFileTex
 				elsif ($line =~ /\smapped\s\(/) { $mapped = $val; }
 			}
 
-			$texMapping .= " $sample & $raw & $mapped (" . $mapped/$raw*100 . " \\%) & $properly (". $properly/$raw*100 . " \\%) \\\\ \n";
+			$texMapping .= " $sample & $raw & $mapped (" . sprintf("%.2f",($mapped/$raw*100)) . " \\%) & $properly (". sprintf("%.2f",($properly/$raw*100)) . " \\%) \\\\ \n";
 		
 		}
           
