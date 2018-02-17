@@ -182,8 +182,9 @@ sub creatingStatFileTex
                # tex header (table header)
                $texMapping = "\\subsection{Mapping}
 	\\begin{table}[ht]
+         \\resizebox{\textwidth}{!}{%
 		\\centering
-		\\begin{tabular}{l|r|r|r}
+		\\begin{tabularx}{l|r|r|r}
 			Samples & Raw sequences & Mapped sequences & Properly mapped  \\\\\\hline $file \n" if  ($texMapping eq 'NA');
           
 			# variable initialisation (number of sequences)
@@ -213,8 +214,9 @@ sub creatingStatFileTex
                # tex header (table header)
                $texCalling = "\\subsection{Calling}
 	\\begin{table}[ht]
+         \\resizebox{\textwidth}{!}{%
 		\\centering
-		\\begin{tabular}{l|r}
+		\\begin{tabularx}{l|r}
 			Samples & Polymorphisms detected   \\\\\\hline \n $file " if  ($texCalling eq 'NA');
                
                # variable initialisation (number of polymorphism)
@@ -234,10 +236,11 @@ sub creatingStatFileTex
                # tex header (table header)
                $texFastq = "\\subsection{Fastq stat}
 	\\begin{table}[ht]
+     \\resizebox{\textwidth}{!}{%
 		\\centering
-		\\begin{tabular}{l|r|r|r|r|r|r|r|r|r|r|r|r|r}
-			Samples & Raw sequences & Lenght & Length mean & Length min & qual min & qual max & qual mean & \\%A & \\%C & \\%G & \\%T & \\%N & Total bases    \\\\\\hline \n " if  ($texFastq eq 'NA');
-          
+		\\begin{tabularx}{18cm}{X|c|c|c|c|c|c|c|c|c|c|c|c|X}
+Samples & seq & \multicolumn{3}{c|}{Length} &\multicolumn{3}{c|}{Qual} & \%A & \%C & \%G & \%T & \%N & Total bases    \\\hline
+& & Len. & mean & min & min & max & mean & & & & & & \\\\";
 			# variable initialisation (number of sequences)
 			my $read = 0;
                my $len = 0;
@@ -264,16 +267,16 @@ sub creatingStatFileTex
                     
 				if ($line =~ /^reads/) { $read = $val; }
 				elsif ($line =~ /^len\t/) { $len = $val;  }
-				elsif ($line =~ /^len\smean\(/) { $lenMean = $val; }
-                    elsif ($line =~ /^len\smin\(/) { $lenMin = $val; }
-                    elsif ($line =~ /^qual\smin\(/) { $qualMin = $val; }
-                    elsif ($line =~ /^qual\smax\(/) { $qualMax = $val; }
-                    elsif ($line =~ /^qual\smean\(/) { $qualMean = $val; }
-                    elsif ($line =~ /^%A/) { $A = $val; }
-                    elsif ($line =~ /^%C/) { $C = $val; }
-                    elsif ($line =~ /^%G/) { $G = $val; }
-                    elsif ($line =~ /^%T/) { $T = $val; }
-                    elsif ($line =~ /^%N/) { $N = $val; }
+				elsif ($line =~ /^len\smean/) { $lenMean = $val; }
+                    elsif ($line =~ /^len\smin/) { $lenMin = $val; }
+                    elsif ($line =~ /^qual\smin/) { $qualMin = $val; }
+                    elsif ($line =~ /^qual\smax/) { $qualMax = $val; }
+                    elsif ($line =~ /^qual\smean/) { $qualMean = $val; }
+                    elsif ($line =~ /^%A/) { $A = sprintf("%.2f",($val)); }
+                    elsif ($line =~ /^%C/) { $C = sprintf("%.2f",($val)); }
+                    elsif ($line =~ /^%G/) { $G = sprintf("%.2f",($val)); }
+                    elsif ($line =~ /^%T/) { $T = sprintf("%.2f",($val)); }
+                    elsif ($line =~ /^%N/) { $N = sprintf("%.2f",($val)); }
                     elsif ($line =~ /^total\sbases/) { $totBase = $val; }
 			}
 
@@ -285,7 +288,7 @@ sub creatingStatFileTex
      
      
 	
-	my $texFooter =  " \\end{tabular}
+	my $texFooter =  " \\end{tabularx}}
 \\end{table}";
 	
      if ($texFastq ne 'NA') { $texFastq .= $texFooter } else { $texFastq = ''; }
