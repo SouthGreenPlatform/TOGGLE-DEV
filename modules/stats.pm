@@ -136,12 +136,15 @@ sub creatingFastqStatFileRaw
      # Getting arguments
      my ($fastqDir )=@_;
     
+     my $softParameters;
+     $softParameters->{"-D"}="";
+     
      my $fastqFiles=toolbox::readDir($fastqDir);
      foreach my $fastqFile (@{$fastqFiles})
      {
           my $statOutputFile = $fastqFile;
           $statOutputFile =~ s/\.fastq$|\.fastq.gz$/\.fastq\.stat/;
-          eaUtils::fastqStats($fastqFile, $statOutputFile); 
+          eaUtils::fastqStats($fastqFile, $statOutputFile, $softParameters); 
      }
 
 }
@@ -232,14 +235,15 @@ sub creatingStatFileTex
           ########### FASTQ PART - fastqd
 		if ($file =~ /\.fastq.stat$/)
 		{
+               
                # tex header (table header)
                $texFastq = "\\subsection{Fastq stat}
 	\\begin{table}[ht]
      \\resizebox{\\textwidth}{!}{%
 		\\centering
 		\\begin{tabularx}{18cm}{X|c|c|c|c|c|c|c|c|c|c|c|c|X}
-Samples & seq & \\multicolumn{3}{c|}{Length} & \\multicolumn{3}{c|}{Qual} & \\%A & \\%C & \\%G & \\%T & \\%N & Total bases    \\\\ \\hline
-& & Len. & mean & min & min & max & mean & & & & & & \\\\" if  ($texFastq eq 'NA');
+Samples & seq & \\multicolumn{3}{c|}{Length} & \\multicolumn{3}{c|}{Qual} & \\%A & \\%C & \\%G & \\%T & \\%N & Total Bases    \\\\ \\hline
+& & Len. & Mean & Min & Min & Max & Mean & & & & & & \\\\" if  ($texFastq eq 'NA');
 
 			# variable initialisation (number of sequences)
 			my $read = 0;
@@ -267,11 +271,11 @@ Samples & seq & \\multicolumn{3}{c|}{Length} & \\multicolumn{3}{c|}{Qual} & \\%A
                     
 				if ($line =~ /^reads/) { $read = $val; }
 				elsif ($line =~ /^len\t/) { $len = $val;  }
-				elsif ($line =~ /^len\smean/) { $lenMean = $val; }
+				elsif ($line =~ /^len\smean/) { $lenMean = sprintf("%.2f",($val)); }
                     elsif ($line =~ /^len\smin/) { $lenMin = $val; }
                     elsif ($line =~ /^qual\smin/) { $qualMin = $val; }
                     elsif ($line =~ /^qual\smax/) { $qualMax = $val; }
-                    elsif ($line =~ /^qual\smean/) { $qualMean = $val; }
+                    elsif ($line =~ /^qual\smean/) { $qualMean = sprintf("%.2f",($val)); }
                     elsif ($line =~ /^%A/) { $A = sprintf("%.2f",($val)); }
                     elsif ($line =~ /^%C/) { $C = sprintf("%.2f",($val)); }
                     elsif ($line =~ /^%G/) { $G = sprintf("%.2f",($val)); }
