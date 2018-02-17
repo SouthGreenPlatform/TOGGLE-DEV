@@ -543,7 +543,8 @@ if ($orderBefore1000)
         $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
         $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
         $launcherCommand.=" -nocheck" if ($checkFastq == 1);
-
+        $launcherCommand.=" -report" if ($report);
+        
         #Launching through the scheduler launching system
         my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
         ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- \nerrorFile = $errorFile",2);
@@ -704,7 +705,7 @@ if ($orderAfter1000)
     $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
     $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
     $launcherCommand.=" -nocheck" if ($checkFastq == 1);
-
+    $launcherCommand.=" -report" if ($report);
 
     my $jobList="";
     my %jobHash;
