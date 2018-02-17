@@ -37,21 +37,7 @@ if ($report)
         # the file type is normally fastq
         elsif ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/) 
         {
-            if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
-            {
-                if ($fastqReverseIn ne "NA")
-                {
-                    toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
-                }
-                else
-                {
-                    $fastqReverseIn = $file;
-                }
-            }
-            else
-            {
-                $fastqForwardIn = $file;
-            }
+            $fastqReverseIn = $file;
         }
         
         # the file type is normally fasta
@@ -68,22 +54,24 @@ if ($report)
         
     }
 
+
+    
     # if bam / sam
     if ($samFileIn ne "NA")                                                                       
     {
-        $samFileOut = $newDir."/"."$readGroup".".PICARDTOOLSSORT.mapping.bam";                        
+        $samFileOut = $newDir."/"."$readGroup".".PICARDTOOLSSORT.mapping.bam";
+        toolbox::exportLog("-----  stats block : creatingMallingStatFileRaw : Je lis 1 $samFileIn", 1); 
         stats::creatingMappingStatFileRaw($samFileIn,$samFileOut);
     }
+    # else vcf
     elsif ($vcfFileIn ne "NA")                                                                       
     {
         toolbox::exportLog("-----  stats block : creatingCallingStatFileRaw : Je lis 1 $vcfFileIn", 1);    
         stats::creatingCallingStatFileRaw($vcfFileIn);
     }
-
-    # else vcf
     # else fasta
     # else fastq
-    elsif ($fastqReverseIn ne "NA" or $fastqForwardIn ne "NA")                                                                       
+    elsif ($fastqReverseIn ne "NA")                                                                       
     {
         toolbox::exportLog("-----  stats block : creatingFastqStatFileRaw : Je lis repertoire $newDir", 1);    
         stats::creatingFastqStatFileRaw($newDir);
