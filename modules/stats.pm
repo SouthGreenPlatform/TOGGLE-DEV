@@ -186,7 +186,7 @@ sub creatingStatFileTex
 	\\begin{table}[ht]
          \\resizebox{\\textwidth}{!}{%
 		\\centering
-		\\begin{tabularx}{l|r|r|r}
+		\\begin{tabularx}{18cm}{X|c|c|c}
 			Samples & Raw sequences & Mapped sequences & Properly mapped  \\\\\\hline  \n" if  ($texMapping eq 'NA');
           
 			# variable initialisation (number of sequences)
@@ -218,7 +218,7 @@ sub creatingStatFileTex
 	\\begin{table}[ht]
          \\resizebox{\\textwidth}{!}{%
 		\\centering
-		\\begin{tabularx}{l|r}
+		\\begin{tabularx}{15cm}{X|c}
 			Samples & Polymorphisms detected   \\\\\\hline \n  " if  ($texCalling eq 'NA');
                
                # variable initialisation (number of polymorphism)
