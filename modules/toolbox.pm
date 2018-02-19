@@ -35,6 +35,7 @@ use warnings;
 use Data::Dumper;
 use Exporter;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+use Carp;
 
 use localConfig;
 use namingConvention;
@@ -86,7 +87,7 @@ sub exportLog
         print ERR $logLines;
         print OUT "ANALYSIS ABORTED\n";
     
-        die("ANALYSIS ABORTED... Look at $errorFile\n");  
+        confess ("ANALYSIS ABORTED... Look at $errorFile\n\n$logLines");  
     }
     elsif ($controlValue eq "1")	#Everything is Ok
     {
