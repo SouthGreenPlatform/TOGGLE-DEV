@@ -40,7 +40,7 @@ xleftmargin=2mm,
 prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
 %backgroundcolor=\color{green!5},
 %frameround=fttt,
-escapeinside=??,
+escapeinside={(*@}{@*)},
 rulecolor=\color{teal},
 keywords={% Give key words here                                         % keywords
     maketitle},
@@ -119,8 +119,8 @@ See the software configuration used by TOGGLe (\ref{appendix:config})  in Append
 
 
  % \verbatiminput{input/configuration.txt}
- 
- 
+
+
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %           JOBS DESCRIPTION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -144,11 +144,11 @@ See the software configuration used by TOGGLe (\ref{appendix:config})  in Append
 
 \input{input/stats.tex}
 
-\cite{Monat2015}
+\cite{toggle}
 
 \clearpage
 
-%\bibliographystyle{nar}
+\bibliographystyle{acm}
 \bibliography{TOGGLe_Workflow_Report}
 
 \clearpage
