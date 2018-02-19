@@ -228,7 +228,7 @@ if (not -d $outputDir) #if the output folder is not existing yet
 }
 
 chdir $outputDir;
-  
+
 #Checking if $outputDir is empty
 my $lsOutputDir = `ls`;
 chomp $lsOutputDir;
@@ -466,7 +466,7 @@ if ($refFastaFile ne 'None')
     #Providing the good reference location
     $refFastaFile = $refDir."/".$goodFileFasta;
     checkFormat::checkFormatFasta($refFastaFile); # checking format fasta
- 
+
     ##DEBUG print $refFastaFile,"\n";
     onTheFly::indexCreator($configInfo,$refFastaFile);
 }
@@ -504,7 +504,7 @@ my $finalDir = $outputDir."/finalResults";
 my $intermediateDir = $workingDir."/intermediateResults";
 
 #Creating  directory
-my $statDir = $outputDir."/statsReport";        
+my $statDir = $outputDir."/statsReport";
 toolbox::makeDir($statDir);
 
 #Graphviz Graphic generator
@@ -543,6 +543,7 @@ if ($orderBefore1000)
         $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
         $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
         $launcherCommand.=" -nocheck" if ($checkFastq == 1);
+        $launcherCommand.=" -report" if ($report);
 
         #Launching through the scheduler launching system
         my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
@@ -635,12 +636,12 @@ if ($orderBefore1000)
             {
                 my ($basicName)=toolbox::extractPath($file);
                 toolbox::exportLog("------>".$basicName."\n",1);
-                
-                # Moving stat file into stat directory instead of intermediateDir        
+
+                # Moving stat file into stat directory instead of intermediateDir
                 if ($basicName =~ /\.stat$/)
                 {
                     my $mvCommand="mv $file $statDir/$basicName && rm -f $file";
-                    toolbox::run($mvCommand,"noprint");    
+                    toolbox::run($mvCommand,"noprint");
                 }
                 else
                 {
@@ -674,11 +675,11 @@ if ($orderBefore1000)
 				$file =~s/://g;
 				my ($basicName)=toolbox::extractPath($file);
 
-                # Moving stat file into stat directory instead of finalDir        
+                # Moving stat file into stat directory instead of finalDir
                 if ($basicName =~ /\.stat$/)
                 {
                     my $mvCommand="mv $file $statDir/$basicName && rm -f $file";
-                    toolbox::run($mvCommand,"noprint");    
+                    toolbox::run($mvCommand,"noprint");
                 }
                 else
                 {
@@ -704,6 +705,7 @@ if ($orderAfter1000)
     $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
     $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
     $launcherCommand.=" -nocheck" if ($checkFastq == 1);
+    $launcherCommand.=" -report" if ($report);
 
 
     my $jobList="";
@@ -742,12 +744,12 @@ if ($orderAfter1000)
     foreach my $file (@{$fileList}) #Copying the final data in the final directory
     {
         my ($basicName)=toolbox::extractPath($file);
-        
-                        # Moving stat file into stat directory instead of finalDir        
+
+                        # Moving stat file into stat directory instead of finalDir
         if ($basicName =~ /\.stat$/)
         {
             my $mvCommand="mv $file $statDir/$basicName && rm -f $file";
-            toolbox::run($mvCommand,"noprint");    
+            toolbox::run($mvCommand,"noprint");
         }
         else
         {
