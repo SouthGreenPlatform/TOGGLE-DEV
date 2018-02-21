@@ -175,11 +175,12 @@ sub schedulerRun
     #Returning to normal run if no scheduler config provided even if scheduler exists
     $schedulerType = "normalRun" unless toolbox::extractHashSoft($configInfo,$schedulerType);
     
-    my $schedulerOptionsHash=toolbox::extractHashSoft($configInfo,$schedulerType);
-    
-    
-    
-    my $schedulerOptions=toolbox::extractOptions($schedulerOptionsHash);
+    my $schedulerOptions = "";
+    if ($schedulerType ne "normalRun")
+    {
+        my $schedulerOptionsHash=toolbox::extractHashSoft($configInfo,$schedulerType);
+        $schedulerOptions=toolbox::extractOptions($schedulerOptionsHash);
+    }
 
     
 	#Picking up ENV variable
@@ -223,13 +224,13 @@ sub schedulerRun
     
     #Parsing infos and informing logs
     chomp $currentJID;
+    $currentJID = "SerialJob" if $schedulerType eq "normalRun"; 
     
     unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
     {
         return -1; #Returning to launcher subprogram the error type
     }
 
-    $currentJID = "SerialJob" if $schedulerType eq "normalRun"; 
 
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in $commands{'run'}{$schedulerType} mode through the command:\n\t$launcherCommand\n",1);
 
@@ -285,7 +286,7 @@ sub schedulerWait
     }
 
     #Compiling infos about sge jobs: jobID, node number, exit status
-    sleep 5;#Needed for acct to register infos...
+    sleep 5;
 	
 	#open file for report job info
 	my $openNameFile = $outputDir."/sample_parallel_table.tex";
@@ -295,7 +296,7 @@ sub schedulerWait
 		 $openNameFile = $outputDir."/sample_global_table.tex";
 	}
 	
-	open (FH, '>', $openNameFile) or die "\nERROR: $0 : cannot open file $openNameFile. $!\nExiting...\n";
+	open (my $fhOut, '>', $openNameFile) or die "\nERROR: $0 : cannot open file $openNameFile. $!\nExiting...\n";
 	
 	my $outputLineTex = "\\begin{table}[ht]
 	\\centering
@@ -335,9 +336,9 @@ Individual\tJobID\tExitStatus
 		
 
     }
-	print FH $outputLineTex;
+	print $fhOut $outputLineTex;
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
-	print FH "\n\\end{tabular}
+	print $fhOut "\n\\end{tabular}
 	\\end{table}";
 
     if (scalar @jobsInError)
@@ -345,7 +346,7 @@ Individual\tJobID\tExitStatus
 		#at least one job has failed
 		return \@jobsInError;
     }
-    close FH;
+    close $fhOut;
     return 1;
 }
 
