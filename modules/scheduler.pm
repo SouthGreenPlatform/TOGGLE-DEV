@@ -128,7 +128,7 @@ sub launcher {
     my $runOutput = &schedulerRun($schedulerType);
 
 
-	if ($runOutput == 0 && $requirement == 0)
+	if ($runOutput eq "0" && $requirement == 0)
     {
 	#The job has to succeed either it will kill all other jobs
         toolbox::exportLog("ERROR: scheduler::launcher on $sample using the scheduler $schedulerType: ".$commandLine."\nThe job cannot be achieved and is mandatory, thus the whole analysis is stop\n",0);
