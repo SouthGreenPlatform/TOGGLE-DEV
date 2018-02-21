@@ -8,6 +8,8 @@ $order
 #$sge
 #-q YOURQUEUE.q
 #-b Y
+
+
 $gatkSelectVariants
 -T=SelectVariants
 -selectType=SNP
