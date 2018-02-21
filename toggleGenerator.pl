@@ -561,7 +561,7 @@ if ($orderBefore1000)
           $errorList =~ s/obiWanKenobi\$\|//;
           ##DEBUG          print "++$errorList++\n";
         }
-        next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
+        #next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
 
         ##DEBUG        toolbox::exportLog("INFOS: $0 : Parallel job",2);
 
