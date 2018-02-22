@@ -120,7 +120,7 @@ sub creatingCallingStatFileRaw
           $vcfOutputFile =~ s/\.vcf$/\.calling\.stat/;
          
           my $grepcmd='grep "#" '.$vcfFileIn ." -v -c > $vcfOutputFile " ;
-          toolbox::run($grepcmd); #,"noprint");        
+          system($grepcmd) and die "ERROR: stats::creatingCallingStatFileRaw : The command $grepcmd is failed\n";  #toolbox::run($grepcmd); #,"noprint");        
      }
      else
      {
