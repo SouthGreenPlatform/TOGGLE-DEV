@@ -541,7 +541,7 @@ sub generateReports
 	# The file has not been created, no parallel analysis (step number > 1000 uniquely) 
 	else
 	{
-		my $echoCmd="echo 'None sample analysis, step number >1000 uniquely' >  $reportDirWF/input/sample_parallel_table.tex";
+		my $echoCmd="echo 'No single sample analyzed, step number >1000 only' >  $reportDirWF/input/sample_parallel_table.tex";
 		toolbox::run($echoCmd,"noprint");
 	}
 	
@@ -554,7 +554,7 @@ sub generateReports
 	# The file has not been created, no global analysis (step number < 1000 uniquely) 
 	else
 	{
-		my $echoCmd="echo 'None global analysis, step number <1000 uniquely' >  $reportDirWF/input/sample_global_table.tex";
+		my $echoCmd="echo 'No global analysis, step number <1000 only' >  $reportDirWF/input/sample_global_table.tex";
 		toolbox::run($echoCmd,"noprint");
 	}
 	
@@ -566,7 +566,7 @@ sub generateReports
 	{		
 		stats::creatingStatFileTex($statDir);
 		$mvCmd="mv $outDir/stats.tex $reportDirWF/input";
-		toolbox::run($mvCmd);
+		toolbox::run($mvCmd,"noprint");
 	}
 	
 	#Command line
@@ -575,11 +575,11 @@ sub generateReports
 	
 	#Software Version
 	$mvCmd="mv $outDir/software.txt $reportDirWF/input";
-	toolbox::run($mvCmd);
+	toolbox::run($mvCmd,"noprint");
 	
 	#config file
 	$cpCmd="cp $configInfo $reportDirWF/input/configuration.txt";
-	toolbox::run($cpCmd);
+	toolbox::run($cpCmd,"noprint");
 	
 	#generating pdf report in $texWorkflowFile 	
 	my $texCmd="pdflatex $texWorkflowFile";
