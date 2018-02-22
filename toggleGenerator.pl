@@ -481,12 +481,15 @@ my $hashmerge=toolbox::extractHashSoft($configInfo,"merge"); #Picking up infos f
 
 my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 
+#Obtaining infos for OUT NA steps
+my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
+
 foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
 {
     if ($step < 1000)
     {
         $$orderBefore1000{$step}=$$hashOrder{$step};
-        $lastOrderBefore1000 = $step;
+        $lastOrderBefore1000 = $step unless $$hashInOut{$$hashOrder{$step}}{"OUT"} eq "NA"; # the last step will be everything but a dead-end one.
     }
     else
     {
