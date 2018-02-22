@@ -77,7 +77,8 @@ use plink;
 use sniplay;
 use fastme;
 use readseq;
-
+use stats;
+use eaUtils;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -154,6 +155,13 @@ $parser->add_args(
                         help     => 'Reference file name',
                         dest     => 'reference',
                         default  => "None"
+                    ],
+                    [
+                        '-report','--report',
+                        required => 0,
+                        type     =>"Bool",
+                        help     => 'Use if you want to generate workflow an analysis reports',
+                        dest     => 'report'
                     ]
 
                 );
@@ -180,6 +188,7 @@ my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);  
 #verify if -nocheckfastq arguments exist in args. The fastq format is verified par default if $checkFastq == 0.
 # WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
 my $checkFastq = $parser->namespace->checkFastq;
+my $report = $parser->namespace->report;
 
 my @listFilesMandatory=($initialDir, $fileConf); #stock mandatory files to test if they exist
 push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
@@ -203,18 +212,18 @@ my $readGroup = $pathIndividu[0];
 if ($0 =~ m/toggleMultiple/)
 {
   #The script will be running for a globalAnalysis thus we must change the readGroup value
-  $readGroup = "multipleAnalysis";
+  $readGroup = "globalAnalysis";
 }
 chdir "$initialDir";
-my $infosFile = "individuSoft.txt";
-open (F1, ">",$infosFile) or die ("ERROR: $0 : Cannot open the file $infosFile\n$!\n");
-print F1 "$readGroup\n";
-print F1 "global\n";
 
+# Creating log file
+my $logFile=$initialDir."/".$readGroup."_log.o";
+my $errorFile=$initialDir."/".$readGroup."_log.e";
+system("touch $logFile $errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
 
+  
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
 toolbox::exportLog("INFOS: Initial command line : $cmd_line\n",1);
-
 
 my $initialFileList = toolbox::readDir($initialDir);
 

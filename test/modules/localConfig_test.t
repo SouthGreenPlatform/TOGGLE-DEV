@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 ###################################################################################################################################
 #
 # Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
@@ -30,23 +28,74 @@
 #
 ###################################################################################################################################
 
-#Will test if localConfig is Ok
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
 
 use strict;
 use warnings;
-use Test::More 'no_plan'; 
 use Data::Dumper;
+
+use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use lib qw(../../modules/);
 
-
-########################################
-#use of localConfig module ok
-########################################
-
-use_ok('localConfig');
-
+# Load localConfig if primary test is successful 
+use_ok('localConfig') or exit;
 use localConfig;
+
+
+########################################
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+
+
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+#########################################
+#Preparing test directory
+#########################################
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
+
+
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
+
+
+
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+# SPECIFIC PART OF MODULE TEST
+######################################################################################################################################
+######################################################################################################################################
 
 ########################################
 #Capture of location of localConfig module ok

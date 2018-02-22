@@ -30,56 +30,70 @@
 #
 ###################################################################################################################################
 
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
 
-
-#Will test if htseq works correctly
 use strict;
 use warnings;
+use Data::Dumper;
+
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
 
-########################################
-#use of module ok
-########################################
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('HTSeq') or exit;
-can_ok( 'HTSeq','htseqCount');
-
 use localConfig;
-use HTSeq;
+
+
+########################################
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
+
+
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
 
 #########################################
-#Remove files and directory created by previous test
+#Preparing test directory
 #########################################
-my $testingDir="$toggle/dataTest/htseqTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"htseq\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
 
 
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -rf htseq_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
 
-
-my $bankData="$toggle/data/Bank/";
-my $testData="$toggle/data/testData/";
+######################################################################################################################################
+######################################################################################################################################
 
 ########################################
 #HTSeq::htseqCount bam file
 ########################################
+my $bankData="$toggle/data/Bank/";
+my $testData="$toggle/data/testData/";
 
 # input file
 my $gffRef="$bankData/referenceRnaseqGFF.gff3";
@@ -109,7 +123,7 @@ is(HTSeq::htseqCount($bam, $htseqcountFile,$gffRef, $optionHachees),1,'HTSeq::ht
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.bam','accepted_hits.SAMTOOLSSORT.sam','htseq_TEST_log.e','htseq_TEST_log.o','individuSoft.txt');
+my @expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.bam','accepted_hits.SAMTOOLSSORT.sam','htseq_log.e','htseq_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'HTSeq::htseqCount - output list');
 
@@ -156,7 +170,7 @@ is(HTSeq::htseqCount($sam, $htseqcountFile,$gffRef, $optionHachees),1,'HTSeq::ht
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAM-HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.sam','htseq_TEST_log.e','htseq_TEST_log.o','individuSoft.txt');
+@expectedOutput = ('accepted_hits.HTSEQCOUNT.txt','accepted_hits.SAM-HTSEQCOUNT.txt','accepted_hits.SAMTOOLSSORT.sam','htseq_log.e','htseq_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'HTSeq::htseqCount - output list');
 

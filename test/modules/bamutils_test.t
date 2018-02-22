@@ -30,53 +30,64 @@
 #
 ###################################################################################################################################
 
-#Will test if samTools module work correctly works correctly
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
+
 use strict;
 use warnings;
+use Data::Dumper;
 
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
 
-########################################
-#use of bamuttils modules ok
-########################################
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('bamutils') or exit;
-
-can_ok('bamutils','bamutilsTool');
-
 use localConfig;
-use bamutils;
 
-#########################################
-#Remove files and directory created by previous test
-#########################################
-
-my $testingDir="$toggle/dataTest/bamutilsTestDir";
-my $cleaningCmd="rm -Rf $testingDir"; 
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 ########################################
-#Creation of test directory
+# Extract automatically tool name and sub name list
 ########################################
-my $makeDirCmd = "mkdir $testingDir";
-system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
 
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCmd="echo \"bamutils\nTEST\" > individuSoft.txt";
-system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
 
-#######################################
-#Cleaning the logs for the test
-#######################################
-$cleaningCmd="rm -Rf bamutils_TEST_log.*";
-system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
 
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
+
+#########################################
+#Preparing test directory
+#########################################
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
+
+
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
 
 
 
@@ -101,7 +112,7 @@ is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','individuSoft.txt','RC3.bamutilsFilter.bam');
+my @expectedOutput = ('bamutils_log.e','bamutils_log.o','RC3.bamutilsFilter.bam');
 
 is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilsFilter - output list');
 
@@ -132,7 +143,7 @@ is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('bamutils_TEST_log.e','bamutils_TEST_log.o','individuSoft.txt','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
+@expectedOutput = ('bamutils_log.e','bamutils_log.o','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
 
 is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilstobed - output list');
 

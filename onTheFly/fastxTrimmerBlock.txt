@@ -30,7 +30,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 # fastxTrimmer::execution
 ##########################################
 
-$softParameters = toolbox::extractHashSoft($optionRef, $stepName);                         # recovery of specific parameters of FatsQC
+$softParameters = toolbox::extractHashSoft($optionRef, $stepName);                         # recovery of specific parameters
 
 
 foreach my $file (@{$fileList})

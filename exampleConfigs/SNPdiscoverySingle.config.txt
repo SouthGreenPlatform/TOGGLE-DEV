@@ -1,3 +1,5 @@
+#This very complete configuration will start from a set of single end FASTQ files and generates a cleaned VCF while removing intermediate data
+
 $order
 1=fastqc
 2=cutadapt
@@ -19,11 +21,11 @@ $cleaner
 4
 9
 
-#PUT YOUR OWN SGE CONFIGURATION HERE
+#PUT YOUR OWN SCHEDULER CONFIGURATION HERE
+#Example for SGE
 #$sge
 #-q YOURQUEUE.q
 #-b Y
-#-V
 
 $cutadapt
 -O=10

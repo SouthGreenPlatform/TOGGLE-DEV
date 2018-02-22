@@ -249,6 +249,9 @@ sub correctName
         case ($name =~ m/^sniplay[\s|\.|\-| \/|\\|\|]*ped[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="sniplayPed2fasta";}
         case ($name =~ m/^fastme/i){$correctedName="fastme";}
 		case ($name =~ m/^readseq/i){$correctedName="readseq";}
+        
+        #ea-Utils
+        case ($name =~ m/^fastq[\s|\.|\-| \/|\\|\|]*stats/i){$correctedName="fastqStats";}
 		
         else
         {

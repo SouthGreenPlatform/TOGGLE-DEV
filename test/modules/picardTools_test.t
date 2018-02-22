@@ -1,5 +1,3 @@
-#!/usr/bin/perl -w
-
 ###################################################################################################################################
 #
 # Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
@@ -30,64 +28,87 @@
 #
 ###################################################################################################################################
 
-#Will test if picardsTools module works correctly
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
+
 use strict;
 use warnings;
-
-use Test::More 'no_plan'; 
-use Test::Deep;
 use Data::Dumper;
-use FindBin qw($Bin);
-use lib qw(../../modules/);
 
-########################################
-#use of picardTools modules ok
-########################################
+use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+use Test::Deep;
+
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('picardTools') or exit;
-can_ok( 'picardTools','picardToolsMarkDuplicates');
-can_ok( 'picardTools','picardToolsCreateSequenceDictionary');
-can_ok( 'picardTools','picardToolsSortSam');
-can_ok( 'picardTools','picardToolsAddOrReplaceReadGroups');
-can_ok( 'picardTools','picardToolsCleanSam');
-can_ok( 'picardTools','picardToolsSamFormatConverter');
-can_ok( 'picardTools','picardToolsValidateSamFile');
-
 use localConfig;
-use picardTools;
 
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/picardtoolsTestDir";
-my $cleaningCmd="rm -Rf $testingDir"; 
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-my $bankData="$toggle/data/Bank/";
-my $bamData="$toggle/data/testData/samBam/";
 
 ########################################
-#Creation of test directory
+# Extract automatically tool name and sub name list
 ########################################
-my $makeDirCmd = "mkdir $testingDir";
-system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
 
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCmd="echo \"picardtools\nTEST\" > individuSoft.txt";
-system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
 
-#######################################
-#Cleaning the logs for the test
-#######################################
-$cleaningCmd="rm -Rf picardtools_TEST_log.*";
-system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
 
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
+
+#########################################
+#Preparing test directory
+#########################################
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
+
+
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
+
+
+
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+# SPECIFIC PART OF MODULE TEST
+######################################################################################################################################
+######################################################################################################################################
 ##########################################
 #picardToolsCreateSequenceDictionary test
 ##########################################
+my $bankData="$toggle/data/Bank/";
+my $bamData="$toggle/data/testData/samBam/";
 
 #Input file
 
@@ -105,7 +126,7 @@ is(picardTools::picardToolsCreateSequenceDictionary($fastaRef,$fastaRefDict),1,'
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta');
+my @expectedOutput = ('picardTools_log.e','picardTools_log.o','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCreateSequenceDictionary - output list');
 
@@ -135,7 +156,7 @@ is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionsHachees),1,'pica
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSortSam - output list');
 
@@ -172,7 +193,7 @@ is(picardTools::picardToolsMarkDuplicates($bamFile, $bamFileOut, $duplicatesFile
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsMarkDuplicates - output list');
 
@@ -199,7 +220,7 @@ is(picardTools::picardToolsCleanSam($bamFile, $bamFileOut,$optionsHachees),1,'pi
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCleanSam - output list');
 
@@ -226,7 +247,7 @@ is(picardTools::picardToolsSamFormatConverter($bamFile, $samFileOut,$optionsHach
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSamFormatConverter - output list');
 
@@ -253,7 +274,7 @@ is(picardTools::picardToolsAddOrReplaceReadGroups($bamFile, $bamFileOut,$readGro
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
+@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'referenceIrigin.dict','referenceIrigin.fasta');
 
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsAddOrReplaceReadGroups - output list');
 
@@ -286,7 +307,7 @@ is($observedOutput,$expectedLastLine,'picardTools::picardToolsAddOrReplaceReadGr
 ## expected output test
 #$observedOutput = `ls`;
 #@observedOutput = split /\n/,$observedOutput;
-#@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSVALIDATESAMFILE.infos','referenceIrigin.dict','referenceIrigin.fasta');
+#@expectedOutput = ('picardTools_log.e','picardTools_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSVALIDATESAMFILE.infos','referenceIrigin.dict','referenceIrigin.fasta');
 #
 #is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsValidateSamFile - output list');
 #

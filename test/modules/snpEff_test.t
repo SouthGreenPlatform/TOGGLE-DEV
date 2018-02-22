@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 ###################################################################################################################################
 #
 # Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
@@ -30,26 +28,82 @@
 #
 ###################################################################################################################################
 
-#Will test if snpeff works correctly
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
+
 use strict;
 use warnings;
+use Data::Dumper;
+
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
 
-
-########################################
-#Test of the use of snpeff modules
-########################################
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('snpEff') or exit;
-
-can_ok('snpEff','dbCreator');
-can_ok('snpEff','snpEffAnnotation');
-
 use localConfig;
-use snpEff;
+
+
+########################################
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
+
+
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
+
+#########################################
+#Preparing test directory
+#########################################
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
+
+
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
+
+
+
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+# SPECIFIC PART OF MODULE TEST
+######################################################################################################################################
+######################################################################################################################################
 
 my $expectedData="$toggle/data/expectedData/";
 
@@ -64,16 +118,9 @@ chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the
 
 
 #######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"snpEff\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
-
-#######################################
 #Cleaning the logs for the test
 #######################################
-my $cleaningCommand="rm -Rf snpEff_TEST_log.*";
+my $cleaningCommand="rm -Rf snpEff_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 

@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 ###################################################################################################################################
 #
 # Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
@@ -30,49 +28,82 @@
 #
 ###################################################################################################################################
 
-#Will test if onTheFly works correctly
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
 
 use strict;
 use warnings;
-use Test::More 'no_plan'; #tests => 19; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Data::Dumper;
+
+use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use lib qw(../../modules/);
 
-use localConfig;
-
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('onTheFly') or exit;
-can_ok('onTheFly','checkOrder');
-can_ok('onTheFly','generateScript');
-can_ok('onTheFly','indexCreator');
-can_ok('onTheFly','generateGraphviz');
-
 use localConfig;
-use onTheFly;
+
+
+########################################
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
+
+
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
 
 #########################################
-#Remove the files and directory created by the previous test
+#Preparing test directory
 #########################################
-my $testingDir="$toggle/dataTest/onTheFlyTestDir";
-my $rmDirCommand="rm -Rf $testingDir; mkdir $testingDir"; 
-system ("$rmDirCommand") and die ("ERROR: $0 : Cannot remove the previous test directory with the command $rmDirCommand \n$!\n");
-chdir $testingDir or die ("ERROR: $0 : Cannot create $testingDir\n$!\n");
-
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-#system("mkdir LOGS");
-my $creatingCommand="echo \"onTheFly\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf onTheFly_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
 
 
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
+
+
+
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+# SPECIFIC PART OF MODULE TEST
+######################################################################################################################################
+######################################################################################################################################
 ########################################
 #Creation of test files
 ########################################
@@ -186,13 +217,13 @@ is (onTheFly::generateScript($hashConf,$outputScript),'1','onTheFly::generateScr
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.fasta','toggleBzzz.pl');
+my @expectedOutput = ('onTheFly_log.e','onTheFly_log.o','referenceIrigin.fasta','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateScript - output list');
 
 # expected content test
 
-my $expectedMD5sum="40c38dd4f3fbab7be4c9e534598aaf02";
+my $expectedMD5sum="7ee0c081a08c144852310b51670cd07e";
 my $observedMD5sum=`md5sum $outputScript`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -216,7 +247,7 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator - cr
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('onTheFly_log.e','onTheFly_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator - output list');
 
@@ -239,7 +270,7 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator no c
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('onTheFly_log.e','onTheFly_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator no creation - output list');
 
@@ -263,7 +294,7 @@ is (onTheFly::indexCreator($hashConf,$fastaRef),'1','onTheFly::indexCreator forc
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
+@expectedOutput = ('onTheFly_log.e','onTheFly_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator forcing creation - output list');
 
@@ -285,12 +316,12 @@ $hashConf = {
             };
 
 #execution test
-is (onTheFly::generateGraphviz($hashConf,"$toggle/dataTest/onTheFlyTestDir"),'1','onTheFly::generateGraphviz');
+is (onTheFly::generateGraphviz($hashConf,"$testDir"),'1','onTheFly::generateGraphviz');
 
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl','togglePipeline.dot','togglePipeline.png');
+@expectedOutput = ('onTheFly_log.e','onTheFly_log.o','referenceIrigin.dict','referenceIrigin.fasta','referenceIrigin.fasta.amb','referenceIrigin.fasta.ann','referenceIrigin.fasta.bwt','referenceIrigin.fasta.fai','referenceIrigin.fasta.pac','referenceIrigin.fasta.sa','toggleBzzz.pl','togglePipeline.dot','togglePipeline.png');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateGraphviz - output list');
 

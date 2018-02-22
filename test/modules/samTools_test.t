@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 ###################################################################################################################################
 #
 # Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
@@ -30,60 +28,82 @@
 #
 ###################################################################################################################################
 
-#Will test if samTools module work correctly works correctly
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
+
 use strict;
 use warnings;
+use Data::Dumper;
 
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
 
-########################################
-#use of samtools modules ok
-########################################
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('samTools') or exit;
-
-can_ok( 'samTools','samToolsFaidx');
-can_ok( 'samTools','samToolsIndex');
-can_ok( 'samTools','samToolsSort');
-can_ok( 'samTools','mergeHeader');
-can_ok( 'samTools','samToolsMerge');
-can_ok( 'samTools','samToolsView');
-can_ok( 'samTools','samToolsIdxstats');
-can_ok( 'samTools','samToolsDepth');
-can_ok( 'samTools','samToolsFlagstat');
-can_ok( 'samTools','samToolsMpileUp');
-
 use localConfig;
-use samTools;
 
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/samToolsTestDir";
-my $cleaningCmd="rm -Rf $testingDir"; 
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 ########################################
-#Creation of test directory
+# Extract automatically tool name and sub name list
 ########################################
-my $makeDirCmd = "mkdir $testingDir";
-system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
 
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCmd="echo \"samTools\nTEST\" > individuSoft.txt";
-system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
 
-#######################################
-#Cleaning the logs for the test
-#######################################
-$cleaningCmd="rm -Rf samTools_TEST_log.*";
-system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
+
+#########################################
+#Preparing test directory
+#########################################
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
+
+
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
+
+
+
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+# SPECIFIC PART OF MODULE TEST
+######################################################################################################################################
+######################################################################################################################################
 
 ########################################
 #initialisation and setting configs
@@ -110,7 +130,7 @@ is(samTools::samToolsFaidx($fastaRef),1,'samTools::samToolsFaidx');
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('individuSoft.txt','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+my @expectedOutput = ('referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_log.e','samTools_log.o');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsFaidx - output list');
 
@@ -140,7 +160,7 @@ is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('RC3.bam','RC3.bam.bai','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_log.e','samTools_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIndex - output list');
 
@@ -166,7 +186,7 @@ is(samTools::samToolsView($bamFile, $bamFileOut, $optionsHachees),1,'samTools::s
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_log.e','samTools_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsView - output list');
 
@@ -191,7 +211,7 @@ is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_log.e','samTools_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsSort - output list');
 
@@ -222,7 +242,7 @@ is(samTools::samToolsMerge(\@bamFiles,$bamFileOut,'headerFile.sam'),1,'samTools:
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+@expectedOutput = ('headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_log.e','samTools_log.o');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMerge - output list');
 
@@ -248,7 +268,7 @@ is(samTools::mergeHeader(\@bamFiles,$header),1,'samTools::mergeHeader');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samTools_log.e','samTools_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::mergeHeader - output list');
 
@@ -273,7 +293,7 @@ is(samTools::samToolsIdxstats($bamFile,$statsFile),1,'samTools::samToolsIdxstats
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_log.e','samTools_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -299,7 +319,7 @@ is(samTools::samToolsDepth(\@bamFiles,$depthFile),1,'samTools::samToolsDepth');
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_log.e','samTools_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -325,7 +345,7 @@ is(samTools::samToolsFlagstat($bamFile,$statsBamFile),1,'samTools::samToolsFlagS
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_log.e','samTools_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
@@ -351,7 +371,7 @@ is(samTools::samToolsMpileUp(\@bamFiles,$mpileupFile),1,'samTools::samToolsMpile
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('depth.txt','headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSMPILEUP.mpileup','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_TEST_log.e','samTools_TEST_log.o','testedHeader.txt');
+@expectedOutput = ('depth.txt','headerFile.sam','MergeBam.bam','RC3.bam','RC3.bam.bai','RC3-SAMTOOLSFLAGSTAT.txt','RC3-SAMTOOLSMPILEUP.mpileup','RC3-SAMTOOLSVIEW.bam','RC3-SAMTOOOLSSORT.bam','referenceIrigin.fasta','referenceIrigin.fasta.fai','samIdxStat.txt','samTools_log.e','samTools_log.o','testedHeader.txt');
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMpileUp - output list');
 

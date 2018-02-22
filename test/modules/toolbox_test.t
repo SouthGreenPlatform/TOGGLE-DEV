@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 ###################################################################################################################################
 #
 # Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
@@ -30,77 +28,80 @@
 #
 ###################################################################################################################################
 
-#Will test if toolbox.pm works correctly
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
+
 use strict;
 use warnings;
+use Data::Dumper;
+
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
 
+# Load localConfig if primary test is successful 
+use_ok('localConfig') or exit;
 use localConfig;
 
 
 ########################################
-#Test of the use of toolbox modules
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
+
+
+########################################
+#Automatically module test with use_ok and can_ok
 ########################################
 
-use_ok('localConfig');
-use_ok('toolbox');
-can_ok('toolbox','exportLog');
-can_ok('toolbox','checkFile');
-can_ok('toolbox','readFile');   #remove test for return 0
-can_ok('toolbox','writeFile');  #remove test for return 0
-can_ok('toolbox','sizeFile');
-can_ok('toolbox','existsFile');
-can_ok('toolbox','existsDir');
-can_ok('toolbox','makeDir');
-can_ok('toolbox','readDir');
-#can_ok('toolbox','readDir2');
-can_ok('toolbox','readFileConf');
-can_ok('toolbox','extractPath');
-can_ok('toolbox','extractOptions');
-can_ok('toolbox','extractName');
-can_ok('toolbox','run');
-can_ok('toolbox','checkNumberLines');
-can_ok('toolbox','addInfoHeader');
-can_ok('toolbox','changeDirectoryArbo');
-can_ok('toolbox','extractHashSoft');
-can_ok('toolbox','checkInitialDirContent');
-can_ok('toolbox','relativeToAbsolutePath');
+use_ok($toolName) or exit;
+eval "use $toolName";
 
-use localConfig;
-use toolbox;
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
+
+#########################################
+#Preparing test directory
+#########################################
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
+
+
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+# SPECIFIC PART OF MODULE TEST
+######################################################################################################################################
+######################################################################################################################################
 
 my $testData="$toggle/data/testData/";
 my $configFile="$toggle/exampleConfigs/SNPdiscoveryPaired.config.txt";
-
-#########################################
-#Remove files and directory created by previous test
-#########################################
-my $testingDir="$toggle/dataTest/toolboxTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-my $makeDirCmd = "mkdir pairingDir";
-system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
-
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"toolbox\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
-
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf toolbox_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
-
-
-
 
 #######################################
 #charge needed test files into variables
@@ -134,35 +135,33 @@ my $wrongFasta=$testData."wrongReference.fasta";
 ########################################
 # toolbox::exportLog tests
 ########################################
-# Test if individuSoft.txt has been created
-my $file="individuSoft.txt";
-my $got=(-e $file)?1:0;
-my $expectedBool=1;
-is($got,$expectedBool,"toolbox::exportLog - exist $file?");
-
-# Test if the log is written in toolbox_TEST_log.o
-# Test if toolbox_TEST_log.o has been created
-my $expected="INFO:  toolbox_test.t\n";
-toolbox::exportLog($expected,1);
-
-my $file_log="toolbox_TEST_log.o";
-$got=(-e $file_log)?1:0;
-is($got,$expectedBool,"toolbox::exportLog - exist $file_log?");
-
-$got=`head -n1 $file_log`;
-is($got,$expected,"toolbox::exportLog - Log in $file_log");
-
-
-# Test if the log is written in toolbox_TEST_log.e
-# Test if toolbox_TEST_log.e has been created
-$expected="WARNING:  toolbox_test.t\n";
-toolbox::exportLog($expected,2);
-my $file_error="toolbox_TEST_log.e";
-$got=(-e $file_error)?1:0;
-is($got,$expectedBool,"toolbox::exportLog - exist $file_error?");
-
-$got=`head -n1 $file_error`;
-is($got,$expected,"toolbox::exportLog - Log in $file_error");
+#my $got=(-e $file)?1:0;
+#my $expectedBool=1;
+#is($got,$expectedBool,"toolbox::exportLog - exist $file?");
+#
+## Test if the log is written in toolbox_log.o
+## Test if toolbox_log.o has been created
+#my $expected="INFO:  toolbox_test.t\n";
+#toolbox::exportLog($expected,1);
+#
+#my $file_log="toolbox_log.o";
+#$got=(-e $file_log)?1:0;
+#is($got,$expectedBool,"toolbox::exportLog - exist $file_log?");
+#
+#$got=`head -n1 $file_log`;
+#is($got,$expected,"toolbox::exportLog - Log in $file_log");
+#
+#
+## Test if the log is written in toolbox_log.e
+## Test if toolbox_log.e has been created
+#$expected="WARNING:  toolbox_test.t\n";
+#toolbox::exportLog($expected,2);
+#my $file_error="toolbox_log.e";
+#$got=(-e $file_error)?1:0;
+#is($got,$expectedBool,"toolbox::exportLog - exist $file_error?");
+#
+#$got=`head -n1 $file_error`;
+#is($got,$expected,"toolbox::exportLog - Log in $file_error");
 
 
 ########################################
@@ -372,7 +371,7 @@ ok($date eq $endOfLog,'toolbox::run - command behaviour');
 ########################################
 #toolbox::checkInitialDirContent test TODO add test negatif
 ########################################
-$makeDirCmd = "mkdir initialDir";
+my $makeDirCmd = "mkdir initialDir";
 system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
 
 my $copyCmd= "cp $fastqFile initialDir/";           # command to copy the original fastq file into the test directory

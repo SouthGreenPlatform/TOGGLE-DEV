@@ -45,19 +45,17 @@ use Data::Dumper;
 #
 ##################################
 
-our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash);
+our ($commandLine, $requirement, $sample, $configInfo, $jobList, %jobHash, @errorFileList, $outputDir);
 
 #Here is the core commands for any scheduler: run, acct and queue command.
 
-my %commands =('run' => {'sge'=>'qsub',
+my %commands =('run' => {'normalRun'=>'sh',
+                         'sge'=>'qsub',
 						 'slurm'=>'sbatch',
 						 'mprun'=>'ccc_msub',
 						 'lsf'=>'bsub'},
-			   'acct' => {'sge'=>'qacct -j',
-						  'slurm'=>'qacct -j',
-						  'mprun'=>'ccc_macct',
-						  'lsf'=>'bacct'},
-			   'queue' => {'sge'=>'qstat -u \$USER',
+			   'queue' => {'normalRun'=>'',
+                          'sge'=>'qstat -u \$USER',
 						  'slurm'=>'squeue',
 						  'mprun'=>'ccc_mstat -u \$USER',
 						  'lsf'=>'bjobs -u \$USER'});
@@ -66,22 +64,16 @@ my %commands =('run' => {'sge'=>'qsub',
 
 #Here are the infos for parsing data in waiting system
 
-my %parsings = ('JIDposition' => {	'sge'=>2,
+my %parsings = ('JIDposition' => {	'normalRun'=>'',
+                                    'sge'=>2,
 									'slurm'=>3,
 									'mprun'=>3,
 									'lsf'=>1},
-				'JIDsplitter' => {'sge'=>"\\s",
+				'JIDsplitter' => {'normalRun'=>'',
+                                  'sge'=>"\\s",
 								  'slurm'=>"\\s",
 								  'mprun'=>"\\s",
-								  'lsf'=>"<\|>"},
-				'acctOutSplitter' => {'sge'=>"\\n",
-									  'slurm'=>"\\n",
-									  'mprun'=>"\\s+",
-									  'lsf'=>"\\s+"},
-				'acctOutText' => {'sge'=>"exit_status  0",
-								  'slurm'=>"COMPLETED",
-								  'mprun'=>"COMPLETED",
-								  'lsf'=>"Total number of done jobs:\\s*1\\s*Total number of exited jobs:\\s*0\\s*"});
+								  'lsf'=>"<\|>"});
 
 ##DEBUG toolbox::exportLog(Dumper(\%parsings),0);
 
@@ -133,59 +125,64 @@ sub launcher {
     my $schedulerType = &checkingCapability;
 	##DEBUG toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
 
-    my $runOutput;
-
-    if (defined $$configInfo{$schedulerType})
-	{
-		$runOutput = &schedulerRun($schedulerType)
-	}
-	else
-	{
-		$runOutput = &normalRun
-	};
+    my $runOutput = &schedulerRun($schedulerType);
 
 
-	if ($runOutput == 0 && $requirement == 0)
+	if ($runOutput eq "0" && $requirement == 0)
     {
 	#The job has to succeed either it will kill all other jobs
         toolbox::exportLog("ERROR: scheduler::launcher on $sample using the scheduler $schedulerType: ".$commandLine."\nThe job cannot be achieved and is mandatory, thus the whole analysis is stop\n",0);
     	return 0;
     }
 
-    return $runOutput;
+        #Picking up the output error file
+    my @listOne = split /-d\s+/, $commandLine;
+    my ($folderOut) = split /\s+/, $listOne[1];
+    my $errorLog = `basename $folderOut`;
+    chomp $errorLog;
+    $errorLog=$folderOut."/".$errorLog."_log.e";
+    
+    return ($runOutput, $errorLog);
 }
 
-sub normalRun { #For running in normal mode, ie no scheduler
-
-    #BASED ON TOOLBOX::RUN, but will not stop the whole pipeline for an error
-    use Capture::Tiny qw(capture);
-
-    toolbox::exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
-
-    ##Execute the command
-    my ($result,$stderr)=capture {` $commandLine `};
-
-    ##Log export according to the error
-    if ($?==0) #Success, no error
-    {
-		return 1;
-    }
-    else  #Error, the job cannot be achieved for any reason
-    {
-	##DEBUG
-		toolbox::exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
-		return 0;
-    }
-
-}
+#sub normalRun
+#{ #For running in normal mode, ie no scheduler
+#
+#    #BASED ON TOOLBOX::RUN, but will not stop the whole pipeline for an error
+#    use Capture::Tiny qw(capture);
+#
+#    toolbox::exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
+#
+#    ##Execute the command
+#    my ($result,$stderr)=capture {` $commandLine `};
+#
+#    ##Log export according to the error
+#    if ($?==0) #Success, no error
+#    {
+#		return 1;
+#    }
+#    else  #Error, the job cannot be achieved for any reason
+#    {
+#	##DEBUG
+#		toolbox::exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
+#		return 0;
+#}
 
 sub schedulerRun
 { #For any scheduler,will launch a script encapsulating the command line
 
 	my ($schedulerType) = @_;
-    my $schedulerOptionsHash=toolbox::extractHashSoft($configInfo,$schedulerType);
-    my $schedulerOptions=toolbox::extractOptions($schedulerOptionsHash);
+    #Returning to normal run if no scheduler config provided even if scheduler exists
+    $schedulerType = "normalRun" unless toolbox::extractHashSoft($configInfo,$schedulerType);
+    
+    my $schedulerOptions = "";
+    if ($schedulerType ne "normalRun")
+    {
+        my $schedulerOptionsHash=toolbox::extractHashSoft($configInfo,$schedulerType);
+        $schedulerOptions=toolbox::extractOptions($schedulerOptionsHash);
+    }
 
+    
 	#Picking up ENV variable
     my $envOptionsHash=toolbox::extractHashSoft($configInfo,"env");
     my $envOptions=toolbox::extractOptions($envOptionsHash,"","\n");
@@ -203,12 +200,15 @@ sub schedulerRun
 
     #Adding scheduler options
     my $launcherCommand = $commands{'run'}{$schedulerType}." ".$schedulerOptions;
+    
+   
+    ##DEBUG    toolbox::exportLog("NORMAL: scheduler::Run: the errorLog is $errorLog;",1);
 
     #Creating the bash script for slurm to launch the command
     #my $date =`date +%Y_%m_%d_%H_%M_%S`;
     #chomp $date;
     my $scriptName=$schedulerFolder."/".$sample."_schedulerScript.sh";
-    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
+    my $bashScriptCreationCommand= "echo \"#!/bin/bash\n\n".$envOptions."\n".$commandLine."\n\n\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand,"noprint");
     $launcherCommand.=" ".$scriptName;
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
@@ -221,21 +221,25 @@ sub schedulerRun
         toolbox::exportLog ("WARNING : $0 : Cannot launch the job for $sample: $!\n",2);
         $currentJID = "";
     }
-
+    
     #Parsing infos and informing logs
     chomp $currentJID;
-
+    $currentJID = "SerialJob" if $schedulerType eq "normalRun"; 
+    
     unless ($currentJID) #The job has no output in STDOUT, ie there is a problem...
     {
-        return 0; #Returning to launcher subprogram the error type
+        return -1; #Returning to launcher subprogram the error type
     }
+
 
     toolbox::exportLog("INFOS: $0 : Correctly launched for $sample in $commands{'run'}{$schedulerType} mode through the command:\n\t$launcherCommand\n",1);
 
     #Picking job ID
-    my @infosList=split ($parsings{'JIDsplitter'}{$schedulerType}, $currentJID);
-    $currentJID = $infosList[$parsings{'JIDposition'}{$schedulerType}];
-
+    if ($schedulerType ne "normalRun")
+    {
+        my @infosList=split ($parsings{'JIDsplitter'}{$schedulerType}, $currentJID);
+        $currentJID = $infosList[$parsings{'JIDposition'}{$schedulerType}];
+    }
 
 	##DEBUG	toolbox::exportLog($currentJID,2);
 
@@ -252,17 +256,13 @@ sub schedulerRun
 sub waiter
 { #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
 
-    ($jobList,my $jobsInfos) = @_;
+    ($jobList,my $jobsInfos, $outputDir) = @_;
 
     %jobHash = %{$jobsInfos};
 
     my $schedulerType = &checkingCapability;
-    my $stopWaiting;
-
-    if (defined $$configInfo{$schedulerType})
-	{
-		$stopWaiting = &schedulerWait($schedulerType)
-	}
+    
+    my $stopWaiting = &schedulerWait($schedulerType, $outputDir);
 
     return $stopWaiting;
 }
@@ -270,22 +270,40 @@ sub waiter
 
 sub schedulerWait
 {
-    my ($schedulerType) = @_;
+    my ($schedulerType, $ouputDir) = @_;
     my $nbRunningJobs = 1;
     my @jobsInError=();
 
     ##Waiting for jobs to finish
     while ($nbRunningJobs)
     {
+      last if $schedulerType eq "normalRun";
       #Picking up the number of currently running jobs
       my $statCommand = $commands{'queue'}{$schedulerType}." | egrep -c \"$jobList\"";
       $nbRunningJobs = `$statCommand`;
       chomp $nbRunningJobs;
-      sleep 50;
+      sleep 15;
     }
 
     #Compiling infos about sge jobs: jobID, node number, exit status
-    sleep 25;#Needed for acct to register infos...
+    sleep 5;
+	
+	#open file for report job info
+	my $openNameFile = $outputDir."/sample_parallel_table.tex";
+	
+	if (scalar(keys%jobHash) == 1 && defined($jobHash{"global"}))
+	{
+		 $openNameFile = $outputDir."/sample_global_table.tex";
+	}
+	
+	open (my $fhOut, '>', $openNameFile) or die "\nERROR: $0 : cannot open file $openNameFile. $!\nExiting...\n";
+	
+	my $outputLineTex = "\\begin{table}[ht]
+	\\centering
+	\\begin{tabular}{l||r||r}
+	Samples & Job ID & Status \\\\\\hline
+	";
+	
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
 Individual\tJobID\tExitStatus
@@ -293,60 +311,42 @@ Individual\tJobID\tExitStatus
 
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
     {
-		my $acctCommand = $commands{'acct'}{$schedulerType}." ".$jobHash{$individual}." 2>&1";
-		my $acctOutput = `$acctCommand`;
-		my $outputLine;
-
-		chomp $acctOutput;
-		if ($acctOutput =~ "-bash: " or $acctOutput =~ "installed")
-		{
-		  #IF acct cannot be run on the node
-		  $outputLine = "$individual\t$jobHash{$individual}\tNA\tNA\n";
-		  toolbox::exportLog($outputLine,1);
-		  next;
+        
+        my ($currentLine, $outputLine);
+        $outputLine = "$individual\t$jobHash{$individual}{output}\t";
+		$outputLineTex .= "$individual & $jobHash{$individual}{output} & ";
+        
+        my $grepError = `grep "ERROR" $jobHash{$individual}{errorFile}`;
+        chomp $grepError;
+        
+        if ($grepError)
+        {
+            $currentLine = "Error";
+            push @jobsInError, $individual;
 		}
-
-		my @linesQacct = split ($parsings{'acctOutSplitter'}{$schedulerType}, $acctOutput);
-		$outputLine = $individual."\t".$jobHash{$individual}."\t";
-		my $currentLine ="Error";
-		my $parserText = $parsings{'acctOutText'}{$schedulerType};
-
-		##DEBUG	toolbox::exportLog($parserText,2);
-
-		while (@linesQacct) #Parsing the qacct output
-		{
-		  my $line = shift @linesQacct;
-		  #Passing the header lines
-		  next if $line =~ m/JobID/;
-		  next if $line =~ m/^$/;
-
-
-
-		  if ($line =~ m/$parserText/) #Picking up exit status
-		  {
-			  $currentLine = "Normal";
-			  last;
-		  }
-
-		  next;
-		}
-
-		#The parsing text has not been found meaning still an error
-		if ($currentLine eq "Error")
-		{
-		  push @jobsInError, $individual;
-		}
-		$outputLine .= $currentLine;
+        else
+        {
+            $currentLine = "Normal";
+        }
+       
+    	$outputLine .= $currentLine;
+		$outputLineTex .= $currentLine."\\\\";
 		toolbox::exportLog($outputLine,1);
+		
+		
 
     }
+	print $fhOut $outputLineTex;
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
+	print $fhOut "\n\\end{tabular}
+	\\end{table}";
 
     if (scalar @jobsInError)
     {
 		#at least one job has failed
 		return \@jobsInError;
     }
+    close $fhOut;
     return 1;
 }
 

@@ -30,56 +30,71 @@
 #
 ###################################################################################################################################
 
-#Will test if bwa works correctly
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
+
 use strict;
 use warnings;
+use Data::Dumper;
+
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
 
-
-########################################
-#use of bwa module ok
-########################################
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('crac') or exit;
-can_ok('crac','cracIndex');
-can_ok('crac','crac');
-
 use localConfig;
-use crac;
 
-my $bankData="$toggle/data/Bank/";
-my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
+
+########################################
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
+
+
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
 
 #########################################
-#Remove files and directory created by previous test
+#Preparing test directory
 #########################################
-my $testingDir="$toggle/dataTest/cracTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"crac\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
 
 
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf crac_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
 
 
 ##########################################
 ##### crac::index
 ##########################################
+my $bankData="$toggle/data/Bank/";
+my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
 
 
 # input file
@@ -97,7 +112,7 @@ is(crac::cracIndex($fastaRef,$optionsHachees),1,'crac::cracIndex - running');
 
 # expected output test
 #Check if files created
-my @expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
+my @expectedOutput = ("crac_log.e","crac_log.o","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::cracIndex - Filetree created');
@@ -132,7 +147,7 @@ is(crac::crac($samFileOut,$cracIndex,$forwardFastq,$reverseFastq,$optionsHachees
 
 # expected output test
 #Check if files created
-@expectedOutput = ("crac_TEST_log.e","crac_TEST_log.o","individuSoft.txt","irigin.CRAC.sam","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
+@expectedOutput = ("crac_log.e","crac_log.o","irigin.CRAC.sam","referenceIrigin.fasta","referenceIrigin.fasta.CRAC.index.conf","referenceIrigin.fasta.CRAC.index.ssa");
 $observedOutput = `ls ./`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'crac::crac - Files created');

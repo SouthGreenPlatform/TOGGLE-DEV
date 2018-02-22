@@ -109,7 +109,7 @@ sub gatkVersion
 {
 	my $version = `$GATK -version` or die toolbox::exportLog("ERROR: versionSoft::gatkVersion : Can not grep gatk version\nPlease check your GATK installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return "Version: ".$version;
+	return $version;
 }
 
 sub htseqcountVersion
@@ -130,7 +130,7 @@ sub picardToolsVersion
 {
 	my $version = `$picard CheckFingerprint --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::picardToolsVersion : Can not grep picardTools version\nPlease check your picardtools installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return "Version: ".$version;
+	return $version;
 }
 
 sub stacksVersion
@@ -151,7 +151,7 @@ sub snpeffVersion
 {
 	my $version = `$snpEff -version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::snpeffVersion : Can not grep snpeff version\nPlease check your snpeff installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return "Version: ".$version;
+	return $version;
 }
 
 sub tgiclVersion
@@ -212,7 +212,7 @@ sub bedToolsVersion
 	my $version = `$bedtools --version` or die toolbox::exportLog("ERROR: versionSoft::bedToolsVersion : Can not grep BEDtools version\nPlease check your BEDtools installation.\n", 0);
 	chomp($version);
 	return $version;
-	
+
 }
 
 sub abyssVersion
@@ -220,7 +220,7 @@ sub abyssVersion
 	my $version = `$abyss --version | grep 'GNU Make'` or die toolbox::exportLog("ERROR: versionSoft::abyssVersion : Can not grep Abyss version\nPlease check your Abyss installation.\n", 0);
 	chomp($version);
 	return $version;
-	
+
 }
 
 #sub transAbyssVersion
@@ -228,7 +228,7 @@ sub abyssVersion
 #	my $version = `$transAbyss --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::transAbyssVersion : Can not grep transAbyss version\nPlease check your transAbyss installation.\n", 0);
 #	chomp($version);
 #	return $version;
-#	
+#
 #}
 
 sub breakDancerVersion
@@ -240,14 +240,23 @@ sub breakDancerVersion
 
 sub pindelVersion
 {
-	my $version = `pindel | grep -m 1 version` or die toolbox::exportLog("ERROR: versionSoft::pindelVersion : Can not grep breakDancer version\nPlease check your pindel installation.\n", 0);
+	my $version = `$pindel | grep -m 1 version` or die toolbox::exportLog("ERROR: versionSoft::pindelVersion : Can not grep breakDancer version\nPlease check your pindel installation.\n", 0);
 	chomp($version);
+	return $version;
+}
+
+sub fastqStatsVersion
+{
+	my $version =`$fastqStats -h | grep Version` or die toolboox::exportLog("ERROR: versionSoft::fastqStatsVersion: Cannot grep fastq-stats version\nPlease check your fastq-stats/ea-utils installation.\n",0);
+	chomp $version;
 	return $version;
 }
 
 sub writeLogVersion
 {
-	my ($fileConf, $version) = @_;
+	my ($fileConf, $version, $reportDir,$report) = @_; #recovery $report boolean value: set to 1 if report is requested. $reportDir is the path were software.txt is generated
+	$report=0 if not defined $report; # by default $report does not generate sofware.txt
+
 	my %softPathVersion = ("toggle"	=> $version);
 	my %softPath = ("toggle"	=> $toggle);
 
@@ -372,12 +381,12 @@ sub writeLogVersion
 			case ($softOrder =~ m/^fastme.*/i){$softPathVersion{"fastme"}= fastmeVersion if not defined $softPathVersion{"fastme"};
 											  $softPath{"fastme"}= $fastme if not defined $softPath{"fastme"};
 											  }
-			
+
 			#FOR readseq
 			case ($softOrder =~ m/^readseq.*/i){$softPathVersion{"readseq"}= readseqVersion if not defined $softPathVersion{"readseq"};
 											  $softPath{"readseq"}= $readseqjar if not defined $softPath{"readseq"};
 											  }
-											  
+
 			#FOR SNIPLAY
 			case ($softOrder =~ m/^sniplay.*/i){$softPathVersion{"sniplay"}= "v1.0" if not defined $softPathVersion{"sniplay"};
 												$softPath{"sniplay"}= "sniplay" if not defined $softPath{"sniplay"};
@@ -385,7 +394,7 @@ sub writeLogVersion
 
 			#For format checking
 			case($softOrder =~ m/^check/i){next;}
-			
+
 			#FOR crac.pm
 			case ($softOrder =~ m/^crac.*/i){$softPathVersion{"crac"}= cracVersion if not defined $softPathVersion{"crac"};
 											$softPath{"crac"}= $crac if not defined $softPath{"crac"};
@@ -393,7 +402,7 @@ sub writeLogVersion
 			#FOR duplicationDetector
 			case ($softOrder =~ m/^duplicationDetector/i){$softPathVersion{"duplicationDetector"}= "v1.0" if not defined $softPathVersion{"duplicationDetector"};
 											$softPath{"duplicationDetector"}= $duplicationDetector if not defined $softPath{"duplicationDetector"};}
-			
+
 			#FOR checkFormatFasta
 			case ($softOrder =~ m/^checkFormatFasta/i){$softPathVersion{"checkFormatFasta"}= "v1.0" if not defined $softPathVersion{"checkFormatFasta"};
 											$softPath{"checkFormatFasta"}= "checkFormatFasta" if not defined $softPath{"checkFormatFasta"};}
@@ -409,43 +418,47 @@ sub writeLogVersion
 			#FOR checkEncodeByASCIIcontrol
 			case ($softOrder =~ m/^checkEncodeByASCIIcontrol/i){$softPathVersion{"checkEncodeByASCIIcontrol"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontrol"};
 																 $softPath{"checkEncodeByASCIIcontrol"}= "checkEncodeByASCIIcontrol" if not defined $softPath{"checkEncodeByASCIIcontrol"};}
-			
+
 			#FOR checkFormatGff
 			case ($softOrder =~ m/^checkFormatGff/i){$softPathVersion{"checkFormatGff"}= "v1.0" if not defined $softPathVersion{"checkFormatGff"};
 											$softPath{"checkFormatGff"}= "checkFormatGff" if not defined $softPath{"checkFormatGff"};}
-			
+
 			#FOR checkFormatBed
 			case ($softOrder =~ m/^checkFormatBed/i){$softPathVersion{"checkFormatBed"}= "v1.0" if not defined $softPathVersion{"checkFormatBed"};
 											$softPath{"checkFormatBed"}= "checkFormatBed" if not defined $softPath{"checkFormatBed"};}
-			
+
 			#FOR BEDtools
 			case ($softOrder =~ m/^bedtools/i){$softPathVersion{"bedtools"}= bedToolsVersion if not defined $softPathVersion{"bedtools"};
 												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
 			case ($softOrder =~ m/.*bed$/i){$softPathVersion{"bedtools"}= bedToolsVersion if not defined $softPathVersion{"bedtools"};
 												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
-			
+
 			#FOR generic command
 			case ($softOrder =~ m/^generic/i){$softPathVersion{"generic"}= "v0.1" if not defined $softPathVersion{"generic"};
 												$softPath{"generic"}= "" if not defined $softPath{"generic"};}
-			
+
 			#FOR Abyss
 			case ($softOrder =~ m/^abyss/i){$softPathVersion{"abyss"}= abyssVersion if not defined $softPathVersion{"abyss"};
 												$softPath{"abyss"}= $abyss if not defined $softPath{"abyss"};}
-			
+
 			#FOR transAbyss
 			#case ($softOrder =~ m/^transAbyss/i){$softPathVersion{"transAbyss"}= transAbyssVersion if not defined $softPathVersion{"transAbyss"};
 												#$softPath{"transAbyss"}= $abyss if not defined $softPath{"transAbyss"};}
-												
+
 			#For breakDancer
 			case ($softOrder =~ m/^bam2cfg/i){$softPathVersion{"breakDancer"}= breakDancerVersion if not defined $softPathVersion{"breakDancer"};
 												$softPath{"bam2cfg"}= $bam2cfg if not defined $softPath{"bam2cfg"};}
 			case ($softOrder =~ m/^breakDancer/i){$softPathVersion{"breakDancer"}= breakDancerVersion if not defined $softPathVersion{"breakDancer"};
 												$softPath{"breakDancer"}= $breakDancer if not defined $softPath{"breakDancer"};}
-			
+
 			#For Pindel
 			case ($softOrder =~ m/^pindel/i){$softPathVersion{"pindel"}= pindelVersion if not defined $softPathVersion{"pindel"};
 												$softPath{"pindel"}= $pindel if not defined $softPath{"pindel"};}
-											
+
+			#For ea-Utils
+			case ($softOrder =~ m/^fastqStats/i){$softPathVersion{"fastqStats"}=fastqStatsVersion if not defined $softPathVersion{"fastqStats"};
+												$softPath{"fastqStats"}=$fastqStats if not defined $softPath{"fastqStats"};}
+
 			else
 			{
 				toolbox::exportLog("ERROR VERSIONSOFTS: $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);
@@ -455,6 +468,10 @@ sub writeLogVersion
 	## DEBUG print Dumper(%softPathVersion);
 
 	open (my $fhConfig, "<", "$toggle/modules/localConfig.pm");
+	open (my $fhSoft, ">", "$reportDir/software.txt") if $report;
+	#open (my $fhSoft, ">", "$reportDir/software.tex") if $report;
+    #print $fhSoft "\\begin{itemize}\n";
+
 	while (my $line = <$fhConfig>)
 	{
 		no strict "vars";
@@ -463,8 +480,17 @@ sub writeLogVersion
 		next unless $line =~ m/^our \$/;
 		my ($soft,$value) = split /=/, $line;
 		$soft =~ s/our| |\$//g;
-		toolbox::exportLog("$soft : $softPath{$soft} : $softPathVersion{$soft}",1) if defined $softPathVersion{$soft};
+		if (defined $softPathVersion{$soft})
+		{
+			toolbox::exportLog(uc($soft)." : $softPath{$soft} : $softPathVersion{$soft}",1);
+			#print $fhSoft "\\item"  .			uc($soft) ." : \n \\begin{verbatim}\n$softPathVersion{$soft} \n \\end{verbatim}" if $report;
+			print $fhSoft uc($soft) ." : ".$softPathVersion{$soft}." (*\@{\\cite{$soft}}\@*)\n" if $report;
+		}
 	}
+
+	#print $fhSoft "\\end{itemize}\n";
+	close $fhConfig;
+	close $fhSoft if $report;
 }
 1;
 

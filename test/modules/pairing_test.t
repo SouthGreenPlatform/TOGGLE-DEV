@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 ###################################################################################################################################
 #
 # Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
@@ -30,62 +28,87 @@
 #
 ###################################################################################################################################
 
-#Will test if pairing.pm works correctly
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+## COMMON MODULE TEST HEADER
+######################################################################################################################################
+######################################################################################################################################
+
 use strict;
 use warnings;
+use Data::Dumper;
+
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use Data::Dumper;
-use lib qw(../../modules/);
 
-
-########################################
-#Test of the use of pairing modules
-########################################
+# Load localConfig if primary test is successful 
 use_ok('localConfig') or exit;
-use_ok('pairing') or exit;
-
-can_ok('pairing','pairRecognition');
-can_ok('pairing','createDirPerCouple');
-can_ok('pairing','repairing');
-can_ok('pairing','extractName');
-
 use localConfig;
-use pairing;
 
-my $bankData="$toggle/data/Bank/";
-my $fastqPairedData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
-my $fastqSingleData="$toggle/data/testData/fastq/singleOneIndividuIrigin/";
+
+########################################
+# Extract automatically tool name and sub name list
+########################################
+my ($toolName,$tmp) = split /_/ , $0;
+my $subFile=$toggle."/modules/".$toolName.".pm";
+my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automatically sub name list by grep command \n$!\n");
+
+
+########################################
+#Automatically module test with use_ok and can_ok
+########################################
+
+use_ok($toolName) or exit;
+eval "use $toolName";
+
+foreach my $subName (@sub)
+{
+    chomp ($subName);
+    $subName =~ s/sub //;
+    can_ok($toolName,$subName);
+}
 
 #########################################
-#Remove files and directory created by previous test
+#Preparing test directory
 #########################################
-my $testingDir="$toggle/dataTest/pairingTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
-
-chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
-
-my $makeDirCmd = "mkdir pairingDir";
-system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+my $testDir="$toggle/dataTest/$toolName"."TestModule";
+my $cmd="rm -Rf $testDir ; mkdir -p $testDir";
+system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($toolName) with the following cmd $cmd\n$!\n");
+chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
 
 
-#######################################
-#Creating the IndividuSoft.txt file
-#######################################
-my $creatingCommand="echo \"pairing\nTEST\" > individuSoft.txt";
-system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
+#########################################
+#Creating log file
+#########################################
+my $logFile=$toolName."_log.o";
+my $errorFile=$toolName."_log.e";
+system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
+
+######################################################################################################################################
+######################################################################################################################################
 
 
-#######################################
-#Cleaning the logs for the test
-#######################################
-my $cleaningCommand="rm -Rf pairing_TEST_log.*";
-system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
+
+
+
+
+
+######################################################################################################################################
+######################################################################################################################################
+# SPECIFIC PART OF MODULE TEST
+######################################################################################################################################
+######################################################################################################################################
 ########################################
 ##### pairing::extractName
 ########################################
+my $fastqPairedData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
+my $fastqSingleData="$toggle/data/testData/fastq/singleOneIndividuIrigin/";
 
 my $expectName1=("irigin3_1");
 my $expectRG1=("irigin3");
@@ -109,35 +132,36 @@ is_deeply($obsRG2,$expectRG2,'pairing::extractName - RG irigin3');
 # input file
 my $checkFastq = 1;
 
-# copy paired and single files into pairingDir
+# copy paired and single files into $testDir
 my $fastqFilePaired = $fastqPairedData."irigin*_*.fastq";     # fastq file
-my $copyCmd= "cp $fastqFilePaired pairingDir";           # command to copy the original fastq file into the test directory
+my $copyCmd= "cp $fastqFilePaired $testDir";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFilePaired in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 my $fastqFileSingle = $fastqSingleData."irigin*_*.fastq";     # fastq file
-$copyCmd= "cp $fastqFileSingle pairingDir";           # command to copy the original fastq file into the test directory
+$copyCmd= "cp $fastqFileSingle $testDir";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFileSingle in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 
 my $expectedOutput={
           '@H3:C39R6ACXX:3:1101:1215:1877' => {
                                                          'ReadGroup' => 'irigin1',
-                                                         'forward' => 'pairingDir/irigin1_1.fastq',
-                                                         'reverse' => 'pairingDir/irigin1_2.fastq'
+                                                         'forward' => "$testDir/irigin1_1.fastq",
+                                                         'reverse' => "$testDir/irigin1_2.fastq"
                                                        },
           '@H2:C381HACXX:5:1101:1359:1908' => {
                                                  'ReadGroup' => 'irigin3',
-                                                 'forward' => 'pairingDir/irigin3_1.fastq',
-                                                 'reverse' => 'pairingDir/irigin3_2.fastq'
+                                                 'forward' => "$testDir/irigin3_1.fastq",
+                                                 'reverse' => "$testDir/irigin3_2.fastq"
                                                },
           '@H3:C39R6ACXX:3:1101:1192:1848' => {
                                                    'ReadGroup' => 'irigin2',
-                                                   'forward' => 'pairingDir/irigin2_1.fastq',
+                                                   'forward' => "$testDir/irigin2_1.fastq",
                                                 }
         };
 
-my $observedOutput=pairing::pairRecognition("pairingDir",$checkFastq);
-##DEBUG print "pairRecognition Expected :\n"; print Dumper ($expectedOutput);print "pairRecognition Observed:\n"; print Dumper ($observedoutput);
+my $observedOutput=pairing::pairRecognition("$testDir",$checkFastq);
+##DEBUG
+print "pairRecognition Expected :\n"; print Dumper ($expectedOutput);print "pairRecognition Observed:\n"; print Dumper ($observedOutput);
 is_deeply($observedOutput,$expectedOutput,'pairing::pairRecognition - output list');
 
 
@@ -145,28 +169,30 @@ is_deeply($observedOutput,$expectedOutput,'pairing::pairRecognition - output lis
 ##### pairing::createDirPerCouple
 ########################################
 
-my $checkValue3=pairing::createDirPerCouple($observedOutput,"pairingDir");
+my $checkValue3=pairing::createDirPerCouple($observedOutput,"$testDir");
 is ($checkValue3,1,'pairing::createDirPerCouple - running');
 
 # Filetree expected
-my $expectedFileTree = "pairingDir/:
+my $expectedFileTree = "$testDir:
 irigin1
 irigin2
 irigin3
+pairing_log.e
+pairing_log.o
 
-pairingDir/irigin1:
+$testDir/irigin1:
 irigin1_1.fastq
 irigin1_2.fastq
 
-pairingDir/irigin2:
+$testDir/irigin2:
 irigin2_1.fastq
 
-pairingDir/irigin3:
+$testDir/irigin3:
 irigin3_1.fastq
 irigin3_2.fastq
 ";
 
-my $observedFileTree = `ls -R pairingDir/`;
+my $observedFileTree = `ls -R $testDir`;
 
 ##DEBUG print "Expected: \n"; print Dumper ($expectedFileTree);print "Observed: \n"; print Dumper ($observedFileTree);
 is_deeply($observedFileTree,$expectedFileTree,'pairing::pairRecognition - Filetree created');
@@ -176,11 +202,11 @@ is_deeply($observedFileTree,$expectedFileTree,'pairing::pairRecognition - Filetr
 ########################################
 
 # input file
-my $rmDirCmd= "rm -r pairingDir";           # command to copy the original fastq file into the test directory
-system ($rmDirCmd) and die ("ERROR: $0 : Cannot removed pairingDir in the test directory with the command $rmDirCmd\n$!\n");    # RUN the rm command
+my $rmDirCmd= "rm -r $testDir";           # command to copy the original fastq file into the test directory
+system ($rmDirCmd) and die ("ERROR: $0 : Cannot removed $testDir in the test directory with the command $rmDirCmd\n$!\n");    # RUN the rm command
 
-my $fastqPairedData="$toggle/data/testData/fastq/pairingRepairing/";
-# copy paired and single files into pairingDir
+ $fastqPairedData="$toggle/data/testData/fastq/pairingRepairing/";
+# copy paired and single files into $testDir
 $fastqFilePaired = $fastqPairedData."irigin*_*.fastq";     # fastq file
 $copyCmd= "cp $fastqFilePaired ./";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFilePaired in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
@@ -196,15 +222,14 @@ is ($checkValue,'1','pairing::repairing - running');
 
 #Check if files created
 $expectedFileTree = ".:
-individuSoft.txt
 irigin2_1.fastq
 irigin3_1.CUTADAPT.fastq
 irigin3_1.REPAIRING.fastq
 irigin3_2.CUTADAPT.fastq
 irigin3_2.REPAIRING.fastq
 irigin3_Single
-pairing_TEST_log.e
-pairing_TEST_log.o
+pairing_log.e
+pairing_log.o
 
 ./irigin3_Single:
 irigin3Single.fastq
