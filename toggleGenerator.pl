@@ -638,7 +638,7 @@ if ($orderBefore1000)
                 toolbox::exportLog("------>".$basicName."\n",1);
 
                 # Moving stat file into stat directory instead of intermediateDir
-                if ($basicName =~ /\.stat$/)
+                if ($basicName =~ /\.tat$/)
                 {
                     my $mvCommand="mv $file $statDir/$basicName && rm -f $file";
                     toolbox::run($mvCommand,"noprint");
