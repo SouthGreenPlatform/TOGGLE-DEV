@@ -548,7 +548,7 @@ if ($orderBefore1000)
         #Launching through the scheduler launching system
         my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
         ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- \nerrorFile = $errorFile",2);
-        if ($jobOutput ne 0)
+        if ($jobOutput eq 0)
         {
           #the linear job is not ok, need to pick up the number of jobs
           my $individualName = `basename $currentDir` or warn("\nERROR: $0 : Cannot pick up basename for $currentDir : $!\n");
