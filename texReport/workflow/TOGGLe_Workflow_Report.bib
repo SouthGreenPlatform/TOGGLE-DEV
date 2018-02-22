@@ -1,3 +1,15 @@
+@article {toggle,
+	author = {Tranchant-Dubreuil, Christine and Ravel, Sebastien and Monat, Cecile and Sarah, Gautier and Diallo, Abdoulaye and Helou, Laura and Dereeper, Alexis and Tando, Ndomassi and Orjuela-Bouniol, Julie and Sabot, Francois},
+	title = {TOGGLe, a flexible framework for easily building complex workflows and performing robust large-scale NGS analyses},
+	year = {2018},
+	doi = {10.1101/245480},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {The advent of NGS has intensified the need for robust pipelines to perform high-performance automated analyses. The required softwares depend on the sequencing method used to produce raw data (e.g. Whole genome sequencing, Genotyping By Sequencing, RNASeq) as well as the kind of analyses to carry on (GWAS, population structure, differential expression). These tools have to be generic and scalable, and should meet the biologists needs. Here, we present the new version of TOGGLe (Toolbox for Generic NGS Analyses), a simple and highly flexible framework to easily and quickly generate pipelines for large-scale second- and third-generation sequencing analyses, including multi-threading support. TOGGLe comprises a workflow manager designed to be as effortless as possible to use for biologists, so the focus can remain on the analyses. Embedded pipelines are easily customizable and supported analyses are reproducible and shareable. TOGGLe is designed as a generic, adaptable and fast evolutive solution, and has been tested and used in large-scale projects with numerous samples and organisms. It is freely available at http://toggle.southgreen.fr/ under the GNU GPLv3/CeCill-C licenses) and can be deployed onto HPC clusters as well as on local machines.},
+	URL = {https://www.biorxiv.org/content/early/2018/01/10/245480},
+	eprint = {https://www.biorxiv.org/content/early/2018/01/10/245480.full.pdf},
+	journal = {bioRxiv}
+}
+
 @ARTICLE{Monat2015,
 author = {Monat, C{\'{e}}cile and Tranchant-Dubreuil, Christine and Kougbeadjo, Ayit{\'{e}} and Farcy, C{\'{e}}dric and Ortega-Abboud, Enrique and Amanzougarene, Souhila and Ravel, S{\'{e}}bastien and Agbessi, Mawuss{\'{e}} and Orjuela-Bouniol, Julie and Summo, Maryline and Sabot, Fran{\c{c}}ois},
 doi = {10.1186/s12859-015-0795-6},
@@ -12,9 +24,26 @@ volume = {16},
 year = {2015}
 }
 
+@article{SouthGreen2016,
+title = "The South Green portal: a comprehensive resource for tropical and Mediterranean crop genomics",
+journal = "Current Plant Biology",
+volume = "7-8",
+pages = "6-9",
+doi = "10.1016/j.cpb.2016.12.002",
+issn = "22146628",
+url = {http://linkinghub.elsevier.com/retrieve/pii/S2214662816300482},
+	year = "2016",
+	month = {2016 Nov}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%
 % TOOLS INTEGRATED
 %%%%%%%%%%%%%%%%%%%%%%
+
+@article{java,
+title = {{https://www.java.com/fr/}},
+url={https://www.java.com/fr/}
+}
 
 @article{fastqc,
 author = {Andrews S.},
@@ -55,8 +84,7 @@ doi = {10.7717/peerj.3720},
  year = 2017,
  month = aug,
  keywords = {NGS, Sequencing, Read, Trimming, Preprocessing, Adapter, Cutadapt, Illumina},
- abstract = {
-A key step in the transformation of raw sequencing reads into biological insights is the trimming of adapter sequences and low-quality bases. Read trimming has been shown to increase the quality and reliability while decreasing the computational requirements of downstream analyses. Many read trimming software tools are available; however, no tool simultaneously provides the accuracy, computational efficiency, and feature set required to handle the types and volumes of data generated in modern sequencing-based experiments. Here we introduce Atropos and show that it trims reads with high sensitivity and specificity while maintaining leading-edge speed. Compared to other state-of-the-art read trimming tools, Atropos achieves significant increases in trimming accuracy while remaining competitive in execution times. Furthermore, Atropos maintains high accuracy even when trimming data with elevated rates of sequencing errors. The accuracy, high performance, and broad feature set offered by Atropos makes it an appropriate choice for the pre-processing of Illumina, ABI SOLiD, and other current-generation short-read sequencing datasets. Atropos is open source and free software written in Python (3.3+) and available at https://github.com/jdidion/atropos.
+ abstract = {A key step in the transformation of raw sequencing reads into biological insights is the trimming of adapter sequences and low-quality bases. Read trimming has been shown to increase the quality and reliability while decreasing the computational requirements of downstream analyses. Many read trimming software tools are available; however, no tool simultaneously provides the accuracy, computational efficiency, and feature set required to handle the types and volumes of data generated in modern sequencing-based experiments. Here we introduce Atropos and show that it trims reads with high sensitivity and specificity while maintaining leading-edge speed. Compared to other state-of-the-art read trimming tools, Atropos achieves significant increases in trimming accuracy while remaining competitive in execution times. Furthermore, Atropos maintains high accuracy even when trimming data with elevated rates of sequencing errors. The accuracy, high performance, and broad feature set offered by Atropos makes it an appropriate choice for the pre-processing of Illumina, ABI SOLiD, and other current-generation short-read sequencing datasets. Atropos is open source and free software written in Python (3.3+) and available at https://github.com/jdidion/atropos.
 },
  volume = 5,
  pages = {e3720},
@@ -85,21 +113,6 @@ year = {2013}
 }
 
 %bwa
-@article{bwa,
-author = {Li, Heng and Durbin, Richard},
-doi = {10.1093/bioinformatics/btp324},
-issn = {1367-4811},
-journal = {Bioinformatics (Oxford, England)},
-month = {jul},
-number = {14},
-pages = {1754--60},
-pmid = {19451168},
-publisher = {Oxford University Press},
-title = {{Fast and accurate short read alignment with Burrows-Wheeler transform.}},
-url = {http://www.ncbi.nlm.nih.gov/pubmed/19451168 http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC2705234},
-volume = {25},
-year = {2009}}
-
 @article{bwa,
 author = {Li, Heng and Durbin, Richard},
 doi = {10.1093/bioinformatics/btp698},
@@ -132,21 +145,8 @@ volume = {27},
 year = {2011}
 }
 
-@article{samtools,
-issn = {1367-4811},
-journal = {Bioinformatics (Oxford, England)},
-month = {aug},
-number = {16},
-pages = {2078--9},
-pmid = {19505943},
-title = {{The Sequence Alignment/Map format and SAMtools.}},
-url = {http://www.ncbi.nlm.nih.gov/pubmed/19505943 http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC2723002},
-volume = {25},
-year = {2009}
-}
-
 %picardtools
-@article{picardtools,
+@article{picard,
     author = {Wysoker, Alec and Tibbetts, Kathleen and Fennell, Tim},
     url = {http://picard.sourceforge.net},
     title = {{Picard tools, http://picard.sourceforge.net}},
@@ -155,19 +155,6 @@ year = {2009}
 }
 
 %gatk
-@article{gatk,
-author = {McKenna, A. and Hanna, M. and Banks, E. and Sivachenko, A. and Cibulskis, K. and Kernytsky, A. and Garimella, K. and Altshuler, D. and Gabriel, S. and Daly, M. and DePristo, M. A.},
-doi = {10.1101/gr.107524.110},
-issn = {1088-9051},
-journal = {Genome Research},
-month = {sep},
-number = {9},
-pages = {1297--1303},
-title = {{The Genome Analysis Toolkit: A MapReduce framework for analyzing next-generation DNA sequencing data}},
-url = {http://genome.cshlp.org/cgi/doi/10.1101/gr.107524.110},
-volume = {20},
-year = {2010}
-}
 @article{gatk,
 author = {{Van der Auwera}, Geraldine A and Carneiro, Mauricio O and Hartl, Chris and Poplin, Ryan and {Del Angel}, Guillermo and Levy-Moonshine, Ami and Jordan, Tadeusz and Shakir, Khalid and Roazen, David and Thibault, Joel and Banks, Eric and Garimella, Kiran V and Altshuler, David and Gabriel, Stacey and DePristo, Mark A},
 doi = {10.1002/0471250953.bi1110s43},
@@ -180,20 +167,6 @@ title = {{From FastQ data to high confidence variant calls: the Genome Analysis 
 url = {http://www.ncbi.nlm.nih.gov/pubmed/25431634 http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC4243306},
 volume = {43},
 year = {2013}
-}
-@article{gatk,
-author = {DePristo, Mark A and Banks, Eric and Poplin, Ryan and Garimella, Kiran V and Maguire, Jared R and Hartl, Christopher and Philippakis, Anthony A and del Angel, Guillermo and Rivas, Manuel A and Hanna, Matt and McKenna, Aaron and Fennell, Tim J and Kernytsky, Andrew M and Sivachenko, Andrey Y and Cibulskis, Kristian and Gabriel, Stacey B and Altshuler, David and Daly, Mark J},
-doi = {10.1038/ng.806},
-issn = {1546-1718},
-journal = {Nature genetics},
-month = {may},
-number = {5},
-pages = {491--8},
-pmid = {21478889},
-title = {{A framework for variation discovery and genotyping using next-generation DNA sequencing data.}},
-url = {http://www.ncbi.nlm.nih.gov/pubmed/21478889 http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=PMC3083463},
-volume = {43},
-year = {2011}
 }
 
 %bowtie
@@ -213,7 +186,7 @@ volume = {10},
 year = {2009}
 }
 
-@article{bowtie,
+@article{bowtie2,
 author = {Langmead, Ben and Salzberg, Steven L},
 doi = {10.1038/nmeth.1923},
 issn = {1548-7091},
@@ -230,10 +203,6 @@ year = {2012}
 
 %crac
 @article{crac,
-abstract = {A large number of RNA-sequencing studies set out to predict mutations, splice junctions or fusion RNAs. We propose a method, CRAC, that integrates genomic locations and local coverage to enable such predictions to be made directly from RNA-seq read analysis. A k-mer profiling approach detects candidate mutations, indels and splice or chimeric junctions in each single read. CRAC increases precision compared with existing tools, reaching 99:5{\%} for splice junctions, without losing sensitivity. Importantly, CRAC predictions improve with read length. In cancer libraries, CRAC recovered 74{\%} of validated fusion RNAs and predicted novel recurrent chimeric junctions. CRAC is available at 
-                  http://crac.gforge.inria.fr
-                  
-                .},
 author = {Philippe, Nicolas and Salson, Mika{\"{e}}l and Commes, Th{\'{e}}r{\`{e}}se and Rivals, Eric},
 doi = {10.1186/gb-2013-14-3-r30},
 file = {:Users/tranchan/Library/Application Support/Mendeley Desktop/Downloaded/Philippe et al. - 2013 - CRAC an integrated approach to the analysis of RNA-seq reads.pdf:pdf},
@@ -269,7 +238,7 @@ year = {2010}
 }
 
 %tophat
-@article{tophat,
+@article{tophat2,
 author = {Kim, Daehwan and Pertea, Geo and Trapnell, Cole and Pimentel, Harold and Kelley, Ryan and Salzberg, Steven L and Mortazavi, A and Williams, BA and McCue, K and Schaeffer, L and Wold, B and Pei, B and Sisu, C and Frankish, A and Howald, C and Habegger, L and Mu, XJ and Harte, R and Balasubramanian, S and Tanzer, A and Diekhans, M and Reymond, A and Hubbard, TJ and Harrow, J and Gerstein, MB and Roberts, A and Trapnell, C and Donaghey, J and Rinn, JL and Pachter, L and Trapnell, C and Pachter, L and Salzberg, SL and Wu, TD and Nacu, S and Grant, GR and Farkas, MH and Pizarro, AD and Lahens, NF and Schug, J and Brunk, BP and Stoeckert, CJ and Hogenesch, JB and Pierce, EA and Dobin, A and Davis, CA and Schlesinger, F and Drenkow, J and Zaleski, C and Jha, S and Batut, P and Chaisson, M and Gingeras, TR and Wang, K and Singh, D and Zeng, Z and Coleman, SJ and Huang, Y and Savich, GL and He, X and Mieczkowski, P and Grimm, SA and Perou, CM and MacLeod, JN and Chiang, DY and Prins, JF and Liu, J and Zhang, Z and Harrison, PM and Liu, Y and Gerstein, M and Kalyana-Sundaram, S and Kumar-Sinha, C and Shankar, S and Robinson, DR and Wu, YM and Cao, X and Asangani, IA and Kothari, V and Prensner, JR and Lonigro, RJ and Iyer, MK and Barrette, T and Shanmugam, A and Dhanasekaran, SM and Palanisamy, N and Chinnaiyan, AM and Chen, R and Mias, GI and Li-Pook-Than, J and Jiang, L and Lam, HY and Miriami, E and Karczewski, KJ and Hariharan, M and Dewey, FE and Cheng, Y and Clark, MJ and Im, H and Habegger, L and Balasubramanian, S and O, M and Xing, J and Zhang, Y and Han, K and Salem, AH and Sen, SK and Huff, CD and Zhou, Q and Kirkness, EF and Levy, S and Batzer, MA and Jorde, LB and Levy, S and Sutton, G and Ng, PC and Feuk, L and Halpern, AL and Walenz, BP and Axelrod, N and Huang, J and Kirkness, EF and Denisov, G and Lin, Y and MacDonald, JR and Pang, AW and Shago, M and Stockwell, TB and Tsiamouri, A and Bafna, V and Bansal, V and Kravitz, SA and Busam, DA and Beeson, KY and McIntosh, TC and Remington, KA and Abril, JF and Gill, J and Borman, J and Rogers, YH and Frazier, ME and Scherer, SW and Strausberg, RL and Langmead, B and Salzberg, SL and Kim, D and Salzberg, SL and Langmead, B and Trapnell, C and Pop, M and Salzberg, SL and Griebel, T and Zacher, B and Ribeca, P and Raineri, E and Lacroix, V and Guigo, R and Sammeth, M},
 doi = {10.1186/gb-2013-14-4-r36},
 issn = {1465-6906},
@@ -317,7 +286,8 @@ volume = {29},
 year = {2013}
 }
 
-%@article{ngsutils,
+%vcftools
+@article{vcftools,
 author = {Danecek, P. and Auton, A. and Abecasis, G. and Albers, C. A. and Banks, E. and DePristo, M. A. and Handsaker, R. E. and Lunter, G. and Marth, G. T. and Sherry, S. T. and McVean, G. and Durbin, R.},
 doi = {10.1093/bioinformatics/btr330},
 file = {:Users/tranchan/Library/Application Support/Mendeley Desktop/Downloaded/Danecek et al. - 2011 - The variant call format and VCFtools.pdf:pdf},
@@ -462,15 +432,4 @@ author = "Gustave Djedatin and Cécile Monat and Stefan Engelen and Francois Sab
 keywords = "Duplication, NGS, Rice"
 }
 
-@article{SouthGreen2016,
-title = "The South Green portal: a comprehensive resource for tropical and Mediterranean crop genomics",
-journal = "Current Plant Biology",
-volume = "7-8",
-pages = "6-9",
-doi = "10.1016/j.cpb.2016.12.002",
-issn = "22146628",
-url = {http://linkinghub.elsevier.com/retrieve/pii/S2214662816300482},
-	year = "2016",
-	month = {2016 Nov}
-}
 
