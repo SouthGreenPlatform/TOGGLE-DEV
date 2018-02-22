@@ -560,9 +560,14 @@ sub generateReports
 	
 	# stats
 	my $statDir = $outDir."/statsReport";
-	stats::creatingStatFileTex($statDir);
-	$mvCmd="mv $outDir/stats.tex $reportDirWF/input";
-	toolbox::run($mvCmd);
+
+	my @fileStatList = `ls $statDir` or die "ERROR: onTheFly::generateReports : ls $statDir";
+    if (scalar (@fileStatList)>0)
+	{		
+		stats::creatingStatFileTex($statDir);
+		$mvCmd="mv $outDir/stats.tex $reportDirWF/input";
+		toolbox::run($mvCmd);
+	}
 	
 	#Command line
 	$mvCmd="mv $outDir/commandLine.tex $reportDirWF/input";
