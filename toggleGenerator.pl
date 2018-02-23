@@ -481,6 +481,9 @@ my $hashmerge=toolbox::extractHashSoft($configInfo,"merge"); #Picking up infos f
 
 my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 
+#Initializing value of lastOrder in case of only NA OUT pipeline
+$lastOrderBefore1000=1;
+
 #Obtaining infos for OUT NA steps
 my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
 
