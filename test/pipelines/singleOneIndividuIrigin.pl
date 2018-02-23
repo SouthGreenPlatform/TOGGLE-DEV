@@ -84,13 +84,13 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for singleOneIndividusI
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+my @expectedOutput = ('globalAnalysis.GATKSELECTVARIANT.vcf','globalAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - singleOneIndividu (no SGE) list ');
 
 # expected output content
-$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+$observedOutput=`tail -n 1 $testingDir/finalResults/globalAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 my $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
 is($observedOutput,$expectedOutput, 'toggleGenerator - singleOneIndividu (no SGE) content ');
