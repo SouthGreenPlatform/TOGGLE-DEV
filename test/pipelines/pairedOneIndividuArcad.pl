@@ -84,13 +84,13 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuAr
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+my @expectedOutput = ('globalAnalysis.GATKSELECTVARIANT.vcf','globalAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu (no SGE) list ');
 
 # expected output content
-$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+$observedOutput=`tail -n 1 $testingDir/finalResults/globalAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 my $expectedOutput="LOC_Os12g32240.1	864	.	C	T	350.77	PASS	AC=2;AF=1.00;AN=2;DP=10;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=30.63;SOR=3.258	GT:AD:DP:GQ:PL	1/1:0,10:10:30:379,30,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu (no SGE) content ');

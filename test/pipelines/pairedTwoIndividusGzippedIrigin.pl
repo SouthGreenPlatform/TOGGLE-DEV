@@ -84,13 +84,13 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusG
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+my @expectedOutput = ('globalAnalysis.GATKSELECTVARIANT.vcf','globalAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividusGzippedIrigin (no SGE) list ');
 
 # expected output content
-$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+$observedOutput=`tail -n 1 $testingDir/finalResults/globalAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 my $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusGzippedIrigin (no SGE) content ');
