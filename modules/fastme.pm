@@ -119,7 +119,9 @@ C<fastme::fastme($vcfFile,$pedOut);>
 
 =head1 AUTHORS
 
- Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
+Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
+Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant, Alexis Dereeper and Francois Sabot
+ 
 
 L<http://www.southgreen.fr/>
 
