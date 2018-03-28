@@ -86,8 +86,8 @@ sub exportLog
         print OUT "ERROR: toolbox::exportLog : Look at $errorFile for more infos\n";
         print ERR $logLines;
         print OUT "ANALYSIS ABORTED\n";
-    
-        confess ("ANALYSIS ABORTED... Look at $errorFile\n\n$logLines");  
+
+        confess ("ANALYSIS ABORTED... Look at $errorFile\n\n$logLines");
     }
     elsif ($controlValue eq "1")	#Everything is Ok
     {
@@ -500,6 +500,7 @@ sub readFileConf
     while (@lines)		#Reading all lines
     {
         my $currentLine=shift @lines;
+        $currentLine =~  s/\r[\n]*/\n/gm;  # now, an \r (Mac) or \r\n (Win) becomes \n (UNIX+)
         chomp $currentLine;
 
         #Avoided lines
@@ -1108,7 +1109,7 @@ sub degzip
     my $plainFile = `basename $gzFile`;
     chomp $plainFile;
     $plainFile =~ s/\.gz$//i;
-    
+
     my $command = "gzip -d -c `readlink $gzFile` > $plainFile";
         #Execute command
     if(&run($command,"noprint") != 1)
@@ -1116,7 +1117,7 @@ sub degzip
         return 0;
     }
 
-	
+
 	return $plainFile;
 }
 ################################################################################################
