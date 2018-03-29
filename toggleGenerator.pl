@@ -170,8 +170,22 @@ $parser->add_args(
                         '-report','--report',
                         required => 0,
                         type     =>"Bool",
-                        help     => 'Use if you want to generate workflow an analysis reports',
+                        help     => 'Use if you want to generate workflow and analysis reports',
                         dest     => 'report'
+                    ]
+                    [
+                        '-add','--add',
+                        required => 0,
+                        type     =>"Bool",
+                        help     => 'Use if you want to add new samples to an already run analysis',
+                        dest     => 'add'
+                    ]
+                    [
+                        '-rerun','--rerun',
+                        required => 0,
+                        type     =>"Bool",
+                        help     => 'Use if you want to re-run samples that have enncoutered error previously',
+                        dest     => 'rerun'
                     ]
 
                 );
@@ -206,6 +220,8 @@ my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);  
 # WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
 my $checkFastq = $parser->namespace->checkFastq;
 my $report = $parser->namespace->report;
+my $addSample = $parser->namespace->add;
+my $rerun = $parser->namespace->rerun;
 
 #stock mandatory files to test if they exist
 my @listFilesMandatory=($initialDir, $fileConf);

@@ -120,12 +120,20 @@ sub launcher {
     ($commandLine,$requirement, $sample, $configInfo) = @_;
 
     #Picking up sample name
-
+    my $dirName = $sample; #We need to conserve it
     $sample=`basename $sample` or toolbox::exportLog("ERROR : scheduler::launcher : Cannot pickup the basename for $sample: $!\n",0);
     chomp $sample;
     
     #Check if sample already run by checking if output folder already filled
     #If yes, return a 1 and a log
+    my $listFolderSample = toolbox::readDir($dirName);
+    if (${$listFolderSample}[1] =~ m/^1_/) 
+    {
+        #The folder has already one step within
+        return "Already performed";
+        next;
+    }
+    
 
     my $schedulerType = &checkingCapability;
 	##DEBUG toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
