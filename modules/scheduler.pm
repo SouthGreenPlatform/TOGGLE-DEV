@@ -23,11 +23,13 @@ package scheduler;
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions
+# PI belong also to ADNid for v2 and v3 and INRA for v3
 # Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
 # Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
 # Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
+# Version 4 written by Sebastien Ravel, Julie Orjuela-Bouniol, Christine Tranchant, Amad Diouf, Valentin Klein, Alexis Dereeper, and Francois Sabot
 ###################################################################################################################################
 
 use strict;
@@ -121,6 +123,9 @@ sub launcher {
 
     $sample=`basename $sample` or toolbox::exportLog("ERROR : scheduler::launcher : Cannot pickup the basename for $sample: $!\n",0);
     chomp $sample;
+    
+    #Check if sample already run by checking if output folder already filled
+    #If yes, return a 1 and a log
 
     my $schedulerType = &checkingCapability;
 	##DEBUG toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
@@ -144,29 +149,6 @@ sub launcher {
     
     return ($runOutput, $errorLog);
 }
-
-#sub normalRun
-#{ #For running in normal mode, ie no scheduler
-#
-#    #BASED ON TOOLBOX::RUN, but will not stop the whole pipeline for an error
-#    use Capture::Tiny qw(capture);
-#
-#    toolbox::exportLog("INFOS: scheduler::normalRun : $commandLine\n",1);
-#
-#    ##Execute the command
-#    my ($result,$stderr)=capture {` $commandLine `};
-#
-#    ##Log export according to the error
-#    if ($?==0) #Success, no error
-#    {
-#		return 1;
-#    }
-#    else  #Error, the job cannot be achieved for any reason
-#    {
-#	##DEBUG
-#		toolbox::exportLog("WARNING: scheduler::normalRun on $sample: ".$result."\n--".$stderr."\nThe $sample data set has provoked and error, and was not analyzed anymore.\n",2);
-#		return 0;
-#}
 
 sub schedulerRun
 { #For any scheduler,will launch a script encapsulating the command line
