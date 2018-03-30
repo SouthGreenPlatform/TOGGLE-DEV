@@ -124,16 +124,34 @@ sub launcher {
     $sample=`basename $sample` or toolbox::exportLog("ERROR : scheduler::launcher : Cannot pickup the basename for $sample: $!\n",0);
     chomp $sample;
     
+    #Picking up the output error file
+    my @listOne = split /-d\s+/, $commandLine;
+    my ($folderOut) = split /\s+/, $listOne[1];
+    my $errorLog = `basename $folderOut`;
+    chomp $errorLog;
+    $errorLog=$folderOut."/".$errorLog."_log.e";
+    
     #Check if sample already run by checking if output folder already filled
     my $listFolderSample = toolbox::readDir($dirName);
     if (${$listFolderSample}[1] =~ m/^1_/) 
     {
         #The folder has already one step within
-        if ($commandLine =~ "add")
+        if ($commandLine =~ "-add")
         {
             #The sample has already run,
-            return "$sample already performed";
-            next;
+            toolbox::exportLog("WARNING: scheduler::launcher on $sample: nThe job has already run\n",1);
+            return ("Sample $sample analysis already performed", $errorLog);
+        }
+        elsif ($commandLine =~ "-rerun")
+        {
+            #may be errors in the sample, the script launched will check it
+            toolbox::exportLog("WARNING: scheduler::launcher on $sample: nThe job has already run, but errors may have occurred in the previous run.\nWill launch it whatever to control it.\n",1);
+
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: scheduler::launcher on $sample\nThe job has already run but no option for re-running or adding samples specified...\n",0);
+            return (0,$errorLog);
         }
         
     }
@@ -152,12 +170,7 @@ sub launcher {
     	return 0;
     }
 
-        #Picking up the output error file
-    my @listOne = split /-d\s+/, $commandLine;
-    my ($folderOut) = split /\s+/, $listOne[1];
-    my $errorLog = `basename $folderOut`;
-    chomp $errorLog;
-    $errorLog=$folderOut."/".$errorLog."_log.e";
+        
     
     return ($runOutput, $errorLog);
 }

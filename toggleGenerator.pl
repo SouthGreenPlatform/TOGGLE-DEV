@@ -250,7 +250,33 @@ my $lsOutputDir = `ls`;
 chomp $lsOutputDir;
 if ($lsOutputDir ne "") # The folder is not empty
 {
-  die "\nERROR: $0 : The output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n";
+ 
+     if ($addSample || $rerun)
+     {
+      warn "\nWARN: $0 : cannot create the output folder $outputDir: $!\nProbably you want to add samples or re-run the jobs.\n Every logs and reports will be backuped and new ones will be added (if requested).\n";
+      #Backuping pre data
+      my @fileList = split /\n/, $lsOutputDir;
+      while (@fileList)
+      {
+        my $currentFile = shift @fileList;
+        if ($currentFile =~ m/log\./ || $currentFile =~ m/Report/)
+        {
+         #Old log and report files
+         my $newName = "OLD_".$currentFile;
+         my $mvCom = `mv $outputDir/$currentFile $outputDir/$newName 2>&1`;
+         if ($mvCom)#Error in transfer/copying/backuping
+         {
+          die "\nERROR: $0 : Cannot backup the old information:\n $mvCom\nPlease provide another directory for outputting results.\n\nExiting...\n\n";
+         }
+        }
+        
+      }
+      
+     }
+     else
+     {
+      die "\nERROR: $0 : The output directory $outputDir is not empty, TOGGLE will not continue\nPlease provide an empty directory for outputting results.\n\nExiting...\n\n";
+     }
 }
 
 # Creating log file GLOBAL
