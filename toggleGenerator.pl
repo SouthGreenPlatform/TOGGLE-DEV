@@ -566,6 +566,8 @@ if ($orderBefore1000)
         $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
         $launcherCommand.=" -nocheck" if ($checkFastq == 1);
         $launcherCommand.=" -report" if ($report);
+        $launcherCommand.=" -add" if ($add);
+        $launcherCommand.=" -rerun" if ($rerun);
 
         #Launching through the scheduler launching system
         my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
@@ -728,6 +730,9 @@ if ($orderAfter1000)
     $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
     $launcherCommand.=" -nocheck" if ($checkFastq == 1);
     $launcherCommand.=" -report" if ($report);
+    $launcherCommand.=" -add" if ($add);
+    $launcherCommand.=" -rerun" if ($rerun);
+    
 
 
     my $jobList="";

@@ -125,13 +125,17 @@ sub launcher {
     chomp $sample;
     
     #Check if sample already run by checking if output folder already filled
-    #If yes, return a 1 and a log
     my $listFolderSample = toolbox::readDir($dirName);
     if (${$listFolderSample}[1] =~ m/^1_/) 
     {
         #The folder has already one step within
-        return "Already performed";
-        next;
+        if ($commandLine =~ "add")
+        {
+            #The sample has already run,
+            return "$sample already performed";
+            next;
+        }
+        
     }
     
 
