@@ -263,8 +263,10 @@ if ($lsOutputDir ne "") # The folder is not empty
         {
          #Old log and report files
          my $newName = "OLD_".$currentFile;
-         my $mvCom = `mv $outputDir/$currentFile $outputDir/$newName 2>&1`;
-         if ($mvCom)#Error in transfer/copying/backuping
+         my $mvCom = "mv $outputDir/$currentFile $outputDir/$newName 2>&1";
+         my $mvResult= `$mvCom`;
+         chomp $mvResult;
+         if ($mvResult)#Error in transfer/copying/backuping
          {
           die "\nERROR: $0 : Cannot backup the old information:\n $mvCom\nPlease provide another directory for outputting results.\n\nExiting...\n\n";
          }
