@@ -506,6 +506,14 @@ sub readFileConf
         #Avoided lines
         next if $currentLine =~ m/^$/;#Empty line
         next if $currentLine =~ m/^#/;#Commented line
+		
+		if ($currentLine =~ m/#/) 
+		{
+			($currentLine, my $comment)=split /#/,$currentLine, 2;
+			print $currentLine;
+			print $comment;
+		}
+
 
         if ($currentLine =~ m/^\$/)		#New program to be configured, line starting by $
         {
