@@ -3,9 +3,9 @@
 ## http://toggle.southgreen.fr
 
 
-#---------------------------------------------------------------
+###############################
 # 1 - PIPELINE CONFIGURATION
-#---------------------------------------------------------------
+###############################
 
 #---------------------------------------------------------------
 #   Building Workflow
@@ -13,7 +13,7 @@
 # After the tag $order define steps composing the pipeline and
 # their relative order.
 # Each line consists of the step number followed by
-# an equal symbol then by the software’s name (e.g. 1=FastQC).
+# an equal symbol then by the software√ïs name (e.g. 1=FastQC).
 #
 # - All the steps with a number <1000
 # are carried out for each sample separately
@@ -107,9 +107,9 @@ $gatkSelectVariants
 
 
 
-#---------------------------------------------------------------
+###############################
 # 2 - DATA MANAGEMENT
-#---------------------------------------------------------------
+###############################
 
 #---------------------------------------------------------------
 #   Removing intermediate data Part
@@ -145,9 +145,9 @@ $cleaner
 
 
 
-#---------------------------------------------------------------
+###############################
 # 3 - CLUSTER CONFIGURATION
-#---------------------------------------------------------------
+###############################
 
 #---------------------------------------------------------------
 #   Setting up jobs scheduler
