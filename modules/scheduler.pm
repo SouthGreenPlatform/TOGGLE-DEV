@@ -121,8 +121,13 @@ sub launcher {
 
     $sample=`basename $sample` or toolbox::exportLog("ERROR : scheduler::launcher : Cannot pickup the basename for $sample: $!\n",0);
     chomp $sample;
-
-    my $schedulerType = &checkingCapability;
+    if ($sample =~ m/^\d/)
+    {
+	#the sample name starts with a number, not a good idea for schedulers
+	toolbox::exportLog("WARNING: scheduler::launcher: the sample name for $sample is starting with a number. Its scheduler job will be named s$sample for ensure its successful launching\n",2);
+	$sample = "s".$sample;
+    } 
+     my $schedulerType = &checkingCapability;
 	##DEBUG toolbox::exportLog("INFO : scheduler::launcher : Scheduler is $schedulerType\n",0);
 
     my $runOutput = &schedulerRun($schedulerType);
