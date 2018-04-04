@@ -7,9 +7,9 @@
 # 1 - PIPELINE CONFIGURATION
 ###############################
 
-#---------------------------------------------------------------
+#------------------------------
 #   Building Workflow
-#---------------------------------------------------------------
+#------------------------------
 # After the tag $order define steps composing the pipeline and
 # their relative order.
 # Each line consists of the step number followed by
@@ -22,7 +22,7 @@
 # are performed as a global analysis 
 #
 # - Step name is not casse-sensitive
-#---------------------------------------------------------------
+#------------------------------
 
 $order
 1=fastqc
@@ -42,9 +42,9 @@ $order
 
 
 
-#---------------------------------------------------------------
+#------------------------------
 #   Providing software parameters
-#---------------------------------------------------------------
+#------------------------------
 # Foreach software, parameters can be provided after the line
 # composed of the symbol $ followed by the software name 
 #
@@ -53,7 +53,7 @@ $order
 # - TOGGLe will handle itself the input and output files as
 # well as the references.
 # - see software manual for more details about 
-#---------------------------------------------------------------
+#------------------------------
 
 $cutadapt
 -O=10
@@ -111,34 +111,33 @@ $gatkSelectVariants
 # 2 - DATA MANAGEMENT
 ###############################
 
-#---------------------------------------------------------------
-#   Removing intermediate data Part
-#---------------------------------------------------------------
+#------------------------------
+#   Removing intermediate data
+#------------------------------
 # users can specify after the tag $cleaner,
 # the list of step number (one by line)
-#---------------------------------------------------------------
+#------------------------------
 
 $cleaner
 3
 4
 9
 
-#---------------------------------------------------------------
+#------------------------------
 #   Compressing data
-#---------------------------------------------------------------
+#------------------------------
 # users can specify after the tag $compress,
 # the list of step number (one by line) that data have to be compressed
-#---------------------------------------------------------------
+#------------------------------
 #$compress
 
 
-
-#---------------------------------------------------------------
+#------------------------------
 #   Transferring data from project directory to work directory
-#---------------------------------------------------------------
+#------------------------------
 # users can specify after the tag $scp,
 # the directory name where the data have to be copied (by scp)
-#---------------------------------------------------------------
+#------------------------------
 #$scp
 #/scratch
 
@@ -149,14 +148,14 @@ $cleaner
 # 3 - CLUSTER CONFIGURATION
 ###############################
 
-#---------------------------------------------------------------
+#------------------------------
 #   Setting up jobs scheduler
-#---------------------------------------------------------------
+#------------------------------
 #  TOGGLe can run with either LSF, MPRUN, SLURM or SGE
 #  jobs schedulers. 
 #  - According to the scheduler, after the tag $LSF or $MPRUN or $SLURM or $SGE
 #  set scheduler options list
-#---------------------------------------------------------------
+#------------------------------
 #Example for SGE
 #$sge
 #-q YOURQUEUE.q
@@ -164,12 +163,12 @@ $cleaner
 #-cwd
 #-V
 
-#---------------------------------------------------------------
+#------------------------------
 #   Providing a specific environment variables
-#---------------------------------------------------------------
+#------------------------------
 #  User can specify ENVIRONMENT variables in their jobs (e.g. export or module load)
 # using tag $env
-#---------------------------------------------------------------
+#------------------------------
 #$env
 #module load bioinfo/toggle
 
