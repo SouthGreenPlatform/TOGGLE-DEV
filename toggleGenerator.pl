@@ -184,7 +184,7 @@ $parser->add_args(
                         '-rerun','--rerun',
                         required => 0,
                         type     =>"Bool",
-                        help     => 'Use if you want to re-run samples that have enncoutered error previously',
+                        help     => 'Use if you want to re-run samples that have encoutered error previously',
                         dest     => 'rerun'
                     ]
 
