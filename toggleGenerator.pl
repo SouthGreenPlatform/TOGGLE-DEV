@@ -592,7 +592,7 @@ if ($orderBefore1000)
         $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
         $launcherCommand.=" -nocheck" if ($checkFastq == 1);
         $launcherCommand.=" -report" if ($report);
-        $launcherCommand.=" -add" if ($add);
+        $launcherCommand.=" -add" if ($addSample);
         $launcherCommand.=" -rerun" if ($rerun);
 
         #Launching through the scheduler launching system
@@ -756,7 +756,7 @@ if ($orderAfter1000)
     $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
     $launcherCommand.=" -nocheck" if ($checkFastq == 1);
     $launcherCommand.=" -report" if ($report);
-    $launcherCommand.=" -add" if ($add);
+    $launcherCommand.=" -add" if ($addSample);
     $launcherCommand.=" -rerun" if ($rerun);
     
 
