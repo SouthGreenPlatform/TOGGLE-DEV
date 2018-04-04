@@ -172,19 +172,19 @@ $parser->add_args(
                         type     =>"Bool",
                         help     => 'Use if you want to generate workflow and analysis reports',
                         dest     => 'report'
-                    ]
+                    ],
                     [
                         '-add','--add',
                         required => 0,
                         type     =>"Bool",
                         help     => 'Use if you want to add new samples to an already run analysis',
                         dest     => 'add'
-                    ]
+                    ],
                     [
                         '-rerun','--rerun',
                         required => 0,
                         type     =>"Bool",
-                        help     => 'Use if you want to re-run samples that have encoutered error previously',
+                        help     => 'Use if you want to re-run samples that have encountered error previously',
                         dest     => 'rerun'
                     ]
 
