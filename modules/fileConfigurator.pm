@@ -134,7 +134,10 @@ our %testParams=    (
         plinkVcf2Ped => [""],
         sniplayPed2fasta => [""],
 	readseq => ["-f 12"],
-	fastme => ["-d"]
+	fastme => ["-d"],
+	#HISAT2
+	hisat2 => [""],
+
         );
 
 sub softParams

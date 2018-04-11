@@ -79,6 +79,7 @@ use fastme;
 use readseq;
 use stats;
 use eaUtils;
+use hisat2;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -221,7 +222,7 @@ my $logFile=$initialDir."/".$readGroup."_log.o";
 my $errorFile=$initialDir."/".$readGroup."_log.e";
 system("touch $logFile $errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
 
-  
+
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
 toolbox::exportLog("INFOS: Initial command line : $cmd_line\n",1);
 
@@ -330,7 +331,7 @@ if (defined $optionRef->{"scp"})
     chomp $refFastaFile;
     $refFastaFile = $refFastaFolder."/".$refFastaFile;
   }
-  
+
   $previousDir = $initialDir."/0_initialFiles";
   $fileList=toolbox::readDir($previousDir);
 }
