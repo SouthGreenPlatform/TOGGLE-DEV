@@ -144,7 +144,7 @@ sub correctName
         case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*clean[\s|\.|\-| \/|\\|\|]*sam/i){$correctedName="picardToolsCleanSam"} # Correction for picardToolsCleanSam
         case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*converter/i){$correctedName="picardToolsSamFormatConverter"} # Correction for picardToolsSamFormatConverter
         case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*add[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*replace[\s|\.|\-| \/|\\|\|]*read[\s|\.|\-| \/|\\|\|]*groups/i){$correctedName="picardToolsAddOrReplaceReadGroups"} # Correction for picardToolsAddOrReplaceReadGroups
-    
+
 
         #FOR gatk.pm
         case ($name =~ m/^gatk[\s|\.|\-| \/|\\|\|]*base[\s|\.|\-| \/|\\|\|]*recalibrator/i){$correctedName="gatkBaseRecalibrator"} # Correction for gatkBaseRecalibrator
@@ -218,41 +218,47 @@ sub correctName
         #FOR DUPLICATIONDETECTOR
         case ($name =~ m/^duplication[\s|\.|\-| \/|\\|\|]*detector/i){$correctedName="duplicationDetector";} #Correction for duplicationDetector
 
-        
+
         #FOR BEDTOOLS
         case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*intersect/i){$correctedName="bedToolsIntersectBed";} #Correction for intersectBed version 1
         case ($name =~ m/^intersect[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="bedToolsIntersectBed";} #Correction for intersectBed version 2
         case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*window/i){$correctedName="bedToolsWindowBed";} #Correction for windowBed version 1
         case ($name =~ m/^window[\s|\.|\-| \/|\\|\|]*bed/i){$correctedName="bedToolsWindowBed";} #Correction for windowBed version 2
         case ($name =~ m/^bed[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*generic/i){$correctedName="bedToolsGeneric";} #Correction for bedtools generic
-        
+
         #FOR GENERIC COMMAND SYSTEM
         case ($name =~ m/^generic/i){$correctedName="generic";} #Correction for generic command
-        
+
         #FOR abyss functions
         #case ($name =~ m/^trans[\s|\.|\-| \/|\\|\|]*abyss/i){$correctedName="transAbyss"} # Correction for transAbyss step
         case ($name =~ m/^abyss/i){$correctedName="abyssSimple";} # Correction for abyss step
-        
+
         #FOR pindel
         case ($name =~ m/^pindel/i){$correctedName="pindel";}
-        
+
         #FOR breakDancer
         case ($name =~ m/^break[\s|\.|\-| \/|\\|\|]*dancer/i){$correctedName="breakDancer";}
         case ($name =~ m/^bam[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*cfg/i){$correctedName="bam2cfg";}
         case ($name =~ m/^bam[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*cfg[\s|\.|\-| \/|\\|\|]*pl/i){$correctedName="bam2cfg";}
-        
+
         #FOR pindel
         case ($name =~ m/^pindel/i){$correctedName="pindel";}
-         
+
         # SNIPLAY
         case ($name =~ m/^plink[\s|\.|\-| \/|\\|\|]*vcf[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*ped/i){$correctedName="plinkVcf2Ped";}
         case ($name =~ m/^sniplay[\s|\.|\-| \/|\\|\|]*ped[\s|\.|\-| \/|\\|\|]*2[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="sniplayPed2fasta";}
         case ($name =~ m/^fastme/i){$correctedName="fastme";}
 		case ($name =~ m/^readseq/i){$correctedName="readseq";}
-        
+
         #ea-Utils
         case ($name =~ m/^fastq[\s|\.|\-| \/|\\|\|]*stats/i){$correctedName="fastqStats";}
-		
+
+        # hisat2
+        case ($name =~ m/^hisat2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="hisat2Build"; } #Correction for hisat2-build
+        case ($name =~ m/^hisat2.*/i){$correctedName="hisat2"; } #Correction for hisat2
+
+
+
         else
         {
             toolbox::exportLog("ERROR NAMING CONVENTION : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);

@@ -312,3 +312,14 @@ OUT=fasta
 $fastqStats
 IN=fastq
 OUT=NA
+
+
+$hisat2-build
+IN=fasta
+OUT=NA
+MANDATORY=reference
+
+$hisat2
+IN=fastq
+OUT=sam,bam
+MANDATORY=reference

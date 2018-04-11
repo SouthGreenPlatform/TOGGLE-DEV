@@ -252,6 +252,21 @@ sub fastqStatsVersion
 	return $version;
 }
 
+sub hisat2BuildVersion
+{   #We works with the STDOUT output
+	my $version = `$hisat2/hisat2-build -h 2>&1 | grep "HISAT2 version"` or die toolbox::exportLog("ERROR: versionSoft::hisat2BuildVersion : Can not grep hisat2Build version.\nPlease check your hisat2-build installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+
+sub hisat2Version
+{   #We works with the STDOUT output
+	my $version = `$hisat2/hisat2 -h 2>&1 | grep "HISAT2 version"` or die toolbox::exportLog("ERROR: versionSoft::hisat2Version : Can not grep hisat2 version.\nPlease check your hisat2 installation.\n", 0);
+	chomp($version);
+	return $version;
+}
+
+
 sub writeLogVersion
 {
 	my ($fileConf, $version, $reportDir,$report) = @_; #recovery $report boolean value: set to 1 if report is requested. $reportDir is the path were software.txt is generated
@@ -321,6 +336,17 @@ sub writeLogVersion
 											   $softPath{"tophat2"}= $tophat2 if not defined $softPath{"tophat2"};
 											   $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
 											   $softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
+											   }
+			#FOR hisat2.pm
+			case ($softOrder =~ m/^hisat2.*build.*/i){$softPathVersion{"hisat2Build"}= hisat2BuildVersion if not defined $softPathVersion{"hisat2Build"};
+												$softPath{"hisat2Build"}= $hisat2."/hisat2-build" if not defined $softPath{"hisat2Build"};
+
+												}
+			case ($softOrder =~ m/^hisat2.*/i){$softPathVersion{"hisat2"}=hisat2Version if not defined $softPathVersion{"hisat2"};
+											   $softPathVersion{"hisat2Build"}= hisat2BuildVersion if not defined $softPathVersion{"hisat2Build"};
+
+											   $softPath{"hisat2"}= $hisat2."/hisat2" if not defined $softPath{"hisat2"};
+											   $softPath{"hisat2Build"}=  $hisat2."/hisat2-build" if not defined $softPath{"hisat2Build"};
 											   }
 
 			#FOR cufflinks.pm

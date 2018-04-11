@@ -44,6 +44,7 @@ use tophat;
 use bowtie;
 use crac;
 use stats;
+use hisat2;
 
 ################################################################################################
 # sub checkOrder =>  Will verify the order of the softwares in the pipeline
@@ -237,9 +238,9 @@ sub generateScript
 		$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
     }
 
-	
-	
-	
+
+
+
 	###########################################
 	###########################################
 	############# EN TEST REPORT STAT MAPPING
@@ -247,11 +248,11 @@ sub generateScript
 	$catCommand .= " ".$toggle."/onTheFly/statsMappingBlock.txt";
 	###########################################
 	###########################################
-	
-	
-	
-	
-	
+
+
+
+
+
     $catCommand .= " $toggle/onTheFly/endBlock.txt > $script && chmod 775 $script"; #Adding the end of the script and rending it executable
 
     ##DEBUG print $catCommand,"\n";
@@ -396,10 +397,29 @@ sub indexCreator
                 my $softParameters = toolbox::extractHashSoft($hashConf,"bowtie2-Build");                                  # recovery of specific parameters of bowtie2Build index
                 bowtie::bowtie2Build($reference,$softParameters);
             }
+		}
 
-
+		#INDEXING for hisat2
+        if ($currentSoft =~ m/hisat2Build/i or $currentSoft =~ m/hisat2/i) #Any step involving bowtie or tophat
+        {
+            if ($currentSoft eq "hisat2Build") # If the index is expressely asked
+            {
+                my $softParameters = toolbox::extractHashSoft($hashConf,"hisat2Build");                                  # recovery of specific parameters of bowtieBuild index
+                hisat2::hisat2Build($reference,$softParameters);
+            }
+            else #We check if the index is present or not
+            {
+                my $refIndexedFile = $reference.".1.ht2";
+                if (-e $refIndexedFile)
+                {# The index is already created
+                    toolbox::exportLog("INFOS: onTheFly::indexCreator : The reference index for hisat2-built already exists, skipped...\n",1);
+                    next;
+                }
+                my $softParameters = toolbox::extractHashSoft($hashConf,"hisat2Build");                                  # recovery of specific parameters of bowtieBuild index
+                hisat2::hisat2Build($reference,$softParameters);
+            }
         }
-		
+
 		 #INDEXING for CRAC
         if ($currentSoft eq "crac" or $currentSoft =~ m/crac/i)  #Any step involving crac
         {
@@ -438,13 +458,13 @@ sub generateGraphviz
 	my @months = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
 	my @days = qw(Sun Mon Tue Wed Thu Fri Sat Sun);
     my $date = "$days[$wday], the $mday $months[$mon], $year";
-	
+
 	# Print Log
-	toolbox::exportLog("INFOS : $0 : onTheFly::generateGraphviz is creating the graphical view of the current pipeline.\n",1);     
+	toolbox::exportLog("INFOS : $0 : onTheFly::generateGraphviz is creating the graphical view of the current pipeline.\n",1);
 
 	# Open dot file to generate
     open(OUT,">", $dotFileOut) or die "Cannot create $dotFileOut: $0\n";
- 
+
     # Dot header
     print OUT "digraph G \n{
     \tgraph [fontsize=24,fontname=Arial, colorscheme=X11,  nodesep=1, compound=true;]
@@ -454,41 +474,41 @@ sub generateGraphviz
 	# Generating progressively workflow by reading  hash of configuration file
     my ($previousSoft,$soft, $softLabel, $input,$output);
 	my $wkf;
-	
+
     foreach my $step (sort {$a <=> $b} keys %{$hashOrder})
     {
 		# soft name formatting
-		$soft=$$hashOrder{$step};	
+		$soft=$$hashOrder{$step};
 		$soft =~ s/bamutils.*/bamutilsTool/g; #Rename special for bamutils tools
 		$soft =~ s/ .+$//; #Removing anything after a space. E.g a samtoolsview 1 will become samtoolsView
-			
+
 		$input=$$hashInOut{$soft}{"IN"};
 		$output=$$hashInOut{$soft}{"OUT"};
-		
+
 		# Get input and output format from sofware Formats. txt file
 		$softLabel="$soft ($step)";
 		$soft=$soft."_".$step;
 		my $color = "darkorange" ;
 		$color = "deeppink1" if ( $step>=1000);
-		
-		if (not defined ($previousSoft)) #first line, input file 
+
+		if (not defined ($previousSoft)) #first line, input file
 		{
 			print OUT "\nFile_input [shape=record, style=rounded, color=dodgerblue2, fontcolor=dodgerblue2, width=2, label=\" $input \" ]";
 			$wkf="\n File_input ";
 		}
 		$wkf.=" -> $soft";
-		
+
 		print OUT "$soft [shape=box, color=$color, label=\" $softLabel \"]\n";
-		
+
 		$previousSoft = $soft;
     }
 
-    print OUT "File_output [shape=record, style=rounded, color=dodgerblue2, fontcolor=dodgerblue2, width=2, label= \" $output \" ]; \n";    
+    print OUT "File_output [shape=record, style=rounded, color=dodgerblue2, fontcolor=dodgerblue2, width=2, label= \" $output \" ]; \n";
 	$wkf.=" -> File_output [color=dodgerblue3, arrowhead=none];\n\t}\n";
     print OUT $wkf;
     close OUT;
 
-	
+
 	# Dot command to generate png picture
     my $dotCom="dot -Tpng -o$graphicFileOut $dotFileOut"; #To generate png file
 
@@ -507,7 +527,7 @@ sub generateGraphviz
 
 
 ###############################################################################################
-# sub generateReport =>  will generate lateX reports of workflow and analysis 
+# sub generateReport =>  will generate lateX reports of workflow and analysis
 ################################################################################################
 # arguments :
 # - in: outdir
@@ -516,74 +536,74 @@ sub generateReports
 {
     my ($outDir, $configInfo)=@_;
 	my $reportDirWF="$outDir/texReport/workflow/";
-	
-	# copying texReport files from 
+
+	# copying texReport files from
 	my $cpCmd="cp $toggle/texReport $outDir -rf";
 	toolbox::run($cpCmd, "noprint");
-	
+
 	# Report file name generated by TOGGLe to describe workflow architecture
 	my $texWorkflowFile=$reportDirWF."/TOGGLe_Workflow_Report.tex";
 	my $pdfWorkflowFile=$reportDirWF."/TOGGLe_Workflow_Report.pdf";
-	
-	
+
+
 	#copying differents tex files to input repertory
-	
+
 	#Pipeline picture generated by graphivz
 	my $mvCmd="cp $outDir/togglePipeline.png $reportDirWF/";
 	toolbox::run($mvCmd,"noprint");
-	
+
 	#parallel sample created by scheduler::schedulerWait
 	if ( -e $outDir."/sample_parallel_table.tex")
 	{
 		$mvCmd="mv $outDir/sample_parallel_table.tex $reportDirWF/input";
 		toolbox::run($mvCmd,"noprint");
 	}
-	# The file has not been created, no parallel analysis (step number > 1000 uniquely) 
+	# The file has not been created, no parallel analysis (step number > 1000 uniquely)
 	else
 	{
 		my $echoCmd="echo 'No single sample analyzed, step number >1000 only' >  $reportDirWF/input/sample_parallel_table.tex";
 		toolbox::run($echoCmd,"noprint");
 	}
-	
+
 	#parallel sample
 	if ( -e  $outDir."/sample_global_table.tex")
 	{
 		$mvCmd="mv $outDir/sample_global_table.tex $reportDirWF/input";
 		toolbox::run($mvCmd,"noprint");
 	}
-	# The file has not been created, no global analysis (step number < 1000 uniquely) 
+	# The file has not been created, no global analysis (step number < 1000 uniquely)
 	else
 	{
 		my $echoCmd="echo 'No global analysis, step number <1000 only' >  $reportDirWF/input/sample_global_table.tex";
 		toolbox::run($echoCmd,"noprint");
 	}
-	
+
 	# stats
 	my $statDir = $outDir."/statsReport";
 
 	my @fileStatList = `ls $statDir` or die "ERROR: onTheFly::generateReports : ls $statDir";
     if (scalar (@fileStatList)>0)
-	{		
+	{
 		stats::creatingStatFileTex($statDir);
 		$mvCmd="mv $outDir/stats.tex $reportDirWF/input";
 		toolbox::run($mvCmd,"noprint");
 	}
-	
+
 	#Command line
 	$mvCmd="mv $outDir/commandLine.tex $reportDirWF/input";
 	toolbox::run($mvCmd);
-	
+
 	#Software Version
 	$mvCmd="mv $outDir/software.txt $reportDirWF/input";
 	toolbox::run($mvCmd,"noprint");
-	
+
 	#config file
 	$cpCmd="cp $configInfo $reportDirWF/input/configuration.txt";
 	toolbox::run($cpCmd,"noprint");
-	
-	#generating pdf report in $texWorkflowFile 	
+
+	#generating pdf report in $texWorkflowFile
 	my $texCmd="pdflatex $texWorkflowFile";
-	
+
 	#generating biblio
 	my $auxFile =$texWorkflowFile;
 	my @path = split /\//, $auxFile;
@@ -596,15 +616,15 @@ sub generateReports
 
 	# Moving into directory with .tex files. Requested for pdf lateX to avoid loop.
 	chdir "$reportDirWF" or die "\nTEX REPORT ERROR: $0 : cannot cd into the output folder $reportDirWF \nExiting...\n";
-	
+
 	#toolbox::run($texCmd);
-    `$texCmd` or die "\nTEX REPORT ERROR: $0 : cannot generate pdf from tex document $! \nExiting...\n"; 
+    `$texCmd` or die "\nTEX REPORT ERROR: $0 : cannot generate pdf from tex document $! \nExiting...\n";
 	`$bibtexCmd` or die "\nTEX REPORT ERROR: $0 : cannot generate bbl from bib document $! \nExiting...\n";
-	`$texCmd` or die "\nTEX REPORT ERROR: $0 : cannot generate pdf from tex document $! \nExiting...\n"; 
 	`$texCmd` or die "\nTEX REPORT ERROR: $0 : cannot generate pdf from tex document $! \nExiting...\n";
-	
+	`$texCmd` or die "\nTEX REPORT ERROR: $0 : cannot generate pdf from tex document $! \nExiting...\n";
+
 	my $lnCmd="ln -s $pdfWorkflowFile $outDir/.";
-	system($lnCmd) and die "\nTEX REPORT ERROR: $0 : cannot generate pdf link $! \nExiting...\n"; 
+	system($lnCmd) and die "\nTEX REPORT ERROR: $0 : cannot generate pdf link $! \nExiting...\n";
 }
 
 
