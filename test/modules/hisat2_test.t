@@ -93,12 +93,12 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ### Test for hisat2::hisat2Build
 ##########################################
 my $bankData="$toggle/data/Bank/";
-my $fastqData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
+my $fastqData="$toggle/data/testData/rnaseq/pairedOneIndividu/";
 
 # input file
 
-my $fastaRefIni=$bankData."/referenceIrigin.fasta";
-my $fastaRef="referenceIrigin.fasta";
+my $fastaRefIni=$bankData."/referenceRnaseq.fa";
+my $fastaRef="referenceRnaseq.fa";
 
 #copy fasta reference into test directory where the index will be created
 my $copyCommand="cp $fastaRefIni ./$fastaRef";
@@ -110,29 +110,29 @@ is(hisat2::hisat2Build($fastaRef),$fastaRef,'hisat2::hisat2-build');
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('hisat2_log.e','hisat2_log.o','referenceIrigin.fasta','referenceIrigin.fasta.1.ht2','referenceIrigin.fasta.2.ht2','referenceIrigin.fasta.3.ht2','referenceIrigin.fasta.4.ht2','referenceIrigin.fasta.5.ht2','referenceIrigin.fasta.6.ht2','referenceIrigin.fasta.7.ht2','referenceIrigin.fasta.8.ht2');
+my @expectedOutput = ('hisat2_log.e','hisat2_log.o','referenceRnaseq.fa','referenceRnaseq.fa.1.ht2','referenceRnaseq.fa.2.ht2','referenceRnaseq.fa.3.ht2','referenceRnaseq.fa.4.ht2','referenceRnaseq.fa.5.ht2','referenceRnaseq.fa.6.ht2','referenceRnaseq.fa.7.ht2','referenceRnaseq.fa.8.ht2');
 is_deeply(\@observedOutput,\@expectedOutput,'hisat2::hisat2Build - output list');
 
 # expected output content
-my $expectedMD5sum="2f874d156fb1b4fa748b24e61caaf53a";
+my $expectedMD5sum="54c495bbba42cd61c1610442971982c0";
 my $observedMD5sum=`md5sum $fastaRef.1.ht2`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'hisat2::hisat2Build - output content 1.ht2');
 
-$expectedMD5sum="481b0055258e98825bb4a8c52c3e90c0";
+$expectedMD5sum="4ad45a523ecaef6310bb6f7f608eb311";
 $observedMD5sum=`md5sum $fastaRef.2.ht2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'hisat2::hisat2Build - output content 2.ht2');
 
-$expectedMD5sum="dc12cca8433dfb22df23bc78bc6aeef6";
+$expectedMD5sum="8aa5c56a0ba0b0ab7e9e7f3fb7ee4a76";
 $observedMD5sum=`md5sum $fastaRef.3.ht2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'hisat2::hisat2Build - output content 3.ht2');
 
-$expectedMD5sum="3d11892beee30c866ee5e2a06bbbc3d8";
+$expectedMD5sum="a4ebbf39ff457e410253b571ee79088d";
 $observedMD5sum=`md5sum $fastaRef.4.ht2`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -142,26 +142,26 @@ is($observedMD5sum,$expectedMD5sum,'hisat2::hisat2Build - output content 4.ht2')
 ##### hisat2::hisat2
 ##########################################
 # input file
-my $forwardFastq=$fastqData."irigin1_1.fastq";
-my $reverseFastq=$fastqData."irigin1_2.fastq";
+my $forwardFastq=$fastqData."RNASeq_1.fastq";
+my $reverseFastq=$fastqData."RNASeq_2.fastq";
 
 # output file
-my $samFileOut="irigin.HISAT2.sam";
-my $readGroupLine="irigin";
+my $samFileOut="RNASeq.HISAT2.sam";
+my $readGroupLine="RNASeq";
 
 # execution test
 is(hisat2::hisat2($samFileOut,$readGroupLine,$fastaRef,$forwardFastq,$reverseFastq),'1',"hisat2::hisat2 - Test for hisat2 running");
 
 # expected output test
 #Check if files created
-@expectedOutput = ('hisat2_log.e','hisat2_log.o','irigin.HISAT2.sam','referenceIrigin.fasta','referenceIrigin.fasta.1.ht2','referenceIrigin.fasta.2.ht2','referenceIrigin.fasta.3.ht2','referenceIrigin.fasta.4.ht2','referenceIrigin.fasta.5.ht2','referenceIrigin.fasta.6.ht2','referenceIrigin.fasta.7.ht2','referenceIrigin.fasta.8.ht2');
+@expectedOutput = ('hisat2_log.e','hisat2_log.o','referenceRnaseq.fa','referenceRnaseq.fa.1.ht2','referenceRnaseq.fa.2.ht2','referenceRnaseq.fa.3.ht2','referenceRnaseq.fa.4.ht2','referenceRnaseq.fa.5.ht2','referenceRnaseq.fa.6.ht2','referenceRnaseq.fa.7.ht2','referenceRnaseq.fa.8.ht2','RNASeq.HISAT2.sam',);
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'hisat2::hisat2 - Files created');
 
 
 # expected content test $samFileOut
-my $expectedLineNumber = "2954 $samFileOut";                        # structure of the ref file for checking
+my $expectedLineNumber = "2020 $samFileOut";                        # structure of the ref file for checking
 my $observedLineNumber = `wc -l $samFileOut`;                       # structure of the test file for checking
 chomp $observedLineNumber;                                          # to separate the structure and the name of file
 is($observedLineNumber, $expectedLineNumber, "hisat2::hisat2 - output content file sam");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
@@ -170,4 +170,4 @@ is($observedLineNumber, $expectedLineNumber, "hisat2::hisat2 - output content fi
 #GREP command result
 my $grepResult=`grep -c ">" $samFileOut`;
 chomp $grepResult;
-is($grepResult,795,'hisat2::hisat2 - output grep in file sam');
+is($grepResult,0,'hisat2::hisat2 - output grep in file sam');
