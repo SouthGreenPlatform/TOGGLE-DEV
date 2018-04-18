@@ -80,6 +80,7 @@ use readseq;
 use stats;
 use eaUtils;
 use hisat2;
+use stringtie;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed

@@ -321,5 +321,10 @@ MANDATORY=reference
 
 $hisat2
 IN=fastq
-OUT=sam,bam
+OUT=sam
 MANDATORY=reference
+
+$stringtie
+IN=bam
+OUT=gtf
+

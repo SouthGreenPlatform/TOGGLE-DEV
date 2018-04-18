@@ -137,6 +137,8 @@ our %testParams=    (
 	fastme => ["-d"],
 	#HISAT2
 	hisat2 => [""],
+	#stringtie
+	stringtie => [""],
 
         );
 

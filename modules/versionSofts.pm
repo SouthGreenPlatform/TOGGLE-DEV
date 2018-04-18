@@ -265,7 +265,12 @@ sub hisat2Version
 	chomp($version);
 	return $version;
 }
-
+sub stringtieVersion
+{   #We works with the STDOUT output
+	my $version = `$stringtie --version 2>&1 ` or die toolbox::exportLog("ERROR: versionSoft::stringtieVersion : Can not grep stringtie version.\nPlease check your stringtie installation.\n", 0);
+	chomp($version);
+	return $version;
+}
 
 sub writeLogVersion
 {
@@ -340,14 +345,18 @@ sub writeLogVersion
 			#FOR hisat2.pm
 			case ($softOrder =~ m/^hisat2.*build.*/i){$softPathVersion{"hisat2Build"}= hisat2BuildVersion if not defined $softPathVersion{"hisat2Build"};
 												$softPath{"hisat2Build"}= $hisat2."/hisat2-build" if not defined $softPath{"hisat2Build"};
-
 												}
+
 			case ($softOrder =~ m/^hisat2.*/i){$softPathVersion{"hisat2"}=hisat2Version if not defined $softPathVersion{"hisat2"};
 											   $softPathVersion{"hisat2Build"}= hisat2BuildVersion if not defined $softPathVersion{"hisat2Build"};
 
 											   $softPath{"hisat2"}= $hisat2."/hisat2" if not defined $softPath{"hisat2"};
 											   $softPath{"hisat2Build"}=  $hisat2."/hisat2-build" if not defined $softPath{"hisat2Build"};
 											   }
+			#FOR stringtie.pm
+			case ($softOrder =~ m/^stringtie/i){$softPathVersion{"stringtie"}= stringtieVersion if not defined $softPathVersion{"stringtie"};
+												$softPath{"stringtie"}= $stringtie if not defined $softPath{"stringtie"};
+												}
 
 			#FOR cufflinks.pm
 			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= cufflinksVersion if not defined $softPathVersion{"cufflinks"};

@@ -257,6 +257,10 @@ sub correctName
         case ($name =~ m/^hisat2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="hisat2Build"; } #Correction for hisat2-build
         case ($name =~ m/^hisat2.*/i){$correctedName="hisat2"; } #Correction for hisat2
 
+        # stringtie
+        case ($name =~ m/^stringtie.*/i){$correctedName="stringtie"; } #Correction for stringtie
+
+
 
 
         else
