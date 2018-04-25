@@ -1,4 +1,4 @@
-package name;
+package module_template;
 
 ###################################################################################################################################
 #
@@ -30,15 +30,16 @@ package name;
 #
 ###################################################################################################################################
 
+#Perl modules
 use strict;
 use warnings;
+use Data::Dumper;
 
+#TOGGLe modules
 use localConfig;
-
 use toolbox;
+use checkFormat;
 
-sub foo {}
 
-sub bar{}
 
 1;
