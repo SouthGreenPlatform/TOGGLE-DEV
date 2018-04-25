@@ -48,6 +48,7 @@ use_ok('toolbox') or exit;
 use_ok('plink') or exit;
 
 can_ok( 'plink','vcf2ped');
+can_ok('plink','runPcaIbs');
 
 use plink;
 
@@ -82,7 +83,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 ################################################################################################
-##Samtools view
+##VCF to ped
 ################################################################################################
 
 
@@ -109,7 +110,30 @@ my $observedContent=`wc -w $observedOutput`;
 my $validContent = ( $observedContent =~ m/1636/);
 is($validContent,1,'plink::vcf2ped - output content');
 
+################################################################################################
+### PCA
+#################################################################################################
+
+my %optionsRef = ();
+my $optionsHachees = \%optionsRef;
+
+# input file
+my $vcfFile = "$toggle/data/testData/vcf/vcfForSNiPlay/testsnmf.vcf";
+my $fileOut = "control.PLINKPCA";
+
+#execution test
+is(plink::runPcaIbs($vcfFile, $fileOut, $optionsHachees),1,'plink::runPcaIbs');
+
+# expected output test
+my $expectedOutput = 'control.PLINKPCA.pca_plot.txt';
+my $observedOutput = `ls control.PLINKPCA.pca_plot.txt`;
+chomp($observedOutput);
+is($observedOutput,$expectedOutput,'plink::runPcaIbs - output list');
 
 
+my $expectedOutput = 'control.PLINKPCA.ibs_matrix.txt';
+my $observedOutput = `ls control.PLINKPCA.ibs_matrix.txt`;
+chomp($observedOutput);
+is($observedOutput,$expectedOutput,'plink::runPcaIbs - output list');
 
 exit;
