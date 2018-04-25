@@ -34,6 +34,7 @@ package module_template;
 use strict;
 use warnings;
 use Data::Dumper;
+use Switch;
 
 #TOGGLe modules
 use localConfig;

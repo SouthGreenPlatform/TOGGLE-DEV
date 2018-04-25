@@ -32,11 +32,12 @@
 
 use strict;
 use warnings;
+use Data::Dumper;
 use localConfig;
 
 #This tool will allows developer to add easily a new software in TOGGLe
 
-print "\nWelcome to the marvelous world of TOGGLe, the best workflow manager you have ever dreamed of (especially compared to this bullshit of Galaxy...)\n";
+print "\nWelcome to the tenebrous world of TOGGLe, the best workflow manager you have ever dreamed of (especially compared to this bullshit of Galaxy...)\n";
 
 #Asking for the module name, ie the generic tool
 my $module="";
@@ -87,6 +88,8 @@ while ($version eq "")
     print "\nHow do you obtain the version of your tool (e.g. 'bwa 2>&1| grep version' or 'java --version | grep Version' \n";
     $version = <STDIN>;
     chomp $version;
+    #Testing if the command version is ok
+    `$version`or $version ="";
 }
 
 #The testParams value will be used in the fileConfigurator.pm module for block test.
@@ -111,6 +114,7 @@ my $moduleFile = $module.".pm";
 
 unless (-f "$toggle/modules/$moduleFile")
 {   #We create the module if it does not exists
+    print $toggle,"\n";
     open (my $fhTemplate, "<", "$toggle/modules/module_template.pm") or die ("\nCannot open the module_template file:\n$!\n");
     open (my $fhModule, ">", "$toggle/modules/$moduleFile") or die  ("\nCannot create the $moduleFile file:\n$!\n");
     
@@ -130,7 +134,7 @@ unless (-f "$toggle/modules/$moduleFile")
 
 #Testing if exists
 my $subName = "sub $function";
-my $grep = `grep $subName $toggle/modules/$moduleFile`;
+my $grep = `grep $subName $toggle/modules/$moduleFile 2>/dev/null`;
 chomp $grep;
 if ($grep)
 {   #the function exists...
@@ -140,3 +144,48 @@ if ($grep)
 #Creating the text
 my $subText=$subName."\n{\n";
 
+$subText.= '#PLEASE CHECK IF IT IS OK AT THIS POINT!!'."\n\t".'my ($fileIn,$fileOut,@optionsHachees) = @_;'."\n";
+
+#Testing the type of IN OUT and mandatory to generate the input output files variables
+
+$subText.= "\tmy \$validation = 0;\n\tswitch (1)\n\t{";
+
+my %formatValidator = (
+                        fasta =>"\n\t\t".'case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}',
+                        fastq =>"\n\t\t".'case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}',
+                        sam => "\n\t\t".'case ($fileIn =~ m/sam$/i){$validation = 1 if (checkFormat::checkFormatSamOrBam($fileIn) == 1)}',
+                        bam => "\n\t\t".'case ($fileIn =~ m/bam$/i){$validation = 1 if (checkFormat::checkFormatSamOrBam($fileIn) == 2)}',
+                        vcf => "\n\t\t".'case ($fileIn =~ m/vcf|vcf\.gz$/i){$validation = 1 if (checkFormat::checkFormatVcf($fileIn) == 1)}',
+                        gff => "\n\t\t".'case ($fileIn =~ m/gff$/i){$validation = 1 if (checkFormat::checkFormatGff($fileIn) == 1)}',
+                        bed => "\n\t\t".'case ($fileIn =~ m/bed$/i){$validation = 1 if (checkFormat::checkFormatBed($fileIn) == 1)}'
+                        #'phylip'=>"\n\t\t".'case ($fileIn =~ m/phy|phylip$/i){$validation = 1 if (checkFormat::checkFormatPhylip($fileIn) == 1)}'
+                        # gtf
+                        # nwk, newik, nk
+                        # bcf
+                        # ped
+                        # intervals
+                        # txt
+                        # sai
+                       );
+
+my @listIn = split/,/,$in;
+print Dumper (\@listIn);
+foreach my $format (@listIn)
+{
+   print $format,"\t";
+    $subText.= $formatValidator{$format};
+}
+$subText .= "\n\t\telse {toolbox::exportLog(\"ERROR: $module::$function : The file \$file is not a $in file\\n\",0);}\n\t};\n\tdie (toolbox::exportLog(\"ERROR: $module::$function : The file \$file is not a $in file\n\",0) if \$validation == 0;";
+
+#Adding the format checking for each files (exists, not empty, format)
+
+#Extract options
+
+#Generating command
+
+#Executing command and return
+
+#Print in module
+print "\n",$subText,"\n";
+
+exit;
