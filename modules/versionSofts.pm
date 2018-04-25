@@ -344,6 +344,12 @@ sub writeLogVersion
 			case ($softOrder =~ m/^sniplay.*/i){$softPathVersion{"sniplay"}= "v1.0" if not defined $softPathVersion{"sniplay"};
 												$softPath{"sniplay"}= "sniplay" if not defined $softPath{"sniplay"};
 											   }
+											   
+			#FOR VCFTOOLS
+			################# ADD command for version
+			case ($softOrder =~ m/^vcftools.*/i){$softPathVersion{"vcftools"}= "v1.0" if not defined $softPathVersion{"vcftools"};
+												$softPath{"vcftools"}= $vcftools if not defined $softPath{"vcftools"};
+											   }
 
 			#For format checking
 			case($softOrder =~ m/^check/i){next;}

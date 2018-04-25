@@ -251,6 +251,10 @@ $plinkVcf2Ped
 IN=vcf
 OUT=ped
 
+$plinkPCA
+IN=vcf
+OUT=NA
+
 $sniplayPed2fasta
 IN=ped
 OUT=fasta
@@ -262,3 +266,7 @@ OUT=phylip,phy
 $fastme
 IN=phy,phylip
 OUT=nwk,newik,nk
+
+$vcftoolsStats
+IN=vcf
+OUT=txt

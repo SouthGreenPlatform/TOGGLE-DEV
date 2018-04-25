@@ -222,6 +222,9 @@ sub correctName
         case ($name =~ m/^fastme/i){$correctedName="fastme";}
 		case ($name =~ m/^readseq/i){$correctedName="readseq";}
 		
+		# VCFTOOLS
+        case ($name =~ m/^vcf[\s|\.|\-| \/|\\|\|]*tools[\s|\.|\-| \/|\\|\|]*stats/i){$correctedName="vcftoolsStats";}
+		
         else
         {
             toolbox::exportLog("ERROR NAMING CONVENTION : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);
