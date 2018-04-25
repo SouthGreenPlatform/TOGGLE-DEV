@@ -55,6 +55,39 @@ while ($function eq "")
     print "\nWhat is the name of your function (e.g. bwaAln for bwa aln) ?\n";
     $function = <STDIN>;
     chomp $function;
+    $function =~ s/\s//g;
+}
+
+# Create the module if needed
+$module = lc $module;
+my $moduleFile = $module.".pm";
+
+unless (-f "$toggle/modules/$moduleFile")
+{   #We create the module if it does not exists
+    open (my $fhTemplate, "<", "$toggle/modules/module_template.pm") or die ("\nCannot open the module_template file:\n$!\n");
+    open (my $fhModule, ">", "$toggle/modules/$moduleFile") or die  ("\nCannot create the $moduleFile file:\n$!\n");
+    
+    while (my $line = <$fhTemplate>)
+    {
+        if ($line =~ m/^package/)
+        {
+            $line =~ s/module_template/$module/;
+        }
+        print $fhModule $line;
+    }
+    close $fhTemplate;
+    close $fhModule;
+}
+
+#Testing if exists
+
+my $subName = "sub $function";
+my $grepCom = "grep -c \"$subName\" $toggle/modules/$moduleFile 2>/dev/null";
+my $grep = `$grepCom`;
+chomp $grep;
+if ($grep)
+{   #the function exists...
+    die "\nThe function already exists, will quit...\n";
 }
 
 #asking for IN, OUT mandatory and version
@@ -70,6 +103,7 @@ while ($in eq "")
     print "\nWhat are the different entry formats of your tool, separated by commas (e.g. fastq or fastq,fasta) ?\n";
     $in = <STDIN>;
     chomp $in;
+    $in =~ s/\s//g;
 }
 
 while ($out eq "")
@@ -77,6 +111,7 @@ while ($out eq "")
     print "\nWhat are the different output formats of your tool, separated by commas (e.g. fastq or fastq,fasta) ? \n**NOTE if your tool is a dead-end one, such as FASTQC, please provide NA as output format.**\n";
     $out = <STDIN>;
     chomp $out;
+    $out =~ s/\s//g;
 }
 
 print "\nAre there any mandatory requirement as option for your tool (e.g. reference or gff) ? \n**NOTE if none leave empty.**\n";
@@ -108,43 +143,14 @@ while ($commandLine eq "")
     chomp $commandLine;
 }
 
-# Create the module if needed
-$module = lc $module;
-my $moduleFile = $module.".pm";
 
-unless (-f "$toggle/modules/$moduleFile")
-{   #We create the module if it does not exists
-    print $toggle,"\n";
-    open (my $fhTemplate, "<", "$toggle/modules/module_template.pm") or die ("\nCannot open the module_template file:\n$!\n");
-    open (my $fhModule, ">", "$toggle/modules/$moduleFile") or die  ("\nCannot create the $moduleFile file:\n$!\n");
-    
-    while (my $line = <$fhTemplate>)
-    {
-        if ($line =~ m/^package/)
-        {
-            $line =~ s/module_template/$module/;
-        }
-        print $fhModule $line;
-    }
-    close $fhTemplate;
-    close $fhModule;
-}
 
 #Create the function
-
-#Testing if exists
-my $subName = "sub $function";
-my $grep = `grep $subName $toggle/modules/$moduleFile 2>/dev/null`;
-chomp $grep;
-if ($grep)
-{   #the function exists...
-    die "\nThe function already exists, will quit...\n";
-}
 
 #Creating the text
 my $subText=$subName."\n{\n";
 
-$subText.= '#PLEASE CHECK IF IT IS OK AT THIS POINT!!'."\n\t".'my ($fileIn,$fileOut,@optionsHachees) = @_;'."\n";
+$subText.= '#PLEASE CHECK IF IT IS OK AT THIS POINT!!'."\n\t".'my ($fileIn,$fileOut,$optionsHachees) = @_;'."\n";
 
 #Testing the type of IN OUT and mandatory to generate the input output files variables
 
@@ -168,24 +174,44 @@ my %formatValidator = (
                         # sai
                        );
 
+#Format case addition
 my @listIn = split/,/,$in;
-print Dumper (\@listIn);
 foreach my $format (@listIn)
 {
-   print $format,"\t";
     $subText.= $formatValidator{$format};
 }
-$subText .= "\n\t\telse {toolbox::exportLog(\"ERROR: $module::$function : The file \$file is not a $in file\\n\",0);}\n\t};\n\tdie (toolbox::exportLog(\"ERROR: $module::$function : The file \$file is not a $in file\n\",0) if \$validation == 0;";
-
-#Adding the format checking for each files (exists, not empty, format)
+#finishing the infos
+$subText .= "\n\t\telse {toolbox::exportLog(\"ERROR: $module::$function : The file \$file is not a $in file\\n\",0);}\n\t};\n\tdie (toolbox::exportLog(\"ERROR: $module::$function : The file \$file is not a $in file\\n\",0) if \$validation == 0;";
 
 #Extract options
 
+$subText .= "\t#Picking up options\n\t".'my $options="";'."\n";
+$subText .= "\t".'$options = toolbox::extractOptions($optionsHachees) if $optionsHachees;'."\n\n";
+
 #Generating command
+$subText .= "\t#Execute command\n";
+$commandLine =~ s/FILEIN/\$fileIn/;
+$commandLine =~ s/FILEOUT/\$fileOut/;
+$commandLine =~ s/\[options\]/\$options/;
+$subText .= "\tmy \$command = \"\$$commandLine\" ;";
 
 #Executing command and return
+$subText .= "\n\treturn 1 if (toolbox::run(\$command));\n";
+$subText .= "\ttoolbox::exportLog(\"ERROR: $module::$function : ABORTED\\n\",0);\n}";
+
 
 #Print in module
-print "\n",$subText,"\n";
+my $sedCom = "sed -i 's/^1;\$//' $toggle/modules/$moduleFile";
+system("$sedCom") and die ("\nCannot remove the previous 1;:\n$!\n");
+
+open (my $fhModule, ">>", "$toggle/modules/$moduleFile") or die ("\nCannot open for writing the file $moduleFile:\n$!\n");
+print $fhModule $subText;
+print $fhModule "\n\n1;\n";
+close $fhModule;
+
+
+print "Finished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
+    - $moduleFile
+    - \n";
 
 exit;
