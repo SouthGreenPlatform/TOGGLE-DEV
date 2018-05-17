@@ -43,36 +43,66 @@ use checkFormat;
 
 sub stringtie
 {
-    my ($bamFileIn,$gtfFileOut,$gffFile,$optionsHachees)=@_;
-    if (toolbox::sizeFile($bamFileIn)==1)            ##Check if the bamfileIn exist and is not empty
+    my ($bamFileIn,$gtfFileOut,$gffFile,$listOfGTF,$optionsHachees)=@_;
+    my $command;
+    my $gtfFilesNames="";
+    my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.config
+    ## DEBUG toolbox::exportLog("DEBUG: stringtie::stringtie : stringtie option equals to options $options",1);
+
+    if ($options =~ m/--merge/) # If --merge option is given, is mandatory to step >1000 so listOfGTF != "NA"
     {
+        if ($listOfGTF ne "NA" ) # step 1000 list of gtf
+        {
+            
+            foreach my $file (@{$listOfGTF})       # for each GTF file(s)
+            {
+                if (toolbox::sizeFile($file)==1)        # if current file is not empty TODO add gtf control
+                {
+                   $gtfFilesNames.=" ".$file." ";       # recovery of informations for command line used later
+                }
+                else        # if current file is empty
+                {
+                    toolbox::exportLog("ERROR: stringtie::stringtie : The file $file is not a GTF and cannot be used\n", 0);
+                    return 0;
+                }
+            }
+        }
+        $command="$stringtie $gtfFilesNames $options -o $gtfFileOut";
+    }
+    else   # PAS 1000 sans merge
+    {
+        if (toolbox::sizeFile($bamFileIn)==1)            ##Check if the bamfileIn exist and is not empty
+        {
+            
+            #BAM sorted format is mandatory for stringtie
+            if (checkFormat::checkFormatSamOrBam($bamFileIn)==2)
+            {
+                $command="$stringtie $bamFileIn $options -o $gtfFileOut";
+            }
+            #if SAM format, the file is automatically converted to BAM and sorted
+            if (checkFormat::checkFormatSamOrBam($bamFileIn)==1)
+            {
+                toolbox::exportLog("ERROR: stringtie error : $bamFileIn is sam and stringtie needs a sorted bam. ABORTED\n",0);
+            }
 
-        my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.config
-        ## DEBUG toolbox::exportLog("DEBUG: HTSeq::htseqcount : htseqcount option equals to options $options",1);
+        }
+    }
+    if ($gffFile ne "NA")
+    {
+        $command .= " -G $gffFile";
+    }
+    #Execute command
+    if(toolbox::run($command)==1)		## if the command has been executed correctly, export the log
+    {
+        return 1;
+    }
+    else
+    {
+        toolbox::exportLog("ERROR: stringtie::stringtie : ABORTED\n",0);
+        return 0;
+    }
 
-        my $command;
-        #BAM sorted format is mandatory for stringtie
-        if (checkFormat::checkFormatSamOrBam($bamFileIn)==2)
-        {
-            $command="$stringtie $bamFileIn $options -o $gtfFileOut";
-        }
-        #if SAM format, the file is automatically converted to BAM and sorted
-        if (checkFormat::checkFormatSamOrBam($bamFileIn)==2)
-        {
-            toolbox::exportLog("ERROR: stringtie error : $bamFileIn is sam and stringtie needs a sorted bam. ABORTED\n",0);
-        }
-        #Execute command
-        if(toolbox::run($command)==1)		## if the command has been executed correctly, export the log
-        {
-            return 1;
-        }
-        else
-        {
-            toolbox::exportLog("ERROR: stringtie::stringtie : ABORTED\n",0);
-            return 0;
-        }
 }
-
 
 1;
 
