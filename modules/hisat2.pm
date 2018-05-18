@@ -52,7 +52,7 @@ sub hisat2Build
 	if (toolbox::sizeFile($refFastaFileIn)==1)						# check if the reference file exist and is not empty
 	{
 		my $options=toolbox::extractOptions($optionsHachees, " ");			# Get given options
-		my $command=$hisat2."/hisat2-build".$options." ".$refFastaFileIn." ".$refFastaFileIn;		# command
+		my $command=$hisat2Build." ".$options." ".$refFastaFileIn." ".$refFastaFileIn;		# command
 		##DEBUG toolbox::exportLog("DEBUG: hisat2::hisat2-build : $command\n",1);
 		# Execute command
 		if(toolbox::run($command)==1)							# The command should be executed correctly (ie return) before exporting the log
@@ -98,7 +98,7 @@ sub hisat2
     {
 
         #Basic command line
-        my $command = $hisat2."/hisat2"." --rg-id ".$readGroup." ".$options." -x ".$refFastaFileIn;
+        my $command = $hisat2." --rg-id ".$readGroup." ".$options." -x ".$refFastaFileIn;
 
         if ($reverseFastqFile ne "NA" && toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
