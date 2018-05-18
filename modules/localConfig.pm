@@ -1,9 +1,8 @@
 package localConfig;
 
-
 ###################################################################################################################################
 #
-# Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,109 +30,113 @@ package localConfig;
 #
 ###################################################################################################################################
 
-
-
 use strict;
 use warnings;
 use Exporter;
 
 our @ISA=qw(Exporter);
-
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $crac $cracIndex $bowtie $bowtie2 $atropos $duplicationDetector $plink $bedtools $snmfbin $readseqjar $fastme $abyss $bam2cfg $breakDancer $pindel $fastqStats);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $crac
+$cracIndex $bowtie $bowtie2 $atropos $duplicationDetector $plink $bedtools $snmfbin $readseqjar $fastme $abyss $bam2cfg $breakDancer $pindel $fastqStats $hisat2 $hisat2Build $stringtie);
 
 #toggle path
-our $toggle="/path/to/toggleFolder";
+our $toggle=$ENV{"TOGGLE_PATH"};
 
 #PATH for Mapping on cluster
-our $java = "/path/to/java -Xmx12g -jar";
+our $java = "$ENV{'JAVA_HOME'}/bin/java -jar";
 
-our $bwa = "/path/to/bwa";
-our $picard = "$java /path/to/picard_tools/picard.jar";
+our $bwa = "bwa";
+our $picard = "$java $ENV{'PICARD_PATH'}/picard.jar";
 
-our $samtools = "/path/to/samtools";
-our $GATK = "$java -Xmx12g -jar /path/to/GenomeAnalysisTK.jar";
-our $fastqc = "/path/to/fastqc";
+our $samtools = "samtools";
+our $GATK = "$java $ENV{'GATK_PATH'}/GenomeAnalysisTK.jar";
+our $fastqc = "fastqc";
 
 #Path for CutAdapt
-our $cutadapt = "/path/to/cutadapt";
+our $cutadapt = "cutadapt";
 
 ##### FOR RNASEQ analysis
 #Path for fastq_trimmer
-our $fastxTrimmer="/path/to/fastx_trimmer";
+our $fastxTrimmer="fastx_trimmer";
 
 #Path for tophat2
-our $tophat2="/path/to/tophat2";
+our $tophat2="tophat2";
 
 #path for bowtie2-build
-our $bowtie2Build="/path/to/bowtie2-build";
+our $bowtie2Build="bowtie2-build";
 
 #path for bowtie-build
-our $bowtieBuild="/path/to/bowtie-build";
+our $bowtieBuild="bowtie-build";
 
 #path for htseqcount
-our $htseqcount = "/path/to/htseq-count";
+our $htseqcount = "htseq-count";
 
 #path for Cufflinks
-our $cufflinks = "/path/to/cufflinks";
-our $cuffdiff = "/path/to/cuffdiff";
-our $cuffmerge = "/path/to/cuffmerge";
+our $cufflinks = "cufflinks";
+our $cuffdiff = "cuffdiff";
+our $cuffmerge = "cuffmerge";
 
 #path for tgicl
-our $tgicl = "/path/to/tgicl";
+our $tgicl = "tgicl";
 
 #path for trinity
-our $trinity = "/path/to/trinity";
+our $trinity = "Trinity";
 
 #path for process_radtags
-our $stacks = "/path/to/process_radtags";
+our $stacks = "process_radtags";
 
-#path for snpEff
-our $snpEff = "/path/to/snpEff/snpEff.jar";
+#path to snpEff
+our $snpEff = "$java $ENV{'SNPEFF_PATH'}/snpEff.jar";
 
-#path for bamutils
-our $bamutils = "/path/to/bamutils";
+#path to bamutils
+our $bamutils = "bamutils";
 
-#path for atropos
-our $atropos="/path/to/atropos";
+#path to crac
+our $crac = "crac";
+our $cracIndex = "crac-index";
 
-#Path to bowtie
-our $bowtie = "/path/to/bowtie";
-our $bowtie2 = "/path/to/bowtie2";
+#Path to bowtie bowtie2
+our $bowtie = "bowtie";
+our $bowtie2 = "bowtie2";
 
-#Path to crac
-our $crac = "/path/to/crac";
-our $cracIndex = "/path/to/crac-index";
+# path for atropos
+our $atropos="/usr/local/bin/atropos";
 
-#Path to DuplicationDetector
-our $duplicationDetector = "/path/to/duplicationDetector";
+#Path for duplicationDetector
+our $duplicationDetector = "duplicationDetector.pl";
 
-#Path to BEDtools
-our $bedtools = "/path/to/bedtools";
+#Path to bedtools
+our $bedtools = "bedtools";
 
-#Path to Abyss/TransAbyss
-our $abyss = "/path/to/abyss";
-our $transAbyss = "/path/to/transAbyss";
+#Path to abyss
+our $abyss = "abyss-pe";
 
 #Path to breakDancer
-our $bam2cfg = "/path/to/bam2cfg.pl";
-our $breakDancer = "/path/to/breakDancer";
+our $bam2cfg = "bam2cfg.pl";
+our $breakDancer = "breakdancer-max";
 
 #Path to pindel
-our $pindel = "/path/to/pindel";
-
+our $pindel = "pindel";
 
 # path for plink
-our $plink="/path/to/plink";
+our $plink="plink";
 
 # path to sNMF
-our $snmfbin = "/path/to/snmf";
+our $snmfbin = "$ENV{'SNMF_PATH'}";
 
 # path to readseq
-our $readseqjar = "/path/to//readseq.jar";
+our $readseqjar = "$java $ENV{'READSEQ_PATH'}/readseq.jar";
 
 #path to FastME
-our $fastme= "/path/to/fastme";
+our $fastme= "fastme";
 
-#path to fastq-stats
-our $fastqStats= "/path/to/fastq-stats";
+#path to FastqStats
+our $fastqStats= "fastq-stats";
+
+#path to hisat2
+our $hisat2= "hisat2";
+our $hisat2Build="hisat2-build";
+
+#path to stringtie
+our $stringtie= "stringtie";
+
 1;
