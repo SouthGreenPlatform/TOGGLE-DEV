@@ -254,7 +254,7 @@ sub fastqStatsVersion
 
 sub hisat2BuildVersion
 {   #We works with the STDOUT output
-	my $version = `$hisat2Build -h 2>&1 | grep "HISAT2 version"` or die toolbox::exportLog("ERROR: versionSoft::hisat2BuildVersion : Can not grep hisat2Build version.\nPlease check your hisat2-build installation.\n", 0);
+	my $version = `$hisat2Build  -h 2>&1 | grep "HISAT2 version"` or die toolbox::exportLog("ERROR: versionSoft::hisat2BuildVersion : Can not grep hisat2Build version.\nPlease check your hisat2-build installation.\n", 0);
 	chomp($version);
 	return $version;
 }
