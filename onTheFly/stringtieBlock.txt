@@ -1,0 +1,60 @@
+##############################################
+# Block for stringtie::stringtie
+############################################## 
+
+# Correct variable populating
+foreach my $file (@{$fileList}) #Checking the type of files that must be GTF or BAM
+{
+    if ($file =~ m/gtf$/) # the file type is normally gtf
+    {
+        #toolbox::exportLog("DEBUG : $0 : $file .\n",1);
+        if ($gtfFileIn ne "NA") # Already a gtf recognized, but more than one in the previous folder
+        {
+            toolbox::exportLog("INFO : $0 : there are more than one single GTF file at $stepName step.\n",1);
+        }
+        else
+        {
+            $gtfFileIn = $file;
+            $gtfFileOut = $newDir."/".$readGroup.".STRINGTIEMERGE.gtf";  # name of the GTF file obtained after --merge option 
+        }
+    }
+    
+    elsif ($file =~ m/bam$/)
+	{
+		$bamFileIn = $file;
+        $gtfFileOut = $newDir."/".$readGroup.".STRINGTIE.gtf";  # name of the GTF file obtained (if not --merge option was done) 
+    }
+    else
+	{
+		next;
+	}  
+}
+
+# check populating
+if ( ($bamFileIn ne "NA") and ($gtfFileIn eq "NA") ) #BAM file found in the previous folder
+{
+    toolbox::exportLog("INFO : $0 : BAM file found in $previousDir at step $stepName.\n",1);
+}
+
+elsif (($bamFileIn eq "NA") and ($gtfFileIn ne "NA") ) # GTF file found in the previous folder
+{
+    toolbox::exportLog("INFO : $0 : GTF file found in $previousDir at step $stepName.\n",1);
+}
+
+else {
+    toolbox::exportLog("ERROR : $0 : Any BAM or GTF file(s) were found in $previousDir at step $stepName.\n",0);
+}
+
+# filling input variables to sub
+                          
+$softParameters = toolbox::extractHashSoft($optionRef, $stepName);      # recovery of specific parameters of stringties step
+
+foreach my $file (@{$fileList})
+{
+	if ($file =~ m/gtf$/)
+	{
+		push (@{$listOfGTF},$file); # Picking up the gtf files only
+    }
+}
+
+stringtie::stringtie ($bamFileIn,$gtfFileOut,$gffFile,$listOfGTF,$softParameters); # run stringtie module in block
