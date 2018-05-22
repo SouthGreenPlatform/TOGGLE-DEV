@@ -44,6 +44,7 @@ use checkFormat;
 sub stringtie
 {
     my ($bamFileIn,$gtfFileOut,$gffFile,$listOfGTF,$optionsHachees)=@_;
+    #DBG:: toolbox::exportLog("DBG::::::::::::::: $bamFileIn,$gtfFileOut,$gffFile,$listOfGTF,$optionsHachees", 0);
     my $command;
     my $gtfFilesNames="";
     my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.config
@@ -51,7 +52,7 @@ sub stringtie
 
     if ($options =~ m/--merge/) # If --merge option is given, is mandatory to step >1000 so listOfGTF != "NA"
     {
-        if ($listOfGTF ne "NA" ) # step 1000 list of gtf
+        if ($listOfGTF ne "None" ) # step 1000 list of gtf
         {
             
             foreach my $file (@{$listOfGTF})       # for each GTF file(s)
