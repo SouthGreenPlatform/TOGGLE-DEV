@@ -354,7 +354,7 @@ foreach my $file (@{$initialDirContent})
 }
 
 #Checking if the files are taken in charge by TOGGLE
-if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam|ped/)  # j'ai rajouté fasta pour les besoins de TGICL et moi ped pour SNIPLAY
+if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam|ped|gtf/)  # j'ai rajouté fasta pour les besoins de TGICL et moi ped pour SNIPLAY; GTF for stringtie (option merge)
 {
     toolbox::exportLog("ERROR : $0 : The filetype $previousExtension is not taken in charge by TOGGLE\n",0);
 }
