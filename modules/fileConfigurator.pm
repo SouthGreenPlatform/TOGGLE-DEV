@@ -138,7 +138,7 @@ our %testParams=    (
 	#HISAT2
 	hisat2 => [""],
 	#stringtie
-	stringtie => [""],
+	stringtie => [""]
         );
 
 sub softParams
