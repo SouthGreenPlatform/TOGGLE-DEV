@@ -71,26 +71,32 @@ sub stringtie
     }
     else   # PAS 1000 sans merge
     {
-        if (toolbox::sizeFile($bamFileIn)==1)            ##Check if the bamfileIn exist and is not empty
+        if ($bamFileIn ne "NA" )
         {
-            
-            #BAM sorted format is mandatory for stringtie
-            if (checkFormat::checkFormatSamOrBam($bamFileIn)==2)
+            if (toolbox::sizeFile($bamFileIn)==1)            ##Check if the bamfileIn exist and is not empty
             {
-                $command="$stringtie $bamFileIn $options -o $gtfFileOut";
+                
+                #BAM sorted format is mandatory for stringtie
+                if (checkFormat::checkFormatSamOrBam($bamFileIn)==2)
+                {
+                    $command="$stringtie $bamFileIn $options -o $gtfFileOut";
+                }
+                #if SAM format, the file is automatically converted to BAM and sorted
+                if (checkFormat::checkFormatSamOrBam($bamFileIn)==1)
+                {
+                    toolbox::exportLog("ERROR: stringtie error : $bamFileIn is sam and stringtie needs a sorted bam. ABORTED\n",0);
+                }
+    
             }
-            #if SAM format, the file is automatically converted to BAM and sorted
-            if (checkFormat::checkFormatSamOrBam($bamFileIn)==1)
-            {
-                toolbox::exportLog("ERROR: stringtie error : $bamFileIn is sam and stringtie needs a sorted bam. ABORTED\n",0);
-            }
-
         }
     }
-    if ($gffFile ne "NA")
+    
+    if ($gffFile ne "None") 
     {
         $command .= " -G $gffFile";
     }
+    
+    
     #Execute command
     if(toolbox::run($command)==1)		## if the command has been executed correctly, export the log
     {
