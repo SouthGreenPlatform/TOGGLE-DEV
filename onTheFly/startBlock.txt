@@ -293,6 +293,10 @@ my $pedFileIn = "NA";
 my $phylipFileIn = "NA";
 my $readseqFileIn = "NA";
 
+##GTF for STRINGTIE
+my $gtfFileIn = "NA";
+my $gtfFileOut = "NA";
+my $listOfGTF = ();
 
 ##Internal variables
 ###Directory and file variables
@@ -306,7 +310,7 @@ my $fileList=toolbox::readDir($previousDir);
 my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or in group (1)
 
 
-if ($$fileList[0] !~ m/fasta|fastq|fq|fastq\.gz|fq\.gz|sam|bam|vcf|bai|vcf\.gz$/)
+if ($$fileList[0] !~ m/fasta|fastq|fq|fastq\.gz|fq\.gz|sam|bam|vcf|bai|vcf\.gz$|gtf$/)
 {
   toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); # Not the good formats
 }
