@@ -244,7 +244,7 @@ $grep ="";
 $grepCom = "grep -c \"$function\" $toggle/modules/softwareManagement.pm 2>/dev/null";
 $grep = `$grepCom`;
 chomp $grep;
-if ($grep)
+if ($grep >= 2)
 {   #the function exists...
     warn "\nThe function already exists in softwareManagement.pm\n";
 }
@@ -253,13 +253,42 @@ else
     #the function is not registered
     
     #adding the soft correct name
-    #my $sedCom = "sed -i 's/^#NEW SOFT ADDED AUTOMATICALLY/#NEW SOFT ADDED AUTOMATICALLY";
     open (my $fhTmp, ">", "/tmp/tempModule.pm") or die ("\nCannot open for writing the temp file /tmp/tempModule.pm:\n$!\n");
-    open (my $fhRead "<", "$toggle/modules/softwareManagement.pm") or die ("\nCannot open for reading the module softwaremanagement:\n$!\n");
+    open (my $fhRead, "<", "$toggle/modules/softwareManagement.pm") or die ("\nCannot open for reading the module softwareManagement:\n$!\n");
     
-    print $fhLocal $localLine;
-    print $fhLocal "\n1;\n";
-    close $fhLocal;
+    while (my $line = <$fhRead>)
+    {
+        chomp $line;
+        if ($line =~ m/#NEW SOFT ADDED AUTOMATICALLY/)
+        {
+            my $subFunction = $function;
+            $subFunction =~ s/$module//;
+            my $newName = "\n\t#FOR $function\n\tcase (\$name".' =~ m/^'."$module".'[\s|\.|\-| \/|\\|\|]*'."$subFunction".'/i'."){\$correctedName=\"$function\";} #Correction for $function";
+            $line .= "\n";
+            $line .= $newName;
+        }
+        elsif ($line =~ m/#INFOS FOR NEW TOOLS/)
+        {
+            my $newInfos = "'$function'=>{'IN' => '$in',\n\t\t'OUT'=>'$out',\n\t\t";
+            if ($mandatory ne "")
+            {
+                $newInfos .="'MANDATORY => '$mandatory',\n\t\t";
+            }
+            $version s=~/"/'/g;
+            $newInfos .="'cmdVersion' => \"$version\"},\n";
+            
+            $line .= "\n".$newInfos;
+        }
+        
+        
+        print $fhTmp $line;
+        print $fhTmp "\n";
+    }
+    close $fhTmp;
+    close $fhRead;
+    
+    my $replaceCom = "cp /tmp/tempModule.pm $toggle/modules/softwareManagement.pm && rm -f /tmp/tempModule.pm";
+    system ("$replaceCom") and die ("\nCannot replace the softwareManagement.pm file:\n$!\n");
 }
 #NEW SOFT ADDED AUTOMATICALLY
 
@@ -273,8 +302,9 @@ else
 
 
 print "Finished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
-    - $moduleFile
-    - localConfig.pm
+    - modules/$moduleFile
+    - modules/localConfig.pm
+    - modules/softwareManagement.pm
     - \n";
 
 exit;
