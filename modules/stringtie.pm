@@ -48,7 +48,8 @@ sub stringtie
     my $command;
     my $gtfFilesNames="";
     my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.config
-    ## DEBUG toolbox::exportLog("DEBUG: stringtie::stringtie : stringtie option equals to options $options",1);
+    ## DEBUG
+    toolbox::exportLog("DEBUG: stringtie::stringtie : stringtie option equals to options $options",1);
 
     if ($options =~ m/--merge/) # If --merge option is given, is mandatory to step >1000 so listOfGTF != "NA"
     {

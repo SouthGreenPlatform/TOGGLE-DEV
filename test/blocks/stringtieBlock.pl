@@ -62,11 +62,9 @@ system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test dire
 #Creating config file for this test
 my @listSoft = ("stringtie");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
-
 my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$bamSorted." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for stringtie";
-
 
 ## check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
@@ -89,18 +87,35 @@ print "\n\n#################################################\n";
 print "#### TEST stringtie with --merge option  TODO \n";
 print "#################################################\n";
 
-
 # Remove files and directory created by previous test
-#my $testingDir="$toggle/dataTest/stringtie-noSGE-Blocks";
-#my $cleaningCmd="rm -Rf $testingDir";
-#system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+$testingDir="$toggle/dataTest/stringtie-noSGE-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 #Creating config file for this test
-#Comment ajouter l'option merge et >1000? TODO
-#my @listSoft = ("stringtie");
-#fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+@listSoft = ("1000","stringtie");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+my $sed="sed -i -e 's|\$stringtie|\$stringtie\\n--merge\\n|'  blockTestConfig.txt"; #adding --merge option in blocktestconfig
+## DEBUG print $sed;
+system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
 
-#my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$gtf." -o ".$testingDir;
-#print "\n### Toggle running : $runCmd\n";
-#system("$runCmd") and die "#### ERROR : Can't run TOGGLE for stringtie";
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$gtf." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for stringtie";
+
+## check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults/`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('globalAnalysis.STRINGTIEMERGE.gtf');
+
+## expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two GTF (no SGE) stringtie file list');
+
+# expected output structure
+$expectedMD5sum = "981d3db4929a0bfbe75ccf575d1c7169";
+$observedMD5sum=`md5sum $testingDir/finalResults/globalAnalysis.STRINGTIEMERGE.gtf`;;# structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'toggleGenerator - Two GTF (no SGE) stringtie file content');
 
