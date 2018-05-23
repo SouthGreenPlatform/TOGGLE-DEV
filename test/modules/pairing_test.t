@@ -109,6 +109,11 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ########################################
 my $fastqPairedData="$toggle/data/testData/fastq/pairedTwoIndividusIrigin/";
 my $fastqSingleData="$toggle/data/testData/fastq/singleOneIndividuIrigin/";
+my $fastqDir="/fastqDir";
+mkdir $fastqDir;
+my $mkdirCmd= "mkdir  $testDir$fastqDir";           # command to copy the original fastq file into the test directory
+system ($mkdirCmd) and die ("ERROR: $0 : Cannot copy the repertory $testDir$fastqDir in the test directory with the command $mkdirCmd\n$!\n");    # RUN the copy command
+
 
 my $expectName1=("irigin3_1");
 my $expectRG1=("irigin3");
@@ -134,34 +139,33 @@ my $checkFastq = 1;
 
 # copy paired and single files into $testDir
 my $fastqFilePaired = $fastqPairedData."irigin*_*.fastq";     # fastq file
-my $copyCmd= "cp $fastqFilePaired $testDir";           # command to copy the original fastq file into the test directory
+my $copyCmd= "cp $fastqFilePaired $testDir$fastqDir";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFilePaired in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 my $fastqFileSingle = $fastqSingleData."irigin*_*.fastq";     # fastq file
-$copyCmd= "cp $fastqFileSingle $testDir";           # command to copy the original fastq file into the test directory
+$copyCmd= "cp $fastqFileSingle  $testDir$fastqDir";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFileSingle in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
 
 
 my $expectedOutput={
           '@H3:C39R6ACXX:3:1101:1215:1877' => {
                                                          'ReadGroup' => 'irigin1',
-                                                         'forward' => "$testDir/irigin1_1.fastq",
-                                                         'reverse' => "$testDir/irigin1_2.fastq"
+                                                         'forward' => "$testDir$fastqDir/irigin1_1.fastq",
+                                                         'reverse' => "$testDir$fastqDir/irigin1_2.fastq"
                                                        },
           '@H2:C381HACXX:5:1101:1359:1908' => {
                                                  'ReadGroup' => 'irigin3',
-                                                 'forward' => "$testDir/irigin3_1.fastq",
-                                                 'reverse' => "$testDir/irigin3_2.fastq"
+                                                 'forward' => "$testDir$fastqDir/irigin3_1.fastq",
+                                                 'reverse' => "$testDir$fastqDir/irigin3_2.fastq"
                                                },
           '@H3:C39R6ACXX:3:1101:1192:1848' => {
                                                    'ReadGroup' => 'irigin2',
-                                                   'forward' => "$testDir/irigin2_1.fastq",
+                                                   'forward' => "$testDir$fastqDir/irigin2_1.fastq",
                                                 }
         };
 
-my $observedOutput=pairing::pairRecognition("$testDir",$checkFastq);
-##DEBUG
-print "pairRecognition Expected :\n"; print Dumper ($expectedOutput);print "pairRecognition Observed:\n"; print Dumper ($observedOutput);
+my $observedOutput=pairing::pairRecognition("$testDir$fastqDir",$checkFastq);
+##DEBUG print "pairRecognition Expected :\n"; print Dumper ($expectedOutput);print "pairRecognition Observed:\n"; print Dumper ($observedOutput);
 is_deeply($observedOutput,$expectedOutput,'pairing::pairRecognition - output list');
 
 
@@ -169,30 +173,28 @@ is_deeply($observedOutput,$expectedOutput,'pairing::pairRecognition - output lis
 ##### pairing::createDirPerCouple
 ########################################
 
-my $checkValue3=pairing::createDirPerCouple($observedOutput,"$testDir");
+my $checkValue3=pairing::createDirPerCouple($observedOutput,"$testDir$fastqDir");
 is ($checkValue3,1,'pairing::createDirPerCouple - running');
 
 # Filetree expected
-my $expectedFileTree = "$testDir:
+my $expectedFileTree = "$testDir$fastqDir:
 irigin1
 irigin2
 irigin3
-pairing_log.e
-pairing_log.o
 
-$testDir/irigin1:
+$testDir$fastqDir/irigin1:
 irigin1_1.fastq
 irigin1_2.fastq
 
-$testDir/irigin2:
+$testDir$fastqDir/irigin2:
 irigin2_1.fastq
 
-$testDir/irigin3:
+$testDir$fastqDir/irigin3:
 irigin3_1.fastq
 irigin3_2.fastq
 ";
 
-my $observedFileTree = `ls -R $testDir`;
+my $observedFileTree = `ls -R $testDir$fastqDir`;
 
 ##DEBUG print "Expected: \n"; print Dumper ($expectedFileTree);print "Observed: \n"; print Dumper ($observedFileTree);
 is_deeply($observedFileTree,$expectedFileTree,'pairing::pairRecognition - Filetree created');
@@ -202,8 +204,8 @@ is_deeply($observedFileTree,$expectedFileTree,'pairing::pairRecognition - Filetr
 ########################################
 
 # input file
-my $rmDirCmd= "rm -r $testDir";           # command to copy the original fastq file into the test directory
-system ($rmDirCmd) and die ("ERROR: $0 : Cannot removed $testDir in the test directory with the command $rmDirCmd\n$!\n");    # RUN the rm command
+my $rmDirCmd= "rm -r $testDir$fastqDir";           # command to copy the original fastq file into the test directory
+system ($rmDirCmd) and die ("ERROR: $0 : Cannot removed $testDir$fastqDir in the test directory with the command $rmDirCmd\n$!\n");    # RUN the rm command
 
  $fastqPairedData="$toggle/data/testData/fastq/pairingRepairing/";
 # copy paired and single files into $testDir
