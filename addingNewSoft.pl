@@ -120,7 +120,7 @@ chomp $mandatory;
 
 while ($version eq "")
 {
-    print "\nHow do you obtain the version of your tool (e.g. 'bwa 2>&1| grep version' or 'java --version | grep Version' \n";
+    print "\nHow do you obtain the version of your tool (e.g. 'bwa 2>&1| grep version' or 'java --version | grep Version') \n";
     $version = <STDIN>;
     chomp $version;
     #Testing if the command version is ok
@@ -209,9 +209,72 @@ print $fhModule $subText;
 print $fhModule "\n\n1;\n";
 close $fhModule;
 
+#localConfig
+
+#check if the software name already exists
+$grep ="";
+$grepCom = "grep -c \"$module\" $toggle/modules/localConfig.pm 2>/dev/null";
+$grep = `$grepCom`;
+chomp $grep;
+if ($grep)
+{   #the function exists...
+    warn "\nThe function already exists in localConfig.pm\n";
+}
+else
+{
+    #the function is not registered
+    
+    #adding the soft name in the export
+    my $sedCom = "sed -i 's/^our \@EXPORT=qw(/our \@EXPORT=qw(\$$module /' $toggle/modules/localConfig.pm";
+    system("$sedCom") and die ("\nCannot add the software in the \@EXPORT:\n$!\n");
+    
+    #adding the path at the end of the file
+    $sedCom = "sed -i 's/^1;\$//' $toggle/modules/localConfig.pm";
+    system("$sedCom") and die ("\nCannot remove the previous 1;:\n$!\n");
+
+    my $localLine = "#Path to $module\nour \$$module=\"/path/to/$module\";\n\n";
+    open (my $fhLocal, ">>", "$toggle/modules/localConfig.pm") or die ("\nCannot open for writing the file localConfig.pm:\n$!\n");
+    print $fhLocal $localLine;
+    print $fhLocal "\n1;\n";
+    close $fhLocal;
+}
+
+#function name
+$grep ="";
+$grepCom = "grep -c \"$function\" $toggle/modules/softwareManagement.pm 2>/dev/null";
+$grep = `$grepCom`;
+chomp $grep;
+if ($grep)
+{   #the function exists...
+    warn "\nThe function already exists in softwareManagement.pm\n";
+}
+else
+{
+    #the function is not registered
+    
+    #adding the soft correct name
+    #my $sedCom = "sed -i 's/^#NEW SOFT ADDED AUTOMATICALLY/#NEW SOFT ADDED AUTOMATICALLY";
+    open (my $fhTmp, ">", "/tmp/tempModule.pm") or die ("\nCannot open for writing the temp file /tmp/tempModule.pm:\n$!\n");
+    open (my $fhRead "<", "$toggle/modules/softwareManagement.pm") or die ("\nCannot open for reading the module softwaremanagement:\n$!\n");
+    
+    print $fhLocal $localLine;
+    print $fhLocal "\n1;\n";
+    close $fhLocal;
+}
+#NEW SOFT ADDED AUTOMATICALLY
+
+#Input/output
+
+#versionSoft
+
+#BLOCK CREATION
+
+
+
 
 print "Finished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
     - $moduleFile
+    - localConfig.pm
     - \n";
 
 exit;
