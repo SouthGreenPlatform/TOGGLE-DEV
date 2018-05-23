@@ -48,6 +48,7 @@ my $dataRefArcad = "$toggle/data/Bank/referenceArcad.fasta";
 my $dataOneBam = "$toggle/data/testData/samBam/oneBam/";
 
 
+
 print "\n\n#################################################\n";
 print "#### TEST gatk BaseRecalibrator\n";
 print "#################################################\n";
@@ -121,7 +122,7 @@ $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 #Creating config file for this test
-@listSoft = ("gatkBaseRecalibrator","gatkIndelRealigner");
+@listSoft = ("samToolsIndex","gatkRealignerTargetCreator","gatkIndelRealigner");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;

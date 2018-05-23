@@ -223,7 +223,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateScript - output l
 
 # expected content test
 
-my $expectedMD5sum="7ee0c081a08c144852310b51670cd07e";
+my $expectedMD5sum="1615fe084f4bbc57921ab0a36a6b3b82";
 my $observedMD5sum=`md5sum $outputScript`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
