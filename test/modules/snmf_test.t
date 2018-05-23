@@ -41,7 +41,7 @@ use Data::Dumper;
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
 
-# Load localConfig if primary test is successful 
+# Load localConfig if primary test is successful
 use_ok('localConfig') or exit;
 use localConfig;
 
@@ -103,7 +103,7 @@ my %optionsRef = ();
 my $optionsHachees = \%optionsRef;
 
 # input file
-my $vcfFile = "$toggle/data/testData/vcf/testsnmf.vcf";
+my $vcfFile = "$toggle/data/testData/vcf/vcfForSNiPlay/testsnmf.vcf";
 my $fileOut = "testsnmf";
 
 #execution test
