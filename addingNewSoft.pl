@@ -316,30 +316,32 @@ else
     my @formatList;
     my $fileInType;
     my $fileOutName;
+    my $functionName=uc($function);
+    
     switch(1)
     {
-        case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='$fastqForwardIn';}
-        case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='$fastaFileIn';}
-        case ($in =~ m/sam/ ) { push @formatList, "sam\$"; $fileInType='$samFileIn';}
-        case ($in =~ m/bam/ ) { push @formatList, "bam\$"; $fileInType='$bamFileIn';}
-        case ($in =~ m/vcf/ ) { push @formatList, "vcf\$\|vcf.gz\$"; $fileInType='$vcfFileIn';}
-        case ($in =~ m/bed/ ) { push @formatList, "bed\$\|bed.gz\$"; $fileInType='$bedFileIn';}
-        case ($in =~ m/ped/ ) { push @formatList, "ped\$\|ped.gz\$"; $fileInType='$pedFileIn';}
-        case ($in =~ m/phylip/ ) { push @formatList, "phy\$"; $fileInType='$phylipFileIn';}
-        case ($in =~ m/readseq/ ) { push @formatList, "readseq\$"; $fileInType='$readseqFileIn';}
+        case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='\$fastqForwardIn';}
+        case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='\$fastaFileIn';}
+        case ($in =~ m/sam/ ) { push @formatList, "sam\$"; $fileInType='\$samFileIn';}
+        case ($in =~ m/bam/ ) { push @formatList, "bam\$"; $fileInType='\$bamFileIn';}
+        case ($in =~ m/vcf/ ) { push @formatList, "vcf\$\|vcf.gz\$"; $fileInType='\$vcfFileIn';}
+        case ($in =~ m/bed/ ) { push @formatList, "bed\$\|bed.gz\$"; $fileInType='\$bedFileIn';}
+        case ($in =~ m/ped/ ) { push @formatList, "ped\$\|ped.gz\$"; $fileInType='\$pedFileIn';}
+        case ($in =~ m/phylip/ ) { push @formatList, "phy\$"; $fileInType='\$phylipFileIn';}
+        case ($in =~ m/readseq/ ) { push @formatList, "readseq\$"; $fileInType='\$readseqFileIn';}
         else {push @formatList, "*"; $fileInType='$fileIn';}
     }
+    $format=join('\|',@formatList);
+    
      switch(1)
     {
-        case ($out =~ m/fastq/ ) {$fileOutName='$fastqForwardOut';}
-        case ($in =~ m/fasta/ ) {$fileOutName='$fastaFileOut';}
-        case ($in =~ m/sam/ ) {$fileOutName='$samFileOut';}
-        case ($in =~ m/bam/ ) {$fileOutName='$bamFileOut';}
-        case ($in =~ m/vcf/ ) {$fileOutName='$vcfFileOut';}
-        case ($in =~ m/bed/ ) {$fileOutName='$bedFileOut';}
-        case ($in =~ m/ped/ ) {$fileOutName='$phylipFileIn';}
-        case ($in =~ m/readseq/ ) {$fileOutName='$readseqFileIn';}
-        else {push @formatList, "*"; $fileOutName='$fileOut';}
+        case ($out =~ m/fastq/ ) {$fileOutName='$fastqForwardOut';$formatOut="fastq"}
+        case ($out =~ m/fasta/ ) {$fileOutName='$fastaFileOut';$formatOut="fasta"}
+        case ($out =~ m/sam/ ) {$fileOutName='$samFileOut';$formatOut="sam"}
+        case ($out =~ m/bam/ ) {$fileOutName='$bamFileOut';$formatOut="bam"}
+        case ($out =~ m/vcf/ ) {$fileOutName='$vcfFileOut';$formatOut="vcf"}
+        case ($out =~ m/bed/ ) {$fileOutName='$bedFileOut';$formatOut="bed"}
+        else {$fileOutName='$fileOut';$formatOut="txt"}
     }
     
     $localLine.="
@@ -352,32 +354,29 @@ else
 
 foreach my \$file (\@{\$fileList}) #Checking the type of files that must be BAM
 {
-    if (\$file =~ m/bam\$/) # the file type is normally bam
+    if (\$file =~ m/$format/) # the file type is normally $format
     {
-        if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
+        if (\$file ne \"NA\") # Already a $format recognized
         {
-            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
+            toolbox::exportLog(\"ERROR : \$0 : there are more than one single $format file at \$stepName step.\\n\",0);
         }
         else
         {
-            $bamFileIn = $file;
+            $fileInType = \$file;
         }
     }
 }
 
-if ($bamFileIn eq "NA") #No BAM file found in the previous folder
+if ($format eq \"NA\") #No $format file found in the previous folder
 {
-    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
+    toolbox::exportLog(\"ERROR : \$0 : No $format file found in \$previousDir at step \$stepName.\\n\",0);
 }
 
-$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools sort
+\$softParameters = toolbox::extractHashSoft(\$optionRef,\$stepName);                                # recovery of specific parameters of $function
 
-$bamFileOut = "$newDir"."/"."$readGroup".".SAMTOOLSSORT.bam";
-samTools::samToolsSort($bamFileIn,$bamFileOut,$softParameters);   # Sending to samtools sort function
+$fileOutName = \"\$newDir\".\"/\".\"\$readGroup\".\"\.$functionName\.$formatOut\";
+$module::$function($fileInType,$fileOutName,\$softParameters);   # Sending to $function
 
-    
-    
-    
     ";
     print $fhBlock $localLine;   
 }
