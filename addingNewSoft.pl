@@ -34,6 +34,7 @@ use strict;
 use warnings;
 use Data::Dumper;
 use localConfig;
+use Switch;
 
 #This tool will allows developer to add easily a new software in TOGGLe
 
@@ -150,7 +151,7 @@ while ($commandLine eq "")
 #Creating the text
 my $subText=$subName."\n{\n";
 
-$subText .= "#The standard way to write variables are:\n#REFERENCE = \$reference"
+$subText .= "#The standard way to write variables are:\n#REFERENCE = \$reference";
 $subText .= '#PLEASE CHECK IF IT IS OK AT THIS POINT!!'."\n\t".'my ($fileIn,$fileOut,';
 $subText .= '$reference,' if $commandLine =~ m/REFERENCE/;
 $subText .= '$gff,' if $commandLine =~ m/GFF|GTF/;
@@ -199,10 +200,10 @@ $subText .= "\t".'$options = toolbox::extractOptions($optionsHachees) if $option
 $subText .= "\t#Execute command\n";
 $commandLine =~ s/FILEIN/\$fileIn/;
 $commandLine =~ s/FILEOUT/\$fileOut/;
-$commandLine =~ s/REFERENCE/$reference/;
-$commandLine =~ s/GFF/$gff/;
-$commandLine =~ s/KEYFILE/$keyfile/;
-$commandLine =~ s/VCF/$vcf/;
+$commandLine =~ s/REFERENCE/\$reference/;
+$commandLine =~ s/GFF/\$gff/;
+$commandLine =~ s/KEYFILE/\$keyfile/;
+$commandLine =~ s/VCF/\$vcf/;
 $commandLine =~ s/\[options\]/\$options/;
 $subText .= "\tmy \$command = \"\$$commandLine\" ;";
 
@@ -283,9 +284,9 @@ else
             my $newInfos = "'$function'=>{'IN' => '$in',\n\t\t'OUT'=>'$out',\n\t\t";
             if ($mandatory ne "")
             {
-                $newInfos .="'MANDATORY => '$mandatory',\n\t\t";
+                $newInfos .="'MANDATORY' => '$mandatory',\n\t\t";
             }
-            $version s=~/"/'/g;
+            $version =~s/"/'/g;
             $newInfos .="'cmdVersion' => \"$version\"},\n";
             
             $line .= "\n".$newInfos;
@@ -309,10 +310,11 @@ if (-e "$toggle/onTheFly/$blockName")
     print "The block exists already\n";    
 }
 else
-{
-    open (my $fhBlock, ">>", "$toggle/onTheFly/$blockName") or die ("\nCannot open for writing the file $blockName:\n$!\n");
+{ 
+    open (my $fhBlock, ">>", "$toggle/onTheFly/$blockName") or die ("\nCannot open for writing the file $blockName :\n$!\n");
     my $localLine;
     my $format;
+    my $formatOut;
     my @formatList;
     my $fileInType;
     my $fileOutName;
@@ -320,16 +322,16 @@ else
     
     switch(1)
     {
-        case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='\$fastqForwardIn';}
-        case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='\$fastaFileIn';}
-        case ($in =~ m/sam/ ) { push @formatList, "sam\$"; $fileInType='\$samFileIn';}
-        case ($in =~ m/bam/ ) { push @formatList, "bam\$"; $fileInType='\$bamFileIn';}
-        case ($in =~ m/vcf/ ) { push @formatList, "vcf\$\|vcf.gz\$"; $fileInType='\$vcfFileIn';}
-        case ($in =~ m/bed/ ) { push @formatList, "bed\$\|bed.gz\$"; $fileInType='\$bedFileIn';}
-        case ($in =~ m/ped/ ) { push @formatList, "ped\$\|ped.gz\$"; $fileInType='\$pedFileIn';}
-        case ($in =~ m/phylip/ ) { push @formatList, "phy\$"; $fileInType='\$phylipFileIn';}
-        case ($in =~ m/readseq/ ) { push @formatList, "readseq\$"; $fileInType='\$readseqFileIn';}
-        else {push @formatList, "*"; $fileInType='$fileIn';}
+        case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='$fastqForwardIn';}
+        case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='$fastaFileIn';}
+        case ($in =~ m/sam/ ) { push @formatList, "sam\$"; $fileInType='$samFileIn';}
+        case ($in =~ m/bam/ ) { push @formatList, "bam\$"; $fileInType='$bamFileIn';}
+        case ($in =~ m/vcf/ ) { push @formatList, "vcf\$\|vcf.gz\$"; $fileInType='$vcfFileIn';}
+        case ($in =~ m/bed/ ) { push @formatList, "bed\$\|bed.gz\$"; $fileInType='$bedFileIn';}
+        case ($in =~ m/ped/ ) { push @formatList, "ped\$\|ped.gz\$"; $fileInType='$pedFileIn';}
+        case ($in =~ m/phylip/ ) { push @formatList, "phy\$"; $fileInType='$phylipFileIn';}
+        case ($in =~ m/readseq/ ) { push @formatList, "readseq\$"; $fileInType='$readseqFileIn';}
+        else {push @formatList, "*"; $fileInType='$fileIn'};
     }
     $format=join('\|',@formatList);
     
@@ -341,7 +343,7 @@ else
         case ($out =~ m/bam/ ) {$fileOutName='$bamFileOut';$formatOut="bam"}
         case ($out =~ m/vcf/ ) {$fileOutName='$vcfFileOut';$formatOut="vcf"}
         case ($out =~ m/bed/ ) {$fileOutName='$bedFileOut';$formatOut="bed"}
-        else {$fileOutName='$fileOut';$formatOut="txt"}
+        else {$fileOutName='$fileOut'; $formatOut="txt"};
     }
     
     $localLine.="
@@ -352,7 +354,7 @@ else
 
 #Correct variable populating
 
-foreach my \$file (\@{\$fileList}) #Checking the type of files that must be BAM
+foreach my \$file (\@{\$fileList}) #Checking the type of files that must be $format
 {
     if (\$file =~ m/$format/) # the file type is normally $format
     {
@@ -381,49 +383,13 @@ $module::$function($fileInType,$fileOutName,\$softParameters);   # Sending to $f
     print $fhBlock $localLine;   
 }
 
-
-
-###########################################
-## Block for samtools sort
-###########################################
-#
-##Correct variable populating
-#
-#foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
-#{
-#    if ($file =~ m/bam$/) # the file type is normally bam
-#    {
-#        if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
-#        {
-#            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
-#        }
-#        else
-#        {
-#            $bamFileIn = $file;
-#        }
-#    }
-#}
-#
-#if ($bamFileIn eq "NA") #No BAM file found in the previous folder
-#{
-#    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
-#}
-#
-#$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools sort
-#
-#$bamFileOut = "$newDir"."/"."$readGroup".".SAMTOOLSSORT.bam";
-#samTools::samToolsSort($bamFileIn,$bamFileOut,$softParameters);   # Sending to samtools sort function
-#
-
-
-
-
+close $fhBlock;
 
 
 print "Finished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
     - modules/$moduleFile
     - modules/localConfig.pm
     - modules/softwareManagement.pm
-    - \n";
+    - onTheFly/$blockName\n";
 
 exit;
