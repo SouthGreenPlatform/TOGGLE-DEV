@@ -301,13 +301,122 @@ else
     my $replaceCom = "cp /tmp/tempModule.pm $toggle/modules/softwareManagement.pm && rm -f /tmp/tempModule.pm";
     system ("$replaceCom") and die ("\nCannot replace the softwareManagement.pm file:\n$!\n");
 }
-#NEW SOFT ADDED AUTOMATICALLY
-
-#Input/output
-
-#versionSoft
 
 #BLOCK CREATION
+my $blockName=$function."Block.txt";
+if (-e "$toggle/onTheFly/$blockName")
+{
+    print "The block exists already\n";    
+}
+else
+{
+    open (my $fhBlock, ">>", "$toggle/onTheFly/$blockName") or die ("\nCannot open for writing the file $blockName:\n$!\n");
+    my $localLine;
+    my $format;
+    my @formatList;
+    my $fileInType;
+    my $fileOutName;
+    switch(1)
+    {
+        case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='$fastqForwardIn';}
+        case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='$fastaFileIn';}
+        case ($in =~ m/sam/ ) { push @formatList, "sam\$"; $fileInType='$samFileIn';}
+        case ($in =~ m/bam/ ) { push @formatList, "bam\$"; $fileInType='$bamFileIn';}
+        case ($in =~ m/vcf/ ) { push @formatList, "vcf\$\|vcf.gz\$"; $fileInType='$vcfFileIn';}
+        case ($in =~ m/bed/ ) { push @formatList, "bed\$\|bed.gz\$"; $fileInType='$bedFileIn';}
+        case ($in =~ m/ped/ ) { push @formatList, "ped\$\|ped.gz\$"; $fileInType='$pedFileIn';}
+        case ($in =~ m/phylip/ ) { push @formatList, "phy\$"; $fileInType='$phylipFileIn';}
+        case ($in =~ m/readseq/ ) { push @formatList, "readseq\$"; $fileInType='$readseqFileIn';}
+        else {push @formatList, "*"; $fileInType='$fileIn';}
+    }
+     switch(1)
+    {
+        case ($out =~ m/fastq/ ) {$fileOutName='$fastqForwardOut';}
+        case ($in =~ m/fasta/ ) {$fileOutName='$fastaFileOut';}
+        case ($in =~ m/sam/ ) {$fileOutName='$samFileOut';}
+        case ($in =~ m/bam/ ) {$fileOutName='$bamFileOut';}
+        case ($in =~ m/vcf/ ) {$fileOutName='$vcfFileOut';}
+        case ($in =~ m/bed/ ) {$fileOutName='$bedFileOut';}
+        case ($in =~ m/ped/ ) {$fileOutName='$phylipFileIn';}
+        case ($in =~ m/readseq/ ) {$fileOutName='$readseqFileIn';}
+        else {push @formatList, "*"; $fileOutName='$fileOut';}
+    }
+    
+    $localLine.="
+    
+###########################################
+## Block for $function
+###########################################
+
+#Correct variable populating
+
+foreach my \$file (\@{\$fileList}) #Checking the type of files that must be BAM
+{
+    if (\$file =~ m/bam\$/) # the file type is normally bam
+    {
+        if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
+        }
+        else
+        {
+            $bamFileIn = $file;
+        }
+    }
+}
+
+if ($bamFileIn eq "NA") #No BAM file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools sort
+
+$bamFileOut = "$newDir"."/"."$readGroup".".SAMTOOLSSORT.bam";
+samTools::samToolsSort($bamFileIn,$bamFileOut,$softParameters);   # Sending to samtools sort function
+
+    
+    
+    
+    ";
+    print $fhBlock $localLine;   
+}
+
+
+
+###########################################
+## Block for samtools sort
+###########################################
+#
+##Correct variable populating
+#
+#foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
+#{
+#    if ($file =~ m/bam$/) # the file type is normally bam
+#    {
+#        if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
+#        {
+#            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
+#        }
+#        else
+#        {
+#            $bamFileIn = $file;
+#        }
+#    }
+#}
+#
+#if ($bamFileIn eq "NA") #No BAM file found in the previous folder
+#{
+#    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
+#}
+#
+#$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools sort
+#
+#$bamFileOut = "$newDir"."/"."$readGroup".".SAMTOOLSSORT.bam";
+#samTools::samToolsSort($bamFileIn,$bamFileOut,$softParameters);   # Sending to samtools sort function
+#
+
+
 
 
 
