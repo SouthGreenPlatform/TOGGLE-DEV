@@ -136,7 +136,7 @@ chomp $testParams;
 my $commandLine="";
 while ($commandLine eq "")
 {
-    print "\nWhat is the standard command line to launch your tool ?\n\t- A file in must be written FILEIN\n\t- a file out must be written FILEOUT\n\t- Options location must be written as [options]\n\t- Reference must be written as REFERENCE\n";
+    print "\nWhat is the standard command line to launch your tool ?\n\t- A file in must be written FILEIN\n\t- a file out must be written FILEOUT\n\t- Options location must be written as [options]\n\t- Reference must be written as REFERENCE\n\t- Gff/Gtf must be written as GFF\n\t- Keyfile must be written as KEYFILE\n\t- Vcf must be written as VCF\n";
     print "\nAn example for bwa aln will be:\n\tbwa aln [options] FILEOUT REFERENCE FILEIN\n\n";
     print "\n**NOTE You may have to adapt and correct this command at this end...\n";
     $commandLine=<STDIN>;
@@ -150,11 +150,18 @@ while ($commandLine eq "")
 #Creating the text
 my $subText=$subName."\n{\n";
 
-$subText.= '#PLEASE CHECK IF IT IS OK AT THIS POINT!!'."\n\t".'my ($fileIn,$fileOut,$optionsHachees) = @_;'."\n";
+$subText .= "#The standard way to write variables are:\n#REFERENCE = \$reference"
+$subText .= '#PLEASE CHECK IF IT IS OK AT THIS POINT!!'."\n\t".'my ($fileIn,$fileOut,';
+$subText .= '$reference,' if $commandLine =~ m/REFERENCE/;
+$subText .= '$gff,' if $commandLine =~ m/GFF|GTF/;
+$subText .= '$keyfile,' if $commandLine =~ m/KEYFILE/;
+$subText .= '$vcf,' if $commandLine =~ m/VCF/;
+$subText .= '$optionsHachees) = @_;'."\n";
+
 
 #Testing the type of IN OUT and mandatory to generate the input output files variables
 
-$subText.= "\tmy \$validation = 0;\n\tswitch (1)\n\t{";
+$subText .= "\tmy \$validation = 0;\n\tswitch (1)\n\t{";
 
 my %formatValidator = (
                         fasta =>"\n\t\t".'case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}',
@@ -192,6 +199,10 @@ $subText .= "\t".'$options = toolbox::extractOptions($optionsHachees) if $option
 $subText .= "\t#Execute command\n";
 $commandLine =~ s/FILEIN/\$fileIn/;
 $commandLine =~ s/FILEOUT/\$fileOut/;
+$commandLine =~ s/REFERENCE/$reference/;
+$commandLine =~ s/GFF/$gff/;
+$commandLine =~ s/KEYFILE/$keyfile/;
+$commandLine =~ s/VCF/$vcf/;
 $commandLine =~ s/\[options\]/\$options/;
 $subText .= "\tmy \$command = \"\$$commandLine\" ;";
 
