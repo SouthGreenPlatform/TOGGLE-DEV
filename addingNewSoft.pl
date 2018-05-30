@@ -305,7 +305,7 @@ else
 
 #BLOCK CREATION
 my $blockName=$function."Block.txt";
-if (-e "$toggle/onTheFly/$blockName")
+if (-e "$toggle/onTheFly/$blockName") # verifying block does not exist
 {
     print "The block exists already\n";    
 }
@@ -320,7 +320,7 @@ else
     my $fileOutName;
     my $functionName=uc($function);
     
-    switch(1)
+    switch(1) #populating $format to identify input and output formats
     {
         case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='$fastqForwardIn';}
         case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='$fastaFileIn';}
@@ -345,7 +345,7 @@ else
         case ($out =~ m/bed/ ) {$fileOutName='$bedFileOut';$formatOut="bed"}
         else {$fileOutName='$fileOut'; $formatOut="txt"};
     }
-    
+    #writting general block
     $localLine.="
     
 ###########################################
@@ -391,5 +391,7 @@ print "Finished...\n\n Please have a look to the following files to check if eve
     - modules/localConfig.pm
     - modules/softwareManagement.pm
     - onTheFly/$blockName\n";
+
+
 
 exit;
