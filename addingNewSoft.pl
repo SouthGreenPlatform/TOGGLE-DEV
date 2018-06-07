@@ -335,6 +335,9 @@ else
         else {push @formatList, "*"; $fileInType='$fileIn'};
     }
     $format=join('\|',@formatList);
+    my $formatPlain = $format;
+    $formatPlain =~ s/\$/ /g;
+    $formatPlain =~ s/\|/ /g;
     
      switch (1)
     {
@@ -355,13 +358,13 @@ else
 
 #Correct variable populating
 
-foreach my \$file (\@{\$fileList}) #Checking the type of files that must be $format
+foreach my \$file (\@{\$fileList}) #Checking the type of files that must be $formatPlain
 {
-    if (\$file =~ m/$format/) # the file type is normally $format
+    if (\$file =~ m/$format/) # the file type is normally $formatPlain
     {
-        if (\$file ne \"NA\") # Already a $format recognized
+        if (\$file ne \"NA\") # Already a $formatPlain recognized
         {
-            toolbox::exportLog(\"ERROR : \$0 : there are more than one single $format file at \$stepName step.\\n\",0);
+            toolbox::exportLog(\"ERROR : \$0 : there are more than one single $formatPlain file at \$stepName step.\\n\",0);
         }
         else
         {
@@ -370,15 +373,23 @@ foreach my \$file (\@{\$fileList}) #Checking the type of files that must be $for
     }
 }
 
-if ($format eq \"NA\") #No $format file found in the previous folder
+if (\$file eq \"NA\") #No $format file found in the previous folder
 {
-    toolbox::exportLog(\"ERROR : \$0 : No $format file found in \$previousDir at step \$stepName.\\n\",0);
+    toolbox::exportLog(\"ERROR : \$0 : No $formatPlain file found in \$previousDir at step \$stepName.\\n\",0);
 }
 
 \$softParameters = toolbox::extractHashSoft(\$optionRef,\$stepName);                                # recovery of specific parameters of $function
 
 $fileOutName = \"\$newDir\".\"/\".\"\$readGroup\".\"\.$functionName\.$formatOut\";
-$module::$function($fileInType,$fileOutName,\$softParameters);   # Sending to $function
+$module::$function($fileInType,$fileOutName,";
+
+$localLine .= '$reference,' if $commandLine =~ m/REFERENCE/;
+$localLine .= '$gff,' if $commandLine =~ m/GFF|GTF/;
+$localLine .= '$keyfile,' if $commandLine =~ m/KEYFILE/;
+$localLine .= '$vcf,' if $commandLine =~ m/VCF/;
+
+
+$localLine. = "\$softParameters);   # Sending to $function
 
     ";
     print $fhBlock $localLine;
