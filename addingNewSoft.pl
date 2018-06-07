@@ -389,7 +389,7 @@ $localLine .= '$keyfile,' if $commandLine =~ m/KEYFILE/;
 $localLine .= '$vcf,' if $commandLine =~ m/VCF/;
 
 
-$localLine. = "\$softParameters);   # Sending to $function
+$localLine .= "\$softParameters);   # Sending to $function
 
     ";
     print $fhBlock $localLine;
