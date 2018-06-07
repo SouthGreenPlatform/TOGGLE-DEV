@@ -115,6 +115,9 @@ sub correctName
         case ($name =~ m/^scp/i or $name =~ m/^rsync/i or $name =~ m/^transfer/i){$correctedName="scp";} #Correction for scp transfer
 
         #NEW SOFT ADDED AUTOMATICALLY
+
+	#FOR totoTUTU
+	case ($name =~ m/^toto[\s|\.|\-| \/|\|\|]*TUTU/i){$correctedName="totoTUTU";} #Correction for totoTUTU
         
         #FOR bwa.pm
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
@@ -271,6 +274,9 @@ sub correctName
 #######################################################
 
 my %softInfos = {
+    
+#INFOS FOR NEW TOOLS
+    
 'abyss' =>{'IN' => 'fasta,fastq,sam,bam',
                  'OUT' => 'fasta',
                  'cmdVersion' => "$abyss --version | grep 'GNU Make' " },
