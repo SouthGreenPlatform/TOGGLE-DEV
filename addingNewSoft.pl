@@ -65,7 +65,7 @@ my $moduleFile = $module.".pm";
 
 unless (-f "$toggle/modules/$moduleFile")
 {   #We create the module if it does not exists
-    open (my $fhTemplate, "<", "$toggle/modules/module_template.pm") or die ("\nCannot open the module_template file:\n$!\n");
+    open (my $fhTemplate, "<", "$toggle/modules/module_template.pm") or die ("\nCannot open the $toggle/modules/module_template.pm module_template file:\n$!\n");
     open (my $fhModule, ">", "$toggle/modules/$moduleFile") or die  ("\nCannot create the $moduleFile file:\n$!\n");
     
     while (my $line = <$fhTemplate>)
@@ -320,22 +320,23 @@ else
     my $fileOutName;
     my $functionName=uc($function);
     
-    switch(1) #populating $format to identify input and output formats
+    #populating $format to identify input and output formats
+    switch (1) 
     {
-        case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='$fastqForwardIn';}
-        case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='$fastaFileIn';}
-        case ($in =~ m/sam/ ) { push @formatList, "sam\$"; $fileInType='$samFileIn';}
-        case ($in =~ m/bam/ ) { push @formatList, "bam\$"; $fileInType='$bamFileIn';}
-        case ($in =~ m/vcf/ ) { push @formatList, "vcf\$\|vcf.gz\$"; $fileInType='$vcfFileIn';}
-        case ($in =~ m/bed/ ) { push @formatList, "bed\$\|bed.gz\$"; $fileInType='$bedFileIn';}
-        case ($in =~ m/ped/ ) { push @formatList, "ped\$\|ped.gz\$"; $fileInType='$pedFileIn';}
-        case ($in =~ m/phylip/ ) { push @formatList, "phy\$"; $fileInType='$phylipFileIn';}
-        case ($in =~ m/readseq/ ) { push @formatList, "readseq\$"; $fileInType='$readseqFileIn';}
+        case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='$fastqForwardIn'}
+        case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='$fastaFileIn'}
+        case ($in =~ m/sam/ ) { push @formatList, "sam\$"; $fileInType='$samFileIn'}
+        case ($in =~ m/bam/ ) { push @formatList, "bam\$"; $fileInType='$bamFileIn'}
+        case ($in =~ m/vcf/ ) { push @formatList, "vcf\$\|vcf.gz\$"; $fileInType='$vcfFileIn'}
+        case ($in =~ m/bed/ ) { push @formatList, "bed\$\|bed.gz\$"; $fileInType='$bedFileIn'}
+        case ($in =~ m/ped/ ) { push @formatList, "ped\$\|ped.gz\$"; $fileInType='$pedFileIn'}
+        case ($in =~ m/phylip/ ) { push @formatList, "phy\$"; $fileInType='$phylipFileIn'}
+        case ($in =~ m/readseq/ ) { push @formatList, "readseq\$"; $fileInType='$readseqFileIn'}
         else {push @formatList, "*"; $fileInType='$fileIn'};
     }
     $format=join('\|',@formatList);
     
-     switch(1)
+     switch (1)
     {
         case ($out =~ m/fastq/ ) {$fileOutName='$fastqForwardOut';$formatOut="fastq"}
         case ($out =~ m/fasta/ ) {$fileOutName='$fastaFileOut';$formatOut="fasta"}
@@ -380,18 +381,155 @@ $fileOutName = \"\$newDir\".\"/\".\"\$readGroup\".\"\.$functionName\.$formatOut\
 $module::$function($fileInType,$fileOutName,\$softParameters);   # Sending to $function
 
     ";
-    print $fhBlock $localLine;   
+    print $fhBlock $localLine;
+    close $fhBlock;
 }
 
-close $fhBlock;
 
 
+
+
+#TEST MODULE
+my $moduleTest=$module."_test.t";
+if (-e "$toggle/test/modules/$moduleTest") # verifying module does not exist
+{
+    print "The module $moduleTest exists already\n";    
+}
+else
+{ 
+    open (my $fhModule, ">>", "$toggle/test/modules/$moduleTest") or die ("\nCannot open for writing the file $moduleTest :\n$!\n");
+    my $localLine;
+    $localLine.="
+        
+    #!/usr/bin/perl
+
+    ###################################################################################################################################
+    #
+    # Copyright 2014-2018 IRD-CIRAD-INRA-ADNid
+    #
+    # This program is free software; you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation; either version 3 of the License, or
+    # (at your option) any later version.
+    #
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    # GNU General Public License for more details.
+    #
+    # You should have received a copy of the GNU General Public License
+    # along with this program; if not, see <http://www.gnu.org/licenses/> or
+    # write to the Free Software Foundation, Inc.,
+    # 51 Franklin Street, Fifth Floor, Boston,
+    # MA 02110-1301, USA.
+    #
+    # You should have received a copy of the CeCILL-C license with this program.
+    #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
+    #
+    # Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+    # Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+    # Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+    # Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+    #
+    ###################################################################################################################################
+    
+    ######################################################################################################################################
+    ######################################################################################################################################
+    ## COMMON MODULE TEST HEADER
+    ######################################################################################################################################
+    ######################################################################################################################################
+    
+    use strict;
+    use warnings;
+    use Data::Dumper;
+    
+    use Test::More \'no_plan\'; #Number of tests, to modify if new tests implemented. Can be changed as \'no_plan\' instead of tests=>11 .
+    use Test::Deep;
+    
+    # Load localConfig if primary test is successful
+    use_ok(\'localConfig\') or exit;
+    use localConfig;
+    
+    
+    ########################################
+    # Extract automatically tool name and sub name list
+    ########################################
+    my (\$toolName,\$tmp) = split /_/ , \$0;
+    my \$subFile=\$toggle.\"/modules/\".\$toolName.\".pm\";
+    my \@sub = `grep \"^sub\" \$subFile`or die (\"ERROR: \$0 : Cannot extract automatically sub name list by grep command \\n\$!\\n\");
+    
+    
+    ########################################
+    #Automatically module test with use_ok and can_ok
+    ########################################
+    
+    use_ok(\$toolName) or exit;
+    eval \"use \$toolName\";
+    
+    foreach my \$subName (\@sub)
+    {
+        chomp (\$subName);
+        \$subName =~ s/sub //;
+        can_ok(\$toolName,\$subName);
+    }
+    
+    #########################################
+    #Preparing test directory
+    #########################################
+    my \$testDir=\"\$toggle/dataTest/\$toolName\".\"TestModule\";
+    my \$cmd=\"rm -Rf \$testDir ; mkdir -p \$testDir\";
+    system(\$cmd) and die (\"ERROR: \$0 : Cannot execute the test directory \$testDir (\$toolName) with the following cmd \$cmd\\n\$!\\n\");
+    chdir \$testDir or die (\"ERROR: \$0 : Cannot go into the test directory \$testDir (\$toolName) with the chdir cmd \\n\$!\\n\");
+    
+    
+    #########################################
+    #Creating log file
+    #########################################
+    my \$logFile=\$toolName.\"_log.o\";
+    my \$errorFile=\$toolName.\"_log.e\";
+    system(\"touch \$testDir/\$logFile \$testDir/\$errorFile\") and die \"\\nERROR: \$0 : cannot create the log files \$logFile and \$errorFile: \$!\\nExiting...\\n\";
+    
+    ######################################################################################################################################
+    ######################################################################################################################################
+    
+         
+     
+    ##########################################
+    ### input output Options
+    ##########################################
+    
+    my \%optionsHachees = ();                # Hash containing informations
+    my \$optionHachees = \\%optionsHachees;   # Ref of the hash
+
+    ##########################################
+    ##### $module::$function 
+    ##########################################
+     
+     
+    
+    is($module::$function(FILEIN,FILEOUT,\$optionHachees),1,'$module::$function  - Test for $function running);
+    
+    # expected output test
+    my \$observedOutput = \`ls\`;
+    my \@observedOutput = split /\\n/,\$observedOutput;
+    my \@expectedOutput = (\'FILEOUT\',\'".$module."_log.e\',\'".$module."_log.o\');
+    is_deeply(\\\@observedOutput,\\\@expectedOutput,\'$module::$function - output list\');
+    
+    ################ TODO add test for output content
+    ";
+    
+    print $fhModule $localLine;
+}
+
+close $fhModule;
+
+
+# list of files to check
 print "Finished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
     - modules/$moduleFile
     - modules/localConfig.pm
     - modules/softwareManagement.pm
-    - onTheFly/$blockName\n";
-
-
+    - onTheFly/$blockName
+    - test/modules/$moduleTest\n";
 
 exit;
