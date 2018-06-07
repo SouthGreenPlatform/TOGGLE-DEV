@@ -383,10 +383,10 @@ if (\$file eq \"NA\") #No $format file found in the previous folder
 $fileOutName = \"\$newDir\".\"/\".\"\$readGroup\".\"\.$functionName\.$formatOut\";
 $module::$function($fileInType,$fileOutName,";
 
-$localLine .= '$reference,' if $commandLine =~ m/REFERENCE/;
-$localLine .= '$gff,' if $commandLine =~ m/GFF|GTF/;
-$localLine .= '$keyfile,' if $commandLine =~ m/KEYFILE/;
-$localLine .= '$vcf,' if $commandLine =~ m/VCF/;
+$localLine .= '$reference,' if $commandLine =~ m/REFERENCE/i;
+$localLine .= '$gff,' if $commandLine =~ m/GFF|GTF/i;
+$localLine .= '$keyfile,' if $commandLine =~ m/KEYFILE/i;
+$localLine .= '$vcf,' if $commandLine =~ m/VCF/i;
 
 
 $localLine .= "\$softParameters);   # Sending to $function
