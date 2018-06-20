@@ -518,7 +518,7 @@ else
      
      
     
-    is($module::$function(FILEIN,FILEOUT,\$optionHachees),1,'$module::$function  - Test for $function running);
+    is($module::$function(FILEIN,FILEOUT,\$optionHachees),1,'$module::$function  - Test for $function running');
     
     # expected output test
     my \$observedOutput = \`ls\`;
