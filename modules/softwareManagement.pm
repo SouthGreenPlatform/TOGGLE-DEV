@@ -583,5 +583,255 @@ my %softInfos = {
 };
 
 
+sub writeLogVersion
+{
+	my ($fileConf, $version, $reportDir,$report) = @_; #recovery $report boolean value: set to 1 if report is requested. $reportDir is the path were software.txt is generated
+	$report=0 if not defined $report; # by default $report does not generate sofware.txt
+
+	my %softPathVersion = ("toggle"	=> $version);
+	my %softPath = ("toggle"	=> $toggle);
+
+	toolbox::checkFile($fileConf);
+	my $configInfo=toolbox::readFileConf($fileConf);
+	my $hashOrder=toolbox::extractHashSoft($configInfo,"order");	#Picking up the options for the order of the pipeline
+
+	foreach my $softOrder ( values %{ $hashOrder } )
+	{
+		#DEBUG: print $softOrder." DANS LA BOUCLE\n";
+        
+        $softPathVersion{$softOrder} = `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{$softOrder};
+											$softPath{$softOrder}= $bwa if not defined $softPath{$softOrder}; # TO BE CHECKED HOW TO ADD THE location of the tool
+        
+		switch (1)
+		{
+            
+            #LOG INFOS FOR NEW TOOLS
+            
+			#FOR bwa.pm
+			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= `$softInfos{'bwa'}{'cmdVersion'}` if not defined $softPathVersion{"bwa"};
+											$softPath{"bwa"}= $bwa if not defined $softPath{"bwa"};
+											}
+
+			#FOR samTools.pm
+			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= `$softInfos{'samtools'}{'cmdVersion'}` if not defined $softPathVersion{"samtools"};
+												 $softPath{"samtools"}= $samtools if not defined $softPath{"samtools"};
+												}
+
+			#FOR picardTools.pm
+			case ($softOrder =~ m/^picard.*/i){ $softPathVersion{"java"}= `$softInfos{'java'}{'cmdVersion'}` if not defined $softPathVersion{"java"};
+												$softPath{"java"}= $java if not defined $softPath{"java"};
+												$softPathVersion{"picard"}= `$softInfos{'picardToolsCleanSam'}{'cmdVersion'}` if not defined $softPathVersion{"picard"};
+												$softPath{"picard"}= $picard if not defined $softPath{"picard"};
+											   }
+
+			#FOR gatk.pm
+			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"java"}= `$softInfos{'java'}{'cmdVersion'}` if not defined $softPathVersion{"java"};
+											 $softPathVersion{"GATK"}= `$softInfos{'gatkSelectVariants'}{'cmdVersion'}` if not defined $softPathVersion{"GATK"};
+											 $softPath{"java"}= $java if not defined $softPath{"java"};
+											 $softPath{"GATK"}= $GATK if not defined $softPath{"GATK"};
+											 }
+
+			#FOR fastqc
+			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= `$softInfos{'fastqc'}{'cmdVersion'}` if not defined $softPathVersion{"fastqc"};
+											 $softPath{"fastqc"}= $fastqc if not defined $softPath{"fastqc"};
+											 }
+
+			#FOR fastxToolkit
+			case ($softOrder =~ m/^fastx.*/i){$softPathVersion{"fastxTrimmer"}= `$softInfos{'fastxTrimmer'}{'cmdVersion'}` if not defined $softPathVersion{"fastxTrimmer"};
+											  $softPath{"fastxTrimmer"}= $fastxTrimmer if not defined $softPath{"fastxTrimmer"};
+											  }
+
+			#FOR tophat.pm
+			case ($softOrder =~ m/^bowtie2.*/i){$softPathVersion{"bowtie2Build"}= `$softInfos{'bowtie2build'}{'cmdVersion'}` if not defined $softPathVersion{"bowtie2Build"};
+												$softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
+												$softPathVersion{"bowtie2"}= `$softInfos{'bowtie2'}{'cmdVersion'}` if not defined $softPathVersion{"bowtie2"};
+												$softPath{"bowtie2"}= $bowtie2 if not defined $softPath{"bowtie2"};
+												}
+			case ($softOrder =~ m/^bowtie$/i){$softPathVersion{"bowtieBuild"}= `$softInfos{'bowtieBuild'}{'cmdVersion'}` if not defined $softPathVersion{"bowtieBuild"};
+											 $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
+											 $softPathVersion{"bowtie"}= `$softInfos{'bowtie'}{'cmdVersion'}` if not defined $softPathVersion{"bowtie"};
+											 $softPath{"bowtie"}= $bowtie if not defined $softPath{"bowtie"};
+											 }
+
+			case ($softOrder =~ m/^tophat.*/i){$softPathVersion{"tophat2"}= `$softInfos{'tophat2'}{'cmdVersion'}` if not defined $softPathVersion{"tophat2"};
+											   $softPathVersion{"bowtieBuild"}= `$softInfos{'bowtieBuild'}{'cmdVersion'}` if not defined $softPathVersion{"bowtieBuild"};
+											   $softPathVersion{"bowtie2Build"}= `$softInfos{'bowtie2Build'}{'cmdVersion'}` if not defined $softPathVersion{"bowtie2Build"};
+											   $softPath{"tophat2"}= $tophat2 if not defined $softPath{"tophat2"};
+											   $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
+											   $softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
+											   }
+
+			#FOR cufflinks.pm
+			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= `$softInfos{'cufflinks'}{'cmdVersion'}` if not defined $softPathVersion{"cufflinks"};
+												  $softPath{"cufflinks"}= $cufflinks if not defined $softPath{"cufflinks"};
+												  }
+			case ($softOrder =~ m/^cuffdiff.*/i){$softPathVersion{"cuffdiff"}= `$softInfos{'cufflinks'}{'cmdVersion'}` if not defined $softPathVersion{"cuffdiff"};
+												 $softPath{"cuffdiff"}= $cufflinks if not defined $softPath{"cuffdiff"};
+												 }
+			case ($softOrder =~ m/^cuffmerge.*/i){$softPathVersion{"cuffmerge"}= `$softInfos{'cufflinks'}{'cmdVersion'}` if not defined $softPathVersion{"cuffmerge"};
+												  $softPath{"cuffmerge"}= $cufflinks if not defined $softPath{"cuffmerge"};
+												  }
+
+			#FOR HTSeq
+			case ($softOrder =~ m/^htseq.*/i){$softPathVersion{"htseqcount"}= `$softInfos{'htseqCount'}{'cmdVersion'}` if not defined $softPathVersion{"htseqcount"};
+											  $softPath{"htseqcount"}= $htseqcount if not defined $softPath{"htseqcount"};
+											  }
+
+			#FOR snpEff.pm
+			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"java"}= `$softInfos{'java'}{'cmdVersion'}` if not defined $softPathVersion{"java"};
+											$softPathVersion{"snpEff"}= `$softInfos{'snpEff'}{'cmdVersion'}` if not defined $softPathVersion{"snpEff"};
+											$softPath{"java"}= $java if not defined $softPath{"java"};
+											$softPath{"snpEff"}= $snpEff if not defined $softPath{"snpEff"};
+											}
+
+			#FOR processRadtags.pm
+			case ($softOrder =~ m/process.*/i){$softPathVersion{"stacks"}= `$softInfos{'stacks'}{'cmdVersion'}` if not defined $softPathVersion{"stacks"};
+											   $softPath{"stacks"}= $stacks if not defined $softPath{"stacks"};
+											   }
+
+			#FOR cutadapt functions
+			case ($softOrder =~ m/^cutadapt/i){$softPathVersion{"cutadapt"}= `$softInfos{'cutadapt'}{'cmdVersion'}` if not defined $softPathVersion{"cutadapt"};
+											   $softPath{"cutadapt"}= $cutadapt if not defined $softPath{"cutadapt"};
+											  }
+			#FOR atropos functions
+			case ($softOrder =~ m/^atropos/i){$softPathVersion{"atropos"}= `$softInfos{'atropos'}{'cmdVersion'}` if not defined $softPathVersion{"atropos"};
+											   $softPath{"atropos"}= $atropos if not defined $softPath{"atropos"};
+											  }
+
+			#FOR TGICL
+			case ($softOrder =~ m/^tgicl/i){$softPathVersion{"tgicl"}= `$softInfos{'tgicl'}{'cmdVersion'}` if not defined $softPathVersion{"tgicl"};
+											$softPath{"tgicl"}= $tgicl if not defined $softPath{"tgicl"};
+											}
+
+			#FOR trinity
+			case ($softOrder =~ m/^trinity/i){$softPathVersion{"trinity"}= `$softInfos{'trinity'}{'cmdVersion'}` if not defined $softPathVersion{"trinity"};
+											  $softPath{"trinity"}= $trinity if not defined $softPath{"trinity"};
+											  }
+			#FOR bamutils
+			case ($softOrder =~ m/^bamutils.*/i){$softPathVersion{"bamutils"}= `$softInfos{'bamutils'}{'cmdVersion'}` if not defined $softPathVersion{"bamutils"};
+											  $softPath{"bamutils"}= $bamutils if not defined $softPath{"bamutils"};
+											  }
+			#FOR plink
+			case ($softOrder =~ m/^plink.*/i){$softPathVersion{"plink"}= `$softInfos{'plink'}{'cmdVersion'}` if not defined $softPathVersion{"plink"};
+											  $softPath{"plink"}= $plink if not defined $softPath{"plink"};
+											  }
+			#FOR fastme
+			case ($softOrder =~ m/^fastme.*/i){$softPathVersion{"fastme"}= `$softInfos{'fastme'}{'cmdVersion'}` if not defined $softPathVersion{"fastme"};
+											  $softPath{"fastme"}= $fastme if not defined $softPath{"fastme"};
+											  }
+
+			#FOR readseq
+			case ($softOrder =~ m/^readseq.*/i){$softPathVersion{"readseq"}= `$softInfos{'readseq'}{'cmdVersion'}` if not defined $softPathVersion{"readseq"};
+											  $softPath{"readseq"}= $readseqjar if not defined $softPath{"readseq"};
+											  }
+
+			#FOR SNIPLAY
+			case ($softOrder =~ m/^sniplay.*/i){$softPathVersion{"sniplay"}= "v1.0" if not defined $softPathVersion{"sniplay"};
+												$softPath{"sniplay"}= "sniplay" if not defined $softPath{"sniplay"};
+											   }
+
+			#For format checking
+			case($softOrder =~ m/^check/i){next;}
+
+			#FOR crac.pm
+			case ($softOrder =~ m/^crac.*/i){$softPathVersion{"crac"}= `$softInfos{'crac'}{'cmdVersion'}` if not defined $softPathVersion{"crac"};
+											$softPath{"crac"}= $crac if not defined $softPath{"crac"};
+											}
+			#FOR duplicationDetector
+			case ($softOrder =~ m/^duplicationDetector/i){$softPathVersion{"duplicationDetector"}= "v1.0" if not defined $softPathVersion{"duplicationDetector"};
+											$softPath{"duplicationDetector"}= $duplicationDetector if not defined $softPath{"duplicationDetector"};}
+
+			#FOR checkFormatFasta
+			case ($softOrder =~ m/^checkFormatFasta/i){$softPathVersion{"checkFormatFasta"}= "v1.0" if not defined $softPathVersion{"checkFormatFasta"};
+											$softPath{"checkFormatFasta"}= "checkFormatFasta" if not defined $softPath{"checkFormatFasta"};}
+			#FOR checkFormatFastq
+			case ($softOrder =~ m/^checkFormatFastq/i){$softPathVersion{"checkFormatFastq"}= "v1.0" if not defined $softPathVersion{"checkFormatFasta"};
+											$softPath{"checkFormatFastq"}= "checkFormatFastq" if not defined $softPath{"checkFormatFastq"};}
+			#FOR checkFormatVcf
+			case ($softOrder =~ m/^checkFormatVcf/i){$softPathVersion{"checkFormatVcf"}= "v1.0" if not defined $softPathVersion{"checkFormatVcf"};
+											$softPath{"checkFormatVcf"}= "checkFormatVcf" if not defined $softPath{"checkFormatVcf"};}
+			#FOR checkFormatSamOrBam
+			case ($softOrder =~ m/^checkFormatSamOrBam/i){$softPathVersion{"checkFormatSamOrBam"}= "v1.0" if not defined $softPathVersion{"checkFormatSamOrBam"};
+											$softPath{"checkFormatSamOrBam"}= "checkFormatSamOrBam" if not defined $softPath{"checkFormatSamOrBam"};}
+			#FOR checkEncodeByASCIIcontrol
+			case ($softOrder =~ m/^checkEncodeByASCIIcontrol/i){$softPathVersion{"checkEncodeByASCIIcontrol"}= "v1.0" if not defined $softPathVersion{"checkEncodeByASCIIcontrol"};
+																 $softPath{"checkEncodeByASCIIcontrol"}= "checkEncodeByASCIIcontrol" if not defined $softPath{"checkEncodeByASCIIcontrol"};}
+
+			#FOR checkFormatGff
+			case ($softOrder =~ m/^checkFormatGff/i){$softPathVersion{"checkFormatGff"}= "v1.0" if not defined $softPathVersion{"checkFormatGff"};
+											$softPath{"checkFormatGff"}= "checkFormatGff" if not defined $softPath{"checkFormatGff"};}
+
+			#FOR checkFormatBed
+			case ($softOrder =~ m/^checkFormatBed/i){$softPathVersion{"checkFormatBed"}= "v1.0" if not defined $softPathVersion{"checkFormatBed"};
+											$softPath{"checkFormatBed"}= "checkFormatBed" if not defined $softPath{"checkFormatBed"};}
+
+			#FOR BEDtools
+			case ($softOrder =~ m/^bedtools/i){$softPathVersion{"bedtools"}= `$softInfos{'bedTools'}{'cmdVersion'}` if not defined $softPathVersion{"bedtools"};
+												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
+			case ($softOrder =~ m/.*bed$/i){$softPathVersion{"bedtools"}= `$softInfos{'bedTools'}{'cmdVersion'}` if not defined $softPathVersion{"bedtools"};
+												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
+
+			#FOR generic command
+			case ($softOrder =~ m/^generic/i){$softPathVersion{"generic"}= "v0.1" if not defined $softPathVersion{"generic"};
+												$softPath{"generic"}= "" if not defined $softPath{"generic"};}
+
+			#FOR Abyss
+			case ($softOrder =~ m/^abyss/i){$softPathVersion{"abyss"}= `$softInfos{'abyss'}{'cmdVersion'}` if not defined $softPathVersion{"abyss"};
+												$softPath{"abyss"}= $abyss if not defined $softPath{"abyss"};}
+
+			#FOR transAbyss
+			#case ($softOrder =~ m/^transAbyss/i){$softPathVersion{"transAbyss"}= transAbyssVersion if not defined $softPathVersion{"transAbyss"};
+												#$softPath{"transAbyss"}= $abyss if not defined $softPath{"transAbyss"};}
+
+			#For breakDancer
+			case ($softOrder =~ m/^bam2cfg/i){$softPathVersion{"breakDancer"}= `$softInfos{'breakDancer'}{'cmdVersion'}` if not defined $softPathVersion{"breakDancer"};
+												$softPath{"bam2cfg"}= $bam2cfg if not defined $softPath{"bam2cfg"};}
+			case ($softOrder =~ m/^breakDancer/i){$softPathVersion{"breakDancer"}= `$softInfos{'breakDancer'}{'cmdVersion'}` if not defined $softPathVersion{"breakDancer"};
+												$softPath{"breakDancer"}= $breakDancer if not defined $softPath{"breakDancer"};}
+
+			#For Pindel
+			case ($softOrder =~ m/^pindel/i){$softPathVersion{"pindel"}= `$softInfos{'pindel'}{'cmdVersion'}` if not defined $softPathVersion{"pindel"};
+												$softPath{"pindel"}= $pindel if not defined $softPath{"pindel"};}
+
+			#For ea-Utils
+			case ($softOrder =~ m/^fastqStats/i){$softPathVersion{"fastqStats"}=`$softInfos{'fastqStats'}{'cmdVersion'}` if not defined $softPathVersion{"fastqStats"};
+												$softPath{"fastqStats"}=$fastqStats if not defined $softPath{"fastqStats"};}
+
+			else
+			{
+				toolbox::exportLog("ERROR SOFTWARE Managenemnt: $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);
+			}; # Name unknown to TOGGLE, must stop
+		}
+	}
+	## DEBUG print Dumper(%softPathVersion);
+
+	open (my $fhConfig, "<", "$toggle/modules/localConfig.pm");
+	open (my $fhSoft, ">", "$reportDir/software.txt") if $report;
+	#open (my $fhSoft, ">", "$reportDir/software.tex") if $report;
+    #print $fhSoft "\\begin{itemize}\n";
+
+	while (my $line = <$fhConfig>)
+	{
+		no strict "vars";
+		chomp $line;
+		chop $line; #Remove the last character, ie ";"
+		next unless $line =~ m/^our \$/;
+		my ($soft,$value) = split /=/, $line;
+		$soft =~ s/our| |\$//g;
+		if (defined $softPathVersion{$soft})
+		{
+			toolbox::exportLog(uc($soft)." : $softPath{$soft} : $softPathVersion{$soft}",1);
+			#print $fhSoft "\\item"  .			uc($soft) ." : \n \\begin{verbatim}\n$softPathVersion{$soft} \n \\end{verbatim}" if $report;
+			print $fhSoft uc($soft) ." : ".$softPathVersion{$soft}." (*\@{\\cite{$soft}}\@*)\n" if $report;
+		}
+	}
+
+	#print $fhSoft "\\end{itemize}\n";
+	close $fhConfig;
+	close $fhSoft if $report;
+}
+
+
+
 1;
 
