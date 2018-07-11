@@ -38,7 +38,7 @@ use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Carp;
 
 use localConfig;
-use namingConvention;
+use softwareManagement;
 use checkFormat;
 
 #Global infos
@@ -540,7 +540,7 @@ sub readFileConf
         }
     }
 
-    $configInfos=namingConvention::softwareNomenclature($configInfos); # will correct the configInfo names
+    $configInfos=softwareManagement::softwareNomenclature($configInfos); # will correct the configInfo names
 
     return $configInfos;
 
