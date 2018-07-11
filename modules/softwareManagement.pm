@@ -471,6 +471,8 @@ sub returnSoftInfos
 						'OUT' => 'NA',
 						'MANDATORY' => 'gff',
 						'cmdVersion' => "$htseqcount -h | grep 'version' | cut -d',' -f 2,2" },
+	
+	'java' => {'cmdVersion' => "$java -version 2>&1 | grep 'version'" },
 
 	'picardToolsAddOrReplaceReadGroups' =>{'IN' => 'sam,bam',
 						'OUT' => 'sam,bam',
@@ -589,59 +591,54 @@ sub returnSoftInfos
 
 sub writeLogVersion
 {
-	my ($hashOrder, $version, $reportDir,$report) = @_; #recovery $report boolean value: set to 1 if report is requested. $reportDir is the path were software.txt is generated
+	my ($hashOrder, $toggleVersion, $reportDir,$report) = @_; #recovery $report boolean value: set to 1 if report is requested. $reportDir is the path were software.txt is generated
 	$report=0 if not defined $report; # by default $report does not generate sofware.txt
 
 	my %softInfos = returnSoftInfos();
 	
-	my %softPathVersion = ("toggle"	=> $version);
-	my %softPath = ("toggle"	=> $toggle);
+	my %softPathVersion = ();
+	my %softPath = ();
 
 	foreach my $softOrder ( values %{ $hashOrder } )
 	{
-		#DEBUG: 
-		print $softOrder." DANS LA BOUCLE\n";
-
-        
-        $softPathVersion{$softOrder} = `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{$softOrder};
-											$softPath{$softOrder}= $bwa if not defined $softPath{$softOrder}; # TO BE CHECKED HOW TO ADD THE location of the tool
-        
+		#DEBUG: print $softOrder." DANS LA BOUCLE\n";
+    
 		switch (1)
 		{
             
             #LOG INFOS FOR NEW TOOLS
             
 			#FOR bwa.pm
-			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= `$softInfos{'bwa'}{'cmdVersion'}` if not defined $softPathVersion{"bwa"};
+			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"bwa"};
 											$softPath{"bwa"}= $bwa if not defined $softPath{"bwa"};
 											}
 
 			#FOR samTools.pm
-			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= `$softInfos{'samtools'}{'cmdVersion'}` if not defined $softPathVersion{"samtools"};
+			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"samtools"};
 												 $softPath{"samtools"}= $samtools if not defined $softPath{"samtools"};
 												}
 
 			#FOR picardTools.pm
 			case ($softOrder =~ m/^picard.*/i){ $softPathVersion{"java"}= `$softInfos{'java'}{'cmdVersion'}` if not defined $softPathVersion{"java"};
 												$softPath{"java"}= $java if not defined $softPath{"java"};
-												$softPathVersion{"picard"}= `$softInfos{'picardToolsCleanSam'}{'cmdVersion'}` if not defined $softPathVersion{"picard"};
+												$softPathVersion{"picard"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"picard"};
 												$softPath{"picard"}= $picard if not defined $softPath{"picard"};
 											   }
 
 			#FOR gatk.pm
 			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"java"}= `$softInfos{'java'}{'cmdVersion'}` if not defined $softPathVersion{"java"};
-											 $softPathVersion{"GATK"}= `$softInfos{'gatkSelectVariants'}{'cmdVersion'}` if not defined $softPathVersion{"GATK"};
+											 $softPathVersion{"GATK"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"GATK"};
 											 $softPath{"java"}= $java if not defined $softPath{"java"};
 											 $softPath{"GATK"}= $GATK if not defined $softPath{"GATK"};
 											 }
 
 			#FOR fastqc
-			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= `$softInfos{'fastqc'}{'cmdVersion'}` if not defined $softPathVersion{"fastqc"};
+			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"fastqc"};
 											 $softPath{"fastqc"}= $fastqc if not defined $softPath{"fastqc"};
 											 }
 
 			#FOR fastxToolkit
-			case ($softOrder =~ m/^fastx.*/i){$softPathVersion{"fastxTrimmer"}= `$softInfos{'fastxTrimmer'}{'cmdVersion'}` if not defined $softPathVersion{"fastxTrimmer"};
+			case ($softOrder =~ m/^fastx.*/i){$softPathVersion{"fastxTrimmer"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"fastxTrimmer"};
 											  $softPath{"fastxTrimmer"}= $fastxTrimmer if not defined $softPath{"fastxTrimmer"};
 											  }
 
@@ -809,29 +806,18 @@ sub writeLogVersion
 	}
 	## DEBUG print Dumper(%softPathVersion);
 
-	open (my $fhConfig, "<", "$toggle/modules/localConfig.pm");
 	open (my $fhSoft, ">", "$reportDir/software.txt") if $report;
-	#open (my $fhSoft, ">", "$reportDir/software.tex") if $report;
-    #print $fhSoft "\\begin{itemize}\n";
 
-	while (my $line = <$fhConfig>)
+	toolbox::exportLog("TOGGLE : $toggle : $toggleVersion\n",1);
+	print $fhSoft "TOGGLE : $toggle : $toggleVersion (*\@{\\cite{toggle}}\@*)\n" if $report;
+
+	foreach my $soft ( sort( keys %softPath ) )
 	{
-		no strict "vars";
-		chomp $line;
-		chop $line; #Remove the last character, ie ";"
-		next unless $line =~ m/^our \$/;
-		my ($soft,$value) = split /=/, $line;
-		$soft =~ s/our| |\$//g;
-		if (defined $softPathVersion{$soft})
-		{
-			toolbox::exportLog(uc($soft)." : $softPath{$soft} : $softPathVersion{$soft}",1);
-			#print $fhSoft "\\item"  .			uc($soft) ." : \n \\begin{verbatim}\n$softPathVersion{$soft} \n \\end{verbatim}" if $report;
-			print $fhSoft uc($soft) ." : ".$softPathVersion{$soft}." (*\@{\\cite{$soft}}\@*)\n" if $report;
-		}
+		my $version = $softPathVersion{$soft};
+		toolbox::exportLog(uc($soft)." : $softPath{$soft} : $version",1);
+		print $fhSoft uc($soft) ." : $version (*\@{\\cite{$soft}}\@*)\n" if $report;
 	}
-
-	#print $fhSoft "\\end{itemize}\n";
-	close $fhConfig;
+	
 	close $fhSoft if $report;
 }
 
