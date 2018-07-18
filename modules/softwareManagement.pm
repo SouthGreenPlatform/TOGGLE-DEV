@@ -114,8 +114,9 @@ sub correctName
         #FOR SCP
         case ($name =~ m/^scp/i or $name =~ m/^rsync/i or $name =~ m/^transfer/i){$correctedName="scp";} #Correction for scp transfer
 
-        #NEW SOFT ADDED AUTOMATICALLY
-	
+		#FOR nanoplot
+		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
+
         #FOR bwa.pm
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
@@ -272,9 +273,10 @@ sub correctName
 sub returnSoftInfos
 {
 	my %softInfos = (
-	
-	#INFOS FOR NEW TOOLS
-	
+
+	'nanoplot'=>{'IN' => 'fastq',
+						'OUT'=>'NA',
+						'cmdVersion' => "$nanoplot -v"},
 	'abyss' =>{'IN' => 'fasta,fastq,sam,bam',
 					 'OUT' => 'fasta',
 					 'cmdVersion' => "$abyss --version | grep 'GNU Make' " },
@@ -471,7 +473,7 @@ sub returnSoftInfos
 						'OUT' => 'NA',
 						'MANDATORY' => 'gff',
 						'cmdVersion' => "$htseqcount -h | grep 'version' | cut -d',' -f 2,2" },
-	
+
 	'java' => {'cmdVersion' => "$java -version 2>&1 | grep 'version'" },
 
 	'picardToolsAddOrReplaceReadGroups' =>{'IN' => 'sam,bam',
@@ -582,10 +584,10 @@ sub returnSoftInfos
 	'fastqStats' =>{'IN' => 'fastq',
 						'OUT' => 'NA',
 						 'cmdVersion' => "$fastqStats -h | grep 'Version'" }
-	
+
 	);
 # 	print Dumper( \%softInfos );
-	return %softInfos;	
+	return %softInfos;
 }
 
 
@@ -595,19 +597,19 @@ sub writeLogVersion
 	$report=0 if not defined $report; # by default $report does not generate sofware.txt
 
 	my %softInfos = returnSoftInfos();
-	
+
 	my %softPathVersion = ();
 	my %softPath = ();
 
 	foreach my $softOrder ( values %{ $hashOrder } )
 	{
 		#DEBUG: print $softOrder." DANS LA BOUCLE\n";
-    
+
 		switch (1)
 		{
-            
+
             #LOG INFOS FOR NEW TOOLS
-            
+
 			#FOR bwa.pm
 			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"bwa"};
 											$softPath{"bwa"}= $bwa if not defined $softPath{"bwa"};
@@ -817,7 +819,7 @@ sub writeLogVersion
 		toolbox::exportLog(uc($soft)." : $softPath{$soft} : $version",1);
 		print $fhSoft uc($soft) ." : $version (*\@{\\cite{$soft}}\@*)\n" if $report;
 	}
-	
+
 	close $fhSoft if $report;
 }
 
