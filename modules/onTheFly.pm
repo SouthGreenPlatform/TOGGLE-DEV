@@ -78,16 +78,16 @@ sub checkOrder
 	##DEBUG print $previousSoft,"->",$currentSoft,"\n";
         ##DEBUG print "**",$$hashInOut{$currentSoft}{"OUT"},"\n";
 	#if first round
-	if (!defined $previousFormat && $$hashInOut{$currentSoft}{"OUT"} ne "NA")
+	if (!defined $previousFormat && $hashInOut->{$currentSoft}{"OUT"} ne "NA")
 	{
-	    $previousFormat=$$hashInOut{$currentSoft}{"OUT"};
+	    $previousFormat=$hashInOut->{$currentSoft}{"OUT"};
 	    $previousSoft=$currentSoft;
             $initialStep=$step unless $initialStep;
             $lastStep = $step;
 	    #print "prout\n";
 	    next;
 	}
-	elsif (!defined $previousFormat && $$hashInOut{$currentSoft}{"OUT"} eq "NA")
+	elsif (!defined $previousFormat && $hashInOut->{$currentSoft}{"OUT"} eq "NA")
 	{
             $initialStep = $step;
 	    ##DEBUG print "pas prout\n";
@@ -95,7 +95,7 @@ sub checkOrder
 	}
 
 	#For other rounds
-	$currentFormat=$$hashInOut{$currentSoft}{"IN"};
+	$currentFormat=$hashInOut->{$currentSoft}{"IN"};
 
 	#Comparison IN/OUT
 	my @listCurrentFormat = split (",", $currentFormat);
@@ -114,10 +114,10 @@ sub checkOrder
 
 	#Preparing for the next round
 
-	next if ($$hashInOut{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
+	next if ($hashInOut->{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
 
 	$previousSoft=$currentSoft;
-	$previousFormat=$$hashInOut{$currentSoft}{"OUT"};
+	$previousFormat=$hashInOut->{$currentSoft}{"OUT"};
         $lastStep = $step;
         ##DEBUG print $lastStep,"\n";
 
@@ -146,9 +146,9 @@ sub checkMandatory
 	{
 		my $currentSoft=$$hashOrder{$step};
 		$currentSoft =~ s/ \d+$//; # Removing number if a software is used more than once with different options
-		if (defined($$hashInOut{$currentSoft}{"MANDATORY"}))
+		if (defined($hashInOut->{$currentSoft}{"MANDATORY"}))
 		{
-			my $paramMandatory = $$hashInOut{$currentSoft}{"MANDATORY"};
+			my $paramMandatory = $hashInOut->{$currentSoft}{"MANDATORY"};
 
 			if ($paramMandatory =~ m/reference/)
 			{
@@ -463,8 +463,8 @@ sub generateGraphviz
 		$soft =~ s/bamutils.*/bamutilsTool/g; #Rename special for bamutils tools
 		$soft =~ s/ .+$//; #Removing anything after a space. E.g a samtoolsview 1 will become samtoolsView
 			
-		$input=$$hashInOut{$soft}{"IN"};
-		$output=$$hashInOut{$soft}{"OUT"};
+		$input=$hashInOut->{$soft}{"IN"};
+		$output=$hashInOut->{$soft}{"OUT"};
 		
 		# Get input and output format from sofware Formats. txt file
 		$softLabel="$soft ($step)";
