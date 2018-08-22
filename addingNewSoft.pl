@@ -189,7 +189,7 @@ foreach my $format (@listIn)
     $subText.= $formatValidator{$format};
 }
 #finishing the infos
-$subText .= "\n\t\telse {toolbox::exportLog(\"ERROR: $module::$function : The file \$file is not a $in file\\n\",0);}\n\t};\n\tdie (toolbox::exportLog(\"ERROR: $module::$function : The file \$file is not a $in file\\n\",0) if \$validation == 0;";
+$subText .= "\n\t\telse {toolbox::exportLog(\"ERROR: $module::$function : The file \$fileIn is not a $in file\\n\",0);}\n\t};\n\tdie (toolbox::exportLog(\"ERROR: $module::$function : The file \$fileIn is not a $in file\\n\",0)) if \$validation == 0;";
 
 #Extract options
 
@@ -360,7 +360,7 @@ else
 
 foreach my \$file (\@{\$fileList}) #Checking the type of files that must be $formatPlain
 {
-    if (\$file =~ m/$format/) # the file type is normally $formatPlain
+    if (\$file =~ m/$format\$/) # the file type is normally $formatPlain
     {
         if (\$file ne \"NA\") # Already a $formatPlain recognized
         {
@@ -373,7 +373,7 @@ foreach my \$file (\@{\$fileList}) #Checking the type of files that must be $for
     }
 }
 
-if (\$file eq \"NA\") #No $format file found in the previous folder
+if ($FILEIN eq \"NA\") #No $format file found in the previous folder
 {
     toolbox::exportLog(\"ERROR : \$0 : No $formatPlain file found in \$previousDir at step \$stepName.\\n\",0);
 }
@@ -410,9 +410,7 @@ else
 { 
     open (my $fhModule, ">>", "$toggle/test/modules/$moduleTest") or die ("\nCannot open for writing the file $moduleTest :\n$!\n");
     my $localLine;
-    $localLine.="
-        
-    #!/usr/bin/perl
+    $localLine.="#!/usr/bin/perl
 
     ###################################################################################################################################
     #
@@ -537,9 +535,9 @@ close $fhModule;
 
 # list of files to check
 print "Finished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
-    - modules/$moduleFile
+    - modules/$moduleFile ##NOTE: Please check if the variable is noted as \$bwa and not /usr/bin/bwa !! 
     - modules/localConfig.pm
-    - modules/softwareManagement.pm
+    - modules/softwareManagement.pm ##NOTE: Please check if the variable is noted as \$bwa and not /usr/bin/bwa !!
     - onTheFly/$blockName
     - test/modules/$moduleTest\n";
 
