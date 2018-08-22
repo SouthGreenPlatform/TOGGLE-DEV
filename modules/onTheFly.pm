@@ -63,9 +63,9 @@ sub checkOrder
 
     #Picking up input output for each software
 	my $hashInOut = softwareManagement::returnSoftInfos;
-	print $hashInOut,"\n";
-	print Dumper ($hashInOut);
-	#exit;
+	#DEBUG print $hashInOut,"\n";
+	#DEBUG print Dumper ($hashInOut);
+	#DEBUG exit;
 
 	# checking MANDATORY file for each software ( defined in softwareFormats.txt)
 	checkMandatory($hashOrder,$hashInOut,$refFastaFile,$gffFile,$keyfile);
