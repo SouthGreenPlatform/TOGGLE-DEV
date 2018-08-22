@@ -410,7 +410,7 @@ else
 { 
     open (my $fhModule, ">>", "$toggle/test/modules/$moduleTest") or die ("\nCannot open for writing the file $moduleTest :\n$!\n");
     my $localLine;
-    $localLine.="#!/usr/bin/perl
+    $localLine.="#!/usr/bin/env perl
 
     ###################################################################################################################################
     #
