@@ -277,6 +277,7 @@ sub returnSoftInfos
 	'nanoplot'=>{'IN' => 'fastq',
 						'OUT'=>'NA',
 						'cmdVersion' => "$nanoplot -v"},
+    
 	'abyss' =>{'IN' => 'fasta,fastq,sam,bam',
 					 'OUT' => 'fasta',
 					 'cmdVersion' => "$abyss --version | grep 'GNU Make' " },

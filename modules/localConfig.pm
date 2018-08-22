@@ -39,7 +39,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $crac $cracIndex $bowtie $bowtie2 $atropos $duplicationDetector $plink $bedtools $snmfbin $readseqjar $fastme $abyss $bam2cfg $breakDancer $pindel $fastqStats);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $crac $cracIndex $bowtie $bowtie2 $atropos $duplicationDetector $plink $bedtools $snmfbin $readseqjar $fastme $abyss $bam2cfg $breakDancer $pindel $fastqStats $nanoplot);
 
 #toggle path
 our $toggle="/path/to/toggleFolder";
@@ -136,4 +136,7 @@ our $fastme= "/path/to/fastme";
 
 #path to fastq-stats
 our $fastqStats= "/path/to/fastq-stats";
+
+#path to nanoplot
+our $nanoplot = "/path/to/nanoplot";
 1;
