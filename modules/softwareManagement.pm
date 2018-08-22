@@ -272,7 +272,7 @@ sub correctName
 #######################################################
 sub returnSoftInfos
 {
-	my %softInfos = (
+	my $softInfos = \(
 
 	'nanoplot'=>{'IN' => 'fastq',
 						'OUT'=>'NA',
@@ -588,7 +588,7 @@ sub returnSoftInfos
 
 	);
 # 	print Dumper( \%softInfos );
-	return %softInfos;
+	return $softInfos;
 }
 
 
@@ -597,7 +597,7 @@ sub writeLogVersion
 	my ($hashOrder, $toggleVersion, $reportDir,$report) = @_; #recovery $report boolean value: set to 1 if report is requested. $reportDir is the path were software.txt is generated
 	$report=0 if not defined $report; # by default $report does not generate sofware.txt
 
-	my %softInfos = returnSoftInfos();
+	my %softInfos = %{returnSoftInfos()};
 
 	my %softPathVersion = ();
 	my %softPath = ();
