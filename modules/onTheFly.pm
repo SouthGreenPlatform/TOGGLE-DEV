@@ -63,7 +63,7 @@ sub checkOrder
 
     #Picking up input output for each software
 	my $hashInOut = softwareManagement::returnSoftInfos();
-	print Dumper ($hashInOut);
+	print Dumper (\%{$hashInOut});
 	exit;
 
 	# checking MANDATORY file for each software ( defined in softwareFormats.txt)
