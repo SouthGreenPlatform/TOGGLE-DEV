@@ -588,7 +588,7 @@ sub returnSoftInfos
 
 	);
 # 	print Dumper( \%softInfos );
-	return %softInfos;
+	return \%softInfos;
 }
 
 
