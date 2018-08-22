@@ -487,7 +487,7 @@ my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 $lastOrderBefore1000=1;
 
 #Obtaining infos for OUT NA steps
-my $hashInOut= \{softwareManagement::returnSoftInfos()};
+my $hashInOut= softwareManagement::returnSoftInfos();
 
 foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
 {
