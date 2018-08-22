@@ -494,7 +494,7 @@ foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash 
     if ($step < 1000)
     {
         $$orderBefore1000{$step}=$$hashOrder{$step};
-        $lastOrderBefore1000 = $step unless $$hashInOut{$$hashOrder{$step}}{"OUT"} eq "NA"; # the last step will be everything but a dead-end one.
+        $lastOrderBefore1000 = $step unless $hashInOut->{$$hashOrder{$step}}{"OUT"} eq "NA"; # the last step will be everything but a dead-end one.
     }
     else
     {
