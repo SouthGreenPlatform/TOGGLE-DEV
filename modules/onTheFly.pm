@@ -44,6 +44,7 @@ use tophat;
 use bowtie;
 use crac;
 use stats;
+use softwareManagement;
 
 ################################################################################################
 # sub checkOrder =>  Will verify the order of the softwares in the pipeline
@@ -61,7 +62,7 @@ sub checkOrder
     my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
 
     #Picking up input output for each software
-    my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
+	my $hashInOut = \{softwareManagement::returnSoftInfos()};
 
 	# checking MANDATORY file for each software ( defined in softwareFormats.txt)
 	checkMandatory($hashOrder,$hashInOut,$refFastaFile,$gffFile,$keyfile);
@@ -186,7 +187,7 @@ sub generateScript
     my ($hashOrder,$script,$hashCleaner,$hashCompressor,$hashmerge)=@_;
 
     #Picking up input output for each software
-    my $hashSoftware=toolbox::readFileConf("$toggle/softwareFormats.txt");
+    my $hashSoftware= \{softwareManagement::returnSoftInfos()};
 
     my $catCommand = "cat $toggle/onTheFly/startBlock.txt"; #Will create the preambule for the pipeline code, including paths, use modules, etc...
     my @stepsList = sort{$a <=> $b} keys %{$hashOrder};
@@ -430,7 +431,7 @@ sub generateGraphviz
     my $graphicFileOut=$outDir."/togglePipeline.png"; #Creation of the figure file in png
 
 	# get the input and outpu of the sofwares
-    my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt"); #We need the format IN/OUT
+    my $hashInOut= \{softwareManagement::returnSoftInfos()}; #We need the format IN/OUT
 
 	# Get date of analysis
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
