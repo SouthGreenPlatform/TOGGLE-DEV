@@ -272,7 +272,7 @@ sub correctName
 #######################################################
 sub returnSoftInfos
 {
-	my $softInfos = \(
+	my %softInfos = \(
 
 	'nanoplot'=>{'IN' => 'fastq',
 						'OUT'=>'NA',
@@ -588,7 +588,7 @@ sub returnSoftInfos
 
 	);
 # 	print Dumper( \%softInfos );
-	return $softInfos;
+	return %softInfos;
 }
 
 
