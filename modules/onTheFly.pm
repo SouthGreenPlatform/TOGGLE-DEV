@@ -63,6 +63,7 @@ sub checkOrder
 
     #Picking up input output for each software
 	my $hashInOut = softwareManagement::returnSoftInfos;
+	print $hashInOut,"\n";
 	print Dumper ($hashInOut);
 	exit;
 
