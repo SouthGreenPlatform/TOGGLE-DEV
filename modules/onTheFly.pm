@@ -62,7 +62,7 @@ sub checkOrder
     my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
 
     #Picking up input output for each software
-	my $hashInOut = softwareManagement::returnSoftInfos();
+	my $hashInOut = \{softwareManagement::returnSoftInfos()};
 	print Dumper ($hashInOut);
 	exit;
 
