@@ -373,7 +373,7 @@ foreach my \$file (\@{\$fileList}) #Checking the type of files that must be $for
     }
 }
 
-if (\$file eq \"NA\") #No $format file found in the previous folder
+if ($fileInType eq \"NA\") #No $format file found in the previous folder
 {
     toolbox::exportLog(\"ERROR : \$0 : No $formatPlain file found in \$previousDir at step \$stepName.\\n\",0);
 }
