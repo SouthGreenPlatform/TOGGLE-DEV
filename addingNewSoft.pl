@@ -629,9 +629,9 @@ else
     ";
     
     print $fhBlock $localLine;
+    close $fhBlock;
 }
 
-close $fhBlock;
 
 # list of files to check
 print "Finished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
