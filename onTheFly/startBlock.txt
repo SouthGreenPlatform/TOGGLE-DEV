@@ -257,6 +257,7 @@ $hashOrder = toolbox::rmHashOrder($hashOrder, "processRadtags");
 my $fastaFileIn="NA";
 my $faidxFileOut="NA";
 my $localFastaFileIn = "NA";
+my $fastaFileOut = "NA";
 
 ##FASTQ associated variables
 my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=("NA","NA","NA","NA");

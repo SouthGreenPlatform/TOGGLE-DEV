@@ -1,4 +1,4 @@
-package module_template;
+package nanoplot;
 
 ###################################################################################################################################
 #
@@ -42,5 +42,37 @@ use toolbox;
 use checkFormat;
 
 
+
+
+sub nanoplot
+{
+#The standard way to write variables are:
+#REFERENCE = $reference#PLEASE CHECK IF IT IS OK AT THIS POINT!!
+	my ($fileIn,$dirOut,$optionsHachees) = @_;
+
+	my $options="";
+	$options = toolbox::extractOptions($optionsHachees) if $optionsHachees;
+
+	#Execute command
+	my $command = "$nanoplot -o $dirOut $options" ;
+
+	my $validation = 0;
+	switch (1)
+	{
+		case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){
+			$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1);
+			$command .= " --fastq_rich $fileIn";
+		}
+		case ($fileIn =~ m/summary$/i){
+			# TODO validation summary
+			$validation = 1;
+			$command .= " --summary $fileIn";
+		}
+		else {toolbox::exportLog("ERROR: nanoplot::nanoplot : The file $fileIn is not a fastq file or a sequencing_summary\n",0);};
+	}
+	die (toolbox::exportLog("ERROR: nanoplot::nanoplot : The file $fileIn is not a fastq file or a sequencing_summary\n",0)) if $validation == 0;	#Picking up options
+	return 1 if (toolbox::run($command));
+	toolbox::exportLog("ERROR: nanoplot::nanoplot : ABORTED\n",0);
+}
 
 1;

@@ -46,20 +46,20 @@ use toolbox;
 use onTheFly;
 use scheduler;
 use radseq;
-use versionSofts;
 use checkFormat;
+use softwareManagement;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $version = "Release 0.3.6, 22nd of February, 2018";
+my $toggleVersion = "Release 0.3.6, 22nd of February, 2018";
 my @shortVersion = (3,6);
 
 my $url = "toggle.southgreen.fr/install/releaseNotes/index.html";
 my $lastRealease = `curl -m 5 --connect-timeout 5 --max-time 5 -s "$url" 2>&1 | grep -m 1 '<li><a href="\#0' | cut -f3 -d'>' | cut -f1 -d'<'`;
 chomp($lastRealease);
 my $newRelease="";
-if ($lastRealease ne $version)
+if ($lastRealease ne $toggleVersion)
 {
     my $shortRelease = $lastRealease;
     $shortRelease =~ s/Release (\d\.\d\.\d), .*/$1/;
@@ -96,7 +96,7 @@ my $parser = Getopt::ArgParse->new_parser(
 #\tbioRxiv, doi: https://doi.org/10.1101/245480
 #\thttps://toggle.southgreen.fr/
 ###########################################################################\n",
-        help            => 'a framework to build quickly NGS pipelines'."\n\n".$version,
+        help            => 'a framework to build quickly NGS pipelines'."\n\n".$toggleVersion,
         error_prefix    => "\n\tERROR MSG: "
 );
 
@@ -186,7 +186,7 @@ my @argv= $parser->argv;
 
 if ("-v" ~~ @ARGV or "--version" ~~ @ARGV or "-version" ~~ @ARGV)
 {
-    print $version.$newRelease;
+    print $toggleVersion.$newRelease;
     exit;
 }
 
@@ -255,7 +255,6 @@ system("touch $logFile $errorFile") and die "\nERROR: $0 : cannot create the log
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis starts \n#########################################\n",1);;
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
 toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
-toolbox::exportLog("INFOS: the current version of TOGGLE is $version\n",1);
 
 ### Generate tex file
 my $inputFile="commandLine.tex";
@@ -270,11 +269,8 @@ foreach my $file (@listFilesMandatory)
 }
 
 ##########################################
-# Printing software configurations
-########################################
-
-toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
-versionSofts::writeLogVersion($fileConf,$version.$newRelease,$outputDir,$report);
+# Check di+ctories
+##########################################
 
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
@@ -368,11 +364,17 @@ my $workingDir = $outputDir."/$resultsDir";
 toolbox::makeDir($workingDir);
 
 
+##########################################
+# Printing software version
+########################################
+my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the options for the order of the pipeline
+
+toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
+softwareManagement::writeLogVersion($hashOrder,$toggleVersion.$newRelease,$outputDir,$report);
+
 #########################################
 # check if 1=processRadtags in $order
 #########################################
-my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the options for the order of the pipeline
-
 my @values;
 for my $value ( values %{ $hashOrder } )
 {
@@ -485,14 +487,14 @@ my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 $lastOrderBefore1000=1;
 
 #Obtaining infos for OUT NA steps
-my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
+my $hashInOut= softwareManagement::returnSoftInfos();
 
 foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
 {
     if ($step < 1000)
     {
         $$orderBefore1000{$step}=$$hashOrder{$step};
-        $lastOrderBefore1000 = $step unless $$hashInOut{$$hashOrder{$step}}{"OUT"} eq "NA"; # the last step will be everything but a dead-end one.
+        $lastOrderBefore1000 = $step unless $hashInOut->{$$hashOrder{$step}}{"OUT"} eq "NA"; # the last step will be everything but a dead-end one.
     }
     else
     {

@@ -89,7 +89,7 @@ sub generic {
 
 	use generic;
 
-	generice::generic($fileIn, $fileOut, $optionsHachees)
+	generic::generic($fileIn, $fileOut, $optionsHachees)
 
 =head1 DESCRIPTION
 

@@ -45,6 +45,7 @@ use bowtie;
 use crac;
 use stats;
 use hisat2;
+use softwareManagement;
 
 ################################################################################################
 # sub checkOrder =>  Will verify the order of the softwares in the pipeline
@@ -62,7 +63,10 @@ sub checkOrder
     my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
 
     #Picking up input output for each software
-    my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
+	my $hashInOut = softwareManagement::returnSoftInfos;
+	#DEBUG print $hashInOut,"\n";
+	#DEBUG print Dumper ($hashInOut);
+	#DEBUG exit;
 
 	# checking MANDATORY file for each software ( defined in softwareFormats.txt)
 	checkMandatory($hashOrder,$hashInOut,$refFastaFile,$gffFile,$keyfile);
@@ -78,16 +82,16 @@ sub checkOrder
 	##DEBUG print $previousSoft,"->",$currentSoft,"\n";
         ##DEBUG print "**",$$hashInOut{$currentSoft}{"OUT"},"\n";
 	#if first round
-	if (!defined $previousFormat && $$hashInOut{$currentSoft}{"OUT"} ne "NA")
+	if (!defined $previousFormat && $hashInOut->{$currentSoft}{"OUT"} ne "NA")
 	{
-	    $previousFormat=$$hashInOut{$currentSoft}{"OUT"};
+	    $previousFormat=$hashInOut->{$currentSoft}{"OUT"};
 	    $previousSoft=$currentSoft;
             $initialStep=$step unless $initialStep;
             $lastStep = $step;
 	    #print "prout\n";
 	    next;
 	}
-	elsif (!defined $previousFormat && $$hashInOut{$currentSoft}{"OUT"} eq "NA")
+	elsif (!defined $previousFormat && $hashInOut->{$currentSoft}{"OUT"} eq "NA")
 	{
             $initialStep = $step;
 	    ##DEBUG print "pas prout\n";
@@ -95,7 +99,7 @@ sub checkOrder
 	}
 
 	#For other rounds
-	$currentFormat=$$hashInOut{$currentSoft}{"IN"};
+	$currentFormat=$hashInOut->{$currentSoft}{"IN"};
 
 	#Comparison IN/OUT
 	my @listCurrentFormat = split (",", $currentFormat);
@@ -114,10 +118,10 @@ sub checkOrder
 
 	#Preparing for the next round
 
-	next if ($$hashInOut{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
+	next if ($hashInOut->{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
 
 	$previousSoft=$currentSoft;
-	$previousFormat=$$hashInOut{$currentSoft}{"OUT"};
+	$previousFormat=$hashInOut->{$currentSoft}{"OUT"};
         $lastStep = $step;
         ##DEBUG print $lastStep,"\n";
 
@@ -146,9 +150,9 @@ sub checkMandatory
 	{
 		my $currentSoft=$$hashOrder{$step};
 		$currentSoft =~ s/ \d+$//; # Removing number if a software is used more than once with different options
-		if (defined($$hashInOut{$currentSoft}{"MANDATORY"}))
+		if (defined($hashInOut->{$currentSoft}{"MANDATORY"}))
 		{
-			my $paramMandatory = $$hashInOut{$currentSoft}{"MANDATORY"};
+			my $paramMandatory = $hashInOut->{$currentSoft}{"MANDATORY"};
 
 			if ($paramMandatory =~ m/reference/)
 			{
@@ -187,7 +191,7 @@ sub generateScript
     my ($hashOrder,$script,$hashCleaner,$hashCompressor,$hashmerge)=@_;
 
     #Picking up input output for each software
-    my $hashSoftware=toolbox::readFileConf("$toggle/softwareFormats.txt");
+    my $hashSoftware= softwareManagement::returnSoftInfos();
 
     my $catCommand = "cat $toggle/onTheFly/startBlock.txt"; #Will create the preambule for the pipeline code, including paths, use modules, etc...
     my @stepsList = sort{$a <=> $b} keys %{$hashOrder};
@@ -450,7 +454,7 @@ sub generateGraphviz
     my $graphicFileOut=$outDir."/togglePipeline.png"; #Creation of the figure file in png
 
 	# get the input and outpu of the sofwares
-    my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt"); #We need the format IN/OUT
+    my $hashInOut= softwareManagement::returnSoftInfos(); #We need the format IN/OUT
 
 	# Get date of analysis
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
@@ -482,9 +486,9 @@ sub generateGraphviz
 		$soft =~ s/bamutils.*/bamutilsTool/g; #Rename special for bamutils tools
 		$soft =~ s/ .+$//; #Removing anything after a space. E.g a samtoolsview 1 will become samtoolsView
 
-		$input=$$hashInOut{$soft}{"IN"};
-		$output=$$hashInOut{$soft}{"OUT"};
-
+		$input=$hashInOut->{$soft}{"IN"};
+		$output=$hashInOut->{$soft}{"OUT"};
+		
 		# Get input and output format from sofware Formats. txt file
 		$softLabel="$soft ($step)";
 		$soft=$soft."_".$step;
