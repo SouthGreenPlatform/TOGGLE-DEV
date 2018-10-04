@@ -261,13 +261,13 @@ sub schedulerRun
 sub waiter
 { #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
 
-    ($jobList,my $jobsInfos, $outputDir) = @_;
+    ($jobList,my $jobsInfos, $outputDir, $report) = @_;
 
     %jobHash = %{$jobsInfos};
 
     my $schedulerType = &checkingCapability;
     
-    my $stopWaiting = &schedulerWait($schedulerType, $outputDir);
+    my $stopWaiting = &schedulerWait($schedulerType, $outputDir, $report);
 
     return $stopWaiting;
 }
@@ -275,7 +275,7 @@ sub waiter
 
 sub schedulerWait
 {
-    my ($schedulerType, $ouputDir) = @_;
+    my ($schedulerType, $ouputDir, $report) = @_;
     my $nbRunningJobs = 1;
     my @jobsInError=();
 
@@ -293,6 +293,8 @@ sub schedulerWait
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 5;
 	
+if ($report)
+{
 	#open file for report job info
 	my $openNameFile = $outputDir."/sample_parallel_table.tex";
 	
@@ -308,7 +310,7 @@ sub schedulerWait
 	\\begin{tabular}{l||r||r}
 	Samples & Job ID & Status \\\\\\hline
 	";
-	
+}
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
 Individual\tJobID\tExitStatus
@@ -319,7 +321,7 @@ Individual\tJobID\tExitStatus
         
         my ($currentLine, $outputLine);
         $outputLine = "$individual\t$jobHash{$individual}{output}\t";
-		$outputLineTex .= "$individual & $jobHash{$individual}{output} & ";
+		$outputLineTex .= "$individual & $jobHash{$individual}{output} & " if ($report);
         
         my $grepError = `grep "ERROR" $jobHash{$individual}{errorFile}`;
         chomp $grepError;
@@ -335,23 +337,23 @@ Individual\tJobID\tExitStatus
         }
        
     	$outputLine .= $currentLine;
-		$outputLineTex .= $currentLine."\\\\";
+		$outputLineTex .= $currentLine."\\\\" if ($report);
 		toolbox::exportLog($outputLine,1);
 		
 		
 
     }
-	print $fhOut $outputLineTex;
+	print $fhOut $outputLineTex if ($report);
     toolbox::exportLog("---------------------------------------------------------\n",1);#To have a better table presentation
 	print $fhOut "\n\\end{tabular}
-	\\end{table}";
+	\\end{table}" if ($report);
 
     if (scalar @jobsInError)
     {
 		#at least one job has failed
 		return \@jobsInError;
     }
-    close $fhOut;
+    close $fhOut if ($report);
     return 1;
 }
 
