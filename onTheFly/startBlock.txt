@@ -196,6 +196,7 @@ my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);  
 # WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
 my $checkFastq = $parser->namespace->checkFastq;
 my $report = $parser->namespace->report;
+my $rerun = $parser->namespace->rerun;
 
 my @listFilesMandatory=($initialDir, $fileConf); #stock mandatory files to test if they exist
 push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
@@ -228,14 +229,24 @@ my $logFile=$initialDir."/".$readGroup."_log.o";
 my $errorFile=$initialDir."/".$readGroup."_log.e";
 system("touch $logFile $errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
 
+# Determine the name of the file containing the last successful step
+my $stepFileName=$initialDir."/".$readGroup."_last_step";
+my $stepFileHandle;
+
 
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
 toolbox::exportLog("INFOS: Initial command line : $cmd_line\n",1);
 
 my $initialFileList = toolbox::readDir($initialDir);
 
-#Reorganizing initial files
 my $previousDir = $initialDir."/0_initialFiles";
+
+if ($rerun)
+{
+  # TODO ARRÊTÉ ICI
+}
+
+#Reorganizing initial files
 toolbox::makeDir($previousDir);
 
 foreach my $currentFile (@$initialFileList)
@@ -330,6 +341,11 @@ if (scalar @$fileList >=2 && $$fileList[0] =~ m/(sam|bam|vcf|bai|vcf\.gz|gtf)$/)
 my $originalDir = $initialDir; #Keep in memory the true initial directory
 if (defined $optionRef->{"scp"})
 {
+	if ($rerun)
+	{
+		toolbox::exportLog("ERROR: Rerunning an analysis with the \$scp option is not supported", 0)
+		# TODO : Save the path of the remote folder here so that when resuming we can try to get the files on the node
+	}
   #Picking up the "tmpRoot" info, ie the name of the temp dir on the nodes (eg /scratch, /tmp,...)
   my $scpOptions = toolbox::extractHashSoft($optionRef,"scp");
   my $tmpRoot = toolbox::extractOptions($scpOptions);

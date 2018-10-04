@@ -9,3 +9,7 @@ $previousDir=$newDir;
 $listOfBam=();
 $listOfGTF=();
 
+# Write the number of the last successful test on disk
+open ($stepFileHandle, '>', $stepFileName) or die "ERROR : $0 : cannot open file $stepFileName. $!\nExiting...\n";
+print $stepFileHandle $stepOrder;
+close $stepFileHandle;
