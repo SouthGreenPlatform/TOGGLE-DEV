@@ -164,8 +164,13 @@ $parser->add_args(
                         type     =>"Bool",
                         help     => 'Use if you want to generate workflow an analysis reports',
                         dest     => 'report'
-                    ]
-
+                    ],
+					[
+						'-rerun','--rerun',
+						required => 0,
+						type     => "Bool",
+						help     => "Restart the analysis from the last successful step",
+					]
                 );
 # for print usage "or die" in help
 #my $usage = $parser->format_usage();
