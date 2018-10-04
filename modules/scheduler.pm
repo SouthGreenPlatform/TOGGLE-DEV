@@ -261,7 +261,7 @@ sub schedulerRun
 sub waiter
 { #Global function for waiting, will recover the jobID to survey and will re-dispatch to scheduler
 
-    ($jobList,my $jobsInfos, $outputDir, $report) = @_;
+    ($jobList,my $jobsInfos, $outputDir, my $report) = @_;
 
     %jobHash = %{$jobsInfos};
 
