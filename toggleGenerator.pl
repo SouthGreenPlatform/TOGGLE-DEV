@@ -589,7 +589,7 @@ my $statDir = $outputDir."/statsReport";
 
 toolbox::makeDir($statDir) if $report;
 
-$#Graphviz Graphic generator
+#Graphviz Graphic generator
 toolbox::exportLog("#########################################\nINFOS: Generating graphical view of the current pipeline \n#########################################\n",1);
 onTheFly::generateGraphviz($hashOrder,$outputDir);
 
