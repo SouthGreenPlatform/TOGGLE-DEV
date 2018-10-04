@@ -300,7 +300,7 @@ toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
 my $inputFile="commandLine.tex";
 open(my $cmdFh,">", $inputFile) or toolbox::exportLog("$0 : open error of $inputFile .... $!\n",0);
 print $cmdFh "\n $cmd_line \n";
-#print $cmdFh "\n $reentrancyLog \n" if $reentrancyLog;
+print $cmdFh "\n $reentrancyLog \n" if $reentrancyLog;
 close $cmdFh;
 
 ##########################################
@@ -805,7 +805,7 @@ if ($orderAfter1000)
 	}
 
 	
-		
+		#renoming 
 		if ($addSample || $rerun)
 		{
 				my $mvCom = "mv $finalDir $workingDir/OLD_finalResults";
