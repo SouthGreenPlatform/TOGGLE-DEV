@@ -439,8 +439,9 @@ else
  toolbox::makeDir($workingDir);
 }
 
-my @listOfFiles;
-my @listSamplesRun;
+my @listOfFiles; #list of files (symbolic links of samples (path to pairing))
+my @listSamplesRun; #list of directory samples to run ifadd 
+my @listAllSamples; # list of all directory samples (alreadyrun and add )
 
 foreach my $file (@{$initialDirContent})
 {
@@ -448,12 +449,20 @@ foreach my $file (@{$initialDirContent})
 	my ($name) = split /_/, $shortName;
 	
 
-	next if ($name ~~ @alreadyRun);
+	if ($name ~~ @alreadyRun)
+	{
+		# populating array containing all directory of samples ifadd or rerun
+		push(@listAllSamples, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listAllSamples));
+	}
+	else
+	{
+	# populating array @listOfFiles, @listSamplesRun and @listAllSamples
 	my $lnCommand = "ln -s $file $workingDir/$shortName";
 	toolbox::run($lnCommand,"noprint");
 	push(@listOfFiles, "$workingDir/$shortName");
 	push(@listSamplesRun, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listSamplesRun));
-	
+	push(@listAllSamples, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listAllSamples));
+	}
 }
 
 if ($previousExtension eq "fastq")               # the data are all in FASTQ format
@@ -590,16 +599,6 @@ if ($orderBefore1000)
 	#generate TOGGLeBzzzz.pl
 	onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner,$hashCompressor,$hashmerge) if (!($addSample || $rerun));
 	
-	##CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
-	#if (scalar @{$listSamples} < 3) #ex: Data/file_1.fastq, Data/file_2.fastq, or a single SAM/BAM/VCF individual
-	#{
-	#  my @listPath = split /\//, $$listSamples[0];
-	#  pop @listPath;
-	#  my $trueDirName=join ("/",@listPath);
-	#  $trueDirName .= ":";
-	#  my @tempList = ($trueDirName);
-	#  $listSamples = \@tempList;
-	#}
 	my $errorList="obiWanKenobi";
 
 	#we need those variable for Scheduler launching
@@ -607,8 +606,6 @@ if ($orderBefore1000)
 	my %jobHash;
 	foreach my $currentDir(@listSamplesRun)
 	{
-		#next unless $currentDir =~ m/:$/; # Will work only on folders
-		#$currentDir =~ s/:$//;
 		my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
 		$launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
 		$launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
@@ -691,10 +688,16 @@ if ($orderBefore1000)
 	if ($orderAfter1000) #There is a global analysis afterward
 	{
 		#Creating intermediate directory
-		toolbox::makeDir($intermediateDir) if (!($addSample || $rerun));
+		
+		if ($addSample || $rerun)
+		{
+				my $mvCom = "mv $intermediateDir $workingDir/OLD_intermediateResults";
+				toolbox::run($mvCom, "noprint");
+		}
+		toolbox::makeDir($intermediateDir);
 
 		# Going through the individual tree
-		foreach my $currentDir (@listSamplesRun)
+		foreach my $currentDir (@listAllSamples)
 		{
 			next unless $currentDir =~ m/\//; # Will work only on folders
 			next if $currentDir =~ m/$errorList/; # A job in error will not be transfered, to avoid errors.
