@@ -646,7 +646,7 @@ if ($orderBefore1000)
 	if ($jobList ne "")
 	{
 	  #Have to wait that all jobs are finished
-	  my $waitOutput = scheduler::waiter($jobList,\%jobHash, $outputDir);
+	  my $waitOutput = scheduler::waiter($jobList,\%jobHash, $outputDir, $report);
 	  if ($waitOutput != 1)
 	  {
 		#Creating a chain with the list of individual with an error in the job...
@@ -800,7 +800,7 @@ if ($orderAfter1000)
 	  if ($jobList ne "")
 	  {
 		#Have to wait that all jobs are finished
-		my $waitOutput = scheduler::waiter($jobList,\%jobHash, $outputDir);
+		my $waitOutput = scheduler::waiter($jobList,\%jobHash, $outputDir, $report);
 		if ($waitOutput != 1)
 		{
 		  toolbox::exportLog("ERROR: $0 : Multiple job is not finished correctly, please check error log $errorFile.\n",0);
