@@ -293,8 +293,8 @@ sub schedulerWait
     #Compiling infos about sge jobs: jobID, node number, exit status
     sleep 5;
 	
-if ($report)
-{
+
+
 	#open file for report job info
 	my $openNameFile = $outputDir."/sample_parallel_table.tex";
 	
@@ -303,14 +303,14 @@ if ($report)
 		 $openNameFile = $outputDir."/sample_global_table.tex";
 	}
 	
-	open (my $fhOut, '>', $openNameFile) or die "\nERROR: $0 : cannot open file $openNameFile. $!\nExiting...\n";
-	
+	open (my $fhOut, '>', $openNameFile) or die "\nERROR: $0 : cannot open file $openNameFile. $!\nExiting...\n" if ($report);
+
 	my $outputLineTex = "\\begin{table}[ht]
 	\\centering
 	\\begin{tabular}{l||r||r}
 	Samples & Job ID & Status \\\\\\hline
-	";
-}
+	" if ($report);
+
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
 Individual\tJobID\tExitStatus
