@@ -589,9 +589,6 @@ toolbox::makeDir($statDir);
 toolbox::exportLog("#########################################\nINFOS: Generating graphical view of the current pipeline \n#########################################\n",1);
 onTheFly::generateGraphviz($hashOrder,$outputDir);
 
-
-print Dumper(@listSamplesRun);
-
 if ($orderBefore1000)
 {
 	toolbox::exportLog("\n#########################################\nINFOS: Running individual pipeline script \n#########################################\n",1);
@@ -692,9 +689,9 @@ if ($orderBefore1000)
 		if ($addSample || $rerun)
 		{
 				my $mvCom = "mv $intermediateDir $workingDir/OLD_intermediateResults";
-				toolbox::run($mvCom);
-				print $workingDir."\n";
+				toolbox::run($mvCom, "noprint");
 		}
+		
 		toolbox::makeDir($intermediateDir);
 
 		# Going through the individual tree
@@ -807,6 +804,14 @@ if ($orderAfter1000)
 	  }
 	}
 
+	
+		
+		if ($addSample || $rerun)
+		{
+				my $mvCom = "mv $finalDir $workingDir/OLD_finalResults";
+				toolbox::run($mvCom, "noprint");
+		}
+	
 	#Creating final directory
 	toolbox::makeDir($finalDir);
 
