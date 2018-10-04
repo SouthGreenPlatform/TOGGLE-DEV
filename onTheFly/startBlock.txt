@@ -165,12 +165,12 @@ $parser->add_args(
                         help     => 'Use if you want to generate workflow an analysis reports',
                         dest     => 'report'
                     ],
-					[
-						'-rerun','--rerun',
-						required => 0,
-						type     => "Bool",
-						help     => "Restart the analysis from the last successful step",
-					]
+                    [
+                        '-rerun','--rerun',
+                        required => 0,
+                        type     => "Bool",
+                        help     => "Restart the analysis from the last successful step",
+                    ]
                 );
 # for print usage "or die" in help
 #my $usage = $parser->format_usage();
@@ -341,11 +341,11 @@ if (scalar @$fileList >=2 && $$fileList[0] =~ m/(sam|bam|vcf|bai|vcf\.gz|gtf)$/)
 my $originalDir = $initialDir; #Keep in memory the true initial directory
 if (defined $optionRef->{"scp"})
 {
-	if ($rerun)
-	{
-		toolbox::exportLog("ERROR: Rerunning an analysis with the \$scp option is not supported", 0)
-		# TODO : Save the path of the remote folder here so that when resuming we can try to get the files on the node
-	}
+  if ($rerun)
+  {
+    toolbox::exportLog("ERROR: Rerunning an analysis with the \$scp option is not supported", 0)
+    # TODO : Save the path of the remote folder here so that when resuming we can try to get the files on the node
+  }
   #Picking up the "tmpRoot" info, ie the name of the temp dir on the nodes (eg /scratch, /tmp,...)
   my $scpOptions = toolbox::extractHashSoft($optionRef,"scp");
   my $tmpRoot = toolbox::extractOptions($scpOptions);
