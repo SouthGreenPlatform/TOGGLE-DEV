@@ -297,11 +297,14 @@ toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
 #toolbox::exportLog($reentrancyLog,1) if $reentrancyLog;
 
 ### Generate tex file
-my $inputFile="commandLine.tex";
-open(my $cmdFh,">", $inputFile) or toolbox::exportLog("$0 : open error of $inputFile .... $!\n",0);
-print $cmdFh "\n $cmd_line \n";
-print $cmdFh "\n $reentrancyLog \n" if $reentrancyLog;
-close $cmdFh;
+if ($report)
+{
+	my $inputFile="commandLine.tex";
+	open(my $cmdFh,">", $inputFile) or toolbox::exportLog("$0 : open error of $inputFile .... $!\n",0);
+	print $cmdFh "\n $cmd_line \n";
+	print $cmdFh "\n $reentrancyLog \n" if $reentrancyLog;
+	close $cmdFh;
+}
 
 ##########################################
 # Check directories
@@ -583,9 +586,10 @@ my $intermediateDir = $workingDir."/intermediateResults";
 
 #Creating  directory
 my $statDir = $outputDir."/statsReport";
-toolbox::makeDir($statDir);
 
-#Graphviz Graphic generator
+toolbox::makeDir($statDir) if $report;
+
+$#Graphviz Graphic generator
 toolbox::exportLog("#########################################\nINFOS: Generating graphical view of the current pipeline \n#########################################\n",1);
 onTheFly::generateGraphviz($hashOrder,$outputDir);
 
@@ -804,11 +808,10 @@ if ($orderAfter1000)
 	  }
 	}
 
-	
-		#renoming 
+		#renoming finalResults to avoid lost results 
 		if ($addSample || $rerun)
 		{
-				my $mvCom = "mv $finalDir $workingDir/OLD_finalResults";
+				my $mvCom = "mv $finalDir $outputDir/OLD_finalResults";
 				toolbox::run($mvCom, "noprint");
 		}
 	
