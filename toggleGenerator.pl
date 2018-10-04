@@ -692,7 +692,8 @@ if ($orderBefore1000)
 		if ($addSample || $rerun)
 		{
 				my $mvCom = "mv $intermediateDir $workingDir/OLD_intermediateResults";
-				toolbox::run($mvCom, "noprint");
+				toolbox::run($mvCom);
+				print $workingDir."\n";
 		}
 		toolbox::makeDir($intermediateDir);
 
