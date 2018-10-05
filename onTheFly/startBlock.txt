@@ -232,6 +232,8 @@ system("touch $logFile $errorFile") and die "\nERROR: $0 : cannot create the log
 # Determine the name of the file containing the last successful step
 my $stepFileName=$initialDir."/".$readGroup."_last_step";
 my $stepFileHandle;
+# This will contain the last successful step when using rerun
+my $lastOkStep;
 
 
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
@@ -243,7 +245,18 @@ my $previousDir = $initialDir."/0_initialFiles";
 
 if ($rerun)
 {
-  # TODO ARRÊTÉ ICI
+  # If the initialFiles folder does not exist, the analysis has not started at all
+  if (! -d $previousDir)
+  {
+    toolbox::exportLog("ERROR : Rerun mode has been requested but $previousDir does not exist, so the analysis has not started", 0);
+  }
+
+  # Read the last successful step from the file
+  open ($stepFileHandle, '<', $stepFileName) or die "ERROR : $0 : cannot open file $stepFileName. $!\nExiting...\n";
+  $lastOkStep = <$stepFileHandle>;
+  close $stepFileHandle;
+
+  toolbox::exportLog("INFO : Rerun mode enabled. Will resume after step $lastOkStep.", 1);
 }
 
 #Reorganizing initial files

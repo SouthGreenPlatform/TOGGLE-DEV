@@ -612,6 +612,8 @@ if ($orderBefore1000)
 		$launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
 		$launcherCommand.=" -nocheck" if ($checkFastq == 1);
 		$launcherCommand.=" -report" if ($report);
+		$launcherCommand.=" -rerun" if ($rerun);
+		# TODO checks to see on which samples rerun has to be done
 
 		#Launching through the scheduler launching system
 		my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
