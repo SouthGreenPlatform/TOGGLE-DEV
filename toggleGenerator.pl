@@ -341,10 +341,10 @@ my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,$refFastaFile,$gf
 # Transferring data in the output folder and organizing
 #########################################
 
-# checking if not sub-directory
+# check that the input dir has no subdirectories
 toolbox::checkInitialDirContent($initialDir);
 
-#Checking input data homogeneity
+# check that all of the input files are of the same type (homogeneity)
 my $initialDirContent=toolbox::readDir($initialDir);
 my $previousExtension=0;
 foreach my $file (@{$initialDirContent})
@@ -429,28 +429,31 @@ if ("processRadtags" ~~ @values)												# Check if processRadtags in step or
 my $resultsDir = "output";
 
 my $workingDir = $outputDir."/$resultsDir";
-my @alreadyRun = ();
 
-if ($addSample || $rerun)
+# If we are adding new samples, first list all the existing ones
+# TODO For rerun, we might want to check the samples that are already complete here and also add them to the list
+my @alreadyRun = ();
+if ($addSample)
 {
+	# TODO potential bug : do we check somewhere that $workingDir exists ?
 	my $files = `ls $workingDir`;
 	chomp $files;
- @alreadyRun = split /\n/, $files;
+	@alreadyRun = split /\n/, $files;
 }
 else
 {
- toolbox::makeDir($workingDir);
+	toolbox::makeDir($workingDir);
 }
 
 my @listOfFiles; #list of files (symbolic links of samples (path to pairing))
-my @listSamplesRun; #list of directory samples to run ifadd 
+my @listSamplesRun; #list of directory samples to run ifadd
 my @listAllSamples; # list of all directory samples (alreadyrun and add )
 
 foreach my $file (@{$initialDirContent})
 {
 	my ($shortName)=toolbox::extractPath($file);
 	my ($name) = split /_/, $shortName;
-	
+
 
 	if ($name ~~ @alreadyRun)
 	{
@@ -459,12 +462,12 @@ foreach my $file (@{$initialDirContent})
 	}
 	else
 	{
-	# populating array @listOfFiles, @listSamplesRun and @listAllSamples
-	my $lnCommand = "ln -s $file $workingDir/$shortName";
-	toolbox::run($lnCommand,"noprint");
-	push(@listOfFiles, "$workingDir/$shortName");
-	push(@listSamplesRun, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listSamplesRun));
-	push(@listAllSamples, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listAllSamples));
+		# populating array @listOfFiles, @listSamplesRun and @listAllSamples
+		my $lnCommand = "ln -s $file $workingDir/$shortName";
+		toolbox::run($lnCommand,"noprint");
+		push(@listOfFiles, "$workingDir/$shortName");
+		push(@listSamplesRun, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listSamplesRun));
+		push(@listAllSamples, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listAllSamples));
 	}
 }
 
@@ -474,7 +477,7 @@ if ($previousExtension eq "fastq")               # the data are all in FASTQ for
 	# recognition of pairs of files and create a folder for each pair
 	#########################################
 	my $pairsInfos = pairing::pairRecognition(\@listOfFiles,$checkFastq);            # from files fasta recognition of paired files
-	pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder
+	pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder. Also move the files in the folders.
 
 	##DEBUG toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
 
@@ -519,7 +522,7 @@ if ($refFastaFile ne 'None')
 	#Transforming in a list of files
 	my @listOfRefFiles = split /\n/, $refLsResults;
 
-	
+
 	my $goodFileFasta = ""; #Providing the good reference location
 	while (@listOfRefFiles)
 	{
@@ -599,7 +602,7 @@ if ($orderBefore1000)
 
 	#generate TOGGLeBzzzz.pl
 	onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner,$hashCompressor,$hashmerge) if (!($addSample || $rerun));
-	
+
 	my $errorList="obiWanKenobi";
 
 	#we need those variable for Scheduler launching
@@ -691,13 +694,13 @@ if ($orderBefore1000)
 	if ($orderAfter1000) #There is a global analysis afterward
 	{
 		#Creating intermediate directory
-		
+
 		if ($addSample || $rerun)
 		{
 				my $mvCom = "mv $intermediateDir $workingDir/OLD_intermediateResults";
 				toolbox::run($mvCom, "noprint");
 		}
-		
+
 		toolbox::makeDir($intermediateDir);
 
 		# Going through the individual tree
@@ -810,13 +813,13 @@ if ($orderAfter1000)
 	  }
 	}
 
-		#renoming finalResults to avoid lost results 
+		#renoming finalResults to avoid lost results
 		if ($addSample || $rerun)
 		{
 				my $mvCom = "mv $finalDir $outputDir/OLD_finalResults";
 				toolbox::run($mvCom, "noprint");
 		}
-	
+
 	#Creating final directory
 	toolbox::makeDir($finalDir);
 
