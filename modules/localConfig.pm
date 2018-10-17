@@ -138,10 +138,10 @@ our $fastme= "/path/to/fastme";
 our $fastqStats= "/path/to/fastq-stats";
 
 #path to directory containing bin for hisat2
-our $hisat2="path/to/hisat2/"
+our $hisat2="path/to/hisat2/";
 
 #path to stringtie
-our $stringtie="path/to/stringtie"
+our $stringtie="path/to/stringtie";
 
 #path to nanoplot
 our $nanoplot = "/path/to/nanoplot";
