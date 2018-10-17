@@ -632,13 +632,13 @@ is_deeply(\\\@observedOutput,\\\@expectedOutput,\'toggleGenerator - Two FILES (n
 
 
 # list of files to check
-print "Finished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
+print "\n#######################################\nFinished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
     - modules/$moduleFile ##NOTE: Please check if the variable is noted as \$bwa and not /usr/bin/bwa !! 
     - modules/localConfig.pm
     - modules/softwareManagement.pm ##NOTE: Please check if the variable is noted as \$bwa and not /usr/bin/bwa !!
     - modules/fileConfigurator.pm ##NOTE: Please add line $function =>[\"\"] to add default value for test block 
     - onTheFly/$blockName
     - test/modules/$moduleTest
-    - test/blocks/$blockTest\n";
+    - test/blocks/$blockTest\n\n#######################################\n";
 
 exit;
