@@ -275,7 +275,7 @@ else
         {
             my $subFunction = $function;
             $subFunction =~ s/$module//;
-            my $newName = "\n#NEW SOFT ADDED AUTOMATICALLY\n\n\t#FOR $function\n\tcase (\$name".' =~ m/^'."$module".'[\s|\.|\-| \/|\\|\|]*'."$subFunction".'/i'."){\$correctedName=\"$function\";} #Correction for $function";
+            my $newName = "\n\t#FOR $function\n\tcase (\$name".' =~ m/^'."$module".'[\s|\.|\-| \/|\\|\|]*'."$subFunction".'/i'."){\$correctedName=\"$function\";} #Correction for $function";
             $line .= "\n";
             $line .= $newName;
         }
