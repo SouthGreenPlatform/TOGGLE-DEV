@@ -275,21 +275,29 @@ else
         {
             my $subFunction = $function;
             $subFunction =~ s/$module//;
-            my $newName = "\n#NEW SOFT ADDED AUTOMATICALLY\n\n\t#FOR $function\n\tcase (\$name".' =~ m/^'."$module".'[\s|\.|\-| \/|\\|\|]*'."$subFunction".'/i'."){\$correctedName=\"$function\";} #Correction for $function";
+            my $newName = "\n\t#FOR $function\n\tcase (\$name".' =~ m/^'."$module".'[\s|\.|\-| \/|\\|\|]*'."$subFunction".'/i'."){\$correctedName=\"$function\";} #Correction for $function";
             $line .= "\n";
             $line .= $newName;
         }
         elsif ($line =~ m/#INFOS FOR NEW TOOLS/)
         {
-            my $newInfos = "'$function'=>{'IN' => '$in',\n\t\t'OUT'=>'$out',\n\t\t";
+            my $newInfos = "\t'$function'=>{'IN' => '$in',\n\t\t\t'OUT'=>'$out',\n\t\t\t";
             if ($mandatory ne "")
             {
-                $newInfos .="'MANDATORY' => '$mandatory',\n\t\t";
+                $newInfos .="'MANDATORY' => '$mandatory',\n\t\t\t";
             }
             $version =~s/"/'/g;
             $newInfos .="'cmdVersion' => \"$version\"},\n";
             
-            $line .= "\n#INFOS FOR NEW TOOLS\n".$newInfos;
+            $line .= "\n".$newInfos;
+        }
+        elsif ($line =~ m/#LOG INFO FOR NEW TOOLS/)
+        {
+            my $subFunction = $function;
+            $subFunction =~ s/$module//;
+            my $newName = "\n\t#FOR $function\n\tcase (\$softOrder".' =~ m/^'."$module".'.*/i'."){\$softPathVersion{\"$function\"}=\`$softInfos{\$softOrder}{'cmdVersion'} if not defined \$softPathVersion{\"$function\"};\n\t\t\$softPath{\"$function\"}=\$function if not defined$softPath{\"$function\"};\n}";
+            $line .= "\n";
+            $line .= $newName;
         }
         
         
