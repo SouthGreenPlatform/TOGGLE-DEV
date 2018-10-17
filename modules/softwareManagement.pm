@@ -115,6 +115,10 @@ sub correctName
         case ($name =~ m/^scp/i or $name =~ m/^rsync/i or $name =~ m/^transfer/i){$correctedName="scp";} #Correction for scp transfer
 
         #NEW SOFT ADDED AUTOMATICALLY
+
+
+	#FOR minimap2Index
+	case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Index/i){$correctedName="minimap2Index";} #Correction for minimap2Index
         
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
@@ -277,6 +281,12 @@ sub returnSoftInfos
 	my %softInfos = (
         
     #INFOS FOR NEW TOOLS
+
+	'minimap2Index'=>{'IN' => 'fasta',
+		'OUT'=>'NA',
+		'MANDATORY' => 'reference',
+		'cmdVersion' => "minimap2 --version"},
+
 
 	'nanoplot'=>{'IN' => 'fastq',
 						'OUT'=>'NA',
@@ -614,6 +624,12 @@ sub writeLogVersion
 		{
 
             #LOG INFOS FOR NEW TOOLS
+
+			#FOR minimap2.pm
+			case ($softOrder =~ m/^minimap2.*/i){$softPathVersion{"minimap2"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"minimap2"};
+											$softPath{"minimap2"}= $minimap2 if not defined $softPath{"minimap2"};
+											}
+
 
 			#FOR bwa.pm
 			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"bwa"};
