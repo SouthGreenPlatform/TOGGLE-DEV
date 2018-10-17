@@ -38,7 +38,7 @@ use Switch;
 
 #This tool will allows developer to add easily a new software in TOGGLe
 
-print "\nWelcome to the tenebrous world of TOGGLe, the best workflow manager you have ever dreamed of (especially compared to this bullshit of Galaxy...)\n";
+print "\nWelcome to the tenebrous world of TOGGLe, the best workflow manager you have ever dreamed of...\n";
 
 #Asking for the module name, ie the generic tool
 my $module="";
