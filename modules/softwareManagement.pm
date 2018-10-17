@@ -116,6 +116,9 @@ sub correctName
 
         #NEW SOFT ADDED AUTOMATICALLY
 
+	#FOR minimap2
+	case ($name =~ m/^minimap2/i){$correctedName="minimap2";} #Correction for minimap2
+
 
 	#FOR minimap2Index
 	case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Index/i){$correctedName="minimap2Index";} #Correction for minimap2Index
@@ -281,6 +284,11 @@ sub returnSoftInfos
 	my %softInfos = (
         
     #INFOS FOR NEW TOOLS
+	'minimap2'=>{'IN' => 'fastq,fasta',
+			'OUT'=>'sam',
+			'MANDATORY' => 'reference',
+			'cmdVersion' => "minimap2 --version"},
+
 
 	'minimap2Index'=>{'IN' => 'fasta',
 		'OUT'=>'NA',

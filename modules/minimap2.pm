@@ -65,4 +65,27 @@ sub minimap2Index
 	toolbox::exportLog("ERROR: minimap2::minimap2Index : ABORTED\n",0);
 }
 
+
+sub minimap2
+{
+#The standard way to write variables are:
+#REFERENCE = $reference#PLEASE CHECK IF IT IS OK AT THIS POINT!!
+	my ($fileIn,$fileOut,$reference,$optionsHachees) = @_;
+	my $validation = 0;
+	switch (1)
+	{
+		case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}		
+		case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
+		else {toolbox::exportLog("ERROR: minimap2::minimap2 : The file $fileIn is not a fastq,fasta file\n",0);}
+	};
+	die (toolbox::exportLog("ERROR: minimap2::minimap2 : The file $fileIn is not a fatsq,fasta file\n",0)) if $validation == 0;	#Picking up options
+	my $options="";
+	$options = toolbox::extractOptions($optionsHachees) if $optionsHachees;
+
+	#Execute command
+	my $command = "$minimap2 $options $reference $fileIn > $fileOut" ;
+	return 1 if (toolbox::run($command));
+	toolbox::exportLog("ERROR: minimap2::minimap2 : ABORTED\n",0);
+}
+
 1;
