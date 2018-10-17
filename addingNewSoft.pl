@@ -196,6 +196,10 @@ $subText .= "\n\t\telse {toolbox::exportLog(\"ERROR: $module::$function : The fi
 $subText .= "\t#Picking up options\n\t".'my $options="";'."\n";
 $subText .= "\t".'$options = toolbox::extractOptions($optionsHachees) if $optionsHachees;'."\n\n";
 
+#Adding options in the command
+
+$commandLine =~ s/\[options\]/\$options/;
+
 #Generating command
 $subText .= "\t#Execute command\n";
 $commandLine =~ s/FILEIN/\$fileIn/;
