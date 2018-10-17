@@ -295,7 +295,7 @@ else
         {
             my $subFunction = $function;
             $subFunction =~ s/$module//;
-            my $newName = "\n\t#FOR $function\n\tcase (\$softOrder".' =~ m/^'."$module".'.*/i'."){\$softPathVersion{\"$function\"}=\`$softInfos{\$softOrder}{'cmdVersion'} if not defined \$softPathVersion{\"$function\"};\n\t\t\$softPath{\"$function\"}=\$function if not defined$softPath{\"$function\"};\n}";
+            my $newName = "\n\t#FOR $function\n\tcase (\$softOrder".' =~ m/^'."$module".'.*/i'."){\$softPathVersion{\"$function\"}=\`\$softInfos{\$softOrder}{'cmdVersion'} if not defined \$softPathVersion{\"$function\"};\n\t\t\$softPath{\"$function\"}=\$function if not defined \$softPath{\"$function\"};\n}";
             $line .= "\n";
             $line .= $newName;
         }
