@@ -281,15 +281,15 @@ else
         }
         elsif ($line =~ m/#INFOS FOR NEW TOOLS/)
         {
-            my $newInfos = "'$function'=>{'IN' => '$in',\n\t\t'OUT'=>'$out',\n\t\t";
+            my $newInfos = "\t'$function'=>{'IN' => '$in',\n\t\t\t'OUT'=>'$out',\n\t\t\t";
             if ($mandatory ne "")
             {
-                $newInfos .="'MANDATORY' => '$mandatory',\n\t\t";
+                $newInfos .="'MANDATORY' => '$mandatory',\n\t\t\t";
             }
             $version =~s/"/'/g;
             $newInfos .="'cmdVersion' => \"$version\"},\n";
             
-            $line .= "\n#INFOS FOR NEW TOOLS\n".$newInfos;
+            $line .= "\n".$newInfos;
         }
         
         
