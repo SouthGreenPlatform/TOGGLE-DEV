@@ -337,6 +337,8 @@ toolbox::run($copyCommand,"noprint");
 my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,$refFastaFile,$gffFile,$keyfile);
 
 
+
+
 ##########################################
 # Transferring data in the output folder and organizing
 #########################################
@@ -420,6 +422,30 @@ if ("processRadtags" ~~ @values)												# Check if processRadtags in step or
 # END check if 1=processRadtags in $order
 #########################################
 
+# Determine the last order before 1000 to be used with rerun and generateScripts
+
+my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000,$lastTrueOrderBefore1000);
+# lastTrueOrderBefore1000 takes NA steps into account, lastOrderBefore1000 doesn't
+
+#Initializing value of lastOrder in case of only NA OUT pipeline
+$lastOrderBefore1000=1;
+
+#Obtaining infos for OUT NA steps
+my $hashInOut= softwareManagement::returnSoftInfos();
+
+foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
+{
+	if ($step < 1000)
+	{
+		$$orderBefore1000{$step}=$$hashOrder{$step};
+		$lastTrueOrderBefore1000 = $step;
+		$lastOrderBefore1000 = $step unless $hashInOut->{$$hashOrder{$step}}{"OUT"} eq "NA"; # the last step will be everything but a dead-end one.
+	}
+	else
+	{
+		$$orderAfter1000{$step}=$$hashOrder{$step};
+	}
+}
 
 #########################################
 # Check working dir
@@ -433,7 +459,7 @@ my $workingDir = $outputDir."/$resultsDir";
 # If we are adding new samples, first list all the existing ones
 # TODO For rerun, we might want to check the samples that are already complete here and also add them to the list
 my @alreadyRun = ();
-if ($addSample)
+if ($addSample || $rerun)
 {
 	# TODO potential bug : do we check somewhere that $workingDir exists ?
 	my $files = `ls $workingDir`;
@@ -445,15 +471,53 @@ else
 	toolbox::makeDir($workingDir);
 }
 
+# Go through the list of samples which already have a have a working dir and see which ones need to be rerun or run
+my @rerunSamples = (); # Samples that need to be lauched with --rerun
+if ($rerun)
+{
+	my @newAlreadyRun = ();
+	foreach my $sample (@alreadyRun)
+	{
+		# If we are in rerun mode, we have to determine what state this sample was left in
+		# We just know that the folder for this sample exists
+
+		# If the 0_initialFiles folder does not exist, toggleBzz has not run at all for this sample
+		# If the step file does not exist, not a single step has completed succesfully
+		# In both cases, we simply empty the folder and treat it like a new sample
+
+		my $stepFilePath = "$workingDir/$sample/.".$sample."_last_step";
+		if (! -d "$workingDir/$sample/0_initalFiles" || ! -f $stepFilePath)
+		{
+			system("rm -r $workingDir/$sample/*");
+			next;
+		}
+
+		open (my $stepFileHandle, '<', $stepFilePath) or die "ERROR : $0 : cannot open file $stepFilePath. $!\nExiting...\n";
+		my $lastOkStep = <$stepFileHandle>;
+
+		if ($lastOkStep == $lastTrueOrderBefore1000)
+		{
+			# The individual analysis has finished
+			push @newAlreadyRun, $sample;
+		}
+		else
+		{
+			push @rerunSamples, $sample;
+		}
+
+	}
+
+	@alreadyRun = @newAlreadyRun;
+}
+
 my @listOfFiles; #list of files (symbolic links of samples (path to pairing))
 my @listSamplesRun; #list of directory samples to run ifadd
-my @listAllSamples; # list of all directory samples (alreadyrun and add )
+my @listAllSamples; # list of all directory samples (already run and added)
 
 foreach my $file (@{$initialDirContent})
 {
-	my ($shortName)=toolbox::extractPath($file);
-	my ($name) = split /_/, $shortName;
-
+	my ($shortName)=toolbox::extractPath($file); # name of the file i.e irigin1_1.fastq
+	my ($name) = split /_/, $shortName; # i.e irigin1
 
 	if ($name ~~ @alreadyRun)
 	{
@@ -463,9 +527,12 @@ foreach my $file (@{$initialDirContent})
 	else
 	{
 		# populating array @listOfFiles, @listSamplesRun and @listAllSamples
-		my $lnCommand = "ln -s $file $workingDir/$shortName";
-		toolbox::run($lnCommand,"noprint");
-		push(@listOfFiles, "$workingDir/$shortName");
+		if ($name !~ @rerunSamples)
+		{
+			my $lnCommand = "ln -s $file $workingDir/$shortName";
+			toolbox::run($lnCommand,"noprint");
+			push(@listOfFiles, "$workingDir/$shortName");
+		}
 		push(@listSamplesRun, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listSamplesRun));
 		push(@listAllSamples, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listAllSamples));
 	}
@@ -558,26 +625,6 @@ my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up inf
 my $hashCompressor=toolbox::extractHashSoft($configInfo,"compress"); #Picking up infos for steps to be compress
 my $hashmerge=toolbox::extractHashSoft($configInfo,"merge"); #Picking up infos for steps to be merge
 
-my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
-
-#Initializing value of lastOrder in case of only NA OUT pipeline
-$lastOrderBefore1000=1;
-
-#Obtaining infos for OUT NA steps
-my $hashInOut= softwareManagement::returnSoftInfos();
-
-foreach my $step (sort {$a <=> $b} keys %{$hashOrder}) #Will create two subhash for the order, to launch twice the generateScript
-{
-	if ($step < 1000)
-	{
-		$$orderBefore1000{$step}=$$hashOrder{$step};
-		$lastOrderBefore1000 = $step unless $hashInOut->{$$hashOrder{$step}}{"OUT"} eq "NA"; # the last step will be everything but a dead-end one.
-	}
-	else
-	{
-		$$orderAfter1000{$step}=$$hashOrder{$step};
-	}
-}
 
 #########################################
 # Launching the generated script on all subfolders if steps lower than 1000
@@ -615,8 +662,8 @@ if ($orderBefore1000)
 		$launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
 		$launcherCommand.=" -nocheck" if ($checkFastq == 1);
 		$launcherCommand.=" -report" if ($report);
-		$launcherCommand.=" -rerun" if ($rerun);
-		# TODO checks to see on which samples rerun has to be done
+		$launcherCommand.=" -rerun" if ($rerun && $currentDir ~~ @rerunSamples);
+		toolbox::exportLog("Launch command for $currentDir :\n\t$launcherCommand", 0);
 
 		#Launching through the scheduler launching system
 		my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'

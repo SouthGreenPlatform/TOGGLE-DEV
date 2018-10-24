@@ -209,7 +209,7 @@ foreach my $file (@listFilesMandatory)
   toolbox::checkFile($file); #check file
 }
 
-toolbox::existsDir($initialDir);        # check if this directory exists
+toolbox::existsDir($initialDir);        # exit with an error if the initial dir does not exist
 
 
 ##########################################
@@ -230,7 +230,7 @@ my $errorFile=$initialDir."/".$readGroup."_log.e";
 system("touch $logFile $errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
 
 # Determine the name of the file containing the last successful step
-my $stepFileName=$initialDir."/".$readGroup."_last_step";
+my $stepFileName=$initialDir."/.".$readGroup."_last_step";
 my $stepFileHandle;
 # This will contain the last successful step when using rerun
 my $lastOkStep;
