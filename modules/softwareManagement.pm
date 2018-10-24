@@ -119,6 +119,13 @@ sub correctName
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
 
+        #FOR hisat2
+        case ($name =~ m/^hisat2[\s|\.|\-| \/|\|\|]*/i){$correctedName="hisat2";} #Correction for hisat2
+	
+        #FOR stringtie
+        case ($name =~ m/^stringtie[\s|\.|\-| \/|\|\|]*/i){$correctedName="stringtie";} #Correction for stringtie
+    
+    
         #FOR bwa.pm
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
@@ -282,6 +289,14 @@ sub returnSoftInfos
 						'OUT'=>'NA',
 						'cmdVersion' => "$nanoplot -v"},
     
+    'stringtie'=>{'IN' => 'bam,gtf',
+                        'OUT'=>'gtf',
+                        'cmdVersion' => "$stringtie -v 2>&1 | grep 'StringTie v' "},
+    
+	'hisat2'=>{'IN' => 'fastq',
+                        'OUT'=>'sam',
+                        'cmdVersion' => "$hisat2 -v 2>&1 | grep 'HISAT2 version'"},
+
 	'abyss' =>{'IN' => 'fasta,fastq,sam,bam',
 					 'OUT' => 'fasta',
 					 'cmdVersion' => "$abyss --version | grep 'GNU Make' " },
