@@ -6,7 +6,8 @@ $order
 1000=stringtie2
 
 $samtoolsview
--bS
+-b
+-h
 
 $samtoolssort
 
