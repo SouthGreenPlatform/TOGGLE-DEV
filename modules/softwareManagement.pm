@@ -629,7 +629,17 @@ sub writeLogVersion
 		{
 
             #LOG INFOS FOR NEW TOOLS
+            
+            #FOR stringtie
+            case ($softOrder =~ m/^stringtie.*/i){$softPathVersion{"stringtie"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"stringtie"};
+            		                        $softPath{"stringtie"}= $stringtie if not defined $softPath{"stringtie"};
+											}
 
+			#FOR hisat2.pm
+			case ($softOrder =~ m/^hisat2.*/i){$softPathVersion{"hisat2"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"hisat2"};
+			                               $softPath{"hisat2"}= $hisat2 if not defined $softPath{"hisat2"};
+											}
+            
 			#FOR bwa.pm
 			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"bwa"};
 											$softPath{"bwa"}= $bwa if not defined $softPath{"bwa"};
