@@ -623,7 +623,8 @@ sub writeLogVersion
 
 	foreach my $softOrder ( values %{ $hashOrder } )
 	{
-		#DEBUG: print $softOrder." DANS LA BOUCLE\n";
+		#DEBUG:
+        print $softOrder." DANS LA BOUCLE\n";
 
 		switch (1)
 		{
@@ -631,7 +632,7 @@ sub writeLogVersion
             #LOG INFOS FOR NEW TOOLS
             
             #FOR stringtie
-            case ($softOrder =~ m/^stringtie.*/i){$softPathVersion{"stringtie"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"stringtie"};
+            case ($softOrder =~ m/^stringtie.*/i){$softPathVersion{"stringtie"}= `$softInfos{"stringtie"}{'cmdVersion'}` if not defined $softPathVersion{"stringtie"};
             		                        $softPath{"stringtie"}= $stringtie if not defined $softPath{"stringtie"};
 											}
 
