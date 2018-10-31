@@ -746,7 +746,7 @@ if ($orderAfter1000)
 
     # Going through the individual tree
     my $lastDir = $workingDir."/".$lastOrder."_".$$orderAfter1000{$lastOrder};
-    $lastDir =~ s/ //g;
+    $lastDir =~ s/ /_/g;
     ##DEBUG toolbox::exportLog($lastDir,1);
     my $fileList = toolbox::readDir($lastDir);
     foreach my $file (@{$fileList}) #Copying the final data in the final directory
