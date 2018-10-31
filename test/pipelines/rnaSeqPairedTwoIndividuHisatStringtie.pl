@@ -54,7 +54,7 @@ my $dataRefRnaseqGFF = "$toggle/data/Bank/referenceRnaseqGFF.gff3";
 
 
 print "\n\n#################################################\n";
-print "#### TEST RNASEQPaired  (one individu) / no SGE mode\n";
+print "#### TEST RNASEQPaired  (two individu) / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
