@@ -99,7 +99,7 @@ sub hisat2
     {
 
         #Basic command line
-        my $command = $hisat2."/hisat2 --rg-id ".$readGroup." ".$options." -x ".$refFastaFileIn;
+        my $command = $hisat2."/hisat2 --rg-id ".$readGroup." --rg SM:".$readGroup." ".$options." -x ".$refFastaFileIn;
 
         if ($reverseFastqFile ne "NA" && toolbox::sizeFile($reverseFastqFile) == 1) #Mate sequences
         {
