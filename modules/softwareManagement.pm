@@ -623,8 +623,7 @@ sub writeLogVersion
 
 	foreach my $softOrder ( values %{ $hashOrder } )
 	{
-		#DEBUG:
-        print $softOrder." DANS LA BOUCLE\n";
+		#DEBUG:print $softOrder." DANS LA BOUCLE\n";
 
 		switch (1)
 		{
