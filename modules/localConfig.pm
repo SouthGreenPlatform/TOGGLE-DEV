@@ -39,7 +39,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $crac $cracIndex $bowtie $bowtie2 $atropos $duplicationDetector $plink $bedtools $snmfbin $readseqjar $fastme $abyss $bam2cfg $breakDancer $pindel $fastqStats $hisat2 $stringtie $nanoplot);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $bamutils $crac $cracIndex $bowtie $bowtie2 $atropos $duplicationDetector $plink $bedtools $snmfbin $readseqjar $fastme $abyss $bam2cfg $breakDancer $pindel $fastqStats $hisat2 $stringtie $nanoplot $GATK4);
 
 #toggle path
 our $toggle="/path/to/toggleFolder";
@@ -52,6 +52,7 @@ our $picard = "$java /path/to/picard_tools/picard.jar";
 
 our $samtools = "/path/to/samtools";
 our $GATK = "$java -Xmx12g -jar /path/to/GenomeAnalysisTK.jar";
+our $GATK4 = "/path/to/gatk";
 our $fastqc = "/path/to/fastqc";
 
 #Path for CutAdapt
