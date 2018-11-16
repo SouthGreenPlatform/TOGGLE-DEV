@@ -471,13 +471,17 @@ else
 	toolbox::makeDir($workingDir);
 }
 
+
+# RERUN MODE
 # Go through the list of samples which already have a have a working dir and see which ones need to be rerun or run
 my @rerunSamples = (); # Samples that need to be lauched with --rerun
 if ($rerun)
 {
-	my @newAlreadyRun = ();
+	toolbox::exportLog("#########################################\nINFOS: Rerun mode : Checking the status of individual samples in the output folder \n#########################################\n",1);
+	my @newAlreadyRun = (); # alreadyRun will contain only the samples that have already finished
 	foreach my $sample (@alreadyRun)
 	{
+		next if ($sample eq "intermediateResults"); # Skip the global analysis folder, it's not an individual sample
 		# If we are in rerun mode, we have to determine what state this sample was left in
 		# We just know that the folder for this sample exists
 
@@ -486,9 +490,10 @@ if ($rerun)
 		# In both cases, we simply empty the folder and treat it like a new sample
 
 		my $stepFilePath = "$workingDir/$sample/.".$sample."_last_step";
-		if (! -d "$workingDir/$sample/0_initalFiles" || ! -f $stepFilePath)
+		if (! -d "$workingDir/$sample/0_initialFiles" || ! -f $stepFilePath)
 		{
-			system("rm -r $workingDir/$sample/*");
+			toolbox::exportLog("$sample : not started correctly (will be run as a new sample)", 1);
+			system("rm -r $workingDir/$sample/");
 			next;
 		}
 
@@ -497,17 +502,21 @@ if ($rerun)
 
 		if ($lastOkStep == $lastTrueOrderBefore1000)
 		{
+			toolbox::exportLog("$sample : finished succesfully", 1);
 			# The individual analysis has finished
 			push @newAlreadyRun, $sample;
 		}
 		else
 		{
+			toolbox::exportLog("$sample : will rerun", 1);
+			# The individual analysis will rerun
 			push @rerunSamples, $sample;
 		}
 
 	}
 
 	@alreadyRun = @newAlreadyRun;
+	toolbox::exportLog("\n", 1);
 }
 
 my @listOfFiles; #list of files (symbolic links of samples (path to pairing))
@@ -519,6 +528,8 @@ foreach my $file (@{$initialDirContent})
 	my ($shortName)=toolbox::extractPath($file); # name of the file i.e irigin1_1.fastq
 	my ($name) = split /_/, $shortName; # i.e irigin1
 
+	next if ($name eq "intermediateResults");
+
 	if ($name ~~ @alreadyRun)
 	{
 		# populating array containing all directory of samples ifadd or rerun
@@ -527,7 +538,8 @@ foreach my $file (@{$initialDirContent})
 	else
 	{
 		# populating array @listOfFiles, @listSamplesRun and @listAllSamples
-		if ($name !~ @rerunSamples)
+		# only add files to listOfFiles (which is used for the pairing process) if the sample is new (otherwise the folder is already in place)
+		unless ($name ~~ @rerunSamples)
 		{
 			my $lnCommand = "ln -s $file $workingDir/$shortName";
 			toolbox::run($lnCommand,"noprint");
@@ -657,13 +669,15 @@ if ($orderBefore1000)
 	my %jobHash;
 	foreach my $currentDir(@listSamplesRun)
 	{
+		my $individualName = `basename $currentDir` or toolbox::exportLog("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n",0);
+		chomp $individualName;
+
 		my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
 		$launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
 		$launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
 		$launcherCommand.=" -nocheck" if ($checkFastq == 1);
 		$launcherCommand.=" -report" if ($report);
-		$launcherCommand.=" -rerun" if ($rerun && $currentDir ~~ @rerunSamples);
-		toolbox::exportLog("Launch command for $currentDir :\n\t$launcherCommand", 0);
+		$launcherCommand.=" -rerun" if ($rerun && $individualName ~~ @rerunSamples);
 
 		#Launching through the scheduler launching system
 		my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
@@ -671,10 +685,6 @@ if ($orderBefore1000)
 		if ($jobOutput eq 0)
 		{
 		  #the linear job is not ok, need to pick up the number of jobs
-		  my $individualName = `basename $currentDir` or warn("\nERROR: $0 : Cannot pick up basename for $currentDir : $!\n");
-		  chomp $individualName;
-		  $individualName = $currentDir unless ($individualName); # Basename did not succeed...
-
 		  $errorList.="\$|".$individualName;
 		  ##DEBUG          print "++$errorList++\n";
 		  #Need to remove the empty name...
@@ -686,10 +696,8 @@ if ($orderBefore1000)
 		##DEBUG        toolbox::exportLog("INFOS: $0 : Parallel job",2);
 
 		$jobList = $jobList.$jobOutput."|";
-		my $baseNameDir=`basename $currentDir` or toolbox::exportLog("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n",0);
-		chomp $baseNameDir;
-		$jobHash{$baseNameDir}{output}=$jobOutput;
-		$jobHash{$baseNameDir}{errorFile}=$errorFile;
+		$jobHash{$individualName}{output}=$jobOutput;
+		$jobHash{$individualName}{errorFile}=$errorFile;
 	}
 
 
@@ -740,14 +748,16 @@ if ($orderBefore1000)
 	#Populationg the intermediate directory
 	if ($orderAfter1000) #There is a global analysis afterward
 	{
-		#Creating intermediate directory
-
-		if ($addSample || $rerun)
+		# back up the previous directory if it exists
+		if (($addSample || $rerun) && -d $intermediateDir)
 		{
-				my $mvCom = "mv $intermediateDir $workingDir/OLD_intermediateResults";
-				toolbox::run($mvCom, "noprint");
+			my $oldIntermediateDir = "$workingDir/OLD_intermediateResults";
+			my $mvCom = "mv $intermediateDir $oldIntermediateDir";
+			toolbox::run($mvCom, "noprint");
+			toolbox::exportLog("INFOS : Backing up previous intermediateResults directory to $oldIntermediateDir\n", 1);
 		}
 
+		#Creating intermediate directory
 		toolbox::makeDir($intermediateDir);
 
 		# Going through the individual tree
@@ -824,7 +834,7 @@ if ($orderAfter1000)
 
 	toolbox::exportLog("\n#########################################\n INFOS: Running multiple pipeline script \n#########################################\n",1);
 
-	onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge) if (!($addSample || $rerun));
+	onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge) unless ($addSample);
 
 	$workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
@@ -860,12 +870,14 @@ if ($orderAfter1000)
 	  }
 	}
 
-		#renoming finalResults to avoid lost results
-		if ($addSample || $rerun)
-		{
-				my $mvCom = "mv $finalDir $outputDir/OLD_finalResults";
-				toolbox::run($mvCom, "noprint");
-		}
+	# backup existing finalResults if it exists
+	if (($addSample || $rerun) && -d $finalDir)
+	{
+		my $oldFinalDir = "$outputDir/OLD_finalResults";
+		my $mvCom = "mv $finalDir $oldFinalDir";
+		toolbox::run($mvCom, "noprint");
+		toolbox::exportLog("INFOS : Backing up previous finalResults directory to $oldFinalDir\n", 1);
+	}
 
 	#Creating final directory
 	toolbox::makeDir($finalDir);
