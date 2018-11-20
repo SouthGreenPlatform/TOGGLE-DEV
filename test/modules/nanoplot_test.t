@@ -114,7 +114,7 @@ my @expectedOutput = ('nanopore-100-reads-fastq/NanoPlot-report.html');
 is_deeply(\@observedOutput,\@expectedOutput,'nanoplot::nanoplot - output list');
 
 
-my $expectedMD5sum = "a9f6cc081b0cd6af314cf8879f5440f4";
+my $expectedMD5sum = "1811ee4170016e05647c28391828aa62";
 my $observedMD5sum = `md5sum $dirOut/NanoStats.txt`;
 my @withoutName = split (" ", $observedMD5sum);
 $observedMD5sum = $withoutName[0];
