@@ -84,13 +84,13 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuRN
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('globalAnalysis.STRINGTIEMERGE.gtf');
+my @expectedOutput = ('intermediateResults.STRINGTIEMERGE.gtf');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividuRNASEQHisatStringtie (no SGE) list ');
 
 # expected output content
-$observedOutput=`wc -l $testingDir/finalResults/globalAnalysis.STRINGTIEMERGE.gtf`;
+$observedOutput=`wc -l $testingDir/finalResults/intermediateResults.STRINGTIEMERGE.gtf`;
 chomp $observedOutput;
-my $expectedOutput="12053 $testingDir/finalResults/globalAnalysis.STRINGTIEMERGE.gtf";
+my $expectedOutput="12053 $testingDir/finalResults/intermediateResults.STRINGTIEMERGE.gtf";
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividuRNASEQHisatStringtie (no SGE) content ');
