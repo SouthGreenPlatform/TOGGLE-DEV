@@ -81,5 +81,5 @@ is($grepResult,2004,'toggleGenerator - Two fastq (no SGE) BWA-SW result of bwa b
 # expected output value
 $grepResult= `grep -c 'H2:C381HACXX' $testingDir/finalResults/irigin3BWASW.sam`;
 chomp $grepResult;
-is($grepResult,2002,'toggleGenerator - Two fastq (no SGE) BWA-SW result of bwa bwaSw irigin3BWASW');
+is($grepResult,2003,'toggleGenerator - Two fastq (no SGE) BWA-SW result of bwa bwaSw irigin3BWASW');
 
