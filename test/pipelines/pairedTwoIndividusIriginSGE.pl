@@ -94,7 +94,7 @@ my $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;Ex
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividu (SGE mode) content ');
 
 # expected output content (qsub word)
-$observedOutput=`grep "qsub" $testingDir/GLOBAL_ANALYSIS_*.o -c`;
+$observedOutput=`grep "qsub" $testingDir/TOGGLE_*log.o -c`;
 chomp $observedOutput;
 $expectedOutput=6;
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividu (SGE mode) found qsub command');
