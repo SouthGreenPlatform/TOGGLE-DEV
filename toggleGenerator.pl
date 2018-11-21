@@ -482,6 +482,8 @@ if ($rerun)
 	foreach my $sample (@alreadyRun)
 	{
 		next if ($sample eq "intermediateResults"); # Skip the global analysis folder, it's not an individual sample
+		next if ($sample eq "OLD_intermediateResults");
+
 		# If we are in rerun mode, we have to determine what state this sample was left in
 		# We just know that the folder for this sample exists
 
@@ -529,6 +531,7 @@ foreach my $file (@{$initialDirContent})
 	my ($name) = split /_/, $shortName; # i.e irigin1
 
 	next if ($name eq "intermediateResults");
+	next if ($name eq "OLD_intermediateResults");
 
 	if ($name ~~ @alreadyRun)
 	{
@@ -834,7 +837,7 @@ if ($orderAfter1000)
 
 	toolbox::exportLog("\n#########################################\n INFOS: Running multiple pipeline script \n#########################################\n",1);
 
-	onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge) unless ($addSample);
+	onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge) unless (!$rerun && $addSample);
 
 	$workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
