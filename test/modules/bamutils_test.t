@@ -79,6 +79,12 @@ system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($
 chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
 
 
+################################################################################################
+##bamutils tool
+################################################################################################
+# tools for bamutils bamutilsFilter
+my $toolName = "bamutilsFilter";
+
 #########################################
 #Creating log file
 #########################################
@@ -89,13 +95,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ######################################################################################################################################
 ######################################################################################################################################
 
-
-
-################################################################################################
-##bamutils tool
-################################################################################################
-# tools for bamutils bamutilsFilter
-my $toolName = "bamutilsFilter";
 
 # input file
 my $bamFileIn = "$toggle/data/testData/samBam/oneSam/RC3-SAMTOOLSVIEW.sam";
