@@ -58,13 +58,11 @@ sub gatkBaseRecalibrator
         else        # if one or some previous files doesn't exist or is/are empty or if gatkBaseRecalibrator failed
         {
             toolbox::exportLog("ERROR: gatk::gatkBaseRecalibrator : Uncorrectly done\n", 0);        # returns the error message
-            return 0;
         }
     }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkBaseRecalibrator failed
     {
         toolbox::exportLog("ERROR: gatk::gatkBaseRecalibrator : The files $refFastaFileIn or/and $bamToRecalibrate are incorrects\n", 0);     # returns the error message
-        return 0;
     }
 }  
 
@@ -101,13 +99,11 @@ sub gatkPrintReads
         else        # if one or some previous files doesn't exist or is/are empty or if gatkPrintReads failed
         {
             toolbox::exportLog("ERROR: gatk::gatkPrintReads : Uncorrectly done\n", 0);        # returns the error message
-            return 0;
         }
     }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkPrintReads failed
     {
         toolbox::exportLog("ERROR: gatk::gatkPrintReads : The files $refFastaFileIn or/and $bamToRecalibrate are incorrects\n", 0);     # returns the error message
-        return 0;
     }    
     
 
@@ -134,7 +130,6 @@ sub gatkRealignerTargetCreator
     else        # if one or some previous files doesn't exist or is/are empty or if gatkRealignerTargetCreator failed
     {
         toolbox::exportLog("ERROR: gatk::gatkRealignerTargetCreator : The files $refFastaFileIn or/and $bamToRealigne are incorrects\n", 0);        # returns the error message
-        return 0;
     }
 }
 # GATK Indel Realigner: run the realigner over the intervals producted by gatk::gatkRealignerTargetCreator (see above)
@@ -157,7 +152,6 @@ sub gatkIndelRealigner
     else        # if one or some previous files doesn't exist or is/are empty or if gatkIndelRealigner failed
     {
         toolbox::exportLog("ERROR: gatk:gatkIndelRealigner : The files $refFastaFileIn, $bamToRealigne or/and $intervalsFile are incorrects\n", 0);     # returns the error message
-        return 0;
     }
 }
 # GATK Haplotype Caller: Haplotypes are evaluated using an affine gap penalty Pair HMM.
@@ -173,7 +167,6 @@ sub gatkHaplotypeCaller
         if (($vcfSnpKnownFile) and (toolbox::sizeFile($vcfSnpKnownFile)==0))        # If specified, check if the file of known SNP is correct
         {
             toolbox::exportLog("ERROR: gatk::gatkHaplotypeCaller : The file $vcfSnpKnownFile is uncorrect\n", 0);       # returns the error message
-            return 0;
         }
         elsif (($vcfSnpKnownFile) and (toolbox::sizeFile($vcfSnpKnownFile)==1))     # if specified and file correct ...
         {
@@ -185,7 +178,6 @@ sub gatkHaplotypeCaller
         if (($intervalsFile) and (toolbox::sizeFile($intervalsFile)==0))        # if specified, check if the file of intervals is correct
         {
             toolbox::exportLog("ERROR: gatk::gatkHaplotypeCaller : The file $intervalsFile is uncorrect\n", 0);     # returns the error message
-            return 0;
         }
         elsif (($intervalsFile) and (toolbox::sizeFile($intervalsFile)==1))     # if specified and file of intervals is correct ...
         {
@@ -202,7 +194,6 @@ sub gatkHaplotypeCaller
             else        # if current file is empty
             {
                 toolbox::exportLog("ERROR: gatk::gatkHaplotypeCaller : The file $file is uncorrect\n", 0);      # returns the error message
-                return 0;
             }
         }
         
@@ -223,13 +214,11 @@ sub gatkHaplotypeCaller
         else
         {
             toolbox::exportLog("ERROR: gatk::gatkHaplotypeCaller : Uncorrectly done\n", 0);     # returns the error message
-            return 0;
         }
     }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkHaplotypeCaller failed
     {
         toolbox::exportLog("ERROR: gatk::gatkHaplotypeCaller : The file $refFastaFileIn is uncorrect\n", 0);        # returns the error message
-        return 0;
     }
 }
 # GATK Select Variants: Selects variants from a VCF source.
@@ -252,13 +241,11 @@ sub gatkSelectVariants
         else        # if one or some previous files doesn't exist or is/are empty or if gatkSelectVariants failed
         {
             toolbox::exportLog("ERROR: gatk::gatkSelectVariants : Uncorrectly done\n", 0);      # returns the error message
-            return 0;
         }
     }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkSelectVariants failed
     {
         toolbox::exportLog("ERROR: gatk::gatkSelectVariants : The files $refFastaFileIn or/and $vcfSnpKnownFile are incorrects\n", 0);      # returns the error message
-        return 0;
     }
 }
 
@@ -289,13 +276,11 @@ sub gatkVariantFiltration
         else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
         {
             toolbox::exportLog("ERROR: gatk::gatkVariantFiltration : Uncorrectly done\n", 0);       # returns the error message
-            return 0;
         }
     }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
     {
         toolbox::exportLog("ERROR: gatk::gatkVariantFiltration :  The files $refFastaFileIn or/and $vcfToFilter are incorrects\n", 0);      # returns the error message
-        return 0;
     }
 }
 
@@ -317,7 +302,6 @@ sub gatkUnifiedGenotyper
         else        # if current file is empty or not a BAM
         {
             toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : The file $file is not a BAM and cannot be used\n", 0);      # returns the error message
-            return 0;
         }
     }
     
@@ -334,7 +318,6 @@ sub gatkUnifiedGenotyper
     else        # if one or some previous files doesn't exist or is/are empty or if gatkVariantFiltration failed
     {
         toolbox::exportLog("ERROR: gatk::gatkUnifiedGenotyper : Uncorrectly done\n", 0);        # returns the error message
-        return 0;
     }
     
 }
@@ -373,7 +356,7 @@ sub gatkGeneric
 		
 		#Check if the format is correct
 		if (&localFormatCheck($fileIn) == 0)
-		{#The file is not a BAM/VCF/GFF/BED file
+		{#The file is not a BAM/VCF file
 			toolbox::exportLog("ERROR: gatk::gatkGeneric : The file $fileIn is not a BAM/VCF file\n",0);
 		}
 		
@@ -383,7 +366,6 @@ sub gatkGeneric
         if ($options !~ m/-T/) # The type of walker is not informed in the options
         {
             toolbox::exportLog("ERROR: gatk::gatkGeneric : No walker provided (-T option), cannot continue...\n",0);
-			return 0;
         }
     
         #The generic command system will transform the FILEIN text by the correct FILENAME
@@ -404,16 +386,14 @@ sub gatkGeneric
         {
             return 1;
         }
-        else        # if one or some previous files doesn't exist or is/are empty or if gatkBaseRecalibrator failed
+        else        # if one or some previous files don't exist or is/are empty or if gatkGeneric failed
         {
             toolbox::exportLog("ERROR: gatk::gatkGeneric: Uncorrectly done\n", 0);        # returns the error message
-            return 0;
         }
     }
-    else        # if one or some previous files doesn't exist or is/are empty or if gatkBaseRecalibrator failed
+    else        # if one or some previous files don't exist or is/are empty or if gatkGeneric failed
     {
         toolbox::exportLog("ERROR: gatk::gatkGeneric : The files $fileIn is incorrect\n", 0);     # returns the error message
-        return 0;
     }
 }  
 
@@ -433,117 +413,3 @@ sub localFormatCheck{
 }
 
 1;
-
-
-=head1 NAME
-
-    Package I<gatk> 
-
-=head1 SYNOPSIS
-
-        use gatk;
-    
-        gatk::gatkBaseRecalibrator ($refFastaFileIn, $bamToRecalibrate, $vcfSnpKnownFile, $tableReport, $option_prog{'GATK gatkBaseRecalibrator'});
-    
-        gatk::gatkRealignerTargetCreator ($refFastaFileIn, $bamToRealigne, $intervalsFile, $option_prog{'GATK gatkRealignerTargetCreator'});
-    
-        gatk::gatkIndelRealigner ($refFastaFileIn, $bamToRealigne, $intervalsFile, $bamRealigned, $option_prog{'GATK gatkIndelRealigner'});
-    
-        gatk::gatkHaplotypeCaller ($refFastaFileIn, $vcfCalled, $bamsToCall,$option_prog{'GATK gatkHaplotypeCaller'}, $vcfSnpKnownFile, $intervalsFile);
-    
-        gatk::gatkSelectVariants ($refFastaFileIn, $vcfSnpKnownFile, $vcfVariantsSelected, $option_prog{'GATK selectVariants'});
-    
-        gatk::gatkVariantFiltration ($refFastaFileIn, $vcfFiltered, $vcfToFilter, $option_prog{'GATK VariantFiltration'});
-    
-        gatk::gatkUnifiedGenotyper ($refFastaFileIn, $bamFileIn, $vcfFileOut, $option_prog{'GATK UnifiedGenotyper'});
-    
-        gatk::gatkReadBackedPhasing ($refFastaFileIn, $bamFileIn,$vcfVariant, $vcfFileOut, $option_prog{'GATK ReadBackedPhasing'});
-
-=head1 DESCRIPTION
-
-    Package GATK (McKenna et al, 2010) The Genome Analysis Toolkit or GATK is a software package developed at the Broad Institute to analyze high-throughput sequencing data. 
-
-=head2 FUNCTIONS
-
-
-=head3 gatk::gatkBaseRecalibrator
-
-This module recalibrate the quality score of bases from informations stemming from SNP VCF file if it is done by user
-It takes at least three arguments: the database indexed, the file ".bam" to recalibrate, the name of table of report which will be created by this module
-The file of already known SNP is not mandatory
-The last argument is the options of gatk baseRecalibrator, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_bqsr_BaseRecalibrator.php
-
-
-=head3 gatk::gatkPrintReads
-
-This module apply the recalibration to your sequence data
-It takes at least three arguments: the database indexed, the file ".bam" to recalibrate, the table created by gatkBaseRecalibrator
-The last argument is the options of gatk baseRecalibrator, for more informations https://www.broadinstitute.org/gatk/guide/article?id=2801
-
-
-=head3 gatk::gatkRealignerTargetCreator
-
-This module determine (small) suspicious intervals which are likely in need of realignment
-It takes at least three arguments: the database indexed, the file ".bam" to realigne, the name of the intervals file created by this module
-The last argument is the options of gatk realignerTargetCreator, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_indels_RealignerTargetCreator.php
-
-
-=head3 gatk::gatkIndelRealigner
-
-/!\ IMPORTANT TO NOTE: This module requires the use of the previous one /!\ The input BAM(s), reference, and known indel file(s) should be the same in both modules.
-This module run the realigner over the intervals producted by gatk::gatkRealignerTargetCreator (see above)
-It takes four arguments: the database indexed, the file ".bam" to realigne, the intervals file generated previously, the name of the file realigned which will be created bu this module
-The last arguement is the options of gatk indelRealigner, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_indels_IndelRealigner.php
-
-
-
-=head3 gatk::gatkHaplotypeCaller
-
-This module evaluate haplotypes using an affine gap penalty Pair HMM
-It takes at least three arguments: the database indexed, the file(s) ".bam" to evaluate, the name of the ouput file ".vcf"
-The fourth argument is the options of gatk haplotypeCaller, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php
-The fifth argument is the file of already known SNPs at VCF format
-The last argument is the intervals file created by gatkRealignerTargetCreator (see above)
-
-
-
-=head3 gatk::gatkSelectVariants
-
-This module selects variants from a VCF source
-It takes at least three arguments: the database indexed, the file of already known SNPs, the name of the output file
-The last argument is the options of gatk selectVariants, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_variantutils_SelectVariants.php
-
-
-
-=head3 gatk::gatkVariantFiltration
-
-This module filter variant calls using a number of user-selectable, parameterizable criteria
-It takes at least three arguments: the database indexed, the file, the name of the output file, the file to filter in ".vcf" format
-The last argument is the options of gatk variantFiltration, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_filters_VariantFiltration.php
-
-
-
-=head3 gatk::gatkUnifiedGenotyper
-
-This module is a variant caller which unifies the approaches of several disparate callers -- Works for single-sample and multi-sample data
-It takes at least three arguments: the database indexed, the ".bam" files list, the name of the output file in ".vcf" format
-The last argument is the options of gatk unifiedGenotyper, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_genotyper_UnifiedGenotyper.php
-
-
-
-=head3 gatk::gatkReadBackedPhasing
-
-This module walks along all variant ROD loci, caching a user-defined window of VariantContext sites, and then finishes phasing them when they go out of range (using upstream and downstream reads)
-It takes at least four arguments: the database indexed, the ".bam" file in, the already known variant in ".vcf" format, the name of the output file in ".vcf" format
-The last argument is the options of gatk readBackPhasing, for more informations see https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_phasing_ReadBackedPhasing.php
-
-=head1 AUTHORS
-
-Intellectual property belongs to IRD, CIRAD and South Green developpement plateform 
-Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
-
-=head1 SEE ALSO
-
-L<http://www.southgreen.fr/>
-
-=cut
