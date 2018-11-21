@@ -160,8 +160,7 @@ $scp
 $sge
 -q bioinfo.q
 -b Y
--cwd
--V
+
 
 #------------------------------
 #   Providing a specific environment variables
