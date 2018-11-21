@@ -56,7 +56,7 @@ print "#### TEST SNPdiscoveryPaired paired Irigin (two individus) / SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileSNPPairedIni="$toggle/exampleConfigs/SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
+my $fileSNPPairedIni="$toggle/exampleConfigs/SNPdiscoveryPairedSGE.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedSGE="$toggle/test/pipelines/SNPdiscoveryPairedTestSGE.config.txt";
 
 my $cmd="cp $fileSNPPairedIni $fileSNPPairedSGE";
