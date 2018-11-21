@@ -362,7 +362,78 @@ sub gatkReadBackedPhasing
         return 0;
     }
 }
+
+
+# GATK generic: allows to launch any command from GATK
+sub gatkGeneric
+{
+    my ($fileIn, $fileOut, $optionsHachees) = @_;      # recovery of information
+    if (toolbox::sizeFile($fileIn)==1)
+	{ ##Check if entry file exist and is not empty
+		
+		#Check if the format is correct
+		if (&localFormatCheck($fileIn) == 0)
+		{#The file is not a BAM/VCF/GFF/BED file
+			toolbox::exportLog("ERROR: gatk::gatkGeneric : The file $fileIn is not a BAM/VCF file\n",0);
+		}
+		
+		my $options="";
+        my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
+        #print $options,"\n";
+        if ($options !~ m/-T/) # The type of walker is not informed in the options
+        {
+            toolbox::exportLog("ERROR: gatk::gatkGeneric : No walker provided (-T option), cannot continue...\n",0);
+			return 0;
+        }
+    
+        #The generic command system will transform the FILEIN text by the correct FILENAME
+		$options =~ s/FILEIN/$fileIn/i;
+		
+		#The generic command system will transform the FILEOUT text by the correct FILENAME
+		$options =~ s/FILEOUT/$fileOut/i;
+		my $command;
+		if ($options =~ m/$fileOut/)
+		{
+			$command=$GATK." ".$options;
+		}
+		else
+		{
+			$command=$GATK." ".$options." > ".$fileOut;
+		}
+        if(toolbox::run($command)==1)
+        {
+            return 1;
+        }
+        else        # if one or some previous files doesn't exist or is/are empty or if gatkBaseRecalibrator failed
+        {
+            toolbox::exportLog("ERROR: gatk::gatkGeneric: Uncorrectly done\n", 0);        # returns the error message
+            return 0;
+        }
+    }
+    else        # if one or some previous files doesn't exist or is/are empty or if gatkBaseRecalibrator failed
+    {
+        toolbox::exportLog("ERROR: gatk::gatkGeneric : The files $fileIn is incorrect\n", 0);     # returns the error message
+        return 0;
+    }
+}  
+
+#This function will validate that the given file is at least in one of the accepted format (vcf/bam)
+sub localFormatCheck{
+	my ($file)=@_;
+	my $validation =0;
+	switch (1)
+	{
+		case ($file =~ m/vcf$/i){$validation = 1 if (checkFormat::checkFormatVcf($file) == 1)}
+		case ($file =~ m/bam$/i){$validation = 1 if (checkFormat::checkFormatSamOrBam($file) == 2)}
+		else {toolbox::exportLog("ERROR: bedtools : The file $file is not a BAM/VCF file\n",0);}
+	}
+	
+	return $validation;
+	
+}
+
 1;
+
 
 =head1 NAME
 
