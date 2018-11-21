@@ -25,7 +25,15 @@ if ($fileIn eq "NA") #No file found in the previous folder
     toolbox::exportLog("ERROR : $0 : No file found in $previousDir at step $stepName.\n",0);
 }
 
+#Creation of a hash for providing the external info data if needed: reference, gff,....
+
+my %localHash = ();
+
+$localHash('reference')= $reference if defined $reference;
+$localHash('gff')= $gff if defined $gff;
+
+
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName); # recovery of specific parameters
 
 $fileOut = "$newDir"."/"."$readGroup".".GENERIC".$stepOrder.".TXT";
-generic::generic($fileIn,$fileOut,$softParameters);   # Sending to generic::generic function
+generic::generic($fileIn,$fileOut,$softParameters,\%localHash);   # Sending to generic::generic function

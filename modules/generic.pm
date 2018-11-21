@@ -38,7 +38,7 @@ use Data::Dumper;
 
 
 sub generic {
-	my($fileIn,$fileOut,$optionsHachees)=@_;
+	my($fileIn,$fileOut,$optionsHachees,$localHash)=@_;
 	if (toolbox::sizeFile($fileIn)==1)
 	{ ##Check if entry file exist and is not empty
 		
@@ -61,7 +61,16 @@ sub generic {
 		$options =~ s/FILEOUT/$fileOut/i;
 		my $command=$options;
 		
-		
+		#The generic command system will add the gff and reference if provided...
+		if (defined $localHash)
+		{
+			my $reference = $localHash->{'reference'} if defined $localHash->{'reference'};
+			$options =~ s/REFERENCE/$reference/i if defined $reference;
+			
+			my $gff = $localHash->{'gff'} if defined $localHash->{'gff'};
+			$options =~ s/GFF/$gff/i if defined $gff;
+		}
+				
 		#Execute command
 		if(toolbox::run($command)==1)
 		{
@@ -70,47 +79,14 @@ sub generic {
 		else
 		{
 			toolbox::exportLog("ERROR: generic::generic : Uncorrectly done\n",0);
-			return 0;#Command not Ok
+			#Command not Ok
 		}
 	}
 	else
 	{
 	   toolbox::exportLog("ERROR: generic::generic : The file $fileIn is uncorrect\n",0);
-	   return 0;#File not Ok
+	   #File not Ok
 	}
 }
 
 1;
-=head1 NAME
-
-    Package I<generic>
-
-=head1 SYNOPSIS
-
-	use generic;
-
-	generic::generic($fileIn, $fileOut, $optionsHachees)
-
-=head1 DESCRIPTION
-
-    This package allows the user to launch ANY command in the TOGGLe pipeline. The FILEIN text in the command will be replaced by the $fileIn value, as well as the FILEOUT text by the $fileOut value
-	
-	/!\ NO FORMAT CONTROL ASSOCIATED /!\
-
-=head2 FUNCTIONS
-
-=head3 generic::generic
-
-	launch any command. requires $fileIn, $fileOut, $optionsHachees
-
-
-=head1 AUTHORS
-
-Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
-Written by Christine Tranchant, Cecile Monat, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
-
-=head1 SEE ALSO
-
-L<http://toggle.southgreen.fr/>
-
-=cut
