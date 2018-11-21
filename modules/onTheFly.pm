@@ -248,7 +248,9 @@ sub generateScript
 	###########################################
 	###########################################
 	############# EN TEST REPORT STAT MAPPING
-	$catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt";
+	#$catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt";
+	# NOTE I commented the previous line to avoid having a double afterBlock at the end of the script, but why was it here to begin with ? Is there something i'm missing ? -- vklein, 15/11/2018
+
 	$catCommand .= " ".$toggle."/onTheFly/statsMappingBlock.txt";
 	###########################################
 	###########################################
@@ -488,7 +490,7 @@ sub generateGraphviz
 
 		$input=$hashInOut->{$soft}{"IN"};
 		$output=$hashInOut->{$soft}{"OUT"};
-		
+
 		# Get input and output format from sofware Formats. txt file
 		$softLabel="$soft ($step)";
 		$soft=$soft."_".$step;

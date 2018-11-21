@@ -907,22 +907,21 @@ sub checkInitialDirContent
     my @listOfFolder;
     for (my $i=0; $i<=$#list; $i++)		# for each file/folder contain in the directory
     {
-	if ($list[$i]=~m/(.+):$/)		# there is folder(s)
-	{
-	    $arbo++;
-	    my $folder = $1;
-	    push (@listOfFolder, $folder);
-	}
+		if ($list[$i]=~m/(.+):$/)		# there is folder(s)
+		{
+			$arbo++;
+			my $folder = $1;
+			push (@listOfFolder, $folder);
+		}
     }
     if ($arbo == 0)		# return 0 if only files in directory
     {
-	toolbox::exportLog("INFOS: toolbox::checkInitialDirContent : The directory $initialDir contain only files\n",1);
-	return 0;
+		toolbox::exportLog("INFOS: toolbox::checkInitialDirContent : The directory $initialDir contain only files\n",1);
+		return 0;
     }
     else			# return the list of folders in the directory
     {
-	toolbox::exportLog("INFOS: toolbox::checkInitialDirContent : The directory $initialDir contain $arbo folder(s)\n",1);
-	return (\@listOfFolder);
+		toolbox::exportLog("ERROR : $0 : The initial data directory $initialDir contains subdirectories and not only regular files.\n",0);
     }
 }
 ################################################################################################

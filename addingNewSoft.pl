@@ -67,7 +67,7 @@ unless (-f "$toggle/modules/$moduleFile")
 {   #We create the module if it does not exists
     open (my $fhTemplate, "<", "$toggle/modules/module_template.pm") or die ("\nCannot open the $toggle/modules/module_template.pm module_template file:\n$!\n");
     open (my $fhModule, ">", "$toggle/modules/$moduleFile") or die  ("\nCannot create the $moduleFile file:\n$!\n");
-    
+
     while (my $line = <$fhTemplate>)
     {
         if ($line =~ m/^package/)
@@ -239,11 +239,11 @@ if ($grep)
 else
 {
     #the function is not registered
-    
+
     #adding the soft name in the export
     my $sedCom = "sed -i 's/^our \@EXPORT=qw(/our \@EXPORT=qw(\$$module /' $toggle/modules/localConfig.pm";
     system("$sedCom") and die ("\nCannot add the software in the \@EXPORT:\n$!\n");
-    
+
     #adding the path at the end of the file
     $sedCom = "sed -i 's/^1;\$//' $toggle/modules/localConfig.pm";
     system("$sedCom") and die ("\nCannot remove the previous 1;:\n$!\n");
@@ -267,11 +267,11 @@ if ($grep >= 2)
 else
 {
     #the function is not registered
-    
+
     #adding the soft correct name
     open (my $fhTmp, ">", "/tmp/tempModule.pm") or die ("\nCannot open for writing the temp file /tmp/tempModule.pm:\n$!\n");
     open (my $fhRead, "<", "$toggle/modules/softwareManagement.pm") or die ("\nCannot open for reading the module softwareManagement:\n$!\n");
-    
+
     while (my $line = <$fhRead>)
     {
         chomp $line;
@@ -292,7 +292,7 @@ else
             }
             $version =~s/"/'/g;
             $newInfos .="'cmdVersion' => \"$version\"},\n";
-            
+
             $line .= "\n".$newInfos;
         }
         elsif ($line =~ m/#LOG INFO FOR NEW TOOLS/)
@@ -303,14 +303,14 @@ else
             $line .= "\n";
             $line .= $newName;
         }
-        
-        
+
+
         print $fhTmp $line;
         print $fhTmp "\n";
     }
     close $fhTmp;
     close $fhRead;
-    
+
     my $replaceCom = "cp /tmp/tempModule.pm $toggle/modules/softwareManagement.pm && rm -f /tmp/tempModule.pm";
     system ("$replaceCom") and die ("\nCannot replace the softwareManagement.pm file:\n$!\n");
 }
@@ -319,10 +319,10 @@ else
 my $blockName=$function."Block.txt";
 if (-e "$toggle/onTheFly/$blockName") # verifying block does not exist
 {
-    print "The block exists already\n";    
+    print "The block exists already\n";
 }
 else
-{ 
+{
     open (my $fhBlock, ">>", "$toggle/onTheFly/$blockName") or die ("\nCannot open for writing the file $blockName :\n$!\n");
     my $localLine;
     my $format;
@@ -331,9 +331,9 @@ else
     my $fileInType;
     my $fileOutName;
     my $functionName=uc($function);
-    
+
     #populating $format to identify input and output formats
-    switch (1) 
+    switch (1)
     {
         case ($in =~ m/fastq/ ) { push @formatList, "fastq\$\|fastq.gz\$\|fq\$\|fq.gz\$"; $fileInType='$fastqForwardIn'}
         case ($in =~ m/fasta/ ) { push @formatList, "fasta\$\|fasta.gz\$\|fa\$\|fa.gz\$"; $fileInType='$fastaFileIn'}
@@ -350,7 +350,7 @@ else
     my $formatPlain = $format;
     $formatPlain =~ s/\$/ /g;
     $formatPlain =~ s/\|/ /g;
-    
+
      switch (1)
     {
         case ($out =~ m/fastq/ ) {$fileOutName='$fastqForwardOut';$formatOut="fastq"}
@@ -363,7 +363,7 @@ else
     }
     #writting general block
     $localLine.="
-    
+
 ###########################################
 ## Block for $function
 ###########################################
@@ -416,10 +416,10 @@ $localLine .= "\$softParameters);   # Sending to $function
 my $moduleTest=$module."_test.t";
 if (-e "$toggle/test/modules/$moduleTest") # verifying module does not exist
 {
-    print "The module $moduleTest exists already\n";    
+    print "The module $moduleTest exists already\n";
 }
 else
-{ 
+{
     open (my $fhModule, ">>", "$toggle/test/modules/$moduleTest") or die ("\nCannot open for writing the file $moduleTest :\n$!\n");
     my $localLine;
     $localLine.="#!/usr/bin/env perl
@@ -509,8 +509,8 @@ system(\"touch \$testDir/\$logFile \$testDir/\$errorFile\") and die \"\\nERROR: 
 ######################################################################################################################################
 ######################################################################################################################################
 
-     
- 
+
+
 ##########################################
 ### input output Options
 ##########################################
@@ -519,10 +519,10 @@ my \%optionsHachees = ();                # Hash containing informations
 my \$optionHachees = \\%optionsHachees;   # Ref of the hash
 
 ##########################################
-##### $module::$function 
+##### $module::$function
 ##########################################
- 
- 
+
+
 
 is($module::$function(FILEIN,FILEOUT,\$optionHachees),1,'$module::$function  - Test for $function running');
 
@@ -534,7 +534,7 @@ is_deeply(\\\@observedOutput,\\\@expectedOutput,\'$module::$function - output li
 
 ################ TODO add test for output content
     ";
-    
+
     print $fhModule $localLine;
 }
 
@@ -544,10 +544,10 @@ close $fhModule;
 my $blockTest=$module."Block.pl";
 if (-e "$toggle/test/blocks/$blockTest") # verifying block does not exist
 {
-    print "The block $blockTest exists already\n";    
+    print "The block $blockTest exists already\n";
 }
 else
-{ 
+{
     open (my $fhBlock, ">>", "$toggle/test/blocks/$blockTest") or die ("\nCannot open for writing the file $blockTest :\n$!\n");
     my $localLine;
     $localLine.="#!/usr/bin/env perl
@@ -588,8 +588,8 @@ use Test::More 'no_plan';
 use Test::Deep;
 use fileConfigurator;
 use localConfig;
-use Data::Dumper;    
-    
+use Data::Dumper;
+
 #####################
 ## PATH for data test
 #####################
@@ -627,9 +627,9 @@ my \@expectedOutput = (\'FILE.EXTENTION\',\'FILE.EXTENTION\');
 is_deeply(\\\@observedOutput,\\\@expectedOutput,\'toggleGenerator - Two FILES (no SGE) $module::$function file list \');
 
 # expected output value TO DO
-    
+
     ";
-    
+
     print $fhBlock $localLine;
     close $fhBlock;
 }
@@ -637,10 +637,10 @@ is_deeply(\\\@observedOutput,\\\@expectedOutput,\'toggleGenerator - Two FILES (n
 
 # list of files to check
 print "\n#######################################\nFinished...\n\n Please have a look to the following files to check if everything is Ok:\n\n
-    - modules/$moduleFile ##NOTE: Please check if the variable is noted as \$bwa and not /usr/bin/bwa !! 
+    - modules/$moduleFile ##NOTE: Please check if the variable is noted as \$bwa and not /usr/bin/bwa !!
     - modules/localConfig.pm
     - modules/softwareManagement.pm ##NOTE: Please check if the variable is noted as \$bwa and not /usr/bin/bwa !!
-    - modules/fileConfigurator.pm ##NOTE: Please add line $function =>[\"\"] to add default value for test block 
+    - modules/fileConfigurator.pm ##NOTE: Please add line $function =>[\"\"] to add default value for test block
     - onTheFly/$blockName
     - test/modules/$moduleTest
     - test/blocks/$blockTest\n\n#######################################\n";

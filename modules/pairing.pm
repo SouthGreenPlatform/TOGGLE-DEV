@@ -69,16 +69,16 @@ use checkFormat;
 sub pairRecognition
 {
     toolbox::exportLog("ERROR: pairing::pairRecognition : should done at least two arguments\n",0) if (@_ < 2);
-    my ($folder,$checkFastq)=@_;		# recovery of informations
+    my ($listFiles,$checkFastq)=@_;		# recovery of informations
     my %pairs;
     use Data::Dumper;
     
     #Reading the files in the folder
-    my $listFiles_ref=toolbox::readDir($folder);
-    my @listFiles=@{$listFiles_ref};
-    
+    #my $listFiles_ref=toolbox::readDir($folder);
+    #my @listFiles=@{$listFiles_ref};
+    #
 	
-	foreach my $currentFile (@listFiles)		# for each file
+	foreach my $currentFile (@$listFiles)		# for each file
 	{  
 		if ($checkFastq == 0 )
 		{	

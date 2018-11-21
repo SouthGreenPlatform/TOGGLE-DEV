@@ -1,4 +1,11 @@
 
+  # NOTE : we are in an if block opened in previousBlock.txt
+
+  # Write the number of the last successful step on disk
+  open ($stepFileHandle, '>', $stepFileName) or die "ERROR : $0 : cannot open file $stepFileName. $!\nExiting...\n";
+  print $stepFileHandle $stepOrder;
+  close $stepFileHandle;
+}
 #Switching the $previousDir
 $previousDir=$newDir;
 
