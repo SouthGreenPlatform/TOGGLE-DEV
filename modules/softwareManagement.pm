@@ -512,7 +512,7 @@ sub returnSoftInfos
 						'OUT' => 'ped',
 						'cmdVersion' => "$plink -version" },
 
-	'processRadtags' =>{			'IN' => 'fastq',
+	'stacks' =>{			'IN' => 'fastq',
 						'OUT' => 'fastq',
 						'MANDATORY' => 'keyfile',
 						'cmdVersion' => "$stacks -v 2>&1" },
@@ -693,6 +693,7 @@ sub writeLogVersion
 			case ($softOrder =~ m/process.*/i){$softPathVersion{"stacks"}= `$softInfos{'stacks'}{"cmdVersion"}` if not defined $softPathVersion{"stacks"};
 											   $softPath{"stacks"}= $stacks if not defined $softPath{"stacks"};
 											   }
+            
 
 			#FOR cutadapt functions
 			case ($softOrder =~ m/^cutadapt/i){$softPathVersion{"cutadapt"}= `$softInfos{'cutadapt'}{"cmdVersion"}` if not defined $softPathVersion{"cutadapt"};
