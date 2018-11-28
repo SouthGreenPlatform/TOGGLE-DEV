@@ -662,17 +662,7 @@ my $hashmerge=toolbox::extractHashSoft($configInfo,"merge"); #Picking up infos f
 my $finalDir = $outputDir."/finalResults";
 my $intermediateDir = $workingDir."/intermediateResults";
 my $name="";
-if ($firstOrder>=1000)
-{
-		$intermediateDir = $workingDir."/globalAnalysis";
-		#my $dirName=$workingDir."/output/globalAnalysis";
-		toolbox::makeDir($intermediateDir);
-		my $mvCommand = "mv * $intermediateDir/.";
-	if (toolbox::run($mvCommand,"noprint") == 1)
-	{
-		toolbox::exportLog("INFOS : $0 : Transferring all files to $intermediateDir\n",1);
-	}
-}
+
 
 #Creating  directory
 my $statDir = $outputDir."/statsReport";
@@ -864,6 +854,18 @@ if ($orderAfter1000)
 
 	onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge) unless (!$rerun && $addSample);
 
+if ($firstOrder>=1000)
+{
+		$intermediateDir = $outputDir."/output/globalAnalysis";
+		#my $dirName=$workingDir."/output/globalAnalysis";
+		toolbox::makeDir($intermediateDir);
+		my $mvCommand = "cd $outputdir/output && mv * globalAnalysis/.";
+	if (toolbox::run($mvCommand,"noprint") == 1)
+	{
+		toolbox::exportLog("INFOS : $0 : Transferring all files to $intermediateDir\n",1);
+	}
+}
+	
 	$workingDir = $intermediateDir; # if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
 	my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf ";
