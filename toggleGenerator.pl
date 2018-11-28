@@ -52,8 +52,8 @@ use softwareManagement;
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $TOGGLeVersion = "Release 0.3.6, 22nd of February, 2018";
-my @shortVersion = (3,6);
+my $TOGGLeVersion = "Release 0.3.7, xxth of December, 2018";
+my @shortVersion = (3,7);
 
 my $url = "TOGGLe.southgreen.fr/install/releaseNotes/index.html";
 my $lastRealease = `curl -m 5 --connect-timeout 5 --max-time 5 -s "$url" 2>&1 | grep -m 1 '<li><a href="\#0' | cut -f3 -d'>' | cut -f1 -d'<'`;
@@ -520,6 +520,7 @@ if ($rerun)
 	@alreadyRun = @newAlreadyRun;
 	toolbox::exportLog("\n", 1);
 }
+########END of rerun mode###############
 
 my @listOfFiles; #list of files (symbolic links of samples (path to pairing))
 my @listSamplesRun; #list of directory samples to run ifadd
@@ -545,7 +546,7 @@ foreach my $file (@{$initialDirContent})
 
 	if ($name ~~ @alreadyRun)
 	{
-		# populating array containing all directory of samples ifadd or rerun
+		# populating array containing all directory of samples if add or rerun
 		push(@listAllSamples, "$workingDir/$name") if (!("$workingDir/$name"  ~~ @listAllSamples));
 	}
 	else
@@ -593,6 +594,7 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
 
 	}
 }
+
 
 
 
@@ -660,12 +662,16 @@ my $hashmerge=toolbox::extractHashSoft($configInfo,"merge"); #Picking up infos f
 my $finalDir = $outputDir."/finalResults";
 my $intermediateDir = $workingDir."/intermediateResults";
 my $name="";
-if ($firstOrder>1000)
+if ($firstOrder>=1000)
 {
-			$name="globalAnalysis";
-			$intermediateDir = $workingDir."/globalAnalysis";
+		$intermediateDir = $workingDir."/globalAnalysis";
 		#my $dirName=$workingDir."/output/globalAnalysis";
 		toolbox::makeDir($intermediateDir);
+		my $mvCommand = "mv * $intermediateDir/.";
+	if (toolbox::run($mvCommand,"noprint") == 1)
+	{
+		toolbox::exportLog("INFOS : $0 : Transferring all files to $intermediateDir\n",1);
+	}
 }
 
 #Creating  directory
@@ -691,35 +697,35 @@ if ($orderBefore1000)
 	my %jobHash;
 	foreach my $currentDir(@listSamplesRun)
 	{
-		my $individualName = `basename $currentDir` or toolbox::exportLog("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n",0);
-		chomp $individualName;
-
-		my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
-		$launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
-		$launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
-		$launcherCommand.=" -nocheck" if ($checkFastq == 1);
-		$launcherCommand.=" -report" if ($report);
-		$launcherCommand.=" -rerun" if ($rerun && $individualName ~~ @rerunSamples);
-
-		#Launching through the scheduler launching system
-		my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
-		##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- \nerrorFile = $errorFile",2);
-		if ($jobOutput eq 0)
-		{
-		  #the linear job is not ok, need to pick up the number of jobs
-		  $errorList.="\$|".$individualName;
-		  ##DEBUG          print "++$errorList++\n";
-		  #Need to remove the empty name...
-		  $errorList =~ s/obiWanKenobi\$\|//;
-		  ##DEBUG          print "++$errorList++\n";
-		}
-		#next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
-
-		##DEBUG        toolbox::exportLog("INFOS: $0 : Parallel job",2);
-
-		$jobList = $jobList.$jobOutput."|";
-		$jobHash{$individualName}{output}=$jobOutput;
-		$jobHash{$individualName}{errorFile}=$errorFile;
+				my $individualName = `basename $currentDir` or toolbox::exportLog("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n",0);
+				chomp $individualName;
+		
+				my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
+				$launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
+				$launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
+				$launcherCommand.=" -nocheck" if ($checkFastq == 1);
+				$launcherCommand.=" -report" if ($report);
+				$launcherCommand.=" -rerun" if ($rerun && $individualName ~~ @rerunSamples);
+		
+				#Launching through the scheduler launching system
+				my ($jobOutput, $errorFile) = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
+				##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- \nerrorFile = $errorFile",2);
+				if ($jobOutput eq 0)
+				{
+						#the linear job is not ok, need to pick up the number of jobs
+						$errorList.="\$|".$individualName;
+						##DEBUG          print "++$errorList++\n";
+						#Need to remove the empty name...
+						$errorList =~ s/obiWanKenobi\$\|//;
+						##DEBUG          print "++$errorList++\n";
+				}
+				#next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
+		
+				##DEBUG        toolbox::exportLog("INFOS: $0 : Parallel job",2);
+		
+				$jobList = $jobList.$jobOutput."|";
+				$jobHash{$individualName}{output}=$jobOutput;
+				$jobHash{$individualName}{errorFile}=$errorFile;
 	}
 
 
@@ -858,7 +864,7 @@ if ($orderAfter1000)
 
 	onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge) unless (!$rerun && $addSample);
 
-	$workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
+	$workingDir = $intermediateDir # if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
 	my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf ";
 	$launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
