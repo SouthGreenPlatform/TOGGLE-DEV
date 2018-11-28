@@ -529,7 +529,17 @@ foreach my $file (@{$initialDirContent})
 {
 	my ($shortName)=toolbox::extractPath($file); # name of the file i.e irigin1_1.fastq
 	my ($name) = split /_/, $shortName; # i.e irigin1
-
+ if ($name eq $shortName) #to correct list of samples
+	{
+		($name)= split /\./, $shortName; 	
+	}
+	
+	#if (scalar(keys %{$orderBefore1000})<1)
+	#{
+	#	$name="globalAnalysis"
+	#}
+	
+	#$$orderBefore1000{$step}=$$hashOrder{$step};
 	next if ($name eq "intermediateResults");
 	next if ($name eq "OLD_intermediateResults");
 
@@ -583,6 +593,7 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
 
 	}
 }
+
 
 
 #Generation of Index required for the analysis to work (on the reference only)
@@ -648,6 +659,14 @@ my $hashmerge=toolbox::extractHashSoft($configInfo,"merge"); #Picking up infos f
 #Creating global output folder
 my $finalDir = $outputDir."/finalResults";
 my $intermediateDir = $workingDir."/intermediateResults";
+my $name="";
+if ($firstOrder>1000)
+{
+			$name="globalAnalysis";
+			$intermediateDir = $workingDir."/globalAnalysis";
+		#my $dirName=$workingDir."/output/globalAnalysis";
+		toolbox::makeDir($intermediateDir);
+}
 
 #Creating  directory
 my $statDir = $outputDir."/statsReport";
@@ -887,7 +906,7 @@ if ($orderAfter1000)
 
 	# Going through the individual tree
 	my $lastDir = $workingDir."/".$lastOrder."_".$$orderAfter1000{$lastOrder};
-	$lastDir =~ s/ //g;
+	$lastDir =~ s/ /_/g;
 	##DEBUG toolbox::exportLog($lastDir,1);
 	my $fileList = toolbox::readDir($lastDir);
 	foreach my $file (@{$fileList}) #Copying the final data in the final directory
