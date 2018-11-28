@@ -864,7 +864,7 @@ if ($orderAfter1000)
 
 	onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor,$hashmerge) unless (!$rerun && $addSample);
 
-	$workingDir = $intermediateDir # if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
+	$workingDir = $intermediateDir; # if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
 	my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf ";
 	$launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
