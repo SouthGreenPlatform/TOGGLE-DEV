@@ -111,7 +111,7 @@ is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('bamutils_log.e','bamutils_log.o','RC3.bamutilsFilter.bam');
+my @expectedOutput = ('bamutilsFilter_log.e','bamutilsFilter_log.o','RC3.bamutilsFilter.bam');
 
 is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilsFilter - output list');
 
@@ -142,7 +142,7 @@ is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('bamutils_log.e','bamutils_log.o','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
+@expectedOutput = ('bamutilsFilter_log.e','bamutilsFilter_log.o','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
 
 is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilstobed - output list');
 
