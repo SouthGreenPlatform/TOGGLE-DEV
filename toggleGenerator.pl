@@ -859,7 +859,7 @@ if ($firstOrder>=1000)
 		$intermediateDir = $outputDir."/output/globalAnalysis";
 		#my $dirName=$workingDir."/output/globalAnalysis";
 		toolbox::makeDir($intermediateDir);
-		my $mvCommand = "cd $outputDir/output && mv * globalAnalysis/.";
+		my $mvCommand = "cd $outputDir/output && mv *.* globalAnalysis/.";
 	if (toolbox::run($mvCommand,"noprint") == 1)
 	{
 		toolbox::exportLog("INFOS : $0 : Transferring all files to $intermediateDir\n",1);
