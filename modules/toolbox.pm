@@ -972,13 +972,32 @@ sub controlReadGroup
         my $shortSample = `basename $sample`;
         chomp $shortSample;
         my ($shortName,$readgroup) = pairing::extractName($sample);
-        if (defined $hashName{$readgroup})
+        if ($sample =~ m/fastq$/ or $sample =~ m/fq$/) #if (defined $hashName{$readgroup})
         {
-            toolbox::exportLog("ERROR: toggleGenerator.pl: The readgroup $readgroup was found for two different samples, $shortSample and $hashName{$readgroup}.\n\nYou must rename your samples, see the manual on http://toggle.southgreen.fr/manual/quickManual/#prerequisites\n\n",0);
+            if (defined $hashName{$readgroup}{"paired"} and $hashName{$readgroup}{"paired"} >=2)
+            {
+                toolbox::exportLog("ERROR: toggleGenerator.pl: The readgroup $readgroup was found for two different samples, $shortSample and $hashName{$readgroup}{'sample'}.\n\nYou must rename your samples, see the manual on http://toggle.southgreen.fr/manual/quickManual/#prerequisites\n\n",0);
+            }
+            elsif (defined $hashName{$readgroup}{"paired"} and $hashName{$readgroup}{"paired"} == 1)
+            {
+                $hashName{$readgroup}{"paired"} ++
+            }
+            else
+            {
+                $hashName{$readgroup}{'sample'} = $shortSample;
+                $hashName{$readgroup}{"paired"} = 1
+            }
         }
         else
         {
-            $hashName{$readgroup} = $shortSample;
+            if (defined $hashName{$readgroup})
+            {
+                toolbox::exportLog("ERROR: toggleGenerator.pl: The readgroup $readgroup was found for two different samples, $shortSample and $hashName{$readgroup}.\n\nYou must rename your samples, see the manual on http://toggle.southgreen.fr/manual/quickManual/#prerequisites\n\n",0);
+            }
+            else
+            {
+                $hashName{$readgroup}{'sample'} = $shortSample;
+            }
         }
     }
 }
