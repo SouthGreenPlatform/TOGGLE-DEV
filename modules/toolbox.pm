@@ -974,7 +974,7 @@ sub controlReadGroup
         my ($shortName,$readgroup) = pairing::extractName($sample);
         if (defined $hashName{$readgroup})
         {
-            toolbox::exportLog("ERROR: toggleGenerator.pl: The readgroup $readgroup was found for two different samples, $shortSample and $hashName{$readgroup}.\n\nYou must rename your samples (see the manual on http://toggle.southgreen.fr/manual/quickManual/#prerequisites\n\n",0);
+            toolbox::exportLog("ERROR: toggleGenerator.pl: The readgroup $readgroup was found for two different samples, $shortSample and $hashName{$readgroup}.\n\nYou must rename your samples, see the manual on http://toggle.southgreen.fr/manual/quickManual/#prerequisites\n\n",0);
         }
         else
         {
