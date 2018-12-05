@@ -969,14 +969,16 @@ sub controlReadGroup
     my %hashName;
     foreach my $sample (@{$listFile})
     {
+        my $shortSample = `basename $sample`;
+        chomp $shortSample;
         my ($shortName,$readgroup) = pairing::extractName($sample);
         if (defined $hashName{$readgroup})
         {
-            toolbox::exportLog("ERROR: toggleGenerator.pl: The readgroup $readgroup for sample $sample was already found for another sample, the $hashName{$readgroup} one, you may rename your samples (see the manual on http://toggle.southgreen.fr/manual/quickManual/#prerequisites\n\n",0);
+            toolbox::exportLog("ERROR: toggleGenerator.pl: The readgroup $readgroup for sample $shortSample was already found for another sample, the $hashName{$readgroup} one, you may rename your samples (see the manual on http://toggle.southgreen.fr/manual/quickManual/#prerequisites\n\n",0);
         }
         else
         {
-            $hashName{$readgroup} = $sample;
+            $hashName{$readgroup} = $shortSample;
         }
     }
 }
