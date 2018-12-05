@@ -963,7 +963,7 @@ sub degzip
 #
 ################################################################################################
 
-sub controlReadgroup
+sub controlReadGroup
 {
     my ($listFile) = @_;
     my %hashName;
