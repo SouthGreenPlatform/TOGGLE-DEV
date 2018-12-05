@@ -40,6 +40,7 @@ use Carp;
 use localConfig;
 use softwareManagement;
 use checkFormat;
+use pairing;
 
 #Global infos
 #our @ISA=qw(Exporter);
@@ -771,86 +772,6 @@ sub addInfoHeader
 
 
 
-
-
-
-
-
-
-
-
-################################################################################################
-# sub changeDirectoryArbo => change directory into the arborescence that we've defined
-################################################################################################
-# arguments :
-#       - Directory that will contain all the directory created by the pipeline
-#       - NumberOfDirectory to define what is the directory name that will be returned
-# Returns the directory name that will be created according to the number given as argument
-################################################################################################
-sub changeDirectoryArbo
-{
-    my ($inputDir,$numberOfDirectory) = @_;
-    # numberOfDirectory could be:
-    # 0  for /0_PAIRING_FILES/
-    # 1  for /1_FASTQC/
-    # 11 for /11_FASTXTRIMMER/
-    # 2  for /2_CUTADAPT/
-    # 3  for /3_PAIRING_SEQUENCES/
-    # 4  for /4_MAPPING/
-    # 5  for /5_PICARDTOOLS/
-    # 6  for /6_SAMTOOLS/
-    # 7  for /7_GATK/
-
-    #TODO can be factorized using a HASH I think
-
-    my $finalDirectory;	# output directory returned by the fonction
-
-    if ($numberOfDirectory == 0)		# if you want to move to 0_PAIRING_FILES/
-	{
-	    $finalDirectory = "$inputDir"."0_PAIRING_FILES";
-	}
-	elsif ($numberOfDirectory == 1)		# if you want to move to 1_FASTQC/
-	{
-	    $finalDirectory = "$inputDir"."1_FASTQC";
-	}
-	elsif ($numberOfDirectory == 11)		# if you want to move to 1_FASTQC/
-	{
-	    $finalDirectory = "$inputDir"."11_FASTXTRIMMER";
-	}
-	elsif ($numberOfDirectory == 2)		# if you want to move to 2_CUTADAPT/
-	{
-	    $finalDirectory = "$inputDir"."2_CUTADAPT";
-	}
-	elsif ($numberOfDirectory == 3)		# if you want to move to 3_PAIRING_SEQUENCES/
-	{
-	    $finalDirectory = "$inputDir"."3_PAIRING_SEQUENCES";
-	}
-	elsif ($numberOfDirectory == 4)		# if you want to move to 4_BWA/
-	{
-	    $finalDirectory = "$inputDir"."4_MAPPING";
-	}
-	elsif ($numberOfDirectory == 5)		# if you want to move to 5_PICARDTOOLS/
-	{
-	    $finalDirectory = "$inputDir"."5_PICARDTOOLS";
-	}
-	elsif ($numberOfDirectory == 6)		# if you want to move to 6_SAMTOOLS/
-	{
-	    $finalDirectory = "$inputDir"."6_SAMTOOLS";
-	}
-	elsif ($numberOfDirectory == 7)		# if you want to move to 7_GATK/
-	{
-	    $finalDirectory = "$inputDir"."7_GATK";
-	}
-
-    return $finalDirectory;
-}
-################################################################################################
-# END sub changeDirectoryArbo
-################################################################################################
-
-
-
-
 ################################################################################################
 # sub extractHashSoft => from output of readFileConf, give the sub-hash for the soft you want to use
 ################################################################################################
@@ -926,103 +847,6 @@ sub checkInitialDirContent
 }
 ################################################################################################
 # END sub checkInitialDirContent
-################################################################################################
-
-
-
-
-
-
-
-################################################################################################
-# sub transferDirectoryFromMasterToNode =>  to copy data directory from a master server
-#                                           to one local scratch space of the node
-################################################################################################
-# arguments :
-# 	- the directory name that contains the data to transfer
-#	- the name of the server that contains the initial data
-# Returns the path of the directory created on the scratch space (local) and the node name that contains the data transfered
-################################################################################################
-#sub transferDirectoryFromMasterToNode
-#{
-#    my ($localDir,$master) = @_;
-#								    ###########################################################################
-#    $master = 'nas2' if (not defined $master or $master eq '');     #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
-#								    ###########################################################################
-#    # get the SGE user name
-#    my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
-#    chomp($SGE_User);
-#    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE USER $SGE_User\n",1);
-#
-#    # get the SGE node on what the script is running
-#    my $SGE_Node = `echo \$HOSTNAME` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE node isn't defined\n",0);
-#    chomp($SGE_Node);
-#    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE NODE $SGE_Node\n",1);
-#
-#    # get the SGE job id
-#    my $SGE_JobId = `echo \$JOB_ID` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE id isn't defined\n",0);
-#    chomp($SGE_JobId);
-#    ##DEBUG exportLog("DEBUG INFOS: toolbox::transferDirectoryFromMasterToNode : SGE JOB ID $SGE_JobId\n",1);
-#
-#    # Creating local tmp folder according this convention : /scratch/$user-$jobid-$sge_task_id
-#    my $tmpDir = "/scratch/".$SGE_User."-".$SGE_JobId."/";
-#    toolbox::makeDir($tmpDir) if (not existsDir($tmpDir,0));      # Creation of the tempory directory
-#    ##DEBUG exportLog("DEBUG INFOS: toolbox::transferDirectoryFromMasterToNode : SGE JOB ID $SGE_JobId\n",1);
-#
-#    # Copy the data from the master server to the local scrtatch space
-#    my $cmd="scp -r $SGE_User\@$master:$localDir $tmpDir";
-#    toolbox::run($cmd);
-#
-#    # Extract the name of the directory and return the complete local directory name and the node name
-#    my ($file,$path)=toolbox::extractPath($localDir);
-#    return($tmpDir.$file,$SGE_Node);
-#
-#}
-################################################################################################
-# END sub transferDirectoryFromMasterToNode
-################################################################################################
-
-
-
-
-################################################################################################
-# sub transferDirectoryFromNodeToMaster =>  to transfer data from one local scratch space
-#                                           of the node to a master server
-################################################################################################
-# arguments :
-# 	- the path of the directory on the scratch space (local)
-#	- the node name that contains the data to transfer
-#	- the name of the server that contains the initial data
-#	- a boolean parameter to define if the data wil be removed from the local space after
-#         transferring from the local space to the master server. By default equal to 1 (Data removing)
-# No parameter returned
-################################################################################################
-#sub transferDirectoryFromNodeToMaster
-#{
-#
-#    my ($localDir,$distantDir,$erase,$master) = @_;
-#								###########################################################################
-#    $master = 'nas2' if (not defined $master or $master eq ''); #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
-#								###########################################################################
-#
-#    $erase=1 if (not defined $erase);
-#
-#     # get the SGE user name
-#    my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
-#    chomp($SGE_User);
-#    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE USER $SGE_User $erase $master\n",1);
-#
-#    # Data transferring from the local directory to the distant directory of the master
-#    my $cmd="scp -r $localDir $SGE_User\@$master:$distantDir";
-#    toolbox::run($cmd);
-#
-#    # Removing of the local data directory if $erase equal to 1
-#    $cmd="rm -rf $localDir";
-#    toolbox::run($cmd) if ($erase);
-#
-#}
-################################################################################################
-# END sub transferDirectoryFromNodeToMaster
 ################################################################################################
 
 
@@ -1131,6 +955,31 @@ sub degzip
 # END sub degzip
 ################################################################################################
 
+################################################################################################
+# sub controlReadgroup
+################################################################################################
+#
+# Will verify if file names can be use as readGroup
+#
+################################################################################################
+
+sub controlReadgroup
+{
+    my ($listFile) = @_;
+    my %hashName;
+    foreach my $sample (@{$listFile})
+    {
+        my ($shortName,$readgroup) = pairing::extractName($sample);
+        if (defined $hashName{$readgroup})
+        {
+            toolbox::exportLog("ERROR: toggleGenerator.pl: The readgroup $readgroup for sample $sample was already found for another sample, the $hashName{$readgroup} one, you may rename your samples (see the manual on http://toggle.southgreen.fr/manual/quickManual/#prerequisites\n\n",0);
+        }
+        else
+        {
+            $hashName{$readgroup} = $sample;
+        }
+    }
+}
 
 
 1;

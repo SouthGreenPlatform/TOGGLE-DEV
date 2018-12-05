@@ -349,6 +349,8 @@ toolbox::checkInitialDirContent($initialDir);
 
 # check that all of the input files are of the same type (homogeneity)
 my $initialDirContent=toolbox::readDir($initialDir);
+toolbox::controlReadGroup($initialDirContent);
+
 my $previousExtension=0;
 foreach my $file (@{$initialDirContent})
 {
