@@ -73,7 +73,7 @@ sub checkOrder
     ##DEBUG print Dumper $hashInOut;
 
     #Verifying the coherence of input/output
-    my ($previousSoft,$previousFormat,$currentFormat,$initialStep,$lastStep);
+    my ($previousSoft,$previousFormat,$currentFormat,$initialStep,$lastStep,$lastTrueStep);
     foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
     {
 	my $currentSoft=$$hashOrder{$step};
@@ -117,7 +117,7 @@ sub checkOrder
 	}
 
 	#Preparing for the next round
-
+	$lastTrueStep = $step;
 	next if ($hashInOut->{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
 
 	$previousSoft=$currentSoft;
@@ -127,7 +127,7 @@ sub checkOrder
 
     }
     ##DEBUG print $initialStep,"--",$lastStep,"\n";
-    return ($initialStep,$lastStep); #Will return the last step number
+    return ($initialStep,$lastStep,$lastTrueStep); #Will return the last step number
 }
 
 ################################################################################################

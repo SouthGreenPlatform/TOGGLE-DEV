@@ -334,7 +334,8 @@ toolbox::run($copyCommand,"noprint");
 ##DEBUG }
 
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
-my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,$refFastaFile,$gffFile,$keyfile);
+#last true order is the really last step value, even if NA...
+my ($firstOrder,$lastOrder,$lastTrueOrder) = onTheFly::checkOrder($configInfo,$refFastaFile,$gffFile,$keyfile);
 
 
 
@@ -819,7 +820,7 @@ if ($orderBefore1000)
 			next unless $currentDir =~ m/\//; # Will work only on folders
 			next if $currentDir =~ m/$errorList/; # A job in error will not be transfered, to avoid errors.
 
-			my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
+			my $lastDir = $currentDir."/".$lastTrueOrderBefore1000."_".$$orderBefore1000{$lastTrueOrderBefore1000};
 			$lastDir =~ s/ //g;
 			##DEBUG toolbox::exportLog($lastDir,1);
 
@@ -913,7 +914,7 @@ if ($firstOrder>=1000)
 	toolbox::makeDir($finalDir);
 
 	# Going through the individual tree
-	my $lastDir = $workingDir."/".$lastOrder."_".$$orderAfter1000{$lastOrder};
+	my $lastDir = $workingDir."/".$lastTrueOrder."_".$$orderAfter1000{$lastTrueOrder};
 	$lastDir =~ s/ /_/g;
 	##DEBUG toolbox::exportLog($lastDir,1);
 	my $fileList = toolbox::readDir($lastDir);
