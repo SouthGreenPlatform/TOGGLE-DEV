@@ -374,7 +374,7 @@ foreach my \$file (\@{\$fileList}) #Checking the type of files that must be $for
 {
     if (\$file =~ m/$format\$/) # the file type is normally $formatPlain
     {
-        if (\$file ne \"NA\") # Already a $formatPlain recognized
+        if ($fileInType ne \"NA\") # Already a $formatPlain recognized
         {
             toolbox::exportLog(\"ERROR : \$0 : there are more than one single $formatPlain file at \$stepName step.\\n\",0);
         }
