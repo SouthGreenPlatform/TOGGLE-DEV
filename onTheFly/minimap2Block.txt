@@ -1,18 +1,18 @@
 
-    
+
 ###########################################
 ## Block for minimap2Minimap2
 ###########################################
 
 #Correct variable populating
 
-foreach my $file (@{$fileList}) #Checking the type of files that must be fasta  fasta.gz  fa  fa.gz 
+foreach my $file (@{$fileList}) #Checking the type of files that must be fasta  fasta.gz  fa  fa.gz
 {
-    if ($file =~ m/fasta$|fasta.gz$|fa$|fa.gz$$/) # the file type is normally fasta  fasta.gz  fa  fa.gz 
+    if ($file =~ m/fasta$|fasta.gz$|fa$|fa.gz$|fastq$|fastq.gz$|fq$|fq.gz$/) # the file type is normally fasta  fasta.gz  fa  fa.gz
     {
-        if ($file ne "NA") # Already a fasta  fasta.gz  fa  fa.gz  recognized
+        if ($fastaFileIn ne "NA") # Already a fasta  fasta.gz  fa  fa.gz  recognized
         {
-            toolbox::exportLog("ERROR : $0 : there are more than one single fasta  fasta.gz  fa  fa.gz  file at $stepName step.\n",0);
+            toolbox::exportLog("ERROR : $0 : there are more than one single fasta/fasta.gz/fastq/fastq.gz file at $stepName step.\n",0);
         }
         else
         {
@@ -23,7 +23,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be fasta  
 
 if ($fastaFileIn eq "NA") #No fasta$|fasta.gz$|fa$|fa.gz$ file found in the previous folder
 {
-    toolbox::exportLog("ERROR : $0 : No fasta  fasta.gz  fa  fa.gz  file found in $previousDir at step $stepName.\n",0);
+    toolbox::exportLog("ERROR : $0 : No fasta/fasta.gz/fastq/fastq.gz file found in $previousDir at step $stepName.\n",0);
 }
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of minimap2Minimap2
@@ -31,4 +31,4 @@ $softParameters = toolbox::extractHashSoft($optionRef,$stepName);               
 $samFileOut = "$newDir"."/"."$readGroup".".MINIMAP2MINIMAP2.sam";
 minimap2::minimap2Minimap2($fastaFileIn,$samFileOut,$reference,$softParameters);   # Sending to minimap2Minimap2
 
-    
+
