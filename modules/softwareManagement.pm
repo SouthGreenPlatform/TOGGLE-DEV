@@ -122,7 +122,7 @@ sub correctName
 
 	#FOR minimap2Index
 	case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Index/i){$correctedName="minimap2Index";} #Correction for minimap2Index
-        
+
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
 
@@ -282,12 +282,30 @@ sub correctName
 sub returnSoftInfos
 {
 	my %softInfos = (
-        
+
     #INFOS FOR NEW TOOLS
-	'minimap2'=>{'IN' => 'fastq,fasta',
-			'OUT'=>'sam',
-			'MANDATORY' => 'reference',
-			'cmdVersion' => "minimap2 --version"},
+	'minimap2Map'=>{'IN' => 'fastq,fasta',
+				    'OUT'=>'sam',
+				    'MANDATORY' => 'reference',
+				    'cmdVersion' => "minimap2 --version"},
+	'minimap2MapPaired'=>{'IN' => 'fastq,fasta',
+						  'OUT'=>'sam',
+						  'MANDATORY' => 'reference',
+						  'cmdVersion' => "minimap2 --version"},
+	'minimap2Overlap'=>{'IN' => 'fastq,fasta',
+						'OUT'=>'sam',
+						'cmdVersion' => "minimap2 --version"},
+	'minimap2MapPaf'=>{'IN' => 'fastq,fasta',
+					   'OUT'=>'paf',
+					   'MANDATORY' => 'reference',
+					   'cmdVersion' => "minimap2 --version"},
+	'minimap2MapPairedPaf'=>{'IN' => 'fastq,fasta',
+						     'OUT'=>'paf',
+						     'MANDATORY' => 'reference',
+						     'cmdVersion' => "minimap2 --version"},
+	'minimap2OverlapPaf'=>{'IN' => 'fastq,fasta',
+						'OUT'=>'sam',
+						'cmdVersion' => "minimap2 --version"},
 
 
 	'minimap2Index'=>{'IN' => 'fasta',
@@ -299,7 +317,7 @@ sub returnSoftInfos
 	'nanoplot'=>{'IN' => 'fastq',
 						'OUT'=>'NA',
 						'cmdVersion' => "$nanoplot -v"},
-    
+
 	'abyss' =>{'IN' => 'fasta,fastq,sam,bam',
 					 'OUT' => 'fasta',
 					 'cmdVersion' => "$abyss --version | grep 'GNU Make' " },
