@@ -105,39 +105,42 @@ sub minimap2Map
 	toolbox::exportLog("ERROR: minimap2::minimap2 : ABORTED\n",0);
 }
 
-# TODO : cette fonction est un copier coller de minimap2Map
-# A faire :
-# - Ajouter la vérification de fileIn2 (faire une boucle)
-# - Changer la logique de vérification de -x (forcer -x sr)
-# - Changer l'appel de minimap2
 
 # Paired end short read mapping. Sam or paf output.
 sub minimap2MapPaired
 {
-#The standard way to write variables are:
-#REFERENCE = $reference#PLEASE CHECK IF IT IS OK AT THIS POINT!!
 	my ($fileIn1,$fileIn2,$fileOut,$reference,$optionsHachees) = @_;
 	my $validation = 0;
-	switch (1)
+	# Check both input files for validity
+	foreach my $fileIn ($fileIn1, $fileIn2)
 	{
-		case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
-		case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
-		else {toolbox::exportLog("ERROR: minimap2::minimap2Map : The file $fileIn is not a fastq,fasta file\n",0);}
-	};
-	die (toolbox::exportLog("ERROR: minimap2::minimap2Map : The file $fileIn is not a valid fatsq,fasta file\n",0)) if $validation == 0;	#Picking up options
+		switch (1)
+		{
+			case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
+			case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
+			else {toolbox::exportLog("ERROR: minimap2::minimap2MapPaired : The file $fileIn is not a fastq,fasta file\n",0);}
+		};
+		die (toolbox::exportLog("ERROR: minimap2::minimap2MapPaired : The file $fileIn is not a valid fatsq,fasta file\n",0)) if $validation == 0;
+	}
+
+	# Format options for command line
 	my $options="";
 	$options = toolbox::extractOptions($optionsHachees) if $optionsHachees;
 
-	# Set a default preset if it has not been set by the user
-	if ($options !~ m/-x|-ax/)
+	# Check if the user has set any preset
+	if ($options =~ m/-x|-ax/)
 	{
-		$options = "-x map-ont " . $options;
+		# We only allow the -x sr preset here; error if it's another one
+		toolbox::exportLog("ERROR: minimap2::minimap2MapPaired: The only supported preset for paired end mapping is -x sr. Remove the -x option from your configuration file", 0) if ($options !~ m/-x sr|-ax sr/);
+	} else {
+		# The user has not chosen a preset, apply the correct one silently
+		$options = "-x sr " . $options;
 	}
 
 	# Check that the -a is not set if output is paf or add it if the output is sam
 	if ($fileOut =~ m/.paf$/i && $options =~ m/-a/)
 	{
-		toolbox::exportLog("ERROR: minimap2::minimap2Map : .paf output was requested but the -a option (sam output) is present. If you want paf output : Remove the -a option. If you want sam output : use minimap2Map instead", 0);
+		toolbox::exportLog("ERROR: minimap2::minimap2MapPaired : .paf output was requested but the -a option (sam output) is present. If you want paf output : Remove the -a option. If you want sam output : use minimap2MapPaired instead", 0);
 	}
 
 	# If we want sam output, add -a if it's not set
@@ -147,7 +150,7 @@ sub minimap2MapPaired
 	}
 
 	#Execute command
-	my $command = "$minimap2 $options $reference $fileIn > $fileOut" ;
+	my $command = "$minimap2 $options $reference $fileIn1 $fileIn2 > $fileOut" ;
 	return 1 if (toolbox::run($command));
 	toolbox::exportLog("ERROR: minimap2::minimap2 : ABORTED\n",0);
 }
