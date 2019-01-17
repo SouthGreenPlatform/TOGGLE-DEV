@@ -46,7 +46,7 @@ use Data::Dumper;
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
 
-# Load localConfig if primary test is successful 
+# Load localConfig if primary test is successful
 use_ok('localConfig') or exit;
 use localConfig;
 
@@ -178,7 +178,7 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsIndex - output structure')
 #Output file
 my $bamFileOut="RC3-SAMTOOLSVIEW.bam";
 my %optionsRef = ("-h" => '', "-b" => '', "-F" => "0*02");
-my $optionsHachees = \%optionsRef; 
+my $optionsHachees = \%optionsRef;
 
 #execution test
 is(samTools::samToolsView($bamFile, $bamFileOut, $optionsHachees),1,'samTools::samToolsView');
@@ -263,7 +263,7 @@ my $header = "testedHeader.txt";
 
 #execution test
 
-is(samTools::mergeHeader(\@bamFiles,$header),1,'samTools::mergeHeader');   
+is(samTools::mergeHeader(\@bamFiles,$header),1,'samTools::mergeHeader');
 
 # expected output test
 $observedOutput = `ls`;
@@ -376,7 +376,7 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMpileUp - output list');
 
 # expected output structure
-$expectedMD5sum = "0247045dd18fa40cf0a75b612e1c484d";
+$expectedMD5sum = "e760911621bdec38f47b4bfb2ae2adda";
 $observedMD5sum=`md5sum $mpileupFile`;	# structure of the test file
 @withoutName = split (" ", $observedMD5sum);    				# to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];     						# just to have the md5sum result

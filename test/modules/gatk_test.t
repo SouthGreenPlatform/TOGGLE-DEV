@@ -43,7 +43,7 @@ use Data::Dumper;
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
 
-# Load localConfig if primary test is successful 
+# Load localConfig if primary test is successful
 use_ok('localConfig') or exit;
 use localConfig;
 
@@ -183,7 +183,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkUnifiedGenotyper - output
 # expected output content
 $observedOutput=`tail -n 1 $vcfOut`;
 chomp $observedOutput;
-$expectedOutput="2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;ExcessHet=3.0103;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=49.84;MQ0=0;QD=27.37;SOR=2.303	GT:AD:DP:GQ:PL	1/1:0,2:2:6:82,6,0";
+$expectedOutput="2299572	2417	.	C	T	15.65	.	AC=2;AF=1.00;AN=2;DP=1;Dels=0.00;ExcessHet=3.0103;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=15.65;SOR=1.609	GT:AD:DP:GQ:PL	1/1:0,1:1:3:42,3,0";
 
 is($observedOutput,$expectedOutput,'gatk::gatkUnifiedGenotyper - output content');
 
@@ -281,7 +281,11 @@ my $expectedSNPLines="2224477	996	.	TA	T	34.13	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHe
 2248321	379	.	C	T	64.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
 2281178	4213	.	G	A	64.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
 2281178	4214	.	A	G	64.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
-2290182	1013	.	A	G	44.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";     # structure of the ref file
+2290182	1013	.	A	G	44.17	.	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0
+2291957	21946	.	A	G	20	.	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21948	.	A	G	20	.	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21957	.	A	C	20	.	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21958	.	T	C	20	.	AC=2;AF=1.00;AN=2;DP=0;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=NaN;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,0:0:3:45,3,0";     # structure of the ref file
 my $observedSNPLines=`grep -v "#" $vcfCalled`;      # structure of the test file
 chomp $observedSNPLines;
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkHaplotypeCaller - structure of file');
@@ -310,6 +314,10 @@ $expectedSNPLines="2224477	996	.	TA	T	34.13	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHe
 2281178	4213	.	G	A	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
 2281178	4214	.	A	G	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
 2290182	1013	.	A	G	44.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0
+2291957	21946	.	A	G	20	PASS	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21948	.	A	G	20	PASS	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21957	.	A	C	20	PASS	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21958	.	T	C	20	PASS	AC=2;AF=1.00;AN=2;DP=0;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=NaN;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,0:0:3:45,3,0
 ";     # structure of the ref file
 $observedSNPLines=`grep -v "#" $variantFiltered`;      # structure of the test file
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkVariantFiltration - structure of file');
@@ -338,6 +346,10 @@ $expectedSNPLines="2224477	996	.	TA	T	34.13	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHe
 2281178	4213	.	G	A	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
 2281178	4214	.	A	G	64.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:90,6,0
 2290182	1013	.	A	G	44.17	PASS	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0
+2291957	21946	.	A	G	20	PASS	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21948	.	A	G	20	PASS	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21957	.	A	C	20	PASS	AC=2;AF=1.00;AN=2;DP=1;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=20.00;SOR=1.609	GT:AD:DP:GQ:PL	./.	1/1:0,1:1:3:45,3,0
+2291957	21958	.	T	C	20	PASS	AC=2;AF=1.00;AN=2;DP=0;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=NaN;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,0:0:3:45,3,0
 ";     # structure of the ref file
 $observedSNPLines=`grep -v "#" $vcfVariantsSelected`;      # structure of the test file
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkSelectVariants - structure of file');
@@ -374,7 +386,7 @@ is($observedSNPLines,$expectedSNPLines,'gatk::gatkReadBackedPhasing - structure 
 # rm index
 system ("rm $bamIn.bai") and die ("ERROR: $0 : Cannot remove index file $bamIn.bai\n$!\n");
 system ("rm $bamSingle.bai") and die ("ERROR: $0 : Cannot remove index file $bamSingle.bai\n$!\n");
-#rm idx file on 
+#rm idx file on
 my $dataOneVcf = "$toggle/data/testData/vcf/singleVCF";
 my $cleaningCmd="rm -f $dataOneVcf/GATKVARIANTFILTRATION.vcf.idx";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove GATKVARIANTFILTRATION.vcf.idx with the command $cleaningCmd \n$!\n");
