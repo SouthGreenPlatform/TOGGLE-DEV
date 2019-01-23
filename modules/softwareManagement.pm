@@ -115,6 +115,9 @@ sub correctName
         case ($name =~ m/^scp/i or $name =~ m/^rsync/i or $name =~ m/^transfer/i){$correctedName="scp";} #Correction for scp transfer
 
         #NEW SOFT ADDED AUTOMATICALLY
+
+        #FOR flyeNanoRaw
+        case ($name =~ m/^flye[\s|\.|\-| \/|\|\|]*NanoRaw/i){$correctedName="flyeNanoRaw";} #Correction for flyeNanoRaw
         
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
@@ -284,6 +287,10 @@ sub returnSoftInfos
 	my %softInfos = (
         
     #INFOS FOR NEW TOOLS
+	'flyeNanoRaw'=>{    'IN' => 'fasta,fastq',
+			'OUT'=>'fasta',
+			'cmdVersion' => "flye --version 2>&1"},
+
 
 	'nanoplot'=>{		'IN' => 'fastq',
 				'OUT'=>'NA',
