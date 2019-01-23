@@ -35,7 +35,6 @@ use warnings;
 use Data::Dumper;
 use Exporter;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
-
 use lib qw(.);
 use localConfig;
 use toolbox;
@@ -323,13 +322,19 @@ sub checkFormatFasta
     }
 
     #Opening file
-    open(FILE, "<", $file) or toolbox::exportLog("ERROR: checkFormat::checkFormatFasta : Cannot open the file $file\n$!\n",0);
-
+    open (my $inputHandle, $file) or toolbox::exportLog("ERROR: checkFormat::checkFormatFastq : Cannot open the file $file\n$!\n",0); # open the file to test
+    
+    #If $file is in gzip format
+    if($file =~ m/\.gz$/)
+    {
+        $inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: checkFormat::checkFormatFasta : Cannot open the gz file $file: $GunzipError\n",0);
+    }
+    
     #Reading file
     my $initiator = 0; #We need to scan the very first line, that begins with '>', but this is the only one beginning with that we need
     my %errors; # Will score all the error types
     my $lineNumber=0;#Recording line position
-    while (my $line = <FILE>)
+    while ((my $line = <$inputHandle>))
     {
          chomp $line;
          $lineNumber++;#Counter for scoring lines with errors
