@@ -46,8 +46,8 @@ our %testParams=    (
         bwaMem => [""],
         bwaSw => [""],
         bwaIndex => [""],
-	# crac
-	crac => [""],
+		# crac
+		crac => [""],
         #TopHat soft
         tophat2 => ["-i=30","-I=20000","-a=8","-m=1","--no-coverage-search","-g=10","--bowtie-n","--library-type=fr-unstranded","--microexon-search"],
         #GATK soft
@@ -110,9 +110,9 @@ our %testParams=    (
         checkFormatSamOrBam => [""],
         #fastqUtils
         checkEncodeByASCIIcontrol => [""],
-	# bamutils
-	bamutilsFilter => ["-gte MAPQ 30"],
-	bamutilsRemoveclipping => [""],
+		# bamutils
+		bamutilsFilter => ["-gte MAPQ 30"],
+		bamutilsRemoveclipping => [""],
         #Bowtie softs
         bowtie=>[""],
         bowtie2=>[""],
@@ -133,12 +133,14 @@ our %testParams=    (
         #SNIPLAY
         plinkVcf2Ped => [""],
         sniplayPed2fasta => [""],
-	readseq => ["-f 12"],
-	fastme => ["-d"],
-	#HISAT2
-	hisat2 => [""],
-	#stringtie
-	stringtie => [""]
+		readseq => ["-f 12"],
+		fastme => ["-d"],
+		#HISAT2
+		hisat2 => [""],
+		#stringtie
+		stringtie => [""],
+		#Flye nanoRaw
+		flyeNanoRaw =>[""],
         );
 
 sub softParams
