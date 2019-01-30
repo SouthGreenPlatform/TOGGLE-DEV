@@ -155,4 +155,44 @@ sub minimap2MapPaired
 	toolbox::exportLog("ERROR: minimap2::minimap2 : ABORTED\n",0);
 }
 
+
+# Read overlap. SAM or PAF output
+sub minimap2Overlap
+{
+	my ($fileIn,$fileOut,$optionsHachees) = @_;
+	my $validation = 0;
+	switch (1)
+	{
+		case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
+		case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
+		else {toolbox::exportLog("ERROR: minimap2::minimap2Overlap : The file $fileIn is not a fastq,fasta file\n",0);}
+	};
+	die (toolbox::exportLog("ERROR: minimap2::minimap2Overlap : The file $fileIn is not a valid fatsq,fasta file\n",0)) if $validation == 0;	#Picking up options
+	my $options="";
+	$options = toolbox::extractOptions($optionsHachees) if $optionsHachees;
+
+	# Set a default preset if it has not been set by the user
+	if ($options !~ m/-x|-ax/)
+	{
+		$options = "-x ava-ont " . $options;
+	}
+
+	# Check that the -a is not set if output is paf or add it if the output is sam
+	if ($fileOut =~ m/.paf$/i && $options =~ m/-a/)
+	{
+		toolbox::exportLog("ERROR: minimap2::minimap2Overlap : .paf output was requested but the -a option (sam output) is present. If you want paf output : Remove the -a option. If you want sam output : use minimap2Map instead", 0);
+	}
+
+	# If we want sam output, add -a if it's not set
+	if ($fileOut =~ m/.sam$/i && $options !~ m/-a/)
+	{
+		$options .= " -a";
+	}
+
+	#Execute command
+	my $command = "$minimap2 $options $fileIn $fileIn > $fileOut" ;
+	return 1 if (toolbox::run($command));
+	toolbox::exportLog("ERROR: minimap2::minimap2Overlap : ABORTED\n",0);
+}
+
 1;
