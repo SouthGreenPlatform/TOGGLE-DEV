@@ -116,12 +116,16 @@ sub correctName
 
         #NEW SOFT ADDED AUTOMATICALLY
 
-	#FOR minimap2
-	case ($name =~ m/^minimap2/i){$correctedName="minimap2";} #Correction for minimap2
+		#FOR minimap2
+		case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Map/i){$correctedName="minimap2Map";} #Correction for minimap2Map
+		case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Map[\s|\.|\-| \/|\|\|]*Paf/i){$correctedName="minimap2MapPaf";} #Correction for minimap2MapPaf
+		case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Map[\s|\.|\-| \/|\|\|]*Paired/i){$correctedName="minimap2MapPaired";} #Correction for minimap2MapPaired
+		case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Map[\s|\.|\-| \/|\|\|]*Paired[\s|\.|\-| \/|\|\|]*Paf/i){$correctedName="minimap2MapPairedPaf";} #Correction for minimap2MapPairedPaf
+		case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Overlap/i){$correctedName="minimap2Overlap";} #Correction for minimap2Overlap
+		case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Overlap[\s|\.|\-| \/|\|\|]*Paf/i){$correctedName="minimap2OverlapPaf";} #Correction for minimap2MapPaired
+		case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Index/i){$correctedName="minimap2Index";} #Correction for minimap2Index
 
-
-	#FOR minimap2Index
-	case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Index/i){$correctedName="minimap2Index";} #Correction for minimap2Index
+		case ($name =~ m/^minimap2[\s|\.|\-| \/|\|\|]*Index/i){$correctedName="minimap2Index";} #Correction for minimap2Index
 
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
