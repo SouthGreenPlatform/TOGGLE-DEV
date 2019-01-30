@@ -1,0 +1,34 @@
+
+###########################################
+## Block for minimap2OverlapPaf
+###########################################
+
+# Check that we have an input file of the correct type
+# NOTE we use fastaFileIn but it can be either a fasta or a fastq
+
+foreach my $file (@{$fileList}) #Checking the type of files that must be fasta  fasta.gz  fa  fa.gz
+{
+    if ($file =~ m/fasta$|fasta.gz$|fa$|fa.gz$|fastq$|fastq.gz$|fq$|fq.gz$/) # the file type is normally fasta  fasta.gz  fa  fa.gz
+    {
+        if ($fastaFileIn ne "NA") # Already a fasta  fasta.gz  fa  fa.gz  recognized
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single fasta/fasta.gz/fastq/fastq.gz file at $stepName step.\n",0);
+        }
+        else
+        {
+            $fastaFileIn = $file;
+        }
+    }
+}
+
+if ($fastaFileIn eq "NA") # No valid input file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No fasta/fasta.gz/fastq/fastq.gz file found in $previousDir at step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);
+
+$samFileOut = "$newDir"."/"."$readGroup".".MINIMAP2OVERLAPS.paf";
+minimap2::minimap2Overlap($fastaFileIn,$samFileOut,$softParameters);
+
+

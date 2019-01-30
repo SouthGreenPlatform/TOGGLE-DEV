@@ -1,0 +1,41 @@
+
+###########################################
+## Block for minimap2MapPaired
+###########################################
+
+# Check that we have an input file of the correct type
+# NOTE we use fastqForwardIn/fastqReverseIn but they can be either fasta or fastq
+
+foreach my $file (@{$fileList}) #Checking the type of files that must be fasta  fasta.gz  fa  fa.gz
+{
+    if ($file =~ m/fasta$|fasta.gz$|fa$|fa.gz$|fastq$|fastq.gz$|fq$|fq.gz$/) # the file type is normally fasta  fasta.gz  fa  fa.gz
+    {
+        if ($fastqForwardIn ne "NA") # Already a fasta  fasta.gz  fa  fa.gz  recognized
+        {
+			if ($fastqReverseIn ne "NA")
+			{
+				toolbox::exportLog("ERROR : $0 : there are more than two fasta/fasta.gz/fastq/fastq.gz files at $stepName step.\n",0);
+			}
+			else
+			{
+				$fastqReverseIn = $file;
+			}
+        }
+        else
+        {
+            $fastqForwardIn = $file;
+        }
+    }
+}
+
+if ($fastqForwardIn eq "NA" || $fastqReverseIn eq "NA") # Zero or one input files found
+{
+    toolbox::exportLog("ERROR : $0 : This block requires two fasta/fastq files, which were not found in $previousDir. If you have single end data, use minimap2Map instead. At step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);
+
+$samFileOut = "$newDir"."/"."$readGroup".".MINIMAP2.sam";
+minimap2::minimap2MapPaired($fastqForwardIn,$fastqReverseIn,$samFileOut,$reference,$softParameters);
+
+
