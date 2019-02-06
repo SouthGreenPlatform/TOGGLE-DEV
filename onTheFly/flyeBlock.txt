@@ -1,0 +1,52 @@
+###########################################
+## Block for flyeNanoRaw
+###########################################
+
+#Correct variable populating
+
+foreach my $file (@{$fileList}) #Checking the type of files that must be fastq  fastq.gz  fq  fq.gz 
+{
+    if ($file =~ m/fasta$|fa$|fasta.gz$|fa.gz$|fastq$|fastq.gz$|fq$|fq.gz$$/) # the file type is normally fasta fa fasta.gz fa.gz fastq  fastq.gz  fq  fq.gz 
+    {
+        if ($fastqForwardIn ne "NA") # Already a fastq  fastq.gz  fq  fq.gz  recognized
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single fastq  fastq.gz  fq  fq.gz  file at $stepName step.\n",0);
+        }
+        else
+        {
+            $fastqForwardIn = $file;
+        }
+    }
+}
+
+if ($fastqForwardIn eq "NA") #No fasta$|fa$|fasta.gz$|fa.gz$|fastq$|fastq.gz$|fq$|fq.gz$ file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No fastq  fastq.gz  fq  fq.gz  file found in $previousDir at step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of flyeNanoRaw
+
+my $type="flyeNanoRaw";
+#$fastaFileOut = "$newDir"."/"."$readGroup".".FLYENANORAW.fasta";
+$fastaFileOut = "$newDir";
+
+flye::flye($fastqForwardIn,$fastaFileOut,$softParameters,$type);   # Sending to flyeNanoRaw
+
+
+
+# Move the tophat log subdirectory into the upper directory
+# The log subdirectory will not be transfered into the final directory
+my $moveCmd = "mv ".$newDir."/".$readGroup."/*" ".$initialDir."/FLYETMP_".$readGroup."_LOGS";
+toolbox::run($moveCmd);
+
+# Create a tempory directory
+# and move the tophat bam file unmapped in a tempory directory 
+my $mkdirCmd = "mkdir ".$initialDir."/tophatTempory";
+toolbox::run($mkdirCmd);
+
+$moveCmd = "mv $newDir/*unmapped.bam ".$initialDir."/tophatTempory";
+toolbox::run($moveCmd);
+
+
+
+
