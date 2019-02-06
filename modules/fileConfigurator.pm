@@ -138,7 +138,10 @@ our %testParams=    (
 	#HISAT2
 	hisat2 => [""],
 	#stringtie
-	stringtie => [""]
+	stringtie => [""],
+	#wtdbg2 tools
+	wtdbg2 => [""],
+	wtpoa-cns => [""]
         );
 
 sub softParams
