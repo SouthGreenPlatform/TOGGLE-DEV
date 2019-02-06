@@ -1,0 +1,34 @@
+
+
+###########################################
+## Block for wtpoa-cns
+###########################################
+
+#Correct variable populating
+
+foreach my $file (@{$fileList}) #Checking the type of files that must be sam 
+{
+    if ($file =~ m/sam$$/) # the file type is normally sam 
+    {
+        if ($samFileIn ne "NA") # Already a sam  recognized
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single sam  file at $stepName step.\n",0);
+        }
+        else
+        {
+            $samFileIn = $file;
+        }
+    }
+}
+
+if ($samFileIn eq "NA") #No sam$ file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No sam  file found in $previousDir at step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of wtpoa-cns
+
+$fastaFileOut = "$newDir"."/"."$readGroup".".WTPOA-CNS.fasta";
+wtdbg2::wtpoa-cns($samFileIn,$fastaFileOut,$softParameters);   # Sending to wtpoa-cns
+
+    

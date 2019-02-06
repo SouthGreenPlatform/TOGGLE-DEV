@@ -115,6 +115,13 @@ sub correctName
         case ($name =~ m/^scp/i or $name =~ m/^rsync/i or $name =~ m/^transfer/i){$correctedName="scp";} #Correction for scp transfer
 
         #NEW SOFT ADDED AUTOMATICALLY
+
+	#FOR wtpoa-cns
+	case ($name =~ m/^wtpoa-cns[\s|\.|\-| \/|\|\|]*/i){$correctedName="wtpoa-cns";} #Correction for wtpoa-cns
+
+
+	#FOR wtdbg2
+	case ($name =~ m/^wtdbg2[\s|\.|\-| \/|\|\|]*/i){$correctedName="wtdbg2";} #Correction for wtdbg2
         
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
@@ -284,6 +291,15 @@ sub returnSoftInfos
 	my %softInfos = (
         
     #INFOS FOR NEW TOOLS
+	'wtpoa-cns'=>{'IN' => 'layout,sam',
+			'OUT'=>'fasta',
+			'cmdVersion' => "$wtpoaCns -V"},
+
+
+	'wtdbg2'=>{'IN' => 'fasta,fastq',
+			'OUT'=>'layout',
+			'cmdVersion' => "$wtdbg2 -V"},
+
 
 	'nanoplot'=>{		'IN' => 'fastq',
 				'OUT'=>'NA',
@@ -601,11 +617,22 @@ sub writeLogVersion
 		{
 
             #LOG INFOS FOR NEW TOOLS
+
+	#FOR wtpoa-cns
+	case ($softOrder =~ m/^wtdbg2.*/i){$softPathVersion{"wtpoa-cns"}=`$softInfos{"wtpoa-cns"}{'cmdVersion'} ` if not defined $softPathVersion{"wtpoa-cns"};
+		$softPath{"wtpoa-cns"}=$wtpoaCns if not defined $softPath{"wtpoa-cns"};
+}
+
+            #FOR wtdbg2
+            case ($softOrder =~ m/^wtdbg2.*/i){$softPathVersion{"wtdbg2"}= `$softInfos{"wtdbg2"}{"cmdVersion"}` if not defined $softPathVersion{"wtdbg2"};
+            		                        $softPath{"wtdbg2"}= $stringtie if not defined $softPath{"wtdbg2"};
+											}
             
             #FOR stringtie
             case ($softOrder =~ m/^stringtie.*/i){$softPathVersion{"stringtie"}= `$softInfos{"stringtie"}{"cmdVersion"}` if not defined $softPathVersion{"stringtie"};
             		                        $softPath{"stringtie"}= $stringtie if not defined $softPath{"stringtie"};
 											}
+            
 
 			#FOR hisat2.pm
 			case ($softOrder =~ m/^hisat2.*/i){$softPathVersion{"hisat2"}= `$softInfos{"hisat2"}{"cmdVersion"}` if not defined $softPathVersion{"hisat2"};
