@@ -140,7 +140,7 @@ our %testParams=    (
 		#stringtie
 		stringtie => [""],
 		#Flye nanoRaw
-		flye =>[""],
+		flye =>["--genome-size 5m"],
         );
 
 sub softParams
