@@ -381,6 +381,10 @@ foreach my $file (@{$initialDirContent})
 	{
 		$extension = "fasta";
 	}
+	elsif ($file =~ m/lay\.gz$/) #The file is a gz compressed layout for wtdbg2
+	  {
+		$extension = "layout";
+	  }
 	if ($previousExtension eq "0") #first round
 	{
 		$previousExtension = $extension;
@@ -394,7 +398,7 @@ foreach my $file (@{$initialDirContent})
 }
 
 #Checking if the files are taken in charge by TOGGLe
-if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam|ped|gtf|txt/)  # j'ai rajouté fasta pour les besoins de TGICL et moi ped pour SNIPLAY; GTF for stringtie (option merge)
+if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam|ped|gtf|txt|layout/)  
 {
 	toolbox::exportLog("ERROR : $0 : The filetype $previousExtension is not taken in charge by TOGGLe\n",0);
 }
