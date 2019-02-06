@@ -643,6 +643,8 @@ print "\n#######################################\nFinished...\n\n Please have a 
     - modules/fileConfigurator.pm ##NOTE: Please add line $function =>[\"\"] to add default value for test block
     - onTheFly/$blockName
     - test/modules/$moduleTest
+    - add use $module in onTheFly/startBlock.txt
     - test/blocks/$blockTest\n\n#######################################\n";
+    
 
 exit;
