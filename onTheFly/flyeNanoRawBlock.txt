@@ -1,0 +1,34 @@
+
+
+###########################################
+## Block for flyeNanoRaw
+###########################################
+
+#Correct variable populating
+
+foreach my $file (@{$fileList}) #Checking the type of files that must be fastq  fastq.gz  fq  fq.gz 
+{
+    if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$$/) # the file type is normally fastq  fastq.gz  fq  fq.gz 
+    {
+        if ($fastqForwardIn ne "NA") # Already a fastq  fastq.gz  fq  fq.gz  recognized
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single fastq  fastq.gz  fq  fq.gz  file at $stepName step.\n",0);
+        }
+        else
+        {
+            $fastqForwardIn = $file;
+        }
+    }
+}
+
+if ($fastqForwardIn eq "NA") #No fastq$|fastq.gz$|fq$|fq.gz$ file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No fastq  fastq.gz  fq  fq.gz  file found in $previousDir at step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of flyeNanoRaw
+
+$fastaFileOut = "$newDir"."/"."$readGroup".".FLYENANORAW.fasta";
+flye::flyeNanoRaw($fastqForwardIn,$fastaFileOut,$softParameters,"--nano-raw");   # Sending to flyeNanoRaw
+
+    
