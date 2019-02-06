@@ -140,7 +140,7 @@ our %testParams=    (
 		#stringtie
 		stringtie => [""],
 		#Flye nanoRaw
-		flyeNanoRaw =>[""],
+		flye =>[""],
         );
 
 sub softParams
