@@ -66,12 +66,18 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for flye";
 # check final results
 
 # expected output content
+my $fastaOut="$testingDir/finalResults/scaffolds.fasta";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('FILE.EXTENTION','FILE.EXTENTION');
+my @expectedOutput = ('00-assembly','10-consensus','20-repeat','21-trestle','30-contigger','40-polishing','assembly_graph.gfa','assembly_graph.gv','assembly_info.txt','flye.log','params.json',$fastaOut);
+#my @expectedOutput = ('FILE.EXTENTION','FILE.EXTENTION');
 
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two FILES (no SGE) flye::flye file list ');
 
 # expected output value TO DO
+# expected content test
+my $observedContent=`wc -l $fastaOut`;
+my $validContent = ( $observedContent =~ m/13818/);
+is($validContent,1,'flye::flye - output content assembly with Flye');
 
     
