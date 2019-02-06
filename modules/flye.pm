@@ -69,6 +69,8 @@ sub flye
 	return 1 if (toolbox::run($command));
 	toolbox::exportLog("ERROR: flye::flyeNanoRaw : ABORTED\n",0);
 	
+	my $fastaOut="$fileOut/scaffolds.fasta";
+	return $fastaOut;
 	
 }
 
