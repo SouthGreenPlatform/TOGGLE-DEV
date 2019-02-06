@@ -117,7 +117,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'flye::flyeNanoRaw - output list');
 
 # expected content test
 my $observedContent=`wc -l $dirOut/scaffolds.fasta`;
-my $validContent = ( $observedContent =~ m/13819/);
+my $validContent = ( $observedContent =~ m/13822/);
 is($validContent,1,'flye::flye - output content assembly with Flye');
 
     
