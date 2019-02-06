@@ -116,8 +116,8 @@ sub correctName
 
         #NEW SOFT ADDED AUTOMATICALLY
 
-        #FOR flyeNanoRaw
-        case ($name =~ m/^flye[\s|\.|\-| \/|\|\|]*NanoRaw/i){$correctedName="flyeNanoRaw";} #Correction for flyeNanoRaw
+        #FOR flye
+        case ($name =~ m/^flye[\s|\.|\-| \/|\|\|]*NanoRaw/i){$correctedName="flye";} #Correction for flye
         
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
@@ -287,7 +287,7 @@ sub returnSoftInfos
 	my %softInfos = (
         
     #INFOS FOR NEW TOOLS
-	'flyeNanoRaw'=>{    'IN' => 'fasta,fastq',
+	'flye'=>{    'IN' => 'fasta,fastq',
 			'OUT'=>'fasta',
 			'cmdVersion' => "flye --version 2>&1"},
 
