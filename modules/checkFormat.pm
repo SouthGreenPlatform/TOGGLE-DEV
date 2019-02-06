@@ -378,7 +378,7 @@ sub checkFormatFasta
          next;
 
      }
-    close FILE;
+    close $inputHandle;
 
     #Checking if there are errors
     my $numberOfErrors = scalar(keys %errors);
