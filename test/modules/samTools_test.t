@@ -229,7 +229,7 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort - output structure');
 
 #Input files
 my @bamFiles=("$originalBam","$originalBam");
-my $headerExtractCommand="samtools view -H $originalBam > headerFile.sam";  #Extracting header for the following test
+my $headerExtractCommand="$samtools view -H $originalBam > headerFile.sam";  #Extracting header for the following test
 system($headerExtractCommand) and die ("\nCannot launch the header extract command: $!\n Aborting tests\n");
 
 
@@ -248,7 +248,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMerge - output li
 
 # expected output structure
 my $expectedLineNumber = "3996";
-my $observedLineNumber=`samtools view $bamFileOut | wc -l`;# structure of the test file
+my $observedLineNumber=`$samtools view $bamFileOut | wc -l`;# structure of the test file
 chomp $observedLineNumber;
 is($observedLineNumber,$expectedLineNumber,'samTools::samToolsMerge - output structure');
 
