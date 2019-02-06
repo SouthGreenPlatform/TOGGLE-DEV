@@ -117,7 +117,7 @@ sub correctName
         #NEW SOFT ADDED AUTOMATICALLY
 
         #FOR flye
-        case ($name =~ m/^flye[\s|\.|\-| \/|\|\|]*NanoRaw/i){$correctedName="flye";} #Correction for flye
+        case ($name =~ m/^flye[\s|\.|\-| \/|\|\|]*/i){$correctedName="flye";} #Correction for flye
         
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
@@ -289,7 +289,7 @@ sub returnSoftInfos
     #INFOS FOR NEW TOOLS
 	'flye'=>{    'IN' => 'fasta,fastq',
 			'OUT'=>'fasta',
-			'cmdVersion' => "flye --version 2>&1"},
+			'cmdVersion' => "$flye --version 2>&1"},
 
 
 	'nanoplot'=>{		'IN' => 'fastq',
@@ -607,7 +607,12 @@ sub writeLogVersion
 		switch (1)
 		{
 
-            #LOG INFOS FOR NEW TOOLS
+            #LOG INFO FOR NEW TOOLS
+            #FOR flye
+            case ($softOrder =~ m/^flye.*/i){$softPathVersion{"flye"}= `$softInfos{"flye"}{"cmdVersion"}` if not defined $softPathVersion{"flye"};
+            		                        $softPath{"flye"}= $flye if not defined $softPath{"flye"};
+											}
+            
             
             #FOR stringtie
             case ($softOrder =~ m/^stringtie.*/i){$softPathVersion{"stringtie"}= `$softInfos{"stringtie"}{"cmdVersion"}` if not defined $softPathVersion{"stringtie"};
