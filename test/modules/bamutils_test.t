@@ -83,7 +83,7 @@ chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir (
 ##bamutils tool
 ################################################################################################
 # tools for bamutils bamutilsFilter
-my $toolName = "bamutilsFilter";
+$toolName = "bamutilsFilter";
 
 #########################################
 #Creating log file

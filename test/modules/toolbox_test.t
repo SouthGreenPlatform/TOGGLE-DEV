@@ -46,7 +46,7 @@ use Data::Dumper;
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
 
-# Load localConfig if primary test is successful 
+# Load localConfig if primary test is successful
 use_ok('localConfig') or exit;
 use localConfig;
 
@@ -197,7 +197,7 @@ is (toolbox::writeFile($configFile),'1','toolbox::writeFile - return 1');
 #is (toolbox::writeFile($chmodVcfFile),'0','toolbox::writeFile - return 0');
 
 ########################################
-#toolbox::sizeFile 
+#toolbox::sizeFile
 ########################################
 ok (toolbox::sizeFile($configFile) == 1,'toolbox::sizeFile - return 1');
 ok (toolbox::sizeFile($emptyFile) == 0,'toolbox::sizeFile - return 0');
@@ -207,13 +207,13 @@ ok (toolbox::sizeFile($emptyFile) == 0,'toolbox::sizeFile - return 0');
 #Directory test
 ########################################
 ########################################
-#toolbox::existsDir 
+#toolbox::existsDir
 ########################################
 is (toolbox::existsDir('.'),'1','toolbox::existsDir - return 1');
 is (toolbox::existsDir('beurk',0),'0','toolbox::existsDir - return 0');
 
 ########################################
-#toolbox::makeDir 
+#toolbox::makeDir
 ########################################
 is (toolbox::makeDir('test_dir'),'1','toolbox::makedir - created directory OK');
 is (toolbox::existsDir('test_dir'),'1','toolbox::existsDir - return 1');
@@ -311,7 +311,7 @@ my $optionLine=toolbox::extractOptions($configInfos->{"bwaAln"}," ");
 is ($optionLine =~ m/-n 5/,'1','toolbox::extractOptions - is'); #Test as an Test form because of randomness of hash sorting, to be sure of controlling the data
 
 $optionLine=toolbox::extractOptions($configInfos->{"bwaln"}," ");
-isnt ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','toolbox::extractOptions - option test'); 
+isnt ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','toolbox::extractOptions - option test');
 
 
 
@@ -325,16 +325,6 @@ isnt ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','toolbox::extractOpt
 
 #Check if the two bam are the same
 #is_deeply ($observedMD5sum, "1546666d4335961d81254e91951cac6c  $toggle/dataTest/toolboxTestDir/RC3.PICARDTOOLSSORT.bam\n", "Test for addInfoHeader result");
-
-
-########################################
-#toolbox::changeDirectoryArbo test
-########################################
-my $directory = "./TEST/";
-my $newDirectory = toolbox::changeDirectoryArbo($directory,'0');
-is_deeply($newDirectory, "./TEST/0_PAIRING_FILES", "toolbox::changeDirectoryArbo");
-
-is(toolbox::changeDirectoryArbo($directory,'8'),undef,"toolbox::changeDirectoryArbo");
 
 
 ########################################
@@ -388,5 +378,3 @@ is (toolbox::checkInitialDirContent('initialDir'),'0','toolbox::checkInitialDirC
 $optionLine=toolbox::relativeToAbsolutePath('./');
 ## DEBUG print $optionLine;
 is ($optionLine =~ m/INFOS/,'1','toolbox::relativeToAbsolutePath - OK');
-
-
