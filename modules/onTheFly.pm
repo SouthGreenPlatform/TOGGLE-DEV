@@ -73,7 +73,7 @@ sub checkOrder
     ##DEBUG print Dumper $hashInOut;
 
     #Verifying the coherence of input/output
-    my ($previousSoft,$previousFormat,$currentFormat,$initialStep,$lastStep);
+    my ($previousSoft,$previousFormat,$currentFormat,$initialStep,$lastStep,$lastTrueStep);
     foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
     {
 	my $currentSoft=$$hashOrder{$step};
@@ -117,7 +117,7 @@ sub checkOrder
 	}
 
 	#Preparing for the next round
-
+	$lastTrueStep = $step;
 	next if ($hashInOut->{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
 
 	$previousSoft=$currentSoft;
@@ -127,7 +127,7 @@ sub checkOrder
 
     }
     ##DEBUG print $initialStep,"--",$lastStep,"\n";
-    return ($initialStep,$lastStep); #Will return the last step number
+    return ($initialStep,$lastStep,$lastTrueStep); #Will return the last step number
 }
 
 ################################################################################################
@@ -248,7 +248,9 @@ sub generateScript
 	###########################################
 	###########################################
 	############# EN TEST REPORT STAT MAPPING
-	$catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt";
+	#$catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt";
+	# NOTE I commented the previous line to avoid having a double afterBlock at the end of the script, but why was it here to begin with ? Is there something i'm missing ? -- vklein, 15/11/2018
+
 	$catCommand .= " ".$toggle."/onTheFly/statsMappingBlock.txt";
 	###########################################
 	###########################################
@@ -488,7 +490,7 @@ sub generateGraphviz
 
 		$input=$hashInOut->{$soft}{"IN"};
 		$output=$hashInOut->{$soft}{"OUT"};
-		
+
 		# Get input and output format from sofware Formats. txt file
 		$softLabel="$soft ($step)";
 		$soft=$soft."_".$step;

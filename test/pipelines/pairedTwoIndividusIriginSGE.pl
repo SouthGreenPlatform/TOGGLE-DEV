@@ -56,7 +56,7 @@ print "#### TEST SNPdiscoveryPaired paired Irigin (two individus) / SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileSNPPairedIni="$toggle/exampleConfigs/SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
+my $fileSNPPairedIni="$toggle/exampleConfigs/SNPdiscoveryPairedSGE.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedSGE="$toggle/test/pipelines/SNPdiscoveryPairedTestSGE.config.txt";
 
 my $cmd="cp $fileSNPPairedIni $fileSNPPairedSGE";
@@ -82,19 +82,19 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusI
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('globalAnalysis.GATKSELECTVARIANT.vcf','globalAnalysis.GATKSELECTVARIANT.vcf.idx');
+my @expectedOutput = ('intermediateResults.GATKSELECTVARIANT.vcf','intermediateResults.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividu (SGE mode) list  ');
 
 # expected output content
-$observedOutput=`tail -n 1 $testingDir/finalResults/globalAnalysis.GATKSELECTVARIANT.vcf`;
+$observedOutput=`tail -n 1 $testingDir/finalResults/intermediateResults.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 my $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividu (SGE mode) content ');
 
 # expected output content (qsub word)
-$observedOutput=`grep "qsub" $testingDir/GLOBAL_ANALYSIS_*.o -c`;
+$observedOutput=`grep "qsub" $testingDir/TOGGLe_*log.o -c`;
 chomp $observedOutput;
 $expectedOutput=6;
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividu (SGE mode) found qsub command');

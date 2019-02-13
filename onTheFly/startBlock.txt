@@ -164,8 +164,13 @@ $parser->add_args(
                         type     =>"Bool",
                         help     => 'Use if you want to generate workflow an analysis reports',
                         dest     => 'report'
+                    ],
+                    [
+                        '-rerun','--rerun',
+                        required => 0,
+                        type     => "Bool",
+                        help     => "Restart the analysis from the last successful step",
                     ]
-
                 );
 # for print usage "or die" in help
 #my $usage = $parser->format_usage();
@@ -191,6 +196,7 @@ my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);  
 # WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
 my $checkFastq = $parser->namespace->checkFastq;
 my $report = $parser->namespace->report;
+my $rerun = $parser->namespace->rerun;
 
 my @listFilesMandatory=($initialDir, $fileConf); #stock mandatory files to test if they exist
 push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
@@ -203,7 +209,7 @@ foreach my $file (@listFilesMandatory)
   toolbox::checkFile($file); #check file
 }
 
-toolbox::existsDir($initialDir);        # check if this directory exists
+toolbox::existsDir($initialDir);        # exit with an error if the initial dir does not exist
 
 
 ##########################################
@@ -223,22 +229,44 @@ my $logFile=$initialDir."/".$readGroup."_log.o";
 my $errorFile=$initialDir."/".$readGroup."_log.e";
 system("touch $logFile $errorFile") and die "\nERROR: $0 : cannot create the log files $logFile and $errorFile: $!\nExiting...\n";
 
+# Determine the name of the file containing the last successful step
+my $stepFileName=$initialDir."/.".$readGroup."_last_step";
+my $stepFileHandle;
+# This will contain the last successful step when using rerun
+my $lastOkStep;
+
 
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
 toolbox::exportLog("INFOS: Initial command line : $cmd_line\n",1);
 
 my $initialFileList = toolbox::readDir($initialDir);
 
-#Reorganizing initial files
 my $previousDir = $initialDir."/0_initialFiles";
-toolbox::makeDir($previousDir);
 
-foreach my $currentFile (@$initialFileList)
+if ($rerun)
 {
-  my ($basicName) = toolbox::extractPath($currentFile);
-  next if ($basicName =~ m/individuSoft|log\.[e|o]|Global_log$/); # Passing the individuSoft file
-  my $mvCommand = "mv ".$currentFile." ".$previousDir."/".$basicName;
-  toolbox::run($mvCommand,"noprint");
+  # If the initialFiles folder does not exist, the analysis has not started at all
+  if (! -d $previousDir)
+  {
+    toolbox::exportLog("ERROR : Rerun mode has been requested but $previousDir does not exist, so the analysis has not started", 0);
+  }
+
+  # Read the last successful step from the file
+  open ($stepFileHandle, '<', $stepFileName) or die "ERROR : $0 : cannot open file $stepFileName. $!\nExiting...\n";
+  $lastOkStep = <$stepFileHandle>;
+  close $stepFileHandle;
+
+  toolbox::exportLog("INFO : Rerun mode enabled. Will resume after step $lastOkStep.", 1);
+} else {
+  #Reorganizing initial files
+  toolbox::makeDir($previousDir);
+  foreach my $currentFile (@$initialFileList)
+  {
+    my ($basicName) = toolbox::extractPath($currentFile);
+    next if ($basicName =~ m/individuSoft|log\.[e|o]|Global_log$/); # Passing the individuSoft file
+    my $mvCommand = "mv ".$currentFile." ".$previousDir."/".$basicName;
+    toolbox::run($mvCommand,"noprint");
+  }
 }
 
 my $optionRef=toolbox::readFileConf($fileConf); # Picking up the global options
@@ -325,6 +353,11 @@ if (scalar @$fileList >=2 && $$fileList[0] =~ m/(sam|bam|vcf|bai|vcf\.gz|gtf)$/)
 my $originalDir = $initialDir; #Keep in memory the true initial directory
 if (defined $optionRef->{"scp"})
 {
+  if ($rerun)
+  {
+    toolbox::exportLog("ERROR: Rerunning an analysis with the \$scp option is not supported", 0)
+    # TODO : Save the path of the remote folder here so that when resuming we can try to get the files on the node
+  }
   #Picking up the "tmpRoot" info, ie the name of the temp dir on the nodes (eg /scratch, /tmp,...)
   my $scpOptions = toolbox::extractHashSoft($optionRef,"scp");
   my $tmpRoot = toolbox::extractOptions($scpOptions);
@@ -351,7 +384,7 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
     last if ($position >= 1000);
     my $directory = $initialDir."/".$position."_".$$hashOrder{$position};
     $directory =~ s/ //g; #Removing the spaces
-    toolbox::makeDir($directory); # Create the folder associated with each steps
+    toolbox::makeDir($directory) unless $rerun; # Create the folder associated with each steps. The directory already exists if we are rerunning
     push (@dirList,$directory); # Adding the newly created folder to the list of folders
     $stepDirectory{$position} = $directory;
   }

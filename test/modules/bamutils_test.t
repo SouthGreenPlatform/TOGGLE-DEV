@@ -79,6 +79,12 @@ system($cmd) and die ("ERROR: $0 : Cannot execute the test directory $testDir ($
 chdir $testDir or die ("ERROR: $0 : Cannot go into the test directory $testDir ($toolName) with the chdir cmd \n$!\n");
 
 
+################################################################################################
+##bamutils tool
+################################################################################################
+# tools for bamutils bamutilsFilter
+my $toolName = "bamutilsFilter";
+
 #########################################
 #Creating log file
 #########################################
@@ -89,13 +95,6 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ######################################################################################################################################
 ######################################################################################################################################
 
-
-
-################################################################################################
-##bamutils tool
-################################################################################################
-# tools for bamutils bamutilsFilter
-my $toolName = "bamutilsFilter";
 
 # input file
 my $bamFileIn = "$toggle/data/testData/samBam/oneSam/RC3-SAMTOOLSVIEW.sam";
@@ -112,7 +111,7 @@ is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('bamutils_log.e','bamutils_log.o','RC3.bamutilsFilter.bam');
+my @expectedOutput = ('bamutilsFilter_log.e','bamutilsFilter_log.o','RC3.bamutilsFilter.bam');
 
 is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilsFilter - output list');
 
@@ -143,7 +142,7 @@ is(bamutils::bamutilsTool($toolName, $bamFileIn, $bamFileOut, $optionsHachees),1
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('bamutils_log.e','bamutils_log.o','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
+@expectedOutput = ('bamutilsFilter_log.e','bamutilsFilter_log.o','RC3.bamutilsFilter.bam','RC3.bamutilstobed.bed');
 
 is_deeply(\@observedOutput,\@expectedOutput,'bamutils::bamutilsTool - bamutilstobed - output list');
 

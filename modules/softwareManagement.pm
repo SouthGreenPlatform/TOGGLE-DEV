@@ -130,6 +130,13 @@ sub correctName
 		#FOR nanoplot
 		case ($name =~ m/^nanoplot[\s|\.|\-| \/|\|\|]*/i){$correctedName="nanoplot";} #Correction for nanoplot
 
+        #FOR hisat2
+        case ($name =~ m/^hisat2[\s|\.|\-| \/|\|\|]*/i){$correctedName="hisat2";} #Correction for hisat2
+
+        #FOR stringtie
+        case ($name =~ m/^stringtie[\s|\.|\-| \/|\|\|]*/i){$correctedName="stringtie";} #Correction for stringtie
+
+
         #FOR bwa.pm
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
@@ -289,208 +296,200 @@ sub returnSoftInfos
 
     #INFOS FOR NEW TOOLS
 
-	'nanoplot'=>{'IN' => 'fastq',
-						'OUT'=>'NA',
-						'cmdVersion' => "$nanoplot -v"},
+	'nanoplot'=>{		'IN' => 'fastq',
+				'OUT'=>'NA',
+				'cmdVersion' => "$nanoplot -v"},
 
-	'abyss' =>{'IN' => 'fasta,fastq,sam,bam',
-					 'OUT' => 'fasta',
-					 'cmdVersion' => "$abyss --version | grep 'GNU Make' " },
+	'stringtie'=>{		'IN' => 'bam,gtf',
+				'OUT'=>'gtf',
+				'cmdVersion' => "$stringtie -v 2>&1 | grep 'StringTie v' "},
 
-	'atropos' =>{'IN' => 'fastq',
-					 'OUT' => 'fastq',
-					 'cmdVersion' => "$atropos  2>&1 | grep 'Atropos version' " },
+	'hisat2'=>{		'IN' => 'fastq',
+				'OUT'=>'sam',
+				'cmdVersion' => "$hisat2 -v 2>&1 | grep 'HISAT2 version'"},
 
-	'bam2cfg' =>{'IN' => 'bam',
-						'OUT' => 'NA',
-						'cmdVersion' => "$breakDancer 2>&1 | grep Version' " },
+	'abyss' =>{		'IN' => 'fasta,fastq,sam,bam',
+				'OUT' => 'fasta',
+				'cmdVersion' => "$abyss --version | grep 'GNU Make' " },
 
-	'bamutilsTool' =>{'IN' => 'sam,bam',
-						'OUT' => 'bam,fastq,fasta,bed',
-						'cmdVersion' => "$bamutils | tail -1" },
+	'atropos' =>{		'IN' => 'fastq',
+				'OUT' => 'fastq',
+				'cmdVersion' => "$atropos  2>&1 | grep 'Atropos version' " },
 
-	'bedToolsGeneric' =>{'IN' => 'bam,bed,vcf,gff',
-						'OUT' => 'bed',
-						'cmdVersion' => "$bedtools --version " },
+	'bam2cfg' =>{		'IN' => 'bam',
+				'OUT' => 'NA',
+				'cmdVersion' => "$breakDancer 2>&1 | grep Version' " },
 
-	'bedToolsIntersect' =>{'IN' => 'bam,bed,vcf,gff',
-						'OUT' => 'bed',
-						'cmdVersion' => "$bedtools --version " },
+	'bamutilsTool' =>{	'IN' => 'sam,bam',
+				'OUT' => 'bam,fastq,fasta,bed',
+				'cmdVersion' => "$bamutils | tail -1" },
 
-	'bedToolsWindow' =>{'IN' => 'bam,bed,vcf,gff',
-						'OUT' => 'bed',
-						'cmdVersion' => "$bedtools --version " },
+	'bedTools' =>{		'cmdVersion' => "$bedtools --version " },
 
-	'bowtieBuild' =>{'IN' => 'fasta',
-						'OUT' => 'NA',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bowtieBuild --version 2>&1 | grep 'bowtie-build version'" },
+	'bedToolsGeneric' =>{	'IN' => 'bam,bed,vcf,gff',
+				'OUT' => 'bed'},
 
-	'bowtie2Build' =>{'IN' => 'fasta',
-						'OUT' => 'NA',
-						'MANDATORY' => 'reference',
-						'cmdVersion' =>  "$bowtie2Build --version 2>&1 | grep 'bowtie2-build version'"},
+	'bedToolsIntersect' =>{	'IN' => 'bam,bed,vcf,gff',
+				'OUT' => 'bed'},
 
-	'bowtie' =>{'IN' => 'fastq',
-						'OUT' => 'sam',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bowtie --version | grep 'bowtie version' " },
+	'bedToolsWindow' =>{	'IN' => 'bam,bed,vcf,gff',
+				'OUT' => 'bed' },
 
-	'bowtie2' =>{'IN' => 'fastq',
-						'OUT' => 'sam',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bowtie2 --version | grep 'bowtie2-align-s version'" },
+	'bowtieBuild' =>{	'IN' => 'fasta',
+				'OUT' => 'NA',
+				'MANDATORY' => 'reference',
+				'cmdVersion' => "$bowtieBuild --version 2>&1 | grep 'bowtie-build version'" },
 
-	'breakDancer' =>{'IN' => 'bam',
-						'OUT' => 'NA',
-						'cmdVersion' => "$breakDancer 2>&1 | grep 'Version'" },
+	'bowtie2Build' =>{	'IN' => 'fasta',
+				'OUT' => 'NA',
+				'MANDATORY' => 'reference',
+				'cmdVersion' =>  "$bowtie2Build --version 2>&1 | grep 'bowtie2-build version'"},
 
-	'bwaAln' =>{'IN' => 'fastq',
-						'OUT' => 'sai',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bwa 2>&1 | grep 'Version'" },
+	'bowtie' =>{		'IN' => 'fastq',
+				'OUT' => 'sam',
+				'MANDATORY' => 'reference',
+				'cmdVersion' => "$bowtie --version | grep 'bowtie version' " },
 
-	'bwaIndex' =>{'IN' => 'fasta',
-						'OUT' => 'NA',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bwa 2>&1 | grep 'Version'" },
+	'bowtie2' =>{		'IN' => 'fastq',
+				'OUT' => 'sam',
+				'MANDATORY' => 'reference',
+				'cmdVersion' => "$bowtie2 --version | grep 'bowtie2-align-s version'" },
 
-	'bwaMem' =>{'IN' => 'fastq,fasta',
-						'OUT' => 'sam,bam',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bwa 2>&1 | grep 'Version'" },
+	'breakDancer' =>{	'IN' => 'bam',
+				'OUT' => 'NA',
+				'cmdVersion' => "$breakDancer 2>&1 | grep 'Version'" },
 
-	'bwaSampe' =>{'IN' => 'fastq,sai',
-						'OUT' => 'sam',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bwa 2>&1 | grep 'Version'" },
+	'bwa' =>{ 		'cmdVersion' => "$bwa 2>&1 | grep 'Version'" },
 
-	'bwaSamse' =>{'IN' => 'fastq,sai',
-						'OUT' => 'sam',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bwa 2>&1 | grep 'Version'" },
+	'bwaAln' =>{		'IN' => 'fastq',
+				'OUT' => 'sai',
+				'MANDATORY' => 'reference'},
 
-	'bwaSw' =>{'IN' => 'fastq,fasta',
-						'OUT' => 'sam',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$bwa 2>&1 | grep 'Version'" },
+	'bwaIndex' =>{		'IN' => 'fasta',
+				'OUT' => 'NA',
+				'MANDATORY' => 'reference'},
+
+	'bwaMem' =>{		'IN' => 'fastq,fasta',
+				'OUT' => 'sam,bam',
+				'MANDATORY' => 'reference'},
+
+	'bwaSampe' =>{		'IN' => 'fastq,sai',
+				'OUT' => 'sam',
+				'MANDATORY' => 'reference'},
+
+	'bwaSamse' =>{		'IN' => 'fastq,sai',
+				'OUT' => 'sam',
+				'MANDATORY' => 'reference'},
+
+	'bwaSw' =>{		'IN' => 'fastq,fasta',
+				'OUT' => 'sam',
+				'MANDATORY' => 'reference'},
 
 	'checkEncodeByASCIIcontrol' =>{'IN' => 'fastq',
 						'OUT' => 'NA',
 						'cmdVersion' => "echo 'v1.0'" },
 
-	'checkFormatBed' =>{'IN' => 'bed',
-						'OUT' => 'NA',
-						'cmdVersion' => "echo 'v1.0'" },
+	'checkFormatBed' =>{	'cmdVersion' => "echo 'v1.0'" },
 
-	'checkFormatFasta' =>{'IN' => 'fasta',
-						'OUT' => 'NA',
-						'cmdVersion' => "echo 'v1.0'" },
+	'checkFormatBed' =>{	'IN' => 'bed',
+				'OUT' => 'NA',
+				'cmdVersion' => "echo 'v1.0'" },
 
-	'checkFormatFastq' =>{'IN' => 'fastq',
-						'OUT' => 'NA',
-						'cmdVersion' => "echo 'v1.0'" },
+	'checkFormatFasta' =>{	'IN' => 'fasta',
+				'OUT' => 'NA'},
+
+	'checkFormatFastq' =>{	'IN' => 'fastq',
+				'OUT' => 'NA'},
 
 
-	'checkFormatGff' =>{'IN' => 'gff,gtf',
-						'OUT' => 'NA',
-						'cmdVersion' => "echo 'v1.0'" },
+	'checkFormatGff' =>{	'IN' => 'gff,gtf',
+				'OUT' => 'NA'},
 
-	'checkFormatVcf' =>{'IN' => 'vcf',
-						'OUT' => 'NA',
-						'cmdVersion' => "echo 'v1.0'" },
+	'checkFormatVcf' =>{	'IN' => 'vcf',
+				'OUT' => 'NA'},
 
 	'checkFormatSamOrBam' =>{'IN' => 'sam,bam',
-						'OUT' => 'NA',
-						'cmdVersion' => "echo 'v1.0'" },
+				'OUT' => 'NA'},
 
-	'checkFormatVcf' =>{'IN' => 'vcf',
-						'OUT' => 'NA',
-						'cmdVersion' => "echo 'v1.0'" },
+	'checkFormatVcf' =>{	'IN' => 'vcf',
+				'OUT' => 'NA'},
 
-	'crac' =>{'IN' => 'fastq',
-						'OUT' => 'sam',
-						 'MANDATORY' => 'reference',
-						'cmdVersion' => "$crac -version | grep -m 1 'version'" },
+	'crac' =>{		'IN' => 'fastq',
+				'OUT' => 'sam',
+				'MANDATORY' => 'reference',
+				'cmdVersion' => "$crac -version | grep -m 1 'version'" },
 
-	'cracIndex' =>{'IN' => 'fasta',
-						'OUT' => 'NA',
-						 'MANDATORY' => 'reference',
-						'cmdVersion' => "$crac -version | grep -m 1 'version'" },
+	'cracIndex' =>{		'IN' => 'fasta',
+				'OUT' => 'NA',
+				'MANDATORY' => 'reference'},
 
-	'cutadapt' =>{'IN' => 'fastq',
-						'OUT' => 'fastq',
-						'cmdVersion' => "$cutadapt 2>&1 | grep 'cutadapt version'" },
+	'cutadapt' =>{		'IN' => 'fastq',
+				'OUT' => 'fastq',
+				'cmdVersion' => "$cutadapt 2>&1 | grep 'cutadapt version'" },
 
 	'duplicationDetector' =>{'IN' => 'vcf',
-						'OUT' => 'csv,bed',
-						'cmdVersion' => "echo 'v1.0'"  },
+				'OUT' => 'csv,bed',
+				'cmdVersion' => "echo 'v1.0'"  },
 
-	'fastme' =>{'IN' => 'phy,phylip',
-						'OUT' => 'nwk,newik,nk',
-						'cmdVersion' => "$fastme --version"  },
+	'fastme' =>{		'IN' => 'phy,phylip',
+				'OUT' => 'nwk,newik,nk',
+				'cmdVersion' => "$fastme --version"  },
 
-	'fastqc' =>{'IN' => 'fastq,bam',
-						'OUT' => 'NA',
-						'cmdVersion' => "$fastqc -v"  },
+	'fastqc' =>{		'IN' => 'fastq,bam',
+				'OUT' => 'NA',
+				'cmdVersion' => "$fastqc -v"  },
 
-	'fastxTrimmer' =>{'IN' => 'fastq',
-						'OUT' => 'fastq',
-						'cmdVersion' => "$fastxTrimmer -h | grep 'FASTX Toolkit'"  },
+	'fastxTrimmer' =>{	'IN' => 'fastq',
+				'OUT' => 'fastq',
+				'cmdVersion' => "$fastxTrimmer -h | grep 'FASTX Toolkit'"  },
+
+	'gatk' =>{		'cmdVersion' => "$GATK -version"  },
 
 	'gatkBaseRecalibrator' =>{'IN' => 'bam',
-						'OUT' => 'NA',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$GATK -version"  },
+				'OUT' => 'NA',
+				'MANDATORY' => 'reference'},
 
 	'gatkHaplotypeCaller' =>{'IN' => 'bam,vcf',
-						'OUT' => 'vcf',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$GATK -version"  },
+				'OUT' => 'vcf',
+				'MANDATORY' => 'reference'},
 
 	'gatkIndelRealigner' =>{'IN' => 'intervals,bam,fasta',
-						'OUT' => 'bam',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$GATK -version"  },
+				'OUT' => 'bam',
+				'MANDATORY' => 'reference'},
 
-	'gatkPrintReads' =>{'IN' => 'bam',
-						'OUT' => 'bam',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$GATK -version"  },
+	'gatkPrintReads' =>{	'IN' => 'bam',
+				'OUT' => 'bam',
+				'MANDATORY' => 'reference'},
 
 	'gatkRealignerTargetCreator' =>{'IN' => 'bam,fasta',
-						'OUT' => 'intervals',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$GATK -version"  },
+					'OUT' => 'intervals',
+					'MANDATORY' => 'reference'},
 
 	'gatkSelectVariants' =>{'IN' => 'vcf',
-						'OUT' => 'vcf',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$GATK -version"  },
+				'OUT' => 'vcf',
+				'MANDATORY' => 'reference'},
 
 	'gatkUnifiedGenotyper' =>{'IN' => 'bam,vcf',
-						'OUT' => 'vcf',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$GATK -version"  },
+				'OUT' => 'vcf',
+				'MANDATORY' => 'reference'},
 
-	'gatkVariantFiltration' =>{'IN' => 'vcf',
-						'OUT' => 'vcf',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$GATK -version"  },
+	'gatkVariantFiltration' =>{	'IN' => 'vcf',
+					'OUT' => 'vcf',
+					'MANDATORY' => 'reference'},
 
 	##################
 	## ADD * for all input/output
-	'generic' =>{'IN' => '*',
-						'OUT' => '*',
-						'cmdVersion' => "echo 'v1.0'"  },
+	'generic' =>{		'IN' => '*',
+				'OUT' => '*',
+				'cmdVersion' => "echo 'v1.0'"  },
 	##################
 
-	'htseqCount' =>{'IN' => 'sam,bam',
-						'OUT' => 'NA',
-						'MANDATORY' => 'gff',
-						'cmdVersion' => "$htseqcount -h | grep 'version' | cut -d',' -f 2,2" },
+	'htseqCount' =>{	'IN' => 'sam,bam',
+				'OUT' => 'NA',
+				'MANDATORY' => 'gff',
+				'cmdVersion' => "$htseqcount -h | grep 'version' | cut -d',' -f 2,2" },
 
-	'java' => {'cmdVersion' => "$java -version 2>&1 | grep 'version'" },
+	'java' => {		'cmdVersion' => "$java -version 2>&1 | grep 'version'" },
 
 	'minimap2Map'=>{'IN' => 'fastq,fasta',
 				    'OUT'=>'sam',
@@ -519,114 +518,102 @@ sub returnSoftInfos
 		'MANDATORY' => 'reference',
 		'cmdVersion' => "minimap2 --version"},
 
-	'picardToolsAddOrReplaceReadGroups' =>{'IN' => 'sam,bam',
-						'OUT' => 'sam,bam',
-						'cmdVersion' => "$picard CheckFingerprint --version 2>&1" },
+	'picardTools' =>{	'cmdVersion' => "$picard CheckFingerprint --version 2>&1" },
 
-	'picardToolsCleanSam' =>{'IN' => 'sam,bam',
-						'OUT' => 'sam,bam',
-						'cmdVersion' => "$picard CheckFingerprint --version 2>&1" },
+	'picardToolsAddOrReplaceReadGroups' =>{	'IN' => 'sam,bam',
+						'OUT' => 'sam,bam'},
 
-	'picardToolsCreateSequenceDictionary' =>{'IN' => 'fasta',
-						'OUT' => 'NA',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$picard CheckFingerprint --version 2>&1" },
+	'picardToolsCleanSam' =>{		'IN' => 'sam,bam',
+						'OUT' => 'sam,bam'},
 
-	'picardToolsMarkDuplicates' =>{'IN' => 'bam',
-						'OUT' => 'bam',
-						'cmdVersion' => "$picard CheckFingerprint --version 2>&1" },
+	'picardToolsCreateSequenceDictionary' =>{	'IN' => 'fasta',
+							'OUT' => 'NA',
+							'MANDATORY' => 'reference'},
 
-	'picardToolsSamFormatConverter' =>{'IN' => 'sam,bam',
-						'OUT' => 'sam,bam',
-						'cmdVersion' => "$picard CheckFingerprint --version 2>&1" },
+	'picardToolsMarkDuplicates' =>{		'IN' => 'bam',
+						'OUT' => 'bam'},
 
-	'picardToolsSortSam' =>{'IN' => 'sam,bam',
-						'OUT' => 'sam,bam',
-						'cmdVersion' => "$picard CheckFingerprint --version 2>&1" },
+	'picardToolsSamFormatConverter' =>{	'IN' => 'sam,bam',
+						'OUT' => 'sam,bam'},
 
-	'picardToolsValidateSamFile' =>{'IN' => 'sam,bam',
-						'OUT' => 'NA',
-						'cmdVersion' => "$picard CheckFingerprint --version 2>&1" },
+	'picardToolsSortSam' =>{		'IN' => 'sam,bam',
+						'OUT' => 'sam,bam'},
 
-	'pindel' =>{'IN' => 'bam',
+	'picardToolsValidateSamFile' =>{	'IN' => 'sam,bam',
+						'OUT' => 'NA'},
+
+	'pindel' =>{				'IN' => 'bam',
 						'OUT' => 'NA',
 						'cmdVersion' => "$pindel | grep -m 1 version" },
 
-	'plinkVcf2Ped' =>{'IN' => 'vcf',
+	'plinkVcf2Ped' =>{			'IN' => 'vcf',
 						'OUT' => 'ped',
 						'cmdVersion' => "$plink -version" },
 
-	'processRadtags' =>{'IN' => 'fastq',
+	'stacks' =>{			'IN' => 'fastq',
 						'OUT' => 'fastq',
 						'MANDATORY' => 'keyfile',
 						'cmdVersion' => "$stacks -v 2>&1" },
 
-	'readseq' =>{'IN' => 'fasta',
+	'readseq' =>{				'IN' => 'fasta',
 						'OUT' => 'phylip,phy',
 						'cmdVersion' => "$readseqjar -h | head -1" },
 
-	'samToolsDepth' =>{'IN' => 'bam',
+	'samtools' =>{				'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+
+	'samToolsDepth' =>{			'IN' => 'bam',
+						'OUT' => 'NA'},
+
+	'samToolsFaidx' =>{			'IN' => 'fasta',
 						'OUT' => 'NA',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+						'MANDATORY' => 'reference'},
 
-	'samToolsFaidx' =>{'IN' => 'fasta',
-						'OUT' => 'NA',
-						'MANDATORY' => 'reference',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+	'samToolsFlagstat' =>{			'IN' => 'bam',
+						'OUT' => 'NA'},
 
-	'samToolsFlagstat' =>{'IN' => 'bam',
-						'OUT' => 'NA',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+	'samToolsIdxstats' =>{			'IN' => 'bam',
+						'OUT' => 'NA'},
 
-	'samToolsIdxstats' =>{'IN' => 'bam',
-						'OUT' => 'NA',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+	'samToolsIndex' =>{			'IN' => 'bam',
+						'OUT' => 'NA'},
 
-	'samToolsIndex' =>{'IN' => 'bam',
-						'OUT' => 'NA',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+	'samToolsMerge' =>{			'IN' => 'bam',
+						'OUT' => 'bam'},
 
-	'samToolsMerge' =>{'IN' => 'bam',
-						'OUT' => 'bam',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+	'samToolsMpileUp' =>{			'IN' => 'bam',
+						'OUT' => 'mpileup'},
 
-	'samToolsMpileUp' =>{'IN' => 'bam',
-						'OUT' => 'mpileup',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+	'samToolsSort' =>{			'IN' => 'bam',
+						'OUT' => 'bam'},
 
-	'samToolsSort' =>{'IN' => 'bam',
-						'OUT' => 'bam',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
+	'samToolsView' =>{			'IN' => 'sam,bam',
+						'OUT' => 'sam,bam'},
 
-	'samToolsView' =>{'IN' => 'sam,bam',
-						'OUT' => 'sam,bam',
-						'cmdVersion' => "$samtools 2>&1 | grep 'Version'" },
-
-	'sniplayPed2fasta' =>{'IN' => 'ped',
+	'sniplayPed2fasta' =>{			'IN' => 'ped',
 						'OUT' => 'fasta',
 						'cmdVersion' => "echo 'v3'" },
 
-	'snpEffAnnotation' =>{'IN' => 'vcf',
+	'snpEffAnnotation' =>{			'IN' => 'vcf',
 						'OUT' => 'vcf',
 						'MANDATORY' => 'vcf',
-						 'cmdVersion' => "$snpEff -version 2>&1" },
+						'cmdVersion' => "$snpEff -version 2>&1" },
 
-	'tgicl' =>{'IN' => 'fasta',
+	'tgicl' =>{				'IN' => 'fasta',
 						'OUT' => 'fasta',
-						 'cmdVersion' => "echo 'No version available" },
+						'cmdVersion' => "echo 'No version available" },
 
-	'tophat2' =>{'IN' => 'fastq',
+	'tophat2' =>{				'IN' => 'fastq',
 						'OUT' => 'bam',
 						'MANDATORY' => 'reference',
-						 'cmdVersion' => "$tophat2 -v" },
+						'cmdVersion' => "$tophat2 -v" },
 
-	'trinity' =>{'IN' => 'fastq',
+	'trinity' =>{				'IN' => 'fastq',
 						'OUT' => 'fasta',
-						 'cmdVersion' => "$trinity --version | grep 'Trinity version'" },
+						'cmdVersion' => "$trinity --version | grep 'Trinity version'" },
 
-	'fastqStats' =>{'IN' => 'fastq',
+	'fastqStats' =>{			'IN' => 'fastq',
 						'OUT' => 'NA',
-						 'cmdVersion' => "$fastqStats -h | grep 'Version'" }
+						'cmdVersion' => "$fastqStats -h | grep 'Version'" }
 
 	);
 # 	print Dumper( \%softInfos );
@@ -646,134 +633,144 @@ sub writeLogVersion
 
 	foreach my $softOrder ( values %{ $hashOrder } )
 	{
-		#DEBUG: print $softOrder." DANS LA BOUCLE\n";
+		#DEBUG:print $softOrder." DANS LA BOUCLE\n";
 
 		switch (1)
 		{
 
             #LOG INFOS FOR NEW TOOLS
 
+            #FOR stringtie
+            case ($softOrder =~ m/^stringtie.*/i){$softPathVersion{"stringtie"}= `$softInfos{"stringtie"}{"cmdVersion"}` if not defined $softPathVersion{"stringtie"};
+            		                        $softPath{"stringtie"}= $stringtie if not defined $softPath{"stringtie"};
+											}
+
 			#FOR minimap2.pm
 			case ($softOrder =~ m/^minimap2.*/i){$softPathVersion{"minimap2"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"minimap2"};
 											$softPath{"minimap2"}= $minimap2 if not defined $softPath{"minimap2"};
 											}
 
+			#FOR hisat2.pm
+			case ($softOrder =~ m/^hisat2.*/i){$softPathVersion{"hisat2"}= `$softInfos{"hisat2"}{"cmdVersion"}` if not defined $softPathVersion{"hisat2"};
+			                               $softPath{"hisat2"}= $hisat2 if not defined $softPath{"hisat2"};
+											}
 
 			#FOR bwa.pm
-			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"bwa"};
+			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= `$softInfos{"bwa"}{"cmdVersion"}` if not defined $softPathVersion{"bwa"};
 											$softPath{"bwa"}= $bwa if not defined $softPath{"bwa"};
 											}
 
 			#FOR samTools.pm
-			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"samtools"};
+			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= `$softInfos{"samtools"}{"cmdVersion"}` if not defined $softPathVersion{"samtools"};
 												 $softPath{"samtools"}= $samtools if not defined $softPath{"samtools"};
 												}
 
 			#FOR picardTools.pm
-			case ($softOrder =~ m/^picard.*/i){ $softPathVersion{"java"}= `$softInfos{'java'}{'cmdVersion'}` if not defined $softPathVersion{"java"};
+			case ($softOrder =~ m/^picard.*/i){ $softPathVersion{"java"}= `$softInfos{"java"}{"cmdVersion"}` if not defined $softPathVersion{"java"};
 												$softPath{"java"}= $java if not defined $softPath{"java"};
-												$softPathVersion{"picard"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"picard"};
+												$softPathVersion{"picard"}= `$softInfos{"picardTools"}{"cmdVersion"}` if not defined $softPathVersion{"picard"};
 												$softPath{"picard"}= $picard if not defined $softPath{"picard"};
 											   }
 
 			#FOR gatk.pm
-			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"java"}= `$softInfos{'java'}{'cmdVersion'}` if not defined $softPathVersion{"java"};
-											 $softPathVersion{"GATK"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"GATK"};
+			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"java"}= `$softInfos{"java"}{"cmdVersion"}` if not defined $softPathVersion{"java"};
+											 $softPathVersion{"GATK"}= `$softInfos{"gatk"}{"cmdVersion"}` if not defined $softPathVersion{"GATK"};
 											 $softPath{"java"}= $java if not defined $softPath{"java"};
 											 $softPath{"GATK"}= $GATK if not defined $softPath{"GATK"};
 											 }
 
 			#FOR fastqc
-			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"fastqc"};
+			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= `$softInfos{"fastqc"}{"cmdVersion"}` if not defined $softPathVersion{"fastqc"};
 											 $softPath{"fastqc"}= $fastqc if not defined $softPath{"fastqc"};
 											 }
 
 			#FOR fastxToolkit
-			case ($softOrder =~ m/^fastx.*/i){$softPathVersion{"fastxTrimmer"}= `$softInfos{$softOrder}{'cmdVersion'}` if not defined $softPathVersion{"fastxTrimmer"};
+			case ($softOrder =~ m/^fastx.*/i){$softPathVersion{"fastxTrimmer"}= `$softInfos{"fastxTrimmer"}{"cmdVersion"}` if not defined $softPathVersion{"fastxTrimmer"};
 											  $softPath{"fastxTrimmer"}= $fastxTrimmer if not defined $softPath{"fastxTrimmer"};
 											  }
 
 			#FOR tophat.pm
-			case ($softOrder =~ m/^bowtie2.*/i){$softPathVersion{"bowtie2Build"}= `$softInfos{'bowtie2build'}{'cmdVersion'}` if not defined $softPathVersion{"bowtie2Build"};
+			case ($softOrder =~ m/^bowtie2.*/i){$softPathVersion{"bowtie2Build"}= `$softInfos{"bowtie2build"}{"cmdVersion"}` if not defined $softPathVersion{"bowtie2Build"};
 												$softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
-												$softPathVersion{"bowtie2"}= `$softInfos{'bowtie2'}{'cmdVersion'}` if not defined $softPathVersion{"bowtie2"};
+												$softPathVersion{"bowtie2"}= `$softInfos{"bowtie2"}{"cmdVersion"}` if not defined $softPathVersion{"bowtie2"};
 												$softPath{"bowtie2"}= $bowtie2 if not defined $softPath{"bowtie2"};
 												}
-			case ($softOrder =~ m/^bowtie$/i){$softPathVersion{"bowtieBuild"}= `$softInfos{'bowtieBuild'}{'cmdVersion'}` if not defined $softPathVersion{"bowtieBuild"};
+			case ($softOrder =~ m/^bowtie$/i){$softPathVersion{"bowtieBuild"}= `$softInfos{"bowtieBuild"}{"cmdVersion"}` if not defined $softPathVersion{"bowtieBuild"};
 											 $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
-											 $softPathVersion{"bowtie"}= `$softInfos{'bowtie'}{'cmdVersion'}` if not defined $softPathVersion{"bowtie"};
+											 $softPathVersion{"bowtie"}= `$softInfos{"bowtie"}{"cmdVersion"}` if not defined $softPathVersion{"bowtie"};
 											 $softPath{"bowtie"}= $bowtie if not defined $softPath{"bowtie"};
 											 }
 
-			case ($softOrder =~ m/^tophat.*/i){$softPathVersion{"tophat2"}= `$softInfos{'tophat2'}{'cmdVersion'}` if not defined $softPathVersion{"tophat2"};
-											   $softPathVersion{"bowtieBuild"}= `$softInfos{'bowtieBuild'}{'cmdVersion'}` if not defined $softPathVersion{"bowtieBuild"};
-											   $softPathVersion{"bowtie2Build"}= `$softInfos{'bowtie2Build'}{'cmdVersion'}` if not defined $softPathVersion{"bowtie2Build"};
+			case ($softOrder =~ m/^tophat.*/i){$softPathVersion{"tophat2"}= `$softInfos{"tophat2"}{"cmdVersion"}` if not defined $softPathVersion{"tophat2"};
+											   $softPathVersion{"bowtieBuild"}= `$softInfos{"bowtieBuild"}{"cmdVersion"}` if not defined $softPathVersion{"bowtieBuild"};
+											   $softPathVersion{"bowtie2Build"}= `$softInfos{"bowtie2Build"}{"cmdVersion"}` if not defined $softPathVersion{"bowtie2Build"};
 											   $softPath{"tophat2"}= $tophat2 if not defined $softPath{"tophat2"};
 											   $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
 											   $softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
 											   }
 
 			#FOR cufflinks.pm
-			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= `$softInfos{'cufflinks'}{'cmdVersion'}` if not defined $softPathVersion{"cufflinks"};
+			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= `$softInfos{'cufflinks'}{"cmdVersion"}` if not defined $softPathVersion{"cufflinks"};
 												  $softPath{"cufflinks"}= $cufflinks if not defined $softPath{"cufflinks"};
 												  }
-			case ($softOrder =~ m/^cuffdiff.*/i){$softPathVersion{"cuffdiff"}= `$softInfos{'cufflinks'}{'cmdVersion'}` if not defined $softPathVersion{"cuffdiff"};
+			case ($softOrder =~ m/^cuffdiff.*/i){$softPathVersion{"cuffdiff"}= `$softInfos{'cufflinks'}{"cmdVersion"}` if not defined $softPathVersion{"cuffdiff"};
 												 $softPath{"cuffdiff"}= $cufflinks if not defined $softPath{"cuffdiff"};
 												 }
-			case ($softOrder =~ m/^cuffmerge.*/i){$softPathVersion{"cuffmerge"}= `$softInfos{'cufflinks'}{'cmdVersion'}` if not defined $softPathVersion{"cuffmerge"};
+			case ($softOrder =~ m/^cuffmerge.*/i){$softPathVersion{"cuffmerge"}= `$softInfos{'cufflinks'}{"cmdVersion"}` if not defined $softPathVersion{"cuffmerge"};
 												  $softPath{"cuffmerge"}= $cufflinks if not defined $softPath{"cuffmerge"};
 												  }
 
 			#FOR HTSeq
-			case ($softOrder =~ m/^htseq.*/i){$softPathVersion{"htseqcount"}= `$softInfos{'htseqCount'}{'cmdVersion'}` if not defined $softPathVersion{"htseqcount"};
+			case ($softOrder =~ m/^htseq.*/i){$softPathVersion{"htseqcount"}= `$softInfos{'htseqCount'}{"cmdVersion"}` if not defined $softPathVersion{"htseqcount"};
 											  $softPath{"htseqcount"}= $htseqcount if not defined $softPath{"htseqcount"};
 											  }
 
 			#FOR snpEff.pm
-			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"java"}= `$softInfos{'java'}{'cmdVersion'}` if not defined $softPathVersion{"java"};
-											$softPathVersion{"snpEff"}= `$softInfos{'snpEff'}{'cmdVersion'}` if not defined $softPathVersion{"snpEff"};
+			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"java"}= `$softInfos{'java'}{"cmdVersion"}` if not defined $softPathVersion{"java"};
+											$softPathVersion{"snpEff"}= `$softInfos{'snpEff'}{"cmdVersion"}` if not defined $softPathVersion{"snpEff"};
 											$softPath{"java"}= $java if not defined $softPath{"java"};
 											$softPath{"snpEff"}= $snpEff if not defined $softPath{"snpEff"};
 											}
 
 			#FOR processRadtags.pm
-			case ($softOrder =~ m/process.*/i){$softPathVersion{"stacks"}= `$softInfos{'stacks'}{'cmdVersion'}` if not defined $softPathVersion{"stacks"};
+			case ($softOrder =~ m/process.*/i){$softPathVersion{"stacks"}= `$softInfos{'stacks'}{"cmdVersion"}` if not defined $softPathVersion{"stacks"};
 											   $softPath{"stacks"}= $stacks if not defined $softPath{"stacks"};
 											   }
 
+
 			#FOR cutadapt functions
-			case ($softOrder =~ m/^cutadapt/i){$softPathVersion{"cutadapt"}= `$softInfos{'cutadapt'}{'cmdVersion'}` if not defined $softPathVersion{"cutadapt"};
+			case ($softOrder =~ m/^cutadapt/i){$softPathVersion{"cutadapt"}= `$softInfos{'cutadapt'}{"cmdVersion"}` if not defined $softPathVersion{"cutadapt"};
 											   $softPath{"cutadapt"}= $cutadapt if not defined $softPath{"cutadapt"};
 											  }
 			#FOR atropos functions
-			case ($softOrder =~ m/^atropos/i){$softPathVersion{"atropos"}= `$softInfos{'atropos'}{'cmdVersion'}` if not defined $softPathVersion{"atropos"};
+			case ($softOrder =~ m/^atropos/i){$softPathVersion{"atropos"}= `$softInfos{'atropos'}{"cmdVersion"}` if not defined $softPathVersion{"atropos"};
 											   $softPath{"atropos"}= $atropos if not defined $softPath{"atropos"};
 											  }
 
 			#FOR TGICL
-			case ($softOrder =~ m/^tgicl/i){$softPathVersion{"tgicl"}= `$softInfos{'tgicl'}{'cmdVersion'}` if not defined $softPathVersion{"tgicl"};
+			case ($softOrder =~ m/^tgicl/i){$softPathVersion{"tgicl"}= `$softInfos{'tgicl'}{"cmdVersion"}` if not defined $softPathVersion{"tgicl"};
 											$softPath{"tgicl"}= $tgicl if not defined $softPath{"tgicl"};
 											}
 
 			#FOR trinity
-			case ($softOrder =~ m/^trinity/i){$softPathVersion{"trinity"}= `$softInfos{'trinity'}{'cmdVersion'}` if not defined $softPathVersion{"trinity"};
+			case ($softOrder =~ m/^trinity/i){$softPathVersion{"trinity"}= `$softInfos{'trinity'}{"cmdVersion"}` if not defined $softPathVersion{"trinity"};
 											  $softPath{"trinity"}= $trinity if not defined $softPath{"trinity"};
 											  }
 			#FOR bamutils
-			case ($softOrder =~ m/^bamutils.*/i){$softPathVersion{"bamutils"}= `$softInfos{'bamutils'}{'cmdVersion'}` if not defined $softPathVersion{"bamutils"};
+			case ($softOrder =~ m/^bamutils.*/i){$softPathVersion{"bamutils"}= `$softInfos{'bamutils'}{"cmdVersion"}` if not defined $softPathVersion{"bamutils"};
 											  $softPath{"bamutils"}= $bamutils if not defined $softPath{"bamutils"};
 											  }
 			#FOR plink
-			case ($softOrder =~ m/^plink.*/i){$softPathVersion{"plink"}= `$softInfos{'plink'}{'cmdVersion'}` if not defined $softPathVersion{"plink"};
+			case ($softOrder =~ m/^plink.*/i){$softPathVersion{"plink"}= `$softInfos{'plink'}{"cmdVersion"}` if not defined $softPathVersion{"plink"};
 											  $softPath{"plink"}= $plink if not defined $softPath{"plink"};
 											  }
 			#FOR fastme
-			case ($softOrder =~ m/^fastme.*/i){$softPathVersion{"fastme"}= `$softInfos{'fastme'}{'cmdVersion'}` if not defined $softPathVersion{"fastme"};
+			case ($softOrder =~ m/^fastme.*/i){$softPathVersion{"fastme"}= `$softInfos{'fastme'}{"cmdVersion"}` if not defined $softPathVersion{"fastme"};
 											  $softPath{"fastme"}= $fastme if not defined $softPath{"fastme"};
 											  }
 
 			#FOR readseq
-			case ($softOrder =~ m/^readseq.*/i){$softPathVersion{"readseq"}= `$softInfos{'readseq'}{'cmdVersion'}` if not defined $softPathVersion{"readseq"};
+			case ($softOrder =~ m/^readseq.*/i){$softPathVersion{"readseq"}= `$softInfos{'readseq'}{"cmdVersion"}` if not defined $softPathVersion{"readseq"};
 											  $softPath{"readseq"}= $readseqjar if not defined $softPath{"readseq"};
 											  }
 
@@ -786,7 +783,7 @@ sub writeLogVersion
 			case($softOrder =~ m/^check/i){next;}
 
 			#FOR crac.pm
-			case ($softOrder =~ m/^crac.*/i){$softPathVersion{"crac"}= `$softInfos{'crac'}{'cmdVersion'}` if not defined $softPathVersion{"crac"};
+			case ($softOrder =~ m/^crac.*/i){$softPathVersion{"crac"}= `$softInfos{'crac'}{"cmdVersion"}` if not defined $softPathVersion{"crac"};
 											$softPath{"crac"}= $crac if not defined $softPath{"crac"};
 											}
 			#FOR duplicationDetector
@@ -818,9 +815,9 @@ sub writeLogVersion
 											$softPath{"checkFormatBed"}= "checkFormatBed" if not defined $softPath{"checkFormatBed"};}
 
 			#FOR BEDtools
-			case ($softOrder =~ m/^bedtools/i){$softPathVersion{"bedtools"}= `$softInfos{'bedTools'}{'cmdVersion'}` if not defined $softPathVersion{"bedtools"};
+			case ($softOrder =~ m/^bedtools/i){$softPathVersion{"bedtools"}= `$softInfos{'bedTools'}{"cmdVersion"}` if not defined $softPathVersion{"bedtools"};
 												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
-			case ($softOrder =~ m/.*bed$/i){$softPathVersion{"bedtools"}= `$softInfos{'bedTools'}{'cmdVersion'}` if not defined $softPathVersion{"bedtools"};
+			case ($softOrder =~ m/.*bed$/i){$softPathVersion{"bedtools"}= `$softInfos{'bedTools'}{"cmdVersion"}` if not defined $softPathVersion{"bedtools"};
 												$softPath{"bedtools"}= $bedtools if not defined $softPath{"bedtools"};}
 
 			#FOR generic command
@@ -828,7 +825,7 @@ sub writeLogVersion
 												$softPath{"generic"}= "" if not defined $softPath{"generic"};}
 
 			#FOR Abyss
-			case ($softOrder =~ m/^abyss/i){$softPathVersion{"abyss"}= `$softInfos{'abyss'}{'cmdVersion'}` if not defined $softPathVersion{"abyss"};
+			case ($softOrder =~ m/^abyss/i){$softPathVersion{"abyss"}= `$softInfos{'abyss'}{"cmdVersion"}` if not defined $softPathVersion{"abyss"};
 												$softPath{"abyss"}= $abyss if not defined $softPath{"abyss"};}
 
 			#FOR transAbyss
@@ -836,17 +833,17 @@ sub writeLogVersion
 												#$softPath{"transAbyss"}= $abyss if not defined $softPath{"transAbyss"};}
 
 			#For breakDancer
-			case ($softOrder =~ m/^bam2cfg/i){$softPathVersion{"breakDancer"}= `$softInfos{'breakDancer'}{'cmdVersion'}` if not defined $softPathVersion{"breakDancer"};
+			case ($softOrder =~ m/^bam2cfg/i){$softPathVersion{"breakDancer"}= `$softInfos{'breakDancer'}{"cmdVersion"}` if not defined $softPathVersion{"breakDancer"};
 												$softPath{"bam2cfg"}= $bam2cfg if not defined $softPath{"bam2cfg"};}
-			case ($softOrder =~ m/^breakDancer/i){$softPathVersion{"breakDancer"}= `$softInfos{'breakDancer'}{'cmdVersion'}` if not defined $softPathVersion{"breakDancer"};
+			case ($softOrder =~ m/^breakDancer/i){$softPathVersion{"breakDancer"}= `$softInfos{'breakDancer'}{"cmdVersion"}` if not defined $softPathVersion{"breakDancer"};
 												$softPath{"breakDancer"}= $breakDancer if not defined $softPath{"breakDancer"};}
 
 			#For Pindel
-			case ($softOrder =~ m/^pindel/i){$softPathVersion{"pindel"}= `$softInfos{'pindel'}{'cmdVersion'}` if not defined $softPathVersion{"pindel"};
+			case ($softOrder =~ m/^pindel/i){$softPathVersion{"pindel"}= `$softInfos{'pindel'}{"cmdVersion"}` if not defined $softPathVersion{"pindel"};
 												$softPath{"pindel"}= $pindel if not defined $softPath{"pindel"};}
 
 			#For ea-Utils
-			case ($softOrder =~ m/^fastqStats/i){$softPathVersion{"fastqStats"}=`$softInfos{'fastqStats'}{'cmdVersion'}` if not defined $softPathVersion{"fastqStats"};
+			case ($softOrder =~ m/^fastqStats/i){$softPathVersion{"fastqStats"}=`$softInfos{'fastqStats'}{"cmdVersion"}` if not defined $softPathVersion{"fastqStats"};
 												$softPath{"fastqStats"}=$fastqStats if not defined $softPath{"fastqStats"};}
 
 			else

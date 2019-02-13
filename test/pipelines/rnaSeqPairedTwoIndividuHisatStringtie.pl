@@ -1,4 +1,3 @@
-
 #!/usr/bin/env perl
 
 ###################################################################################################################################
@@ -46,52 +45,52 @@ use sedToggle;
 
 ## PATH for datas test
 # references files
-my $dataRefArcad = "$toggle/data/Bank/referenceArcad.fasta";
+my $dataRefRnaseq = "$toggle/data/Bank/referenceRnaseq.fa";
+my $dataRefRnaseqGFF = "$toggle/data/Bank/referenceRnaseqGFF.gff3";
 
 #####################
-## TOGGLE fastq pairedOneIndividuArcad
+## TOGGLE RNASeq pairedOneIndividu
 #####################
+
 
 print "\n\n#################################################\n";
-print "#### TEST SNPdiscoveryPaired paired ARCAD (one individu) / no SGE mode\n";
+print "#### TEST RNASEQPaired  (two individu) / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileSNPPairedIni="$toggle/exampleConfigs/SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
-my $fileSNPPairedNoSGE="$toggle/test/pipelines/SNPdiscoveryPairedTest.config.txt";
+my $fileRNAPairedIni="$toggle/exampleConfigs/RNASeqHisat2Stringtie.config.txt";
+my $fileRNAPairedNoSGE="$toggle/test/pipelines/RNASeqNoSGE.config.txt";
 
-
-my $cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
+my $cmd="cp $fileRNAPairedIni $fileRNAPairedNoSGE";
 ## DEBUG print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
 # Change the TOGGLE addaptator configuration file
-sedToggle::sedFunction($fileSNPPairedNoSGE);
+sedToggle::sedFunction($fileRNAPairedNoSGE);
 
-#data
-my $dataFastqpairedOneIndividuArcad = "$toggle/data/testData/fastq/pairedOneIndividuArcad";
+# data
+my $dataRNAseqPairedTwoIndividu = "$toggle/data/testData/rnaseq/pairedTwoIndividu";
 
 # Remove files and directory created by previous test
-my $testingDir="$toggle/dataTest/pairedOneIndividuArcad-noSGE";
+my $testingDir="$toggle/dataTest/RNAseq-pairedTwoIndividu-noSGE";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-my $runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
-print "\n### $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuArcad";
+my $runCmd = "toggleGenerator.pl -c ".$fileRNAPairedNoSGE." -d ".$dataRNAseqPairedTwoIndividu." -r ".$dataRefRnaseq." -g ".$dataRefRnaseqGFF." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuRNASEQ no SGE mode";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('intermediateResults.GATKSELECTVARIANT.vcf','intermediateResults.GATKSELECTVARIANT.vcf.idx');
+my @expectedOutput = ('intermediateResults.STRINGTIEMERGE.gtf');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu (no SGE) list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividuRNASEQHisatStringtie (no SGE) list ');
 
 # expected output content
-$observedOutput=`tail -n 1 $testingDir/finalResults/intermediateResults.GATKSELECTVARIANT.vcf`;
+$observedOutput=`wc -l $testingDir/finalResults/intermediateResults.STRINGTIEMERGE.gtf`;
 chomp $observedOutput;
-my $expectedOutput="LOC_Os12g32240.1	864	.	C	T	350.77	PASS	AC=2;AF=1.00;AN=2;DP=10;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=30.63;SOR=3.258	GT:AD:DP:GQ:PL	1/1:0,10:10:30:379,30,0";
-is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu (no SGE) content ');
-
+my $expectedOutput="12053 $testingDir/finalResults/intermediateResults.STRINGTIEMERGE.gtf";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividuRNASEQHisatStringtie (no SGE) content ');

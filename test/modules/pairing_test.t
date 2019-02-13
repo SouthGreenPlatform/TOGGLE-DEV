@@ -46,7 +46,7 @@ use Data::Dumper;
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
 
-# Load localConfig if primary test is successful 
+# Load localConfig if primary test is successful
 use_ok('localConfig') or exit;
 use localConfig;
 
@@ -164,7 +164,8 @@ my $expectedOutput={
                                                 }
         };
 
-my $observedOutput=pairing::pairRecognition("$testDir$fastqDir",$checkFastq);
+my $listFiles_ref=toolbox::readDir("$testDir$fastqDir");
+my $observedOutput=pairing::pairRecognition($listFiles_ref,$checkFastq);
 ##DEBUG print "pairRecognition Expected :\n"; print Dumper ($expectedOutput);print "pairRecognition Observed:\n"; print Dumper ($observedOutput);
 is_deeply($observedOutput,$expectedOutput,'pairing::pairRecognition - output list');
 
