@@ -87,7 +87,7 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 
 # input file
 # reads in fasta format (10X)
-my $fastaIn = "$toggle/data/testData/nanopore/MAP006_3x.fasta";
+my $fastaIn = "$toggle/data/testData/nanopore/BAI3_3x.fastq.gz";
 
 # output of assembly in fasta 
 my $dirOut = "$testDir/FlyeOUT";
@@ -96,7 +96,7 @@ my $fastaOut = "scaffolds.fasta";
 ### input output Options
 ##########################################
 
-my %optionsHachees = ("--genome-size " => "5m");                # Hash containing informations
+my %optionsHachees = ("--genome-size " => "4.723880 m");                # Hash containing informations
 my $optionHachees = \%optionsHachees;   # Ref of the hash
 
 ##########################################
