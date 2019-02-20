@@ -152,3 +152,5 @@ $observedMD5sum = $withoutName[0];  	                        # just to have the 
 is($observedMD5sum, $expectedMD5sum, "breakDancer::breakDancer - output content file");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
 
 exit;
+
+
