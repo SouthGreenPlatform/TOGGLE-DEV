@@ -64,7 +64,7 @@ sub htseqCount
             $bamFileOut =~ s/.bam/.sam/g;
             
             #$command=samTools::samToolsView($bamFileIn,$bamFileOut, XX?); # pbm avec $optionsHachees
-            $command="samtools view -h  $bamFileIn -o $bamFileOut"; ## Command initialization to samtools view
+            $command="$samtools view -h  $bamFileIn -o $bamFileOut"; ## Command initialization to samtools view
             if (toolbox::run($command)==1)
             {
                 toolbox::exportLog("INFOS: samTools::samToolsView : correctly done\n",1);

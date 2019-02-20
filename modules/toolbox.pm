@@ -507,8 +507,8 @@ sub readFileConf
         #Avoided lines
         next if $currentLine =~ m/^$/;#Empty line
         next if $currentLine =~ m/^#/;#Commented line
-		
-		if ($currentLine =~ m/#/) 
+
+		if ($currentLine =~ m/#/)
 		{
 			($currentLine, my $comment)=split /#/,$currentLine, 2;
 			print $currentLine;
@@ -1196,20 +1196,6 @@ Returns  boolean (1 if this function has been correctly running else 0)
 
 Example :
 C<toolbox::addInfoHeader($bamFile, 'RC1'); >
-
-
-
-
-
-
-=head3 toolbox::changeDirectoryArbo()
-
-This function returns a directory name according to the number given as argument. Two arguments are required: directory that will contain all the directory created by the pipeline
-and a number to define what is the directory name that will be returned
-Returns the directory name that will be created
-
-Example :
-C<toolbox::changeDirectoryArbo($initialDir,1); >
 
 
 

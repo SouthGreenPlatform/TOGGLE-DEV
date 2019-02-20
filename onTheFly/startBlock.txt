@@ -82,6 +82,7 @@ use eaUtils;
 use hisat2;
 use stringtie;
 use flye;
+use nanoplot;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed

@@ -42,7 +42,7 @@ use Data::Dumper;
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
 
-# Load localConfig if primary test is successful 
+# Load localConfig if primary test is successful
 use_ok('localConfig') or exit;
 use localConfig;
 
@@ -118,7 +118,7 @@ my @observedOutput = split /\n/,$observedOutput;
 is_deeply(\@observedOutput,\@expectedOutput,'breakDancer::bam2cfg - Filetree created');
 
 # expected content test $fastaRefBWT
-my $expectedMD5sum = "f7c12811367529c68349c20b79d9c439";                                        # structure of the ref file for checking
+my $expectedMD5sum = "d41d8cd98f00b204e9800998ecf8427e";                                        # structure of the ref file for checking
 my $observedMD5sum = `md5sum breakDancer.cfg`;                	                        # structure of the test file for checking
 my @withoutName = split (" ", $observedMD5sum);                                                 # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];  	                        # just to have the md5sum result
