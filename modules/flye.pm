@@ -49,8 +49,8 @@ sub flye
 	my $validation = 0;
 	switch (1)
 	{
-		case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
-		case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
+		case ($fileIn =~ m/fasta$|fa$|fasta\.gz$|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
+		case ($fileIn =~ m/fastq$|fq$|fastq\.gz$|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
 		else {toolbox::exportLog("ERROR: flye::flyeNanoRaw : The file $fileIn is not a fasta,fastq file\n",0);}
 	};
 	die (toolbox::exportLog("ERROR: flye::flyeNanoRaw : The file $fileIn is not a fasta,fastq file\n",0)) if $validation == 0;	#Picking up options
