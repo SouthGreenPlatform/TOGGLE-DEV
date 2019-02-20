@@ -94,7 +94,7 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ### input output Options
 ##########################################
 
-my $fileIn = "$toggle/data/testData/long_read/nanopore-100-reads.fastq";
+my $fileIn = "$toggle/data/testData/nanopore/BAI3/BAI3_3x.fastq.gz";
 my $dirOut = "nanopore-100-reads-fastq";
 my %optionsHachees = ();                # Hash containing informations
 my $optionHachees = \%optionsHachees;   # Ref of the hash
@@ -114,7 +114,7 @@ my @expectedOutput = ('nanopore-100-reads-fastq/NanoPlot-report.html');
 is_deeply(\@observedOutput,\@expectedOutput,'nanoplot::nanoplot - output list');
 
 
-my $expectedMD5sum = "1811ee4170016e05647c28391828aa62";
+my $expectedMD5sum = "f395ea99f4236b143caa2b59e9658229";
 my $observedMD5sum = `md5sum $dirOut/NanoStats.txt`;
 my @withoutName = split (" ", $observedMD5sum);
 $observedMD5sum = $withoutName[0];
