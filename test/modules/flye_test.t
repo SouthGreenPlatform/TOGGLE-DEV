@@ -96,7 +96,7 @@ my $fastaOut = "scaffolds.fasta";
 ### input output Options
 ##########################################
 
-my %optionsHachees = ("--genome-size " => "4.723880 m");                # Hash containing informations
+my %optionsHachees = ("--genome-size " => "4.7m");                # Hash containing informations
 my $optionHachees = \%optionsHachees;   # Ref of the hash
 
 ##########################################
@@ -117,7 +117,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'flye::flyeNanoRaw - output list');
 
 # expected content test
 my $observedContent=`wc -l $dirOut/scaffolds.fasta`;
-my $validContent = ( $observedContent =~ m/13822/);
+my $validContent = ( $observedContent =~ m/10174/);
 is($validContent,1,'flye::flye - output content assembly with Flye');
 
     
