@@ -113,7 +113,7 @@ $observedOutput = `ls $testingDir/finalResults/`;
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two GTF (no SGE) stringtie file list');
 
 # expected output structure
-$expectedMD5sum = "0e001ca7086882dfc90c141fdcb2363f";
+$expectedMD5sum = "62c5516c0d08e10110459cecf5e64c43";
 $observedMD5sum=`md5sum $testingDir/finalResults/globalAnalysis.STRINGTIEMERGE.gtf`;;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
