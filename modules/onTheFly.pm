@@ -76,6 +76,7 @@ sub checkOrder
     my ($previousSoft,$previousFormat,$currentFormat,$initialStep,$lastStep,$lastTrueStep);
     foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
     {
+	$lastTrueStep = $step;
 	my $currentSoft=$$hashOrder{$step};
         $currentSoft =~ s/ \d+$//; # Removing number if a software is used more than once with different options
 		$currentSoft =~ s/bamutils.*/bamutilsTool/g; #Rename special for bamutils tools
@@ -117,7 +118,6 @@ sub checkOrder
 	}
 
 	#Preparing for the next round
-	$lastTrueStep = $step;
 	next if ($hashInOut->{$currentSoft}{"OUT"} eq "NA"); #for a brick such as FastQC which is a 'dead-end'
 
 	$previousSoft=$currentSoft;
@@ -126,7 +126,7 @@ sub checkOrder
         ##DEBUG print $lastStep,"\n";
 
     }
-    ##DEBUG print $initialStep,"--",$lastStep,"\n";
+    ##DEBUG print $initialStep,"--",$lastStep,"--",$lastTrueStep,"\n";
     return ($initialStep,$lastStep,$lastTrueStep); #Will return the last step number
 }
 
