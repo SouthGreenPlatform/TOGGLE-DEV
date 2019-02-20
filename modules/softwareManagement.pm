@@ -378,11 +378,8 @@ sub returnSoftInfos
 						'OUT' => 'NA',
 						'cmdVersion' => "echo 'v1.0'" },
 
-	'checkFormatBed' =>{	'cmdVersion' => "echo 'v1.0'" },
-
 	'checkFormatBed' =>{	'IN' => 'bed',
-				'OUT' => 'NA',
-				'cmdVersion' => "echo 'v1.0'" },
+				'OUT' => 'NA'},
 
 	'checkFormatFasta' =>{	'IN' => 'fasta',
 				'OUT' => 'NA'},
