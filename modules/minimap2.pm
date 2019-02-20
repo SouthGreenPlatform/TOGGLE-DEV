@@ -73,10 +73,10 @@ sub minimap2Map
 	my $validation = 0;
 	switch (1)
 	{
-		case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
-		case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
+		case ($fileIn =~ m/fasta$|fa$|fasta\.gz$|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
+		case ($fileIn =~ m/fastq$|fq$|fastq\.gz$|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
 		else {toolbox::exportLog("ERROR: minimap2::minimap2Map : The file $fileIn is not a fastq,fasta file\n",0);}
-	};
+	}
 	die (toolbox::exportLog("ERROR: minimap2::minimap2Map : The file $fileIn is not a valid fatsq,fasta file\n",0)) if $validation == 0;	#Picking up options
 	my $options="";
 	$options = toolbox::extractOptions($optionsHachees) if $optionsHachees;
@@ -116,8 +116,8 @@ sub minimap2MapPaired
 	{
 		switch (1)
 		{
-			case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
-			case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
+			case ($fileIn =~ m/fasta$|fa$|fasta\.gz$|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
+			case ($fileIn =~ m/fastq$|fq$|fastq\.gz$|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
 			else {toolbox::exportLog("ERROR: minimap2::minimap2MapPaired : The file $fileIn is not a fastq,fasta file\n",0);}
 		};
 		die (toolbox::exportLog("ERROR: minimap2::minimap2MapPaired : The file $fileIn is not a valid fatsq,fasta file\n",0)) if $validation == 0;
@@ -163,8 +163,8 @@ sub minimap2Overlap
 	my $validation = 0;
 	switch (1)
 	{
-		case ($fileIn =~ m/fasta|fa|fasta\.gz|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
-		case ($fileIn =~ m/fastq|fq|fastq\.gz|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
+		case ($fileIn =~ m/fasta$|fa$|fasta\.gz$|fa\.gz$/i){$validation = 1 if (checkFormat::checkFormatFasta($fileIn) == 1)}
+		case ($fileIn =~ m/fastq$|fq$|fastq\.gz$|fq\.gz$/i){$validation = 1 if (checkFormat::checkFormatFastq($fileIn) == 1)}
 		else {toolbox::exportLog("ERROR: minimap2::minimap2Overlap : The file $fileIn is not a fastq,fasta file\n",0);}
 	};
 	die (toolbox::exportLog("ERROR: minimap2::minimap2Overlap : The file $fileIn is not a valid fatsq,fasta file\n",0)) if $validation == 0;	#Picking up options
