@@ -87,7 +87,7 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 
 # input file
 # reads in fasta format (10X)
-my $fastaIn = "$toggle/data/testData/nanopore/BAI3_3x.fastq.gz";
+my $fastaIn = "$toggle/data/testData/nanopore/BAI3/BAI3_3x.fastq.gz";
 
 # output of assembly in fasta 
 my $dirOut = "$testDir/FlyeOUT";
