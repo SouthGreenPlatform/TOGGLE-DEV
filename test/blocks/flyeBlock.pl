@@ -44,7 +44,7 @@ use Data::Dumper;
 
 
 # input file
-my $dataFasta = "$toggle/data/testData/nanopore/";
+my $dataFastq = "$toggle/data/testData/nanopore/";
 
 print "\n\n#################################################\n";
 print "#### TEST flye \n";
@@ -59,7 +59,7 @@ system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test dire
 my @listSoft = ("flye");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFasta." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for flye";
 
