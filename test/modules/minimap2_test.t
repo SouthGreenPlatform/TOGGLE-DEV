@@ -55,7 +55,6 @@ my @sub = `grep "^sub" $subFile`or die ("ERROR: $0 : Cannot extract automaticall
 ########################################
 #Automatically module test with use_ok and can_ok
 ########################################
-
 use_ok($toolName) or exit;
 eval "use $toolName";
 
@@ -85,28 +84,66 @@ system("touch $testDir/$logFile $testDir/$errorFile") and die "\nERROR: $0 : can
 ######################################################################################################################################
 ######################################################################################################################################
 
-     
- 
 ##########################################
 ### input output Options
 ##########################################
 
 my %optionsHachees = ();                # Hash containing informations
-my $optionHachees = \%optionsHachees;   # Ref of the hash
+my $optionsHachees = \%optionsHachees;   # Ref of the hash
 
 ##########################################
-##### minimap2::minimap2Index 
+### Common files
 ##########################################
- 
- 
+my $fastaRef="$toggle/data/Bank/referenceBAI3.fasta";
+my $fastqReads="$toggle/data/testData/nanopore/BAI3/BAI3_3x.fastq.gz";
 
-is(minimap2::minimap2Index(FILEIN,FILEOUT,$optionHachees),1,'minimap2::minimap2Index  - Test for minimap2Index running');
+##########################################
+##### minimap2::minimap2Map (SAM output)
+##########################################
+my $mapSamOutput="map.sam";
 
-# expected output test
+%optionsHachees = (
+	"-a" => '',
+	"-x" => "map-ont",
+);
+$optionsHachees = \%optionsHachees;
+is(minimap2::minimap2Map($fastqReads, $mapSamOutput, $fastaRef, $optionsHachees), 1, 'minimap2::minimap2Map (SAM) - running');
+
+my @expectedOutput = ($mapSamOutput, 'minimap2_log.e', 'minimap2_log.o');
+@expectedOutput = sort @expectedOutput;
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('FILEOUT','minimap2_log.e','minimap2_log.o');
-is_deeply(\@observedOutput,\@expectedOutput,'minimap2::minimap2Index - output list');
+is_deeply(\@observedOutput,\@expectedOutput,'minimap2::minimap2Map (SAM) - File tree');
 
-################ TODO add test for output content
-    
+# NOTE : We can't hash the SAM because it contains the command, which contains the file paths
+# TODO find an alternative (count lines ? use flagstat ?)
+#my $expectedMD5Sum = "eefc1feadc8a6850b93779d2efd2c1f0";
+#my $observedMD5Sum = `md5sum $mapSamOutput`;
+#my @withoutName = split(" ", $observedMD5Sum);
+#$observedMD5Sum = $withoutName[0];
+#is($observedMD5Sum, $expectedMD5Sum, "minimap2::minimap2Map (SAM) - SAM file contents");
+
+##########################################
+##### minimap2::minimap2Map (PAF output)
+##########################################
+my $mapPafOutput="map.paf";
+
+%optionsHachees = (
+	"-x" => "map-ont",
+);
+$optionsHachees = \%optionsHachees;
+is(minimap2::minimap2Map($fastqReads, $mapPafOutput, $fastaRef, $optionsHachees), 1, 'minimap2::minimap2Map (PAF) - running');
+
+push(@expectedOutput, $mapPafOutput);
+@expectedOutput = sort @expectedOutput;
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+is_deeply(\@observedOutput,\@expectedOutput,'minimap2::minimap2Map (PAF) - File tree');
+
+my $expectedMD5Sum = "80c66fb8f84c5294a06467d698e5337a";
+my $observedMD5Sum = `md5sum $mapPafOutput`;
+my @withoutName = split(" ", $observedMD5Sum);
+$observedMD5Sum = $withoutName[0];
+is($observedMD5Sum, $expectedMD5Sum, "minimap2::minimap2Map (PAF) - PAF file contents");
+
+# TODO test for overlap, sr
