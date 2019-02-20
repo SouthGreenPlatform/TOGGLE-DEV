@@ -76,7 +76,7 @@ my @expectedOutput = ('RNASeq2.STRINGTIE.gtf','RNASeq.STRINGTIE.gtf');
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two Sorted Bam (no SGE) stringtie file list');
 
 # expected output structure
-my $expectedMD5sum = "c3e6f50be438ed87fba88911aec66a3e";
+my $expectedMD5sum = "0e001ca7086882dfc90c141fdcb2363f";
 my $observedMD5sum=`md5sum $testingDir/finalResults/RNASeq.STRINGTIE.gtf`;;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -113,7 +113,7 @@ $observedOutput = `ls $testingDir/finalResults/`;
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two GTF (no SGE) stringtie file list');
 
 # expected output structure
-$expectedMD5sum = "981d3db4929a0bfbe75ccf575d1c7169";
+$expectedMD5sum = "0e001ca7086882dfc90c141fdcb2363f";
 $observedMD5sum=`md5sum $testingDir/finalResults/globalAnalysis.STRINGTIEMERGE.gtf`;;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
