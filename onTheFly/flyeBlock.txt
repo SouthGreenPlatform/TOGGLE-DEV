@@ -28,23 +28,25 @@ $softParameters = toolbox::extractHashSoft($optionRef,$stepName);               
 
 my $type="flyeNanoRaw";
 #$fastaFileOut = "$newDir"."/"."$readGroup".".FLYENANORAW.fasta";
-$fastaFileOut = "$newDir";
+$fastaFileOut =  "$newDir"."/"."$readGroup/";
 
 flye::flye($fastqForwardIn,$fastaFileOut,$softParameters,$type);   # Sending to flyeNanoRaw
 
+#change name scaffolds to $readGroup".FLYENANORAW.fasta
+my $moveCmd = "mv ".$newDir."/".$readGroup."/scaffolds.fasta" ".$newDir."/".$readGroup."/".$readGroup."_FLYENANORAW.fasta";
+######### ICI : seul transferir scaffolds.fasta dans finaldir
 
-
-# Move the tophat log subdirectory into the upper directory
+# Move the Flye repertories and gta into the upper directory
 # The log subdirectory will not be transfered into the final directory
 my $moveCmd = "mv ".$newDir."/".$readGroup."/*" ".$initialDir."/FLYETMP_".$readGroup."_LOGS";
 toolbox::run($moveCmd);
 
 # Create a tempory directory
 # and move the tophat bam file unmapped in a tempory directory 
-my $mkdirCmd = "mkdir ".$initialDir."/tophatTempory";
+my $mkdirCmd = "mkdir ".$initialDir."/flyeTempory";
 toolbox::run($mkdirCmd);
 
-$moveCmd = "mv $newDir/*unmapped.bam ".$initialDir."/tophatTempory";
+$moveCmd = "mv $newDir/* ".$initialDir."/tophatTempory";
 toolbox::run($moveCmd);
 
 
