@@ -44,7 +44,7 @@ use Data::Dumper;
 
 
 # input file
-my $dataFastq = "$toggle/data/testData/nanopore/";
+my $dataFastq = "$toggle/data/testData/nanopore/BAI3/";
 
 print "\n\n#################################################\n";
 print "#### TEST flye \n";
