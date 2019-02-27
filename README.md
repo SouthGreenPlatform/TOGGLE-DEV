@@ -3,7 +3,7 @@ TOGGLE : Toolbox for generic NGS analyses
 
 ![TOGGLE Logo](/images/toggleLogo.png)
 
-Dear Biologist, have you ever dream of using the whole power of those numerous NGS tools that your bioinformatician colleagues use through this awful list of command line ?
+Dear Biologist, have you ever dreamed of using the whole power of those numerous NGS tools that your bioinformatician colleagues use through this awful list of command line ?
 
 Dear Bioinformatician, have you ever guess how to design really fastly a new NGS pipeline without having to retype again dozens of code lines to readapt your scripts or starting from scratch ?
 
