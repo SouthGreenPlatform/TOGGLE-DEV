@@ -1,4 +1,4 @@
-## Configuration file : to detect SNP from BAM files with GATK haplotype Caller
+## Configuration file : Apply basic filters on vcf and select SNP  from vcf files w
 ## http://toggle.southgreen.fr
 
 
@@ -24,19 +24,10 @@
 #------------------------------
 
 $order
-#-----------  sort sam
-1=picardToolsSortSam
-#-----------  extracting correctly mapped read
-2=samtoolsview
-3=samToolsIndex
-4=gatkRealignerTargetCreator
-5=gatkIndelRealigner
-6=picardToolsMarkDuplicates
-1000=gatkHaplotypeCaller
 #----------- Filtering step - see gatkVariantFiltration parameters 
-1001=gatkVariantFiltration
+1=gatkVariantFiltration
 #----------- SNP selection  
-1002=gatkSelectVariants
+2=gatkSelectVariants
 
 
 
@@ -53,34 +44,11 @@ $order
 # - see software manual for more details about 
 #------------------------------
 
-$picardToolsSortSam
-SORT_ORDER=coordinate
-VALIDATION_STRINGENCY=SILENT
-CREATE_INDEX=TRUE
 
-$samToolsView
--h
--b
--f=0x02
-
-$gatkRealignerTargetCreator
--T=RealignerTargetCreator
-
-$gatkIndelRealigner
--T=IndelRealigner
-
-$picardToolsMarkDuplicates
-VALIDATION_STRINGENCY=SILENT
-CREATE_INDEX=TRUE
-REMOVE_DUPLICATES=TRUE
-
-$gatkHaplotypeCaller
--T=HaplotypeCaller
--rf BadCigar
 
 $gatkVariantFiltration
 -T=VariantFiltration
---filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'
+--filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>1000' --filterName 'LowQual' --filterExpression 'QUAL<30'
 
 $gatkSelectVariants
 -T=SelectVariants

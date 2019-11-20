@@ -1,4 +1,4 @@
-## Configuration file : to detect SNP from BAM files with GATK haplotype Caller
+## Configuration file : to check sequencing quality from FASTQ files 
 ## http://toggle.southgreen.fr
 
 
@@ -24,19 +24,9 @@
 #------------------------------
 
 $order
-#-----------  sort sam
-1=picardToolsSortSam
-#-----------  extracting correctly mapped read
-2=samtoolsview
-3=samToolsIndex
-4=gatkRealignerTargetCreator
-5=gatkIndelRealigner
-6=picardToolsMarkDuplicates
-1000=gatkHaplotypeCaller
-#----------- Filtering step - see gatkVariantFiltration parameters 
-1001=gatkVariantFiltration
-#----------- SNP selection  
-1002=gatkSelectVariants
+# internal TOGGLE module
+1=checkFormatFastq 
+2=Fastqc
 
 
 
@@ -53,39 +43,8 @@ $order
 # - see software manual for more details about 
 #------------------------------
 
-$picardToolsSortSam
-SORT_ORDER=coordinate
-VALIDATION_STRINGENCY=SILENT
-CREATE_INDEX=TRUE
-
-$samToolsView
--h
--b
--f=0x02
-
-$gatkRealignerTargetCreator
--T=RealignerTargetCreator
-
-$gatkIndelRealigner
--T=IndelRealigner
-
-$picardToolsMarkDuplicates
-VALIDATION_STRINGENCY=SILENT
-CREATE_INDEX=TRUE
-REMOVE_DUPLICATES=TRUE
-
-$gatkHaplotypeCaller
--T=HaplotypeCaller
--rf BadCigar
-
-$gatkVariantFiltration
--T=VariantFiltration
---filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'
-
-$gatkSelectVariants
--T=SelectVariants
--selectType=SNP
-
+$fastqc
+# put your option
 
 ###############################
 # 2 - DATA MANAGEMENT
@@ -100,7 +59,6 @@ $gatkSelectVariants
 
 $cleaner
 #put the step number that TOGGLe have to manage data 
-
 
 #------------------------------
 #   Compressing data
@@ -137,7 +95,7 @@ $cleaner
 #------------------------------
 #Example for SGE
 #$sge
-#-q YOURQUEUE.q
+#-q queue name
 #-b Y
 
 

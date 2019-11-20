@@ -1,4 +1,4 @@
-## Configuration file : to detect SNP from BAM files with GATK haplotype Caller
+## Configuration file : to generate BAM files from single-end fastq files using bwa aln/samse, after a QC control of intial data
 ## http://toggle.southgreen.fr
 
 
@@ -24,14 +24,20 @@
 #------------------------------
 
 $order
+1=fastqc
+2=cutadapt
+3=bwaAln
+4=bwaSamse
 #-----------  sort sam
-1=picardToolsSortSam
+5=picardToolsSortSam
+#-----------  get some mapping statistics
+6=samtoolsflagstat
 #-----------  extracting correctly mapped read
-2=samtoolsview
-3=samToolsIndex
-4=gatkRealignerTargetCreator
-5=gatkIndelRealigner
-6=picardToolsMarkDuplicates
+7=samtoolsview
+8=samToolsIndex
+9=gatkRealignerTargetCreator
+10=gatkIndelRealigner
+11=picardToolsMarkDuplicates
 1000=gatkHaplotypeCaller
 #----------- Filtering step - see gatkVariantFiltration parameters 
 1001=gatkVariantFiltration
@@ -53,6 +59,21 @@ $order
 # - see software manual for more details about 
 #------------------------------
 
+$cutadapt
+-O=10
+-m=35
+-q=20
+--overlap=7
+# Adaptator1 is removed in the forward (-b) read (5' and 3' position)
+-b ADAPTATOR1REVERSE
+# Same traitement is done for the forward adaptator sequence
+-b ADAPTATOR1FORWARD
+
+$bwa aln
+-n=5
+
+$bwa samse
+
 $picardToolsSortSam
 SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
@@ -61,7 +82,7 @@ CREATE_INDEX=TRUE
 $samToolsView
 -h
 -b
--f=0x02
+-F=4
 
 $gatkRealignerTargetCreator
 -T=RealignerTargetCreator
@@ -87,6 +108,8 @@ $gatkSelectVariants
 -selectType=SNP
 
 
+
+
 ###############################
 # 2 - DATA MANAGEMENT
 ###############################
@@ -100,7 +123,9 @@ $gatkSelectVariants
 
 $cleaner
 #put the step number that TOGGLe have to manage data 
-
+3
+4
+9
 
 #------------------------------
 #   Compressing data

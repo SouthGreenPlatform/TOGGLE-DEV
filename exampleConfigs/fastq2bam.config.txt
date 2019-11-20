@@ -1,4 +1,4 @@
-## Configuration file : to detect SNP from BAM files with GATK haplotype Caller
+## Configuration file : to generate BAM files from pair-end fastq files using bwa mem, after a QC control of intial data
 ## http://toggle.southgreen.fr
 
 
@@ -24,19 +24,15 @@
 #------------------------------
 
 $order
-#-----------  sort sam
-1=picardToolsSortSam
-#-----------  extracting correctly mapped read
-2=samtoolsview
-3=samToolsIndex
-4=gatkRealignerTargetCreator
-5=gatkIndelRealigner
-6=picardToolsMarkDuplicates
-1000=gatkHaplotypeCaller
-#----------- Filtering step - see gatkVariantFiltration parameters 
-1001=gatkVariantFiltration
-#----------- SNP selection  
-1002=gatkSelectVariants
+1=fastqc
+2=bwa mem
+# sort sam
+3=picardtoolssortsam 
+# get some mapping statistics
+4=samtoolsflagstat   
+# extracting correctly mapped read
+#5=samtoolsview      
+#6=samToolsIndex
 
 
 
@@ -53,6 +49,9 @@ $order
 # - see software manual for more details about 
 #------------------------------
 
+$bwamem
+# put your option
+
 $picardToolsSortSam
 SORT_ORDER=coordinate
 VALIDATION_STRINGENCY=SILENT
@@ -62,30 +61,6 @@ $samToolsView
 -h
 -b
 -f=0x02
-
-$gatkRealignerTargetCreator
--T=RealignerTargetCreator
-
-$gatkIndelRealigner
--T=IndelRealigner
-
-$picardToolsMarkDuplicates
-VALIDATION_STRINGENCY=SILENT
-CREATE_INDEX=TRUE
-REMOVE_DUPLICATES=TRUE
-
-$gatkHaplotypeCaller
--T=HaplotypeCaller
--rf BadCigar
-
-$gatkVariantFiltration
--T=VariantFiltration
---filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'
-
-$gatkSelectVariants
--T=SelectVariants
--selectType=SNP
-
 
 ###############################
 # 2 - DATA MANAGEMENT
@@ -100,7 +75,6 @@ $gatkSelectVariants
 
 $cleaner
 #put the step number that TOGGLe have to manage data 
-
 
 #------------------------------
 #   Compressing data
